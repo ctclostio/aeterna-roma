@@ -1,0 +1,16 @@
+0x103127e0	facefx_battle_advisor_name_build	middleware-facefx	builds/binds anim name "battle_advisor" via std::string pack (100f1bb0/100f1cc0 x4); advisor track lookup
+0x10306100	facefx_archive_curve_parser	middleware-facefx	text parser w/ token errors "expecting max amplitude","Error: %s"; atof + FxName lookups x12 + assert-terminate path; .fxa curve section reader
+0x10335ac0	facefx_weighted_bone_xform_apply	middleware-facefx	consumes GetWeightedBoneTransforms-array (FUN_10298be0 x4) into float matrix chain (11354b90 x3); skinning weight application
+0x103ac6e0	facefx_unitgroup_audio_paths_collect	middleware-facefx	GetAudioAssetPath x3 over FxAnim set + trig heading calc; collects per-unit audio asset paths
+0x103a3280	facefx_anim_audio_path_getter	middleware-facefx	FxAnim::GetAudioAssetPath consumer, single-path return w/ minimal extra logic
+0x1030e810	facefx_anim_audio_path_resolve	middleware-facefx	FxAnim audio path + curve sample (fpatan); resolves playable audio ref for anim event
+0x10371e50	facefx_fxanim_region_member	middleware-facefx	sits +480 after FxAnim::GetAudioAssetIndex export; calls 1032d570 x3 curve helpers; FxAnim-class member op
+0x1035e8f0	facefx_animgroup_buffers_init	middleware-facefx	near FxAnimGroup::GetNumAnims region; memset zero-fill + FUN_101a2d50 x2 group-array setup; block x6
+0x10368870	math_angle_solve_atan2_pair	math	atan2 x2 + ROUND x2 over float-helper callees (1135d6f0/11364920/1136e120); dual-angle solver
+0x103505f0	math_angle_from_vec_atan2	math	single fpatan + ROUND via 1135d6f0 float helper; vector->angle conversion
+0x10350070	math_angle_from_vec_atan2_b	math	CONCAT13+fpatan+CONCAT22+ROUND; second vector->angle variant sharing helper 1135d6f0
+0x103529c0	geom_clip_pipeline_step	math	chain after geom_polygon_plane_clip_classify: FUN_10348a40 x2 + segment-link init cull + 100eaf40; polygon clipping stage
+0x10357690	crt_lazy_static_init	core	_atexit registration + CRT debug heap hooks (11683a32/116839e8); dynamic-initializer wrapper for static obj
+0x1031c570	crt_lazy_static_init_b	core	_atexit x1 + guard hooks; lazy static ctor wrapper (ROUND in guarded body)
+0x1038d780	crt_lazy_static_init_c	core	_atexit + FUN_1018c1e0 x3 repeated-guard init; static singleton bootstrap
+0x103572e0	crt_lazy_static_init_d	core	_atexit + string releases (100fcc80 x2/100fcc50); static str-holding obj initializer

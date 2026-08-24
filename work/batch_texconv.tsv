@@ -1,0 +1,27 @@
+0x10106920	texconv_a1r5g5b5_to_a4r4g4b4	render	__thiscall imgdesc{ptr,w,h,stride}; u16->u16 nibble pack ((p>>1..>>11)&0xf)->4bit channels; flip flags param2/3; memmove-backed reader FUN_116bd8d0
+0x10107030	texconv_r5g6b5_to_555_family	render	u16->u16 repack w/ 0x7ff mask + xor bit-replication trick ((x>>9)&1|(x>>5)*2); 565->555-style drop
+0x10107400	texconv_r3g3b2_to_a8r8g8b8	render	u16->u32 expand 3-bit fields via (x&7|x<<3) replication into CONCAT11 bytes; imgdesc stride walk + flips
+0x10107870	texconv_r3g3b2_to_rgba8888_bytewise	render	same 3->8 bit replication writing pbVar bytes individually; u16 src -> 4 byte dst per px
+0x10107ca0	texconv_r3g3b2_to_gray_scale_lut	render	3-bit expand then *0x1c+0x7f scale chain -> single byte out; brightness-ramp style LUT math
+0x10108120	texconv_r3g3b2_to_x8r8g8b8_v2	render	u16->u32 3-bit expand variant (extra CONCAT22 path vs 10107400); same desc+flip skeleton
+0x10108550	texconv_x1r5g5b5_force_alpha_bit	render	u16->u16: (p&0x1f)|p&0xffe0|0x8000 - ORs alpha bit 15 only; passthrough otherwise
+0x10108880	texconv_argb4444_channel_shuffle	render	u16->u16 nibble shuffle (p>>6&0xf etc <<4); 4444 channel reorder
+0x10108c30	texconv_r3g3b2_to_u32_expand_v3	render	u16->u32 CONCAT11 3-bit expand, third path variant; identical desc loop skeleton
+0x10109090	texconv_a8r8g8b8_to_a1r5g5b5	render	u32->u16: (a>>15)<<5|r5<<...|b5 packing; 32bpp downconvert w/ 1-bit alpha
+0x10109460	texconv_a8r8g8b8_to_a4r4g4b4	render	u32->u16 nibble truncation (>>4&0xf fields); 32->16 4444
+0x10109830	texconv_x8r8g8b8_to_r5g6b5	render	u32->u16: fields >>3,>>0xb,>>0x13 (&0x1f) + 6-bit green; alpha dropped
+0x10109c40	texconv_x8r8g8b8_to_r5g6b5_v2	render	u32->u16: (a5)<<6|g6 (>>10&0x3f) | r/b 5-bit; alternate 565 field order
+0x1010a4c0	texconv_u16_copy_flip	render	u16->u16 raw element copy through memmove reader; only flip/order logic differs
+0x1010ae30	texconv_5551_to_565_force_gsb	render	u16->u16: (hi>>3|0x20)<<5 pattern forces top bit of shifted field; alpha-consuming upconvert
+0x1010b1e0	texconv_a4r4g4b4_to_565_nibble_repl	render	u16->u16: (nib|0xf0)<<4 sign-ext replicate 4->5 bits; 4444->565 family
+0x1010b590	texconv_a1r5g5b5_strip_alpha	render	u16->u16 masked w/ 0xffe0-class masks + 0x8000 clear; alpha-strip variant of 10108550
+0x1010ba10	texconv_555_to_565_shift_repack	render	u16->u16: (p>>3)<<6 | p>>10 ... 5->6 bit green shift repack
+0x1010bda0	texconv_u32_copy_flip	render	u32->u32 element copy (store=param passthrough, const 0xff mask); flip-only conversion
+0x1010c3c0	texconv_r5g6b5_to_l8_grayscale	render	u16->u8 luma weights 0x96/0x4c/0x1c (/256) classic ITU-R 601; RGB->gray
+0x1010c780	texconv_u32_copy_flip_v2	render	u32->u32 copy, second variant (no masks); desc+flip skeleton shared
+0x1010cad0	texconv_a8r8g8b8_to_a1r5g5b5_opaque	render	u32->u16: (a5|0x20)<<5 forced-opaque alpha + 5-bit rgb; 10109090 sibling
+0x1010ce60	texconv_a8r8g8b8_to_a4r4g4b4_opaque	render	u32->u16: (nib|0xf0)<<4 forced-opaque nibble repl; 10109460 sibling
+0x1010d1f0	texconv_u32_copy_flip_v3	render	u32->u32 copy third variant; const 0xff
+0x1010d530	texconv_l8_to_r5g6b5_gray_replicate	render	u8->u16: gray value replicated r=g=b 5-bit each; L8->565
+0x1010db80	texconv_l8_to_a1r5g5b5_gray	render	u8->u16 gray replicate + 0x8000 alpha bit set; L8->5551
+0x1010df10	texconv_l8_to_565_bitrepl	render	u8->u16: (p>>2|(p>>3)<<6)<<5 bit-replication expand; L8->565 variant

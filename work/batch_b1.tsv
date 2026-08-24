@@ -1,0 +1,15 @@
+0x10473430	facefx_actorlist_audio_refs_eval	middleware-facefx	walks FxList<FxActor*> refs (GetReferences) w/ GetAudioAssetPath + float weight curve sample stack; anim-group audio binding eval
+0x101d0cb0	facefx_eventmgr_vtables_init	middleware-facefx	ctor installs main vtbl PTR_FUN_1175648c + 20 sub-vtbl ladders (PTR_LAB_11756498..1175654c step 6); registers name "ClearEventCallbacks"
+0x10283ca0	battle_naval_wind_update_print	battle	prints "Naval Wind strength: %.2f, direction: %.1f"; wind dir/strength stored via string+float members; naval weather tick
+0x10317d70	render_cam_debug_dump	render	builds debug line "TW Cam: height(..), pitch(..)" w/ FxName/GetNameEntry lookups; camera params to log
+0x103c8c40	facefx_anim_audio_path_get	middleware-facefx	returns FxAnim audio asset path (GetAudioAssetPath) after inline-name compare; 64B scratch + float curve reads
+0x10396cf0	facefx_name_entry_lookup	middleware-facefx	FxName->FxNameEntry lookup wrapper w/ string release pair; small helper
+0x103cf990	math_basis_from_euler_xyz	math	fcos/fsin x3 -> builds 3x3 basis (row triples via 10ca9b90); euler rotation matrix compose
+0x101e4990	math_rot2d_sin_cos	math	two sin+cos pairs, no other calls; planar rotation / directional vector build
+0x1025e2e0	ui_widget_tree_flags_apply	ui	applies state across widget tree: FUN_1015df10 x21 + recursive flag setters FUN_10cb6120/FUN_10cb9f50 x7 each; panel-wide refresh
+0x1015b610	ui_deployment_panel_groups_toggle	ui	strings REINFORCEMENTS/UNITS/SHIPS; toggles widget groups via FUN_1015de60 x17 + tree flag walkers; battle deployment panel
+0x103f9920	math_bearing_trig_calc	math	pure trig: ROUND x3, atan2(fpatan), sin, cos; bearing/heading computation, no memory side effects
+0x103aa9b0	math_yaw_pitch_dir_vector	math	atan2 x2 + sin + cos; converts two angles to direction vector components
+0x10224410	math_orient_trig_blend	math	cos x3 sin x3 atan2 x2 + guarded block; composite orientation solve
+0x1038dc40	crt_static_init_guarded	core	_atexit x2 + CRT debug hooks (11683a32/116839e8); registers static ctors/dtors w/ exception guard wrappers
+

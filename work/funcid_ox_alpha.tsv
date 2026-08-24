@@ -1,0 +1,299 @@
+0x10269620	path2d_ray_closest_hit	core(math)	walks float-pair polyline, FUN_1136e120 seg intersect per span, keeps min t (init 0x7f7fffff), returns hit flag
+0x102f42a0	particle_bytecolor_normalize_walk	render	4 emitter arrays strides 0x1c/0x14/0x28: byte RGB *1/255 -> float colors via 100e22c0/1016ae90 per item
+0x102d5520	obj_ctor_15param_vtbl_117655d4	unknown	ctor: vtable 117655d4, FUN_102d06b0(7,...), stores params at +0x67..+0x69,+0x1b1; 15 args incl floats
+0x1030e070	manager_init_alloc_globals_1176445c	core	sets vtable 1176445c; allocs via 100d12b0 x2; touches globals DAT_64298/6432c; sub-init 1030afa0 x3
+0x10156840	obj_dtor_string_arrays_sweep	core	dtor frees ~8 arrays at +0x114..+0x134, two string dtors (100f1c80) per element then free
+0x102fdd30	geom_box_extents_corners_calc	core(math)	in_ECX[3..8] products *0.5 -> half-extent cross terms; 8x vector op 101a2d20 = box corner/normal generation
+0x102e5290	util_pack_ffff_fields	unknown	packs fields into 16-bit masks (0xffff), helpers 10308a60 x2 + 102cfd70
+0x1021ffd0	rgb888_mask_extract_rand	unknown	masks 0xff00/0xff0000/0x8000 channel extraction w/ const 9.58738e-05 (=1/10430 BAM) + TLS static
+0x1030c520	effect_desc_list_build	render	19x list-node op 101aee30 + 9 allocs; builds linked list of effect descriptors from many manager lookups
+0x103192d0	unit_visual_rand_jitter_update	battle	const 9.58738e-05 + offs 0x10e8/0x1104; calls unit_visual_state_flags_tick (103ec120); per-unit randomized visual params
+0x102f3b20	particle_color_convert_walk_b	render	same 1/255 byte->float color walk family as 102f42a0, different array order
+0x1018cb20	grid_index_range_from_circle	core	(x+-r)*scale -> tile index range clamped to [this+0x10,this+0x14]; spatial hash query bounds
+0x1030edb0	wide_str_table_build_fmt	core	9x wstring dtor + wide assign/copy helpers (100f1bb0/100f1ac0); builds formatted wide-string table, const 0x5004
+0x10268ef0	sub_obj_pair_walk_setup	unknown	walks two sub-objects (102bc5e0/10260720 x2 each), builds stack functor pairs; no strings/consts
+0x10335ac0	anim_scale_10000_vtable_bind	anim	const 10000.0; binds vtable 1176886c x3 + 11768908; 4x call 10298be0 with float math
+0x102c2300	field_365c_mgr_query	unknown	reads field 0x365c region, calls mgr chain 113545d0/105737b0/10d1a700
+0x1025f8b0	bounds_fltmax_init_walk	core	FLT_MAX init then min/max walk via 1029fe40 x2; computes bounding volume
+0x10403bf0	timeline_sample_multi_track	anim	5x timeline sampler 103e96c0 + vec getter 103751a0 x2: samples several animated tracks into outputs
+0x103505f0	util_bam16_pack_ffff	core(math)	10430.378 (65536/2pi) BAM pack + 0xffff mask, single helper 1135d6f0
+0x10235e10	formation_obb_edge_dist_batch	battle	range-walks object array calling obb_point_outside_edge_distance (101ebd00) x10 vs param_4+0x36
+0x10476310	globals_64410_registry_alloc	unknown	allocs x3 around globals DAT_64410/64414; TLS static guard; helpers 10312d50/102198e0
+0x10293140	alloc_free_pair_wrapper	core	single alloc(100fcc80)+free(100fcc50) pair; buffer staging helper
+0x101aad50	multi_alloc_tls_guard_init	core	4 allocs w/ TLS magic-static guards; sub-init 101a29b0/105d0800
+0x1028bd50	subsystem_triple_query_build	unknown	3x calls each to 10557500/102416a0 + allocs; assembles results from three manager lookups
+0x101b5400	field_offs_19dc_23b8_walk	unknown	reads fields at +0x19dc/+0x1a28/+0x23b8..+0x23d0 via 10d1a4c0 x2; struct field updater
+0x1024a850	color_bytes_to_float_params	render	1/255 normalization const; 10x getter 1015aad0 family builds float params from byte colors
+0x102251a0	three_mgr_coord_fetch	unknown	one call each to 10d6e440/10d846f0/101d1bb0 — coordinates across three singletons
+0x101706f0	five_alloc_desc_build	unknown	5 allocs + TLS guard; builds descriptor via 1012c830/10639620/103cf910
+0x1040cde0	global_6432c_sampler_tick	anim	touches global DAT_6432c; 3x sampler 10498ea0 + 1044ff50
+0x10418820	quad_track_sample_blend	anim	4x 104124c0 track sampling + blends 10438540/10411c40
+0x10443de0	battle_facefx_audio_scene_ctor	battle	16 allocs; binds vtables 11779xx; calls facefx_battle_orders_coordinator_ctor + audio_bankset_battle_naval_load
+0x10350070	util_bam16_pack_rgb24	core(math)	BAM 10430.378 + masks 0xffff/0xffffff packing variant
+0x101f7470	vec2_pair_multi_mgr_calc	core(math)	pairs vec2 getter 103751a0 with 6 mgr calls (106188d0/1061b410/1039cc20/103ca3f0) — multi-source interpolation
+0x1027cf80	singleton_chain_probe_a	unknown	chain 1018b880 -> 103d08b0 -> 113545d0; no locals of interest
+0x10206780	six_pushback_list_build	core	6x dword push_back (100eaf40); builds lists from 10552700/1054b330/1054f8d0 sources then frees
+0x104883e0	global_6432c_sub_tick	anim	sibling of 1040cde0: global DAT_6432c + samplers 102198e0 x3/101a5c60 x2
+0x102260a0	facefx_lua_func_resolve_warn	middleware-facefx	'LUA function (%s) not found...' + _strtok('.') id parse; FxActorInstance locals; handler table walk 10f44xxx
+0x1030aa90	globals_64xxx_state_snapshot	core	reads ~12 globals DAT_64110..642fb into snapshot; wstring ops + allocs; state capture/reset
+0x101dab00	dual_alloc_subsys_probe	unknown	2 allocs; calls into 10676e10/1038e7d0/106a1060 chains; no consts
+0x102ca180	bam_scale_field_update	core(math)	9.58738e-05 BAM scale + 0x8000 mask applied to field via 102c2300/113545d0
+0x102b47b0	flt_min_denorm_walk	unknown	denorm floats 1.4e-45/2.8e-45 as sentinels; single callee 102cecb0
+0x10329710	triple_alloc_pair_build	unknown	3 allocs + 1 free; builders 103eb530/103eb590
+0x1024d410	trackbank_6x1200_sampler_fill	anim	allocs 6 x 0x4b0 buffers, then 27x evaluator 10312d50 fills slots; vtable 11754018
+0x1031c090	tls_static_lazy_init	core	magic-static guard (11683a32/116839e8) wrapping one call 102fd5c0
+0x10423050	bam_alloc_mgr_setup	unknown	BAM const 10430.378 + 3 allocs + TLS guard; mgr wiring via 105a47f0/1059f780
+0x10408400	pair_call_8000_flag	unknown	two callees (102964f0/10419120); 0x8000 flag test/set
+0x10180f00	str_fields_bam_jitter	battle	string ops + 9.58738e-05 + 0x8000: per-entity name fields w/ angular jitter update
+0x1043a530	path_spline_len_timeline_eval	battle	calls path_spline_segment_length_accum + timeline evaluators 10404b30/103c0230; allocs result buf
+0x10254190	grid_001953_quantize_alloc	unknown	const 0.001953125 (=1/512) quantization + flags 0x40000/0x200000; allocs + hash helpers 1135a890/11381460
+0x1025aa90	owned_buffer_array_teardown	core	walks stride-12 array freeing entry[0] each; ~30 frees; vtable 1175afcc reset
+0x10438910	blend_sample_buf_swap	anim	pairs blend helper 10438540 with alloc+free staging
+0x10393f30	eight_call_table_walk	unknown	8x 101206f0 + 5x 10392b40 — fixed-size table iteration
+0x10293c60	quad_alloc_geom_prep	unknown	4 allocs + geometry helpers 10271220/1136e500
+0x1040b380	tri_chain_deleg	unknown	three-deep delegation chain 1040a910 -> 10409e80 (+116bde50 TLS)
+0x10217770	str_array_rebuild_dtor	core	4 string dtors + 2 string copies; rebuilds string array via 101db480/101db5f0
+0x104a6cf0	render_boolmask_from_list	render	builds bool mask stack[90] from linked list entries; 1/255 color scale; 4x 10190580 emitter
+0x10212950	fltmax_8000_guarded_alloc	unknown	FLT_MAX sentinel + 0x8000 + magic statics; 3 frees 2 allocs
+0x104927a0	pair_sampler_mgr_fetch	anim	2x 10442ef0 samplers + mgr getters 1016f7e0/101704b0/1018bee0
+0x101b2aa0	audio_user_paths_container_grow	audio	field offsets 0x1cd4/0x23e8/0x23f8; calls audio_asset_path_user_d + container teardown/grow pair
+0x10413c40	eleven_alloc_scene_build	render	11 allocs via new-wrapper 100d12b0 + string copy ctor; assembles scene object set
+0x10296710	global_642ac_mgr_refresh	unknown	global DAT_642ac; 4x 1025f6c0 refresh + mgr pairs; frees x2
+0x102385b0	two_deleg_pair	unknown	pure delegation to 1022e5a0 + 102351a0
+0x10491fb0	flags_1c000_channel_setup	audio	masks 0x4000..0x1c000; wide-string ops; 3x each samplers 10d183f0/112d98d0/10103ec0/104c9b30
+0x102b67b0	denorm_sentinel_list_build	core	denorm float sentinels; 3x push_back + alloc/free staging from 105523e0 sources
+0x10173550	cheat_flags_speed_mult_apply	campaign	14x toggle query FUN_10d99350(0x1f/0x20/0xc/0xd/0xe/0xf); sets +0x9b8=1.5 speed when cheats/modes active
+0x1028c5b0	quad_sub_walk_bounds	unknown	4x sub-walkers 102bc5e0/102a6b00 + bounds 1029fe40
+0x10375f10	bam_trio_pack	core(math)	calls the three BAM packers 10350070/1034fd70/103505f0
+0x10224030	campaign_state_multi_fetch	campaign	8 singleton fetches 10d7d460/10d84a40/10d6e410/10d6c920 etc.
+0x10307750	globals_64xxx_ui_state_sync	ui	reads ~12 globals 0x64114..0x64354; 5x getters 1016f7e0/101704b0 + 102e7c70 sync helpers
+0x1045a190	global_640e4_alloc_quad	unknown	global DAT_640e4; 4 allocs + pair helpers 101fe830/101cd290/101d11f0
+0x101d8ee0	six_free_sub_teardown	core	6 frees + teardown family 101f3ef0/101ce950/101c9540; campaign-mgr chain 10d45a90
+0x102c30e0	ai_goal_jitter_recalc_batch	battle(ai)	denorm sentinels; 4x list walk 101a9110 calling ai_rating_compute_jittered + ai_move_goal_recalc per unit
+0x10446c00	anim_quant_1_over_4096	anim	const 0.00024414062 (1/4096) + 0x8000; short/int mix via float10 eval
+0x1049f7b0	alloc_free_staging_pair	core	single alloc+free staging wrapper
+0x104484a0	scene_alloc_builder_105f5cf0	render	4 allocs; 3x builder 105f5cf0 + 2x 105f5bc0; scene assembly
+0x10239a90	six_alloc_slot_table	core	6 allocs+6 frees; slot table via 101324d0 x3
+0x104033b0	tls_guard_seven_chain	unknown	TLS magic static then 6-call chain 103b8160..103d4ea0; 0x8000 flag
+0x101f7da0	fltmax_bam_vec_query	battle	FLT_MAX init + BAM const; vec2 getter + new-wrapper; range search setup
+0x102740c0	quad_alloc_min_walk	unknown	4 allocs/3 frees + walker 10241ca0; denorm sentinel
+0x10233690	formation_avg_pos_accum	battle	iterates unit list w/ vtbl+0x10 call; 16x vec2 getter FUN_103751a0 summed into accumulator
+0x10170fd0	six_alloc_builder_10627190	unknown	6 allocs/4 frees around builder 10627190
+0x1024ded0	str_slots_rebuild_family	core	string dtor/copy + 3x rebuild helpers 10132c50/1024ddd0/102441f0 over slot arrays
+0x102cef40	five_sub_walk_bounds	unknown	5x sub-walker 102a6b00 + bounds finalize 1029fe40
+0x103b0f80	bam_400000_vec_calc	core(math)	BAM const + 0x400000; vector helpers 1136e230/1136b240/1136b810/1136c500 around vec2 getter
+0x102255c0	sq_dist_22500_threshold	battle	22500.0 (=150^2) squared-range threshold + 0x8000; uses core_locked_container_f pair + mgrs
+0x10182690	vec2_multi_mgr_blend	render	5x vec2 getter 103751a0 blended across mgrs 10d981a0/10620e70/10596840
+0x10143490	vtbl_1173fae4_str_ctor_bank	ui	vtable 1173fae4; 13x string copy ctors + allocs: builds labeled string set for options page
+0x102041b0	campaign_mgr_teardown_pair	campaign	3x frees + teardown family 101d2320/101fe360/101fb8f0 w/ campaign singletons 10d7c570/10d65970
+0x10344fb0	alloc_heavy_unit_table	battle	consts 0x1207/0x2998; 13 frees/8 allocs; game-state singleton 10d1a700 x2; builds per-unit table
+0x1042a060	vtbl_1177da98_str_bank_build	audio	vtable bind; 6 wide-string assigns + samplers 112d98d0/10103ec0; builds named bank list
+0x103100a0	six_track_timeline_eval	anim	6x timeline sampler FUN_103c0230 — evaluates six animated values into outputs
+0x1029ea20	list_1000_flags_teardown	unknown	0x1000 flag; 5x walker 105df5f0 + 4x 105f2140, frees staging
+0x101b7140	toggle_gate_field_238c	campaign	field +0x238c; 3 TLS guards; 2x toggle query 10d99350 gating path via 102947b0/105eb250
+0x1030cbf0	globals_642xx_bam_jitter_apply	core(math)	BAM 9.58738e-05 + globals 0x642b8..0x642ec; applies angular jitter via 1018b5c0 x3
+0x1049600d	walker_1000_quad_tick	anim	0x1000-flag walkers 10491040 x5 + 104c9970 x4 — periodic tick over flagged set
+0x10242210	tls_pair_alloc_guard	unknown	TLS guard + 2 allocs via 102bc4d0 builder
+0x10385ec0	mask_ffffff_batch_proc	render	0xffffff color mask; 4x 11352260 + batch procs 105a0960/105a1fc0
+0x101b79d0	unit_pos_multi_query	battle	4x 102947b0 unit queries + 3x vec2 getters; aggregates positions from unit records
+0x1028d790	fltmax_fields_2518_search	battle	FLT_MAX best-search over fields 0x2518/0x251c; candidate eval chain 1051d790/10682fc0
+0x10392bf0	bam_convert_wrapper_a	core(math)	BAM 10430.378 + 0x8000 pack, delegates to 10391410
+0x10393350	bam_convert_wrapper_b	core(math)	BAM const variant delegating 5x to 10392ae0
+0x1028aa20	critsect_list_walk_pushback	core	walks list under EnterCriticalSection/LeaveCriticalSection; 5x 10282420; flags 0x4000/0x4004/0x4008; push_backs
+0x1037a440	const_6471_audio_curve	audio	consts 1035.0 / 6471.681 curve eval; 4x 113584b0 + emitters 10190580 — distance/gain curve build
+0x101f9770	camera_options_page_build	ui	builds options strings: 'Perspective mode','Camera move/turn speed','Free camera movement','View Extends Selected','Display UI elements','Show sprites','LOD level (0-Automatic, 1-Best)','Selection box size'; 22 label allocs
+0x1028fc70	container_sym_fltmax_bam_search	battle	FLT_MAX best-search + BAM const; composes core_container_sym_build + bounds 1029fe40/1025f8b0
+0x10395ef0	eight_call_18aa10_tls_build	unknown	8x builder 1018aa10 under TLS guard w/ allocs
+0x10269b60	flt_denorm_min_geom_walk	core(math)	1.1754944e-38 (FLT_MIN) sentinel; geometry helpers 11355b40/1136e9d0/1136d510 min-walk
+0x10240460	bam_eps_best_candidate	battle	BAM const + epsilons 0.0001/0.001 + FLT_MAX: best-candidate selection loop, TLS-guarded
+0x102deef0	vtbl11754018_str_fields_bam	anim	vtable 11754018 pair; BAM scale + masks 0x3f80/0x4000/0x8000; one string field
+0x1043ad60	global_6432c_mode_probe_vec	anim	global DAT_6432c; game-mode probe 10168c60 x2; vector ops 11354460/113632a0/11362dd0
+0x1034ead0	tls_quad_geom_eval	core(math)	4x 1135dbc0 + 2x 1136dff0 geometric evals under TLS guard
+0x102cd760	quad_alloc_two_builder	unknown	4 allocs/2 frees + builders 10179670/101b9570
+0x103150e0	battle_camera_shake_list_build	battle	push_backs + battle_camera_shake_txt_parse consumer; assembles camera-shake effect list
+0x102d0bf0	fltmin_vtbl117640c8_deleg	unknown	FLT_MIN sentinel + vtable 117640c8; delegates 102d5920/11359c60/1135b730
+0x101841a0	sixteen_alloc_nine_free_assemble	core	pure memory assembly: 16 allocs / 9 frees, no other calls
+0x10220300	tiny_consts_mask_search	battle	consts 9.19e-09/8.97e-44 + FLT_MAX + masks 0x8000/0xffff; candidate scan w/ vector helper 11373a70
+0x10398520	rand_field_bank_sim_tick	battle	rand LCG 0x343fd + const 1.297e-05 + 32768; fields 0x1ee8..0x2668 per-entity sim tick; vtables 1176e490/1176f488
+0x102fed60	obb_corners_multi_query	battle	calls obb_8corners_compute_store x4 over query set; BAM scale; builds corner sets for range tests
+0x10232130	single_deleg_22e130	unknown	single delegation to FUN_1022e130
+0x101adac0	fltmax_denorm_seg_intersect	core(math)	FLT_MAX + denorm sentinels; 4x segment/geometry eval 11364860
+0x1025d8a0	streambuf_28x_read_pipeline	fs	28x read-buffer op 10cb9040 (grows by 0x100000 chunks) + 16x/14x stream helpers — bulk data ingestion pipeline
+0x1025ce80	streambuf_28x_read_variant	fs	variant of 1025d8a0 with same 10cbxxxx pipeline, alternate post-process 102659f0
+0x101e1bb0	bam_wide_range_pack_build	core(math)	BAM const + 0xffff; composes core_big_builder_e28d0 + vector packers 1036b9b0/1036baf0
+0x1033ec30	flags_80000_geom_batch	render	flags 0x1000/0x80000; 3x 10362f50 + vector batch 11365250/10340370
+0x1017b7d0	mask_ffffff_ui_strings_build	ui	0xffffff mask; string dtors/allocs + label builders 1017fd40/10132920 — UI color/string assembly
+0x1017d340	mask_ff00_global_642ac_ui	ui	masks 0xff00; global DAT_642ac; UI color ops 112ef470/112f0ca0 + list slotting
+0x10322120	bam_ffff_five_deleg	core(math)	BAM const + masks 0x8000/0xffff; 5-call delegation to 10321f30
+0x102ec0d0	field_6f80_sym_build_query	battle	field 0x6f80; 7 allocs; composes core_container_sym_build + vec2 getters
+0x102d99b0	spline_vtbl_bank_strings	battle	vtables 117616cc/1176167c; spline_segment_build_driver + six_track_timeline_eval; string fields; denorm sentinels
+0x10261e60	nine_pair_subsystem_build	unknown	9x each builders 10557500/102416a0 + 6x 102be720: large multi-subsystem assembly
+0x1043c680	rand_bam_quant_anim_eval	anim	rand LCG + consts 1/127(0.00787)/1/65535/1024.0/BAM; samplers 102198e0 x5 + vector ops — randomized quantized animation eval
+0x10290e70	phys_collision_pipeline_call	battle	drives phys_collision_pairs_build via walker chain 1024dbe0 x6/102cef40 x3
+0x10349130	flags_60a00_ui_batch	ui	flags 0x20000..0x60a00; UI ops 112e1830 x3 + vector evals 1136e7d0 x4
+0x1038b4c0	fltmin_bam_two_deleg	core(math)	FLT_MIN + BAM + 0xffff; two delegations 1135fac0/10601760
+0x1041ff00	variantmeshdef_parse_randomize	render	19x variantmeshdef_file_ctor + wide strings; rand LCG picks variants; vtables 1177cc68/1177cddc — unit variant mesh assignment
+0x1027d6b0	six_walk_teardown_mixed	unknown	6x walker 10238d80 + frees; mixed sub-teardown with 105575e0/100d9d90 mgr calls
+0x103ad980	tls_quad_rand_field_update	battle	4 TLS guards + rand LCG; field updates via 10e2e290/1035ae90/103d76e0
+0x10367830	bam_mask_multi_guard_calc	core(math)	BAM consts + masks 0x8000..0xffffff under 4 TLS guards; vector calc 1037cd40/11354300
+0x102667b0	formation_obb_edge_batch_bam	battle	obb_point_outside_edge_distance x4 over walked set (101a9110) + BAM scale; formation-vs-region distance eval
+0x104894c0	flags_40004_mode_tick_samplers	anim	flags 0x2000..0x40004; 8x sampler 102128c0 + vector 11362dd0 x5; per-mode tick bank
+0x104595f0	const_315baf_only	unknown	sole constant 0x315baf, no calls — flag/data probe stub
+0x10186be0	vec_pair_builder_tls	unknown	vector-pair builders 11354a70/11354b90/113660a0 + TLS probes 116835d7 x3
+0x102f5910	quant_1o4096_color_walk	render	consts 1/4096 + 1/255; 11x emitter 102ef620 under 4 TLS guards — quantized color/effect walk
+0x102d1570	spatial_hash_globals_642fd_build	battle	global 0x642fd; spatial_hash_grid_init + 18 allocs + 9x list op 101a2cc0; builds spatial index state
+0x10156bc0	seventy_free_big_dtor	core	massive dtor: 70 frees, fields 0x23b0..0x2538 swept; 5x 1014d360 sub-cleanup
+0x102c3760	global_6432c_bam_unit_fx	battle	BAM scale + global DAT_6432c; per-unit FX walkers 1048c700 x2/1026c890/1026ca20
+0x103b3490	unit_slot_anim_gate_bam_mix	battle	calls battle_unit_slot_anim_gate x2; consts 3276.8/6553.6 (=32768/10,/5) + BAM + globals 0x6432c..0x643a8 — anim/gain mixing for units
+0x104856b0	tls_quant_denorm_probe	unknown	TLS guard pair + 1/4096 quant + denorm sentinels; single-shot probes 104087f0/113545d0
+0x1029a140	bam_best_search_thirteen_free	battle	BAM + FLT denorm; best-match search w/ 8x 10267d10/1056b430, bounds finalize 1029fe40 x5, 13 frees
+0x10368870	bam_seg_intersect_flags_query	battle	BAM const + flags 0x1000/0x1001/0x2000/0x8000; seg intersect 1136e120 + vec helpers over query
+0x103876e0	audio_curve_1035_family	audio	const 1035.0; 7 vector/math helpers incl 1037a440 curve — audio distance/gain chain
+0x103529c0	entity_segment_link_cull_build	battle	calls entity_segment_link_init_cull x2 + push_backs; eps 0.0002 tolerance
+0x102e74c0	eight_track_timeline_eval	anim	8x timeline sampler FUN_103c0230 into output slots
+0x10375bc0	polygon_zone_xform_caller	battle	calls battle_polygon_zone_transform_recurse + alloc; zone setup wrapper
+0x103ac6e0	range_5000_vec2_multi_mgr	battle	consts 5000.0/FLT_MAX; 7x string-op family 10115e00 + vec2 getters — long-range target scan
+0x102bdb90	geom_pair_builder_quad	core(math)	4 geometry builders 113660a0/11354a70/11354b90/11364e70 + sub-walkers 102a6510/1028e480
+0x103a3280	fltmax_5000_pair_eval	battle	FLT_MAX init + 5000.0 range cap; pair evaluators 10404940 x2
+0x10331270	multislot_container_alloc_quad	battle	4 allocs around geom_multislot_container_ctor + 4x filler 10243c90
+0x1029e170	bam_dual_timeline_blend	anim	two BAM consts (10430.378 / 4.79e-05) + dual timeline samplers 10404b30/103c0230 blended
+0x1031c570	tls_static_lazy_init_b	core	magic-static guard wrapping one call 102fd5c0
+0x1038d780	round_quad_flags_tls	unknown	3x math_round_quad_a + flags 0x2000/0x8000 under TLS guard
+0x10371e50	field_1284_walk_triple	unknown	fields 0x1000/0x1284; 3x walker 1032d570 + pairs 1033e3c0/103732b0
+0x102c0140	bam_unit_probe_chain	battle	BAM const; unit probe chain 1028eac0->1028f290->1029f000 w/ vec2 getter
+0x10360050	quad_deleg_two_pair	unknown	4x 10326210 + 2x 10326130 delegation pair
+0x10380f00	single_deleg_37c930	unknown	single delegation to FUN_1037c930
+0x10327e60	alloc_free_staging_c	core	2 allocs + 1 free staging wrapper
+0x102c2da0	quad_alloc_fltmax_staging	battle	FLT_MAX sentinel; 4 allocs/3 frees staging for best-match fill
+0x1030e810	vtbl117642a4_mgr_setup	ui	vtable 117642a4; mgr wiring 1030c010/1030d380/1030afa0 + vec2 getter
+0x103ae630	flags_400000_vec_calc_b	battle	masks 0x8000/0x400000; vector calc chain 1136b240/1136c500 like 103b0f80
+0x103572e0	tls_denorm_alloc_pair	unknown	denorm sentinel + TLS guard + allocs; builder 10298be0/103360f0
+0x102f8d80	global_64298_list_walk	ui	global DAT_64298; list walker 101a9110 + mgr getters 10170470/1016f420
+0x1031ba40	multi_deleg_six_chain	unknown	six-way delegation 102feac0/1030b9f0/102f0920/1031cae0 + vec2 getter
+0x1034c140	fltmax_ffffff_mgr_probe	render	FLT_MAX + 0xffffff mask; 3x probe 100d9d90
+0x10340da0	steering_velocity_blend_caller	battle	calls unit_steering_velocity_blend_tick x2 with BAM consts 0.00095/BAM16 — steering integration step
+0x102c1b80	six_sub_walk_timeline	anim	6x walker 102a7140 + timeline sampler 10404b30 + sub-pairs
+0x103605e0	tls_guard_alloc_pair_d	unknown	TLS magic static + 2 allocs around builder 1038e5f0
+0x1031cec0	bam_field_jitter_apply	battle	BAM scale 9.58738e-05 + 0x8000 mask applied to entity field (no calls)
+0x10341220	fltmax_five_sampler_best	anim	FLT_MAX best-of; 2x sampler 10407790 + geometry eval 1135dbc0
+0x102edd50	fields_23f0_4f80_vtbl_build	unknown	fields 0x23f0/0x23f4/0x250c/0x4f80; vtable 11762488 x2; 6 allocs + sub-builder 101331c0
+0x102dff90	vtbl11764fe8_trackbank14	anim	vtables 11754018 trio + 11764fe8; 12 frees; 5-way builder family 102df980..102dfa60
+0x10393980	single_deleg_391610	unknown	single delegation to FUN_10391610
+0x10325d90	triple_walk_pushback_build	battle	3x walker 10241630 + push_back; multi-source assembly
+0x10340970	vec_geom_quad_calc	core(math)	vector/geometry helpers 11385da0 x2/113660a0/113847c0/1137c3a0
+0x103abc50	seg_circle_flag_query	battle	flag 0x1000; seg-vs-circle 1136def0 + vec2 getter under TLS guard
+0x10389990	denorm_tiny_consts_calc	core(math)	denorm consts 3.6406e-29 pair; 4x 10339ac0 + vector 1135b9f0
+0x102e4260	color_ramp_quant_emit	render	1/255 + denorm ramp table consts 3.4366e-29 series; 3x emitter 102ef620 — quantized color ramp build
+0x10328d20	vtbl11761590_alloc_pair	battle	vtable bind + alloc/free pair; unit-slot builders 1032d480/1032d500/1032d1a0
+0x102a12c0	bam_lambda_mgr_triple	campaign	BAM const; 3x functor invoke 105cf880 + mgr chain 10689330/1018db30
+0x10494750	rand_fields_2394_anim_tick	anim	rand LCG + field 0x2394 + 1/65535 normalize; samplers 103eb8b0 — per-entity anim randomization tick
+0x102fcd10	quat_metric_deleg	anim	single call to anim_quat_dot_xform_metric — quaternion similarity wrapper
+0x1034a580	init_pair_from_globals	core(math)	inits float pairs from globals DAT_11bd2484/88 then pure math on param arrays
+0x103a4510	ent_bearing_six_eval	battle	6x evaluator 103c1f20 + ent_pair_relative_bearing_calc — relative bearing batch for entity pairs
+0x102e4d30	tls_quad_timeline_dual	anim	4 TLS guards + 2x timeline sampler 103c0230
+0x10488ac0	color_norm_two_deleg	render	1/255 color normalize; two delegations 1168cad5/1027ee00
+0x104ade20	vtbl11754018_debug_sphere_bank	battle	vtable 11754018 pair; battle_debug_view_sphere_ctor + builders 104d6740/1025bc50 — debug view object bank
+0x103b5110	nine_nine_sampler_tick	anim	9x evaluator 10312d50 + 9x 102198e0 samplers — dense multi-track tick
+0x10395340	pair_deleg_anim_probe	anim	delegates to 10391f30 + 103948e0 probe pair
+0x102c5a50	str_heavy_stream_ops	fs	7 string dtors/allocs + stream ops 10cff560/10e2b0b0/10cc1ae0 — text/stream processing with string churn
+0x10385720	bam_dual_blend_helper	core(math)	dual BAM consts + timeline sampler; blend helper via core_helper_8d1a0
+0x10399790	inverse_project_nodes_caller	battle	calls transform_inverse_project_nodes x2 + 5x vec2 getter — projects world->screen node sets
+0x10483dc0	twelve_sampler_tick_bank	anim	12x sampler 102198e0 + mgr getters — another dense track tick bank
+0x102faa40	rand_lcg_alloc_quad	unknown	bare rand LCG (0x343fd/0x269ec3) + 4 allocs; builder 102b4f20 x2
+0x10310c10	six_track_timeline_eval_b	anim	6x timeline sampler 103c0230 — sibling of 103100a0
+0x10327060	alloc_free_staging_e	core	3 allocs + 2 frees staging wrapper
+0x10355370	vtbl11768824_fields_19xxx_build	anim	fields 0x19000..0x19008; vtable bind + 4 allocs; geometry builders 11354a70/11364e70/113660a0
+0x1048e870	globals_60xx_eps_probe	unknown	globals 0x60b4..0x60e0 + eps 0.001; probes 104b72d0 x2
+0x1048f270	blend_sample_buf_swap_b	anim	blend helper 10438540 with alloc+free staging (sibling of 10438910)
+0x103aad70	triple_sampler_mgr_blend	anim	3x sampler 103853b0 + mgr pairs 1059eb40/105946e0/105944c0
+0x1041deb0	soldier_visual_spawn_globals_64168	battle	global DAT_64168; fields 0x4c4c/0x5a5c; calls battle_soldier_visual_instance_spawn + vtable 1177a00c
+0x102f74b0	thick_line_quant_draw	render	calls render2d_draw_thick_line_quadx1; quant consts 1/4096 + BAM scale + globals 0x6432c/30 — debug overlay line draw
+0x102a18f0	tls_triple_pushback_build	unknown	3 TLS guards + push_backs + builders 106168a0/102b4b00
+0x102ad660	stream_ops_nine_call_set	fs	nine distinct stream ops 10cbxxxx x3 each + string getter 100f1850 x3 — file/stream pipeline stage
+0x102c7c30	dual_builder_probe_pair	battle	2x builders 10513280/1051d790 + TLS probes; candidate eval 10337350/103558d0
+0x10373f50	color_norm_bam_emit	render	1/255 + BAM const; 2x emitter 10190580 + mgr chain — colored FX emit
+0x10372890	triple_vec_calc_deleg	core(math)	3x vector calc 11381600 + string-op family 101b1280
+0x1037ba60	pushback_tls_probe_single	unknown	one push_back + TLS probe + pair builders 1033e160/1033e600
+0x1035c7b0	seg_intersect_multi_query	battle	2x seg intersect 1136e120 + walkers 10298ee0; range query assembly
+0x1049db00	field_2524_alloc_quad	battle	field 0x2524; 4 allocs around 10432d20 x2 — per-unit record expansion
+0x1035f9e0	quad_walk_two_probe	unknown	4x walker 10326380 + 2x probe 10337730
+0x10376ac0	mgr_getter_six_pack	ui	six mgr getters 1016f420/1016f440/1016f980/1016f9c0 + pair 10337730/10344970
+0x103a2610	scale_10000_rand_timeline	anim	consts 10000.0 + 1.5259e-06 + rand LCG; 6x evaluator 1034e6b0 + dual timeline samplers
+0x103895b0	tls_probe_seven_chain	unknown	TLS probe + 7-call builder chain 101a0b50/10376310/etc.
+0x103a4960	bam_bearing_blend_calc	battle	BAM const; bearing evaluators 103e9eb0/103c1f20 + vector blend 1137e110 x3
+0x103431a0	vec_geom_quad_calc_b	core(math)	same vector helper set as 10340970 (11385da0/113660a0/113847c0/1137c3a0)
+0x102e9a30	const1000_timeline_mgr_mix	anim	const 1000.0; 3x timeline sampler + mgr pairs 105946e0/105944c0/1059eb40
+0x103ab520	input_state_machine_tick_caller	battle(input)	calls battle_input_state_machine_tick + 7 helpers — input processing frame step
+0x102fd5c0	vec_triple_alloc_calc	core(math)	3x vector op 1136e440 + staging alloc/free
+0x103319d0	const3276_seg_intersect_best	battle	3276.8 (=32768/10) + seg intersect 1136e120 under TLS guard — scaled best-match query
+0x103a1e10	fltmax_vec2_getter_pair	battle	FLT_MAX init + vec2 getter + helper 1018da70 — nearest-of wrapper
+0x103028b0	global_643f4_spline_alloc	anim	global DAT_643f4 + flag 0x10000; spline-family builders 102d9060/102d98f0
+0x102c9970	nine_free_walker_teardown	core	9 frees / 4 allocs; teardown walkers 1018de70/10236880
+0x10330790	vtbl1176857c_str_quad	anim	vtable bind + 4 string copy ctors — labeled track set ctor
+0x104178e0	rand_str_fields_visual_tick	render	rand LCG + 1/65535; string fields churn + samplers 112d98d0 — per-frame visual randomization
+0x1037af80	flag20000_only_probe	unknown	sole constant 0x20000 flag test/set, no calls
+0x10349aa0	critsec_mgr_flags_83103_build	core	flags 0x2000..0x83103; 12x UI op 112e1830 + core_critsec_spincount_mgr_init x2 — subsystem manager grid init
+0x10299900	eps001_stream_quant_quad	fs	eps 0.001; 4-call sets over stream ops 10c82370/10c900b0 + quantizer 1030d460
+0x10327730	bam_dual_fields_11ca_tick	battle	dual BAM consts + fields 0x11ca/0x1203; sampler mix incl 112d98d0/105df680
+0x10377aa0	phys_neighbor_bam_query	battle	calls phys_neighbor_query_walk + dual BAM consts; mgr getters 1016f420/440 — neighbor spacing eval
+0x103771e0	unit_slot_pair_walk	battle	2x walker 1034fb20 + slot pair 1033b690/1033c4b0 + mgr getters
+0x1036c780	rand_eps_timeline_eight	anim	rand LCG + eps 7.63e-06 (1/131072); 8x timeline evaluator 10404a90 — randomized track sampling
+0x10356230	triple_eval_tls_geom	anim	3x evaluator 1034e430 under TLS guards + geometry blend 1136b670
+0x10301510	const40960_spline_alloc	anim	const 40960.0; spline family 103018c0/102d9000/102d97d0 + staging
+0x10343770	fltmax_seven_probe	battle	FLT_MAX best-of across 7 probes 100d9d90
+0x10302400	fields_2538_globals_6440a	battle	fields 0x2538/0x253c + global DAT_6440a; 6 allocs + builder set
+0x1039e370	stream_quad_call_bank	fs	4x 103a04a0 + four distinct stream ops 10cffxxx x3 each — stream dispatch bank
+0x103236e0	five_deleg_8000_flag	unknown	5x delegation to 10321ff0 with 0x8000 flag
+0x102bd300	fltmin_two_deleg	unknown	FLT_MIN sentinel; two delegations 113545d0/10274ff0
+0x1036dec0	bam_multi_field_tick	battle	dual BAM consts + fields 0x11ca..0x1244; wide field tick via samplers/probes
+0x102f0920	const_afc9_dual_stream	fs	const 0xafc9; paired stream ops 1017f8e0/10191040 + probe pair 10337600
+0x102dbc50	vtbl1176176c_spline_tracks	battle	vtable bind; path_spline_segment_length_accum + timeline samplers + push_backs — spline track bank build
+0x103149b0	sim_controller_factory_frame	battle	calls battle_sim_controller_factory_by_type; const 0.008333334 (=1/120) frame dt; globals 0x6432c/0x64410/14 — battle sim step setup
+0x102c8290	tls_vtbl_alloc_bounds	unknown	TLS vtable thunk 1169c2e4 x3 + bounds finalize 1029fe40 x2 + 5 allocs
+0x102cb880	bam_denorm_curve_endpoints	anim	BAM const + denorm sentinels; curve endpoint queries via anim_curves_endtime + 4x 102b8050
+0x1039a930	global_642b8_obj_setup	battle	global DAT_642b8; obj setup via 102d06b0 + builders 1039a590/1039c6a0
+0x103254d0	eps0001_triple_walk	battle	eps 0.0001 tolerance; 3x walker 10241630 + eval chain — fine-grained candidate scan
+0x104806d0	quant_1o4096_tls_tick	anim	1/4096 quant + TLS guards; sampler mix 102964f0/102128c0/105ba470
+0x103acfa0	range_adjust_flags_query	battle	flags 0x1000/0x80000; calls range_adjust_by_mode_target x2 + samplers — engagement range re-eval
+0x10376310	bam_spacing_multi_walk	battle	BAM const; 8-call spacing walk incl phys_neighbor_query_walk family — formation spacing update
+0x1041d6b0	vtbl1177caf0_sampler_bank	render	vtable bind; 5x sampler 102128c0 + mgr pairs 10d3a110/10d39d30 — render bank tick
+0x102b6010	flag1000_vec_alloc_probe	unknown	flag 0x1000; allocs/probes + vec2 getter
+0x102f90c0	fields_25c0_bam_unit_calc	battle	fields 0x25c0/0x25c4 + BAM scale — per-unit angular calc
+0x102f1780	field_2524_geom_quad	battle	field 0x2524; 4x geometry op 1136e5c0 + vec2 getter — unit record geometry refresh
+0x10345b80	tls_quad_builder_chain	unknown	2 TLS guards + 8-call builder chain (101a0b50/10398030/1039b410/103a1200)
+0x10497ff0	big_local_struct_fill	anim	fills ~20-float local struct then single callee — packed param block assembly
+0x1035c010	quad_walk_pushback_timeline	battle	4x walkers + push_backs + timeline sampler — unit set rebuild w/ sampling
+0x1034acd0	seg_rect_hits_eps_collect	core(math)	calls geom_segment_rect_hits_collect x2 + dir_scale_mode_offset_calc; eps 0.0001; 9x geom eval 1034ead0
+0x1049d630	unit_audio_eventset_globals	battle	globals 0x2524/0x5a5c/0x64168; battle_anim_unit_audio_eventset_build x2 + vtable 1177b3f8
+0x10306a90	globals_bank_wide_str_sync	ui	reads ~12 globals 0x640e4..0x643b8; 18x wide-string ops + sync helpers — global state to UI text sync
+0x103360f0	vtbl11768908_geom_bind	anim	vtables 11768908+1176886c trio; 4x builder 10298be0 + geometry quad 11354xxx — animated object bind
+0x102fafe0	global_642ac_bam_blend	battle	global DAT_642ac + BAM consts; dual timeline samplers blended into per-entity value
+0x10473ba0	fifteen_sampler_track_tick	anim	15x sampler 102198e0 + mgr getters — widest track tick bank seen
+0x10479de0	five_call_deleg_pair	anim	5x 104dea10 + 2x 10495410 delegation pair
+0x10476b80	formation_line_place_bam_caller	battle	calls battle_formation_line_place x3 + dual BAM consts + 1/255 — orders formation deployment lines
+0x103a39b0	denorm_seg_intersect_guarded	battle	denorm 2.38e-44 + flag 0x2000; seg intersect x2 under TLS guards
+0x10318250	visual_state_eps_bam_tick	battle	eps 0.00024 + dual BAM consts; calls unit_visual_state_flags_tick — visual state refresh step
+0x103781c0	slot_copy_bam_multi_query	battle	4x slot-copy 10344bf0 + vec2 getters + BAM consts — batch unit slot refresh
+0x1035cd90	quad_walk_pushback_eval_b	battle	sibling of 1035c010: 4 walkers + push_backs + eval chain
+0x103a04a0	thirtynine_builder_super	battle	39x builder 10298be0 — massive sub-object assembly hub
+0x103886c0	bam_four_deleg_calc	core(math)	BAM const; four delegations 11385e00/1018b5c0/103aa3d0/1135db30
+0x103229c0	bam_ffff_five_deleg_b	core(math)	BAM const + masks 0x8000/0xffff; 5-call delegation to 10321f90 (sibling of 10322120)
+0x102d3dd0	vtbl11763d08_local_to_world	battle	vtable bind; calls obj_local_to_world_xform + dual BAM consts + FLT_MIN sentinel
+0x103970d0	group_centroid_heading_apply	battle	calls battle_group_centroid_heading_calc x2 + BAM scale — applies group heading to members
+0x1038c3d0	geom_blend_timeline_mix	anim	5x vector blend 1136b670 + dual timeline samplers under TLS guards
+0x102ef6a0	twelve_free_mgr_teardown	ui	12 frees + teardown family 1018ecc0/10304750/101322c0 w/ mgr getters
+0x104758c0	seven_sampler_stream_mix	anim	7x sampler 102128c0 + stream/mgr mix 104c2ca0/104c00f0/10c7de60
+0x10301e70	ten_alloc_five_free_build	core	pure memory assembly: 10 allocs / 5 frees
+0x102c8a30	denorm_bam_single_calc	core(math)	BAM const + denorm sentinels + 0xffff; single vector calc 1135fac0 on packed fields
+0x1047ac10	rand_eps_six_deleg_anim	anim	rand LCG + consts 1/65535 & 1/131072; 6x delegator 104dea10 + vector eval
+0x10470490	globals_642b8_64348_pair	battle	globals DAT_642b8/DAT_64348 + FLT_MIN; sampler pair 10417ef0
+0x1047c350	denorm_alloc_quad_sampler	anim	denorm sentinels; 3 allocs + samplers 10490480/104b72b0
+0x10362350	phys_obb_pair_sweep_caller	battle	calls phys_obb_pair_sweep_query; 4x builder 1034f7f0 + TLS guards — collision sweep stage
+0x10329f30	field242_setter_unroll_copier	battle	242 inlined calls to stride-0x1c keyed setter FUN_10340480 over fields 0x12ec..0x1be4 — bulk unit-state copy
+0x104a84c0	eps001_stream_quant_six	fs	eps 0.001; 6-call sets over stream ops 10c82370/10c900b0 + quantizer 1030d460 (big sibling of 10299900)
+0x10351740	entity_segment_link_batch	battle	6x entity_segment_link_init_cull + push_backs; eps 0.0002 — batch segment-link build/cull
+0x10347160	fltmin_bam_two_probe	battle	FLT_MIN + BAM consts; two probes 1033cae0/113545d0
+0x10484260	fields_17e8_quant_bank	anim	quant 1/4096; dense field bank 0x17e8..0x1814; samplers 10446870/104467d0 + staging
+0x1035d4c0	flags_mask_tls_heavy_build	render	masks 0x2000..0xffffff; 6 TLS guards + 12 allocs + geometry pairs — large FX/object assembly
+0x10366060	tls_triple_functor_invoke	campaign	3 TLS guards; 3x functor invokes 105cd0d0/105cf880 + eval chain — mode-gated callback dispatch
+0x1047d9c0	range40000_sim_step_mega	battle	consts 160000.0(=400^2)/40000.0(=200^2) range squares + BAM + global DAT_642b8; 5x samplers — big per-frame battle sim step (30KB)

@@ -1,0 +1,102 @@
+0x1048e870	facefx_clientevent_play_by_name	middleware-facefx	FxName x11 + FindAnim + PlayClientEvent + FxClientEvent + GetAsCstr under EnterCriticalSection; named client-event playback on actor instance
+0x1048e460	facefx_clientevents_stop_named	middleware-facefx	StopAllClientEvents + Enter/LeaveCriticalSection pair + FindAnim/FxName lookups; teardown counterpart of 1048e870
+0x10463c20	facefx_actorinstance_serialize	middleware-facefx	calls FxActorInstance::Serialize w/ FxArchive param + float curve reads; save/load path
+0x104127b0	facefx_animset_groupname_get	middleware-facefx	uses GetAnimGroupName@FxAnimSet export; returns group name w/ string releases
+0x1042a060	facefx_weightedbones_names_bind	middleware-facefx	GetWeightedBoneTransforms-array accessor (FUN_10298b90 x4) + wide-string assigns x6 + GetNameEntry; bone-name binding list
+0x104178e0	facefx_nameentry_list_collect	middleware-facefx	GetNameEntry x4 over indexed list (bounds-checked getter 112d98d0); name entry array build
+0x10442fa0	facefx_namekey_trig_weight_eval	middleware-facefx	GetNameEntry x3 + single sin/cos + substr split helpers; name-keyed weight curve eval
+0x103abc50	facefx_mountresult_build	middleware-facefx	uses FxMountResult type; builds result obj via FUN_103c4f40 x2 + float helper; archive mount/unmount outcome wrapper
+0x10393f30	facefx_mountresult_consume	middleware-facefx	FxMountResult-typed flow: FUN_101206f0 x8 + FUN_10392b40 x5; consumes mount result codes
+0x104715d0	facefx_actorlist_refs_trig_scan	middleware-facefx	GetReferences@FxList<FxActor*> + sin/cos + CRT guard hooks x4; scans actor list w/ angular metric
+0x1041ff00	variantmeshdef_slotarray_build	render	builds 28-int slot array then wires variantmeshdef_file_ctor objs x19 + weighted-bone-xform consumers x17; VMD slot table assembly
+0x10435e80	battle_objmgr_array_dtor	battle	dtor w/ vtbl PTR_FUN_1177a388: walks 47-slot obj array stride 0x2f calling virtual(0)/el + frees 52 strings; manager teardown
+0x10458a70	math_orient_7joint_trig_chain	math	seven sin/cos pairs chained through joint params; multi-segment orientation propagation
+0x1046a7b0	math_orient_10pair_trig_solve	math	ten sin/cos pairs; dense multi-bone orientation solve
+0x10469fb0	math_orient_3axis_build_b	math	sin/cos x3 + SUB4 x2; euler->matrix compose variant sharing 10404b30 helper
+0x103c25e0	math_orient_3axis_build_a	math	sin/cos x3 + CONCAT44 x2 via 103c0230 getter x4; euler rotation build variant
+0x103fe0f0	math_orient_3axis_compose_c	math	sin/cos x3 + CONCAT44/CONCAT22 packs; third euler-compose variant
+0x10446c00	math_dirvec_sin3_build	math	three sins + CONCAT31 x7; direction-vector from angles build
+0x10476b80	math_heading_trig_resolve	math	ROUND x2 + atan2 + sin/cos + CONCAT44; heading resolve w/ 1044b540 sub-solve
+0x10470490	math_bearing_dual_atan2	math	two atan2 + four sin/cos pairs; dual-bearing direction solve
+0x10439d20	math_arc_pos_sin_cos	math	single sin/cos + CONCAT44 via 11366c10 float lib x3; arc-position eval
+0x1043c680	math_arc_pos_sin_cos_b	math	sin/cos + 11366c10 x3 + CONCAT44; second arc-position variant
+0x1047ac10	math_arc_pos_sin_cos_c	math	sin/cos + 104dea10 x6; third arc-position variant
+0x10488ac0	math_rot2d_pair	math	two sin/cos pairs + 1168cad5 fpu helper; planar rotation pair
+0x1044b540	math_rot2d_pair_b	math	two sin/cos pairs; planar rotate variant w/ 102df760
+0x103d9f00	math_rot2d_quad	math	single sin/cos but 103da4d0 x7 + 103da690 x3; quadrant-aware rotation walk
+0x103f9fa0	math_atan2_multi_branch	math	three atan2 calls + ROUND x2; multi-branch angle resolution
+0x103b0f80	math_atan2_pair_vecblend	math	two atan2 + vector float lib (1136e230/1136b240); blended direction solve
+0x103fda20	math_atan2_curve_sample	math	atan2 + ROUND x2 over 1036a2d0 x5 chain; angle along sampled curve
+0x103cd6e0	math_curve_dense_sample	math	38KB body: ROUND x13 + atan2 + giant switch over sample index; dense keyframe curve evaluator
+0x103d5060	math_curve_angle_sample_b	math	ROUND x5 + atan2 over 1037c7c0 x2 chain; second curve-angle sampler
+0x10399790	math_angdiff_atan2	math	atan2 + ROUND w/ float-lib callees x5; angular difference helper
+0x103cee00	math_atan2_list_reduce	math	atan2 over reduced list (101fe830/101cd290 x4 each); aggregate angle computation
+0x103ff6d0	math_dir_from_cos_sin	math	single sin/cos + CONCAT22 x4; unit direction from angle
+0x103f8a20	math_vecpair_proj_floatlib	math	float-lib only (113545d0 x2, 11361820); vector-pair projection/interp
+0x103dcac0	state_byte_switch_echo	core	switch(this+0x1dd)->copy code to this+0x1dc; mirrored state byte state machine step
+0x10380f00	hash_probe_const_305a9c4b	core	loop probing ptr chains against const 0x305a9c4b; hash-table lookup/probe
+0x103ae630	crt_lazy_static_init_e	core	_atexit + ROUND x4 guarded init; static bootstrap wrapper
+0x103605e0	crt_lazy_static_init_f	core	_atexit + str release pair + 1038e5f0; static bootstrap
+0x103cf4a0	crt_lazy_static_init_g	core	_atexit + 1039e800 one-shot; guarded static init
+0x103c0420	crt_lazy_static_init_h	core	_atexit + 105ecb00 one-shot call; guarded init thunk
+0x104033b0	crt_lazy_static_init_i	core	_atexit + 103b8160 + float lib; guarded static init
+0x103cb2a0	crt_lazy_static_init_j	core	_atexit x4 + string ops; multi-static initializer block
+0x103b88a0	crt_lazy_static_init_k	core	_atexit + sin + ROUND x4 + 12 str ops; large static table initializer
+0x10449980	crt_lazy_static_init_l	core	_atexit + memset zeroing + 101a2d50 x4; static array bootstrap
+0x103c3540	crt_init_with_warning_path	core	_atexit + WARNING macro + string pack; guarded init w/ warning emit
+0x103f50e0	facefx_nodecheck_warn_a	middleware-facefx	vtable probes +0xe8/+0xec/+0xf8 on member iface then WARNING; unsupported-node check (cluster 103d20e0/1018ea90/1034e6a0/1033e110)
+0x103f5c40	facefx_nodecheck_warn_b	middleware-facefx	same cluster + WARNING; node-type check variant B
+0x103f6d70	facefx_nodecheck_warn_c	middleware-facefx	same cluster + WARNING via 103ab370; node check variant C
+0x103e57b0	facefx_nodecheck_warn_d	middleware-facefx	same cluster + WARNING; node check variant D
+0x103e62f0	facefx_nodecheck_warn_e	middleware-facefx	same cluster + WARNING; node check variant E
+0x103ef750	facefx_nodecheck_warn_f	middleware-facefx	same cluster + WARNING; node check variant F
+0x103bb740	facefx_nodecheck_warn_g	middleware-facefx	shared cluster x2 calls each + WARNING; compact node check
+0x103bd2a0	facefx_nodecheck_warn_h	middleware-facefx	largest of WARNING family (18KB); cluster x3 depth; composite node validation
+0x103df130	facefx_nodecheck_warn_i	middleware-facefx	WARNING + thunk_FUN_101a9e40 (GetReferences-adjacent); 30KB traversal/validation hybrid
+0x103bc2b0	facefx_nodevisit_sub4_triplet	middleware-facefx	SUB4 x3 + shared node cluster; node visit arithmetic variant
+0x103e33e0	facefx_node_state_apply_a	middleware-facefx	shared cluster (103d20e0+1018ea90+1034e6a0+1033e110) single pass; node state apply
+0x103dbd70	facefx_node_state_apply_b	middleware-facefx	shared cluster + 103870b0; node state apply variant
+0x103e2d10	facefx_node_state_apply_c	middleware-facefx	shared cluster + 103ace40; node state apply variant
+0x103c43d0	math_interp_round_blend	math	ROUND x2 over 10339700/10379910/103c0230 blend chain; interpolated scalar blend
+0x103d1790	facefx_playlink_chain	middleware-facefx	103f7c50 x3 + play-control callees; playback linkage step
+0x103cc2c0	facefx_vdispatch_guarded	middleware-facefx	guard_check_icall + 103c5f10/103c5b70 pairs; guarded virtual dispatch hub
+0x1040bf40	core_strmap_query_pack	core	string-release heavy (fcc80 x8/fcc50 x6) + 105df600 x3; string-keyed map query path
+0x103ffe00	core_range_pick_block	core	block-dispatch + 105dd020/105dcf60 picks; range-select helper
+0x103e4840	math_blend_sin_round	math	CONCAT22 x3 + ROUND x2 + 10d1a700 x2; blended scalar update
+0x103de810	core_twoobj_update_strings	core	103485e0 x2 + 103a7ee0 x2 + str ops; paired-object updater
+0x10402370	math_atan2_pair_round4	math	atan2 x2 + ROUND x4 + 1135dbc0 x6; dual-angle numeric solve
+0x103feab0	math_orient_full_euler	math	atan2 x3 + ROUND x4 + CONCAT44 x5; full euler extraction/composition
+0x104758c0	core_concat31_six_pack	core	CONCAT31 x6 + 102128c0 TLS-guarded calls x7; packed field builder
+0x103c0d80	core_bigfn_float_pair	core	28KB: float-lib pair (113545d0 x2) + guard hooks; monolithic numeric routine
+0x103c1f40	core_threechain_dispatch	core	chains 103d9500 x3/103a0050 x3/10618570 x2; three-phase dispatcher
+0x103876e0	math_vec16_interpolate	math	CONCAT44 x2 across 6 float-lib callees; 16-float block interpolation
+0x10375bc0	mix_curve_and_angle_step	math	fpatan + ROUND + 10367830 + 105afef0; mixed curve/angle stepping
+0x103845f0	math_twohelper_dispatch	math	two-call dispatcher (10636760 + 103319d0) over 0x15c float locals; numeric prep stub
+0x10360050	core_flagged_numeric_walk	core	flag-guarded walk (bools cVar6/bVar3) w/ 10326210 x4; conditional numeric accumulation
+0x10375840	math_multihelper_blend	math	six float-helper callees (1033b4c0 x2, 1037b640 x2, 1037b7b0 x2); multi-input blend
+0x103b5110	core_strkey_vec4pack_build_a	core	CONCAT44 x11 + 10312d50 x9 + 102198e0 x9; string-keyed vec4 record packer A
+0x10483dc0	core_strkey_vec4pack_build_b	core	CONCAT44 x2 + same builder cluster (102198e0 x12, 101a5c60 x4); record packer B
+0x10473ba0	core_strkey_vec4pack_build_c	core	CONCAT31 x4 + 102198e0 x15; record packer C
+0x1047f980	core_strkey_vec4pack_build_d	core	ROUND x10 + builder cluster; numeric-heavy packer D
+0x103c2d30	mgr_apiclust_quadcaller	core	calls 10cffcf0/cffc30/cff970/cffb80 x3 each; manager-API quad dispatch
+0x1049d630	battle_unit_audio_eventset_link	battle	calls 1049dee0 (battle_anim_unit_audio_eventset_build) x2 + 10cffc30 x2; links unit audio eventsets
+0x10432d20	battle_audio_bankset_link	battle	1030d460 x2 + 10e13b70 + GetNumAnims-adjacent 101a0440; bankset linkage
+0x1049db00	battle_audio_eventset_link_b	battle	10432d20 x2 + string ops; secondary eventset linker
+0x10497ff0	battle_sim_floatwalk_listops	battle	in_ECX float walk over linked ints (unaff_EBP list head); sim-state numeric scan
+0x104093f0	battle_intlist_float_merge	battle	seven int-list pointers + float merges; formation/list numeric merge
+0x10439150	battle_float_field_solver	battle	14 floats + single 11354460 call; field-value solver on entity
+0x1049600d	battle_unaligned_helper_note	battle	note: entry 0x1049600d odd/misaligned - likely mid-function label; calls 10491040 x5 + 104c9970 x4
+0x1049f3c0	core_iface_quad_call	core	11188fa0 x4 + 1134f7b0/f800 pairs; interface quad invocation
+0x10481220	battle_detahelper_x12	battle	104dea10 x12 dominant; repeated battle-helper application
+0x104806d0	battle_detahelper_mix	core	104dea10 + float lib 113545d0 + ROUND; mixed helper/numeric
+0x104ade20	core_strobj_pair_teardown	core	fcc50/fcc80 x5/x3 + 104d6740/1025bc50 pairs; object-pair release path
+0x10413c40	core_strrelease_heavy	core	100d12b0 x11 + minimal else; bulk string release utility
+0x104582b0	ui_strassign_pair_x4	ui	10173c60 x4 (wide assign) + 1048fa60 x3; UI text pair refresh
+0x104484a0	core_strbuild_via_105f5cf0	core	105f5cf0 x3 + str release x4; string build pipeline
+0x104493e0	audio_mgr_call_pair	audio	10e14020/10fef7c0 x2 each + 104a1260; audio-manager paired calls
+0x1045a190	facefx_playctrl_pair	middleware-facefx	101fe830/101cd290 x2 each (play-control cluster); playback ctrl pair
+0x1047bf20	facefx_session_link_pair	middleware-facefx	104b72b0 x2 + session helpers (104901b0/10439150); session linkage
+0x1048f270	core_minimal_release	core	10438540 + single str release pair; tiny cleanup stub
+0x1041deb0	render_vmd_string_slots	render	101150a0 x2 + 1041e890/104385f0; VMD-adjacent string slot fill
+0x10441ec0	render_vmd_entry_link	render	104a6310 x2 + 101a5c60 x2 + 10244270; VMD entry linking
+0x1049f7b0	core_tiny_release_stub	core	one str release pair only; stub
