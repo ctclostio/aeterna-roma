@@ -64,9 +64,17 @@ X:/decompilation/
 - [x] Ghidra headless pipeline validated on Rome2.exe
 - [x] PE metadata extracted (exports/imports)
 - [ ] empire.retail.dll auto-analysis (RUNNING — check `logs/dll_run.log`)
-- [ ] Full decompilation export (~100k+ funcs expected, batched)
+- [x] Full decompilation export (~100k+ funcs expected, batched) — 63,326 funcs in `src_out/empire.retail.dll/decomp/`
+- [~] FuncID pass: 5,452 functions identified (batch1 complete; see `docs/funcid_report.md`, output `work/funcid_batch1_final.tsv`)
 - [ ] RTTI class recovery → headers
 - [ ] Named-symbol propagation (exports, imports thunks)
 - [ ] Module identification (engine subsystems: render, AI, battle, campaign, UI…)
+  - [x] funcid solo pass #1 (2024-08): 250/250 `work/solo_claim_addrs.txt` classified →
+    `work/funcid_solo.tsv` (raw, all parallel runs) + `work/funcid_solo_merged.tsv`
+    (1,066 unique addrs deduped last-wins; subsystem mix: core 421, battle 207,
+    render 103, anim 73, facefx 54, ui 50). Known anchors: MSVC LCG rand
+    (0x343fd+0x269ec3), rad→16-bit angle ×10430.378, anim-id remap switch
+    (8→0x5d9 … default 0x7f3), soldier class letters @obj+0x1dd, unit state
+    byte @obj+0x1dc / idle short 0x11 @+0x1e2, slot array session+0x68→+0xc0.
 - [ ] 64-bit build scaffolding (CMake/MSVC x64)
 - [ ] Pointer-width port of hot code paths
