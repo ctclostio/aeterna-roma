@@ -1,38 +1,45 @@
 #!/usr/bin/env python3
 """Dispatch N parallel pi -p workers to classify/name decompiled functions.
-Each worker gets one shard file (100 addrs) + writes TSV results.
+v2: absolute paths, imperative first-action, per-worker timeout.
 Usage: python dispatch_funcid.py <addr_list> <n_shards>
 """
-import subprocess, sys, os, math, shutil
+import subprocess, sys, os, shutil
 from pathlib import Path
 
-PI = shutil.which('pi') or 'pi'
-
-ADDRS = Path(sys.argv[1])
+ROOT = Path('X:/decompilation')
+ADDRS = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / 'work/batch1_addrs.txt'
 N = int(sys.argv[2]) if len(sys.argv) > 2 else 10
+TIMEOUT = int(sys.argv[3]) if len(sys.argv) > 3 else 3600
 
-addrs = ADDRS.read_text().split()
+PI = shutil.which('pi') or 'pi'
+work = ROOT / 'work'; work.mkdir(exist_ok=True)
+
+addrs = [a.strip() for a in ADDRS.read_text().split() if a.strip()]
 shards = [addrs[i::N] for i in range(N)]
-work = Path('work'); work.mkdir(exist_ok=True)
 
-PROMPT_TMPL = """You are acting as the 'funcid' analyst defined below. Work solo, do not spawn subagents.
+PROMPT_TMPL = """You are the funcid analyst (reverse-engineering decompiled C). Execute this mission NOW, solo.
 
+FIRST ACTION (mandatory, do not skip, do not ask questions): use your read tool on:
+{shard_file_abs}
+
+That file lists function addresses, one per line. For each address A in it, analyze the file:
+{decomp_dir}\\{{A}}_FUN_{{A}}.c
+If missing, run: ls "{decomp_dir}" | grep -i "^{{A}}"
+
+ANALYST RULES:
 {agent_prompt}
 
-YOUR SHARD: read addresses from {shard_file} (one per line).
-For each address A: the function source is src_out/empire.retail.dll/decomp/{pfx}A_FUN_A.c
-where {{pfx}} is empty (files are named like 101f9770_FUN_101f9770.c).
-If that exact file is missing, find it with: ls src_out/empire.retail.dll/decomp | grep -i "^A"
+OUTPUT CONTRACT (mandatory): append TSV lines to exactly this path as you go (every 5-10 functions):
+{out_file_abs}
+Line format: {{addr}}<TAB>{{proposed_name}}<TAB>{{subsystem}}<TAB>{{short evidence}}
+Use bash echo >> or a python one-liner to append. Never hold all results until the end.
 
-Write TSV lines (append every 10) to: {out_file}
-Format: <addr>\t<proposed_name>\t<subsystem>\t<evidence>
-Skip any function whose file contains DECOMPILATION FAILED.
-Process ALL addresses in your shard, then reply with just: SHARD COMPLETE <count>
+When every address is processed, reply with exactly: SHARD COMPLETE <count>
+If you cannot access files, reply SHARD FAILED <reason>.
 """
 
-AGENT_PROMPT = Path('C:/Users/Clayton/.pi/agent/agents/funcid.md').read_text()
-# strip frontmatter
-AGENT_PROMPT = AGENT_PROMPT.split('---',2)[-1].strip()
+agent_md = (Path('C:/Users/Clayton/.pi/agent/agents/funcid.md')).read_text()
+AGENT_PROMPT = agent_md.split('---', 2)[-1].strip()
 
 procs = []
 for i, shard in enumerate(shards):
@@ -40,13 +47,29 @@ for i, shard in enumerate(shards):
     shard_file.write_text('\n'.join(shard))
     out_file = work / f'funcid_{i:02d}.tsv'
     out_file.write_text('')
-    prompt = PROMPT_TMPL.format(agent_prompt=AGENT_PROMPT, shard_file=shard_file,
-                                pfx='', out_file=out_file)
-    log = open(work / f'worker_{i:02d}.log', 'w')
+    prompt = PROMPT_TMPL.format(
+        shard_file_abs=str(shard_file).replace('/', '\\'),
+        decomp_dir=str(ROOT / 'src_out/empire.retail.dll/decomp'),
+        agent_prompt=AGENT_PROMPT,
+        out_file_abs=str(out_file).replace('/', '\\'),
+    )
+    log = open(work / f'worker_{i:02d}.log', 'w', encoding='utf-8')
     p = subprocess.Popen([PI, '-p', '--no-session', prompt],
-                         stdout=log, stderr=subprocess.STDOUT, cwd='X:/decompilation')
+                         stdout=log, stderr=subprocess.STDOUT, cwd=str(ROOT))
     procs.append((i, p))
-    print(f"launched worker {i:02d}: {len(shard)} addrs pid={p.pid}")
+print(f"launched {len(procs)} workers", flush=True)
 
-codes = [(i, p.wait()) for i, p in procs]
-print("exit codes:", codes)
+import time
+deadline = time.time() + TIMEOUT
+alive = dict(procs)
+while alive and time.time() < deadline:
+    time.sleep(20)
+    for i, p in list(alive.items()):
+        if p.poll() is not None:
+            done = sum(1 for _, pp in procs if pp.poll() is not None)
+            print(f"worker {i:02d} exited code={p.returncode} ({done}/{len(procs)} done)", flush=True)
+            del alive[i]
+for i, p in alive.items():
+    print(f"worker {i:02d} TIMEOUT - killing", flush=True)
+    p.kill()
+print("ALL WORKERS FINISHED", flush=True)
