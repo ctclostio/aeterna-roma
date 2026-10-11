@@ -1,15 +1,34 @@
 #include "ported_100edd70_full_entry.h"
 
-#define main rome2_unified_entry_regression_main
-#include "test_startup_100edd70_unified_entry.c"
+#define main rome2_caller_closure_regression_main
+#include "test_startup_100edd70_caller_closure.c"
 #undef main
 
-#define TEST_EVENT_PREFIX_BASE UINT32_C(0x600)
+#define TEST_EVENT_FULL_REGISTRATION_BASE UINT32_C(0x700)
+#define TEST_EVENT_FULL_TERMINAL_BASE UINT32_C(0x800)
+#define TEST_EVENT_FULL_PREFIX_BASE UINT32_C(0x900)
 
 static rome2_100edd70_full_entry_result full_entry_result;
 static rome2_100edd70_full_entry_result full_entry_initial_result;
 static rome2_100edd70_prefix_effects full_entry_prefix_effects;
+static rome2_100edd70_registration_effects full_entry_reg_effects;
+static rome2_100edd70_terminal_effects full_entry_term_effects;
+
+static test_trace full_entry_prefix_trace;
 static uint32_t full_entry_prefix_count;
+static uint32_t full_entry_registration_count;
+static uint32_t full_entry_terminal_count;
+
+static const uint16_t full_exact_literal[22] = {
+    UINT16_C(0x002d), UINT16_C(0x006e), UINT16_C(0x006f),
+    UINT16_C(0x005f), UINT16_C(0x0065), UINT16_C(0x0078),
+    UINT16_C(0x0063), UINT16_C(0x0065), UINT16_C(0x0070),
+    UINT16_C(0x0074), UINT16_C(0x0069), UINT16_C(0x006f),
+    UINT16_C(0x006e), UINT16_C(0x005f), UINT16_C(0x0068),
+    UINT16_C(0x0061), UINT16_C(0x006e), UINT16_C(0x0064),
+    UINT16_C(0x006c), UINT16_C(0x0065), UINT16_C(0x0072),
+    UINT16_C(0x0000)
+};
 
 static void full_entry_prefix_emit(
     void *context,
@@ -19,13 +38,56 @@ static void full_entry_prefix_emit(
     ++full_entry_prefix_count;
     test_append_event(
         trace,
-        TEST_EVENT_PREFIX_BASE + (uint32_t)step.kind);
+        TEST_EVENT_FULL_PREFIX_BASE + (uint32_t)step.kind);
+}
+
+static void full_entry_reg_emit(
+    void *context,
+    rome2_100edd70_registration_step step)
+{
+    test_trace *trace = (test_trace *)context;
+    ++full_entry_registration_count;
+    test_append_event(
+        trace,
+        TEST_EVENT_FULL_REGISTRATION_BASE + (uint32_t)step.kind);
+}
+
+static void full_entry_term_emit(
+    void *context,
+    rome2_100edd70_terminal_step step)
+{
+    test_trace *trace = (test_trace *)context;
+    ++full_entry_terminal_count;
+    test_append_event(
+        trace,
+        TEST_EVENT_FULL_TERMINAL_BASE + (uint32_t)step.kind);
 }
 
 static void full_entry_set_result_sentinel(void)
 {
     memset(&full_entry_result, TEST_RESULT_BYTE, sizeof(full_entry_result));
     full_entry_initial_result = full_entry_result;
+}
+
+static void full_write_exact_literal(test_fixture *fixture)
+{
+    uint32_t index;
+
+    for (index = UINT32_C(0); index < UINT32_C(22); ++index) {
+        test_write_u16_le(
+            fixture->text.bytes + TEST_TEXT_OFFSET + index * UINT32_C(2),
+            full_exact_literal[index]);
+    }
+}
+
+static void full_write_mismatch_literal(test_fixture *fixture)
+{
+    test_write_u16_le(
+        fixture->text.bytes + TEST_TEXT_OFFSET,
+        UINT16_C(0x0061));
+    test_write_u16_le(
+        fixture->text.bytes + TEST_TEXT_OFFSET + UINT32_C(2),
+        UINT16_C(0x0000));
 }
 
 static int full_run_route(
@@ -46,44 +108,45 @@ static int full_run_route(
     uint32_t expected_tail =
         policy == ROME2_INVALID_PARAMETER_INSTALL_HANDLER ? UINT32_C(2) : UINT32_C(0);
     uint32_t expected_epilogue = UINT32_C(10);
-    uint32_t expected_total_events;
+    uint32_t expected_unified_events;
     int failed = 0;
 
     if (ge_route == ROME2_100EDD70_GAME_EXPLORER_DENIED_ACCESS) {
         expected_prefix = (prior_alloc ? 14U : 13U);
-        expected_total_events = expected_prefix;
+        expected_unified_events = UINT32_C(0);
     } else if (ge_route == ROME2_100EDD70_GAME_EXPLORER_VERIFIED_ACCESS) {
         expected_prefix = (prior_alloc ? 13U : 12U);
-        expected_total_events = expected_prefix +
+        expected_unified_events =
             expected_registration + (UINT32_C(45) + poll_count) + expected_tail + expected_epilogue;
     } else {
         /* BYPASS_CLASSNOTREG */
         expected_prefix = (prior_alloc ? 11U : 10U);
-        expected_total_events = expected_prefix +
+        expected_unified_events =
             expected_registration + (UINT32_C(45) + poll_count) + expected_tail + expected_epilogue;
     }
 
     test_init_fixture(fixture, length, poll_count, UINT32_C(0), UINT32_C(1), 0, 0);
     if (policy == ROME2_INVALID_PARAMETER_SKIP_HANDLER) {
-        unified_write_exact_literal(fixture);
+        full_write_exact_literal(fixture);
     } else {
-        unified_write_mismatch_literal(fixture);
+        full_write_mismatch_literal(fixture);
     }
 
+    memset(&full_entry_prefix_trace, 0, sizeof(full_entry_prefix_trace));
     full_entry_prefix_effects.emit_step = full_entry_prefix_emit;
-    full_entry_prefix_effects.context = &fixture->trace;
-    full_entry_prefix_effects.context_byte_count = sizeof(fixture->trace);
+    full_entry_prefix_effects.context = &full_entry_prefix_trace;
+    full_entry_prefix_effects.context_byte_count = sizeof(full_entry_prefix_trace);
     full_entry_prefix_count = UINT32_C(0);
 
-    unified_registration_effects.emit_step = unified_registration_emit;
-    unified_registration_effects.context = &fixture->trace;
-    unified_registration_effects.context_byte_count = sizeof(fixture->trace);
-    unified_registration_count = UINT32_C(0);
+    full_entry_reg_effects.emit_step = full_entry_reg_emit;
+    full_entry_reg_effects.context = &fixture->trace;
+    full_entry_reg_effects.context_byte_count = sizeof(fixture->trace);
+    full_entry_registration_count = UINT32_C(0);
 
-    unified_terminal_effects.emit_step = unified_terminal_emit;
-    unified_terminal_effects.context = &fixture->trace;
-    unified_terminal_effects.context_byte_count = sizeof(fixture->trace);
-    unified_terminal_count = UINT32_C(0);
+    full_entry_term_effects.emit_step = full_entry_term_emit;
+    full_entry_term_effects.context = &fixture->trace;
+    full_entry_term_effects.context_byte_count = sizeof(fixture->trace);
+    full_entry_terminal_count = UINT32_C(0);
     full_entry_set_result_sentinel();
 
     status = rome2_port_100edd70_run_full_entry_sequence(
@@ -111,8 +174,8 @@ static int full_run_route(
         &full_entry_prefix_effects,
         &fixture->effects,
         &fixture->continuation_effects,
-        &unified_registration_effects,
-        &unified_terminal_effects,
+        &full_entry_reg_effects,
+        &full_entry_term_effects,
         &fixture->temporary_owner,
         &fixture->persistent_owner,
         &fixture->lifecycle,
@@ -122,8 +185,11 @@ static int full_run_route(
         status == ROME2_100F1BB0_OWNED_OK,
         case_name, "full entry sequence returned non-OK status");
     failed |= test_expect(
-        fixture->trace.event_count == expected_total_events,
-        case_name, "total event count formula differs");
+        full_entry_prefix_trace.event_count == expected_prefix,
+        case_name, "prefix trace event count differs");
+    failed |= test_expect(
+        fixture->trace.event_count == expected_unified_events,
+        case_name, "unified trace event count formula differs");
     failed |= test_expect(
         full_entry_prefix_count == expected_prefix,
         case_name, "emitted prefix count differs");
@@ -139,10 +205,10 @@ static int full_run_route(
             full_entry_result.exit_code == 0U,
             case_name, "early exit code is non-zero");
         failed |= test_expect(
-            unified_registration_count == 0U,
+            full_entry_registration_count == 0U,
             case_name, "registration emitted on early exit");
         failed |= test_expect(
-            unified_terminal_count == 0U,
+            full_entry_terminal_count == 0U,
             case_name, "terminal emitted on early exit");
     } else {
         failed |= test_expect(
@@ -163,8 +229,8 @@ int main(void)
 {
     int failed = 0;
 
-    /* First run full unified entry and caller closure regressions (51 cases) */
-    failed |= rome2_unified_entry_regression_main();
+    /* First run all caller closure regression tests (44 cases) */
+    failed |= rome2_caller_closure_regression_main();
 
     /* Route A: Modern OS Bypass Route (REGDB_E_CLASSNOTREG) without prior alloc */
     failed |= full_run_route("full bypass skip P1 no-prior",
@@ -230,7 +296,7 @@ int main(void)
         rome2_100f1bb0_owned_status status;
 
         test_init_fixture(fixture, UINT32_C(21), UINT32_C(1), UINT32_C(0), UINT32_C(1), 0, 0);
-        unified_write_exact_literal(fixture);
+        full_write_exact_literal(fixture);
         status = rome2_port_100edd70_run_full_entry_sequence(
             (void *)(uintptr_t)TEST_ARGUMENT1,
             fixture->caller_position2,
@@ -252,8 +318,8 @@ int main(void)
             &full_entry_prefix_effects,
             &fixture->effects,
             &fixture->continuation_effects,
-            &unified_registration_effects,
-            &unified_terminal_effects,
+            &full_entry_reg_effects,
+            &full_entry_term_effects,
             &fixture->temporary_owner,
             &fixture->persistent_owner,
             &fixture->lifecycle,
@@ -270,6 +336,6 @@ int main(void)
         return 1;
     }
     (void)printf(
-        "100edd70 full entry sequence: PASS (51 unified regression + 15 full entry cases)\n");
+        "100edd70 full entry sequence: PASS (44 regression + 15 full entry cases)\n");
     return 0;
 }
