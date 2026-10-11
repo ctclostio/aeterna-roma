@@ -80,7 +80,7 @@ def _compact(text: str) -> str:
 def _check_exact(
     text: str, expected: tuple[int, str], label: str, findings: list[str]
 ) -> None:
-    data = text.encode("utf-8")
+    data = text.replace("\r\n", "\n").replace("\r", "\n").encode("utf-8")
     if len(data) != expected[0]:
         findings.append(f"{label} byte count changed")
     if _sha256(data) != expected[1]:
