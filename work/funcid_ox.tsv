@@ -1,0 +1,305 @@
+0x10002070	nvapi_unload_library	render	FreeLibrary DAT_121254e8 + zero handle/iface globals; counterpart of registry load
+0x10002092	nvapi_load_via_registry_clsid	render	HKLM SOFTWARE\Classes\CLSID {FE750200..} default value -> LoadLibraryA -> GetProcAddress "GetInterface"(5) stored in DAT_12126c28
+0x1000218b	nvapi_iface_vcall_0x34	render	returns 0x426 if iface uninit else virtual call [DAT_12126c28+0x34]; NvAPI-style query via GetInterface obj
+0x100021e0	nvapi_resolve_entrypoints	render	GetProcAddress nvapi_QueryInterface/nvapi_pepQueryInterface; resolves IDs 0xad298d3f & 0x150e828 (+0x33c7358c/0x593e8644); clears 0x137-dword table on fail
+0x10002320	nvapi_load_library_indexed	render	LoadLibraryW "nvapi.dll"/"nvpowerapi.dll" by index then FUN_100021e0 resolve; guards DAT_121264a8[idx]
+0x100023d0	nvapi_wait_and_load	render	poll flag DAT_121264b8[idx] w/ Sleep(100) x10 timeout then FUN_10002320 load
+0x10002430	nvapi_unload_refcounted	render	resolves unload iface ids 0xd7c61344/0xd22bdd7e, decrements per-lib refcount, on last release FreeLibrary + wipes 0x137-dword state table
+0x100025f0	nvapi_thunk_call_f951a4d1	render	lazy-resolve QueryInterface id 0xf951a4d1 into DAT_121264f4 then 2-arg call bracketed by hook fns DAT_121264a0/a4; Interlocked refguard
+0x100026c0	nvapi_thunk_call_4b708b54	render	same thunk pattern, id 0x4b708b54 cached in DAT_12126708, 2 args
+0x10002790	nvapi_thunk_call_fceac864	render	same thunk pattern, id 0xfceac864 cached in DAT_12126720, 3 args
+0x10002860	nvapi_thunk_call_91123d6a	render	same thunk pattern, id 0x91123d6a cached in DAT_12126728, 3 args
+0x10002930	nvapi_thunk_call_37e7191c	render	same thunk pattern, id 0x37e7191c cached in DAT_1212672c, 3 args
+0x10002a00	static_obj_ctor_critsec_guard	core	thiscall ctor sets vtable PTR_FUN_11920740; one-shot lazy init _DAT_121269bc + InitializeCriticalSection(DAT_121269c0) + atexit dtor
+0x10002a50	static_obj_ctor_cs_guard_dtor_mode	core	clone of 10002a00 ctor+CS lazy-init; byte arg routes to thunk_FUN_100fcc50 (vector-deleting-dtor style)
+0x10002ab0	nvapi_init_refcount_cs	render	CS-guarded NvAPI init: calls resolved DAT_12126494, bumps refcounters DAT_121264cc/DAT_12126478 on success
+0x10002bc0	nvapi_unload_cs	render	EnterCriticalSection wrapper around FUN_10002430(0) refcounted unload
+0x10002c50	strsafe_wcsncpy	crt	wide strncpy w/ HRESULT contract: 0x80070057 E_INVALIDARG / 0x8007007a STRSAFE_E_INSUFFICIENT_BUFFER, always NUL-terminates
+0x10002cb0	strsafe_wcsncpy_maxsrc	crt	same as 10002c50 but also bounded by src count param_4 (StringCchCopyNW semantics)
+0x10002d20	strsafe_wcslen_s	crt	StringCchLengthW: scans wstr up to cchMax, writes char count to param_3, E_INVALIDARG guards
+0x10002d70	nvapi_sysdir_path_concat_w	render	GetSystemDirectoryW x2 + LocalAlloc(0x40) + backslash fixup + appends wide name (in EBX); builds full system32 dll path
+0x10002e00	nvapi_path_has_separator_w	render	scans wide str (reg ESI/EDI args) for '\' or '/'; true if any sep found
+0x10002e40	nvapi_path_is_absolute_w	render	true if starts with sep or matches "X:\" / "X:/" drive-root pattern via _isalpha + ':' check
+0x10002e90	nvapi_get_sysdir_alloc_w	render	SetLastError(0); size-query GetSystemDirectoryW then LocalAlloc(0x40) exact-size copy; frees on failure
+0x10002ee0	crt_ptr_adj_2_unk	crt	calls FUN_116be8d3, returns result+2 else reg arg; tiny helper, purpose unresolved
+0x10002f00	crt_wpath_find_ext	crt	scans back from end over non '\'/non '.' chars to locate file extension dot; returns end ptr if none
+0x1139faf0	sea_colour_overlay_component_ctor	render	TLS-singleton "Sea::Colour Overlay"; normalizes dir vec (y=-DAT_120f7860), vtable PTR_FUN_118b9c04, allocs 0x34 render obj FUN_113caa10
+0x10e90220	campaign_commodity_unit_names_table_bind	campaign	L"commodity_unit_names_tables" DB/script fetch -> FUN_10c99c60; sets vtable PTR_FUN_117e1234 + stores handle +4
+0x10ef3450	facefx_named_object_register_class	middleware-facefx	FUN_10ef0170("FxNamedObject",0,0) class reg after sub-ctor; delegates FUN_10ede730 family
+0x11295d00	battle_unit_taking_damage_anim_trigger	battle	flag +0xa1 gate; vtable +0x88; picks FxName "taking_damage" or "wavering" (flags +0x41/+0x42/+0xa3,+0x10,+0x4b) and plays it
+0x10e8f1b0	facefx_name_intern_stream_deserialize	middleware-facefx	5x FUN_10597e60 reads then FxName::GetNameEntry sum-interning (cache-combine) of 5 name members +4..+0x10
+0x10f83790	battle_unit_size_lookup_rank_x_mountclass	battle	concat PTR_s_small_[rank<6] x PTR_s_land__[class<0xc] FxNames; lookup +4 count, scale by +0x84/+0x3c float, x2 if last arg
+0x1016eee0	anim_pop_queued_track_apply	anim	pops LIFO slot stack this+0xfc/0x100 after FUN_1038dc00 gate; vcall +0x5c(name,param,0,1) then stores len at obj[0x44]
+0x1016efa0	cam_anim_update_speed_clamped	anim	queries duration via vtbl +0x10/+0x14 min FUN_10192920 time; per-list FUN_106188d0 ticks; dispatch FUN_10172210 vs FUN_1018bc70 by mode==0/3/5
+0x1016f0f0	job_post_payload_count	core	if this+0x2ec set: posts {this+0x2e4,0,count} job via FUN_11381460/FUN_1015e3b0 branch on DAT_1193798d flag
+0x1016f190	container_iter_next_stride12	core	iterator op++ over vector of 12-byte records; maintains iter fields this[1]/this[2], refreshes cur on advance
+0x1016f1f0	flag_get_11afa8e6	core	returns global byte DAT_11afa8e6
+0x1016f200	battle_validate_all_groups_ready	battle	walks group arrays (stride 0x22c slots w/ ready byte+0x134) then item lists checking flags +0x260/+0xd0->0xc4 and item+0x27c!=id -> false
+0x1016f320	find_first_active_in_two_lists	anim	scans ctx+0x4a0 and +0x4b4 lists for entry w/ byte+0x48c==1 && [entry+0x488]->+0x10==0
+0x1016f3a0	slots_all_idle_check	core	triple-nested walk (counts at +0x18/+0x1c, sublists stride 0xc0/0x50) verifying byte+0xbc==0 everywhere
+0x1016f420	getter_this_d8	core	returns *(this+0xd8)
+0x1016f430	getter_this_60	core	returns *(this+0x60)
+0x1016f440	getter_deref30_d8	core	returns *(*(this+0x30)+0xd8)
+0x1016f450	facefx_track_stats_by_names	middleware-facefx	resolves two FxName ids; walks actor groups(+0x1c/+0x20)->tracks(+0xec)->keys comparing key+0x1c/+0x28 ids, tallying counters p4/p5/p6
+0x1003f110	script_register_ccq_demand_surrender	script	registers cb FUN_10822db0 under "CCQ_DEMAND_SURRENDER" in global registry DAT_11eed978 (double reg + FxName intern)
+0x1127dc50	ui_battle_hud_timer_name_index_build	ui	FUN_1100ea00("BattleHudTimer"); walks global chain DAT_1202e6fc inserting 12B nodes into 0xc-stride bucket hashmap w/ load-factor rehash
+0x109b6560	campaign_agent_leave_force_event_create	campaign	FxName "agent_leave_force" -> FUN_109b63e0 builder; vtable PTR_FUN_117bf90c
+0x10e54960	facefx_name_pair_u32_deserialize	middleware-facefx	2x FUN_10597e60 name reads + 2 raw u32s from stream, GetNameEntry sum-interning
+0x11068d50	ui_dynamic_elem_flags_parse	ui	layout keys "dy_timer"/"dy_name"/"flag_%d"x5 via FUN_100d1790 -> growable u32 array cap+0x50 cnt+0x54 data+0x58
+0x109c7d50	campaign_settlement_expansion_construction_info_load	campaign	DB rec "SETTLEMENT_EXPANSION_CONSTRUCTION_INFO" bind + 3 field readers FUN_1015e1d0/de60
+0x1016f540	preset_vec3_by_type_select	render	switch(0..4) copies one of five global vec3 constant triples (DAT_11afb450/948/500/028/4a8 families) into out
+0x1016f640	preset_vec3_copy_b	anim	copies global triple DAT_11afb948/94c/950 to out (preset set B)
+0x1016f670	preset_vec3_copy_c	anim	copies global triple DAT_11afb500/504/508 to out (preset set C)
+0x1016f6a0	preset_vec3_copy_a	anim	copies global triple DAT_11afb450/454/458 to out (preset set A)
+0x1016f6d0	facefx_track_pct_by_types	middleware-facefx	walks groups->tracks (+0xec), counts tracks whose FUN_10d99350 type in {0xd,0xe,0xf,0x1f,0x20}; returns pct*100
+0x1016f7e0	arr_elem_getter_stride8_field	core	returns *(base+4+idx*8); indexed field accessor over 8-byte records
+0x1016f7f0	facefx_count_tracks_by_anim_name	middleware-facefx	walks groups(+0x1c)->tracks(+0xec), key+0x40->+0x28 id vs FUN_10e2b130(name)+0x10; returns match count
+0x1016f870	facefx_pct_tracks_passing_pred	middleware-facefx	per-track vtbl deref +0x9c8 predicate(param); returns matched/total*100
+0x1016f980	getter_bool_aa8	core	returns *(this+0xaa8)!=0
+0x1016f990	anim_state_check_eq6	anim	if slot idx this+0x4dc active, requires vtbl+300 on [this+0x4d0+idx*4] return 6 else false
+0x1016f9c0	ui_gate_predicate_164_a4_99d	ui	this+0x164==0 && ((FUN_1018e8c0() && this+0xa4==0) || byte+0x99d) -> true
+0x1016f9f0	battle_dir_capability_query	battle	angle bands map to "right_flank"/"front"/"left_flank"/"behind"; queries FUN_100f28e0(obj,name)
+0x1016fac0	battle_spatial_radius_enemy_query	battle	TLS-static cell list (FUN_1018cb20) -> hash walk [ctx->68]->+0xb0 buckets; filters flag 0x20/+0xf4 vtbl/owner!=param_1; dist2<r2 hit
+0x1016fcc0	battle_obox_own_unit_test	battle	same bucket walk w/ owner==param_1; OBB test |dot(dx,c5)+dot(dy,c6)|<=w/2 && c8/c7 pair <=h/2
+0x1016fea0	facefx_find_key_near_pos	middleware-facefx	4-level walk groups(+0xac)->items(+0x1c)->tracks(+0xec)->keys(+0x104); first key flag+0x38 w/ dist2<(x,y) returns it
+0x1016ffc0	facefx_any_node_near_pos	middleware-facefx	walks groups(+0xac)->items(+0x1c)->nodes(+0x114/+0x118); vtbl+8 gate + pos vtbl-deref dist2<param -> true
+0x101700b0	ui_gated_flag_set_28	ui	gate: !FUN_1018e8c0 && !FUN_10d99350(3) && vtbl+0xf4 on anim slot; then *(this+0x28)=1
+0x10170110	ui_gated_flag_set_4c	ui	identical gate to 101700b0; sets *(this+0x4c)=1
+0x10170170	ui_gated_flag_set_38	ui	identical gate; sets *(this+0x38)=1
+0x101701d0	ui_gated_vcall_18_ui	ui	identical gate; then virtual call [+0x18](1) action trigger
+0x10170230	ui_gated_flag_set_5c	ui	identical gate family; sets *(this+0x5c)=1
+0x10170290	ui_gated_flag_set_31	ui	identical gate family; sets *(this+0x31)=1
+0x101702f0	ui_gated_vcall_f8_14	ui	same gate; vcall [+0x14] on [this->c+0xf8+idx*8](1) then *(this+0x28)=1
+0x10170370	ui_toggle_state_20_with_sfx	ui	bool arg: FUN_101acce0(10/0xb/0xc) state markers, sets this+0x20, on-off path FUN_1064d2b0 + FUN_10693d70(...,-1,1,0,1) event fire
+0x10170410	ui_set_flag10_and_update	ui	this+0x9a4 bit4 set/clear by param_1 then FUN_10182160(arg,this+0x178/17c)
+0x10170460	getter_idx_array_at_14	core	returns *(this->0x14 + idx*4)
+0x10170470	facefx_cursor_current_item	middleware-facefx	via this->c0 facefx set (+0xac/+0xb0): bounds-check cursor {p8,p10} and return group's anim ptr
+0x101704b0	facefx_cursor_get_a	core	returns *(cursor.p8 + cursor.p10*8) raw slot
+0x101704c0	facefx_find_animgroup_by_id	middleware-facefx	walks FxAnimGroup array (stride 0x2c) until GetNumAnims==ECX id; NULL if absent
+0x106c5230	campaign_replay_save_serialize	campaign	writes recs "CAMPAIGN_REPLAY"+"BATTLE_REPLAY_BLOCK", loops N@+0x5c x 8B entries @+0x60 as TLS-cached "CAMPAIGN_BATTLE_REPLAY"
+0x114a0060	facefx_config_include_resolve	middleware-facefx	FxName path w/ ':' abs branch; probes "personal_config.h" then DAT_118deca8; scans 12B dir entries @+0x14 -> FUN_114ec090
+0x1021bf90	script_battle_sound_effect_node_exec	script	named-node interp: handler lookup ids 1/-0x2713, tag "battle_sound_effect", result codes -2/-3; debug path prints Lunar<> type msg
+0x102d2a10	facefx_actor_pose_limits_parse	middleware-facefx	brace parser keys max_horizontal/vertical/roll/pitch/yaw; mismatch -> concat err "expecting {/}" + Error:%s + TerminateProcess
+0x109fcaa0	ui_campaign_populace_happiness_binding_update	ui	key PTR_s_FACTION_PROVINCE_POPULACE_HAPPIN*[idx]; 2-name match scan of province list; swaps cache ecx+0x11 + deep vtable notify
+0x11097500	ui_selection_highlight_swap_anim	ui	on sel change @+0x90 replays layout anim "selected_highlight" off/on; spawns 0x14+0xc4 attachable (PTR_FUN_11865ac8); else poll zoom->+0xb4
+0x10170520	script_opt_bool_parse	script	fetches option via FUN_10105360 else string lookup; true iff matches DAT_1174bc40 token or literal L"true"
+0x101705f0	ui_prop_float_bit3_gate	ui	FUN_100d2740(3,1) ctx, FUN_11346920/67a0 fetch; bit(3) of flags dword decides value vs 0; pop ctx
+0x10170670	core_vector_uint_assign	core	std::vector<uint>::assign(this+0x18c..0x194): free old (FUN_100fcc50), grow x2 via FUN_100fcc80, copy range loop
+0x10170a20	ui_state_flags_recompute	ui	rebuilds this+0x9a0 bitmask bit-by-bit (0x1,0x8,0x10,0x20,0x40,0x80,0x100,0x200,0x400) from selection/mode checks FUN_102947b0/FUN_10174ca0(9)/FUN_10d99350(10)
+0x10e43580	audio_projectiles_table_bind	audio	L"audio_projectiles_tables" fetch; builder FUN_10e495e0 fills this+3/+0xc; vtable PTR_FUN_117e0eb4
+0x11225690	ui_diplomacy_faction_list_ctor	ui	FUN_1100ea00("DiplomacyFactionList"); dual sub-objs (1188a4d0/1188a9fc); hash-inserts 0x20B nodes from chain DAT_1202ce88 w/ load-factor rehash
+0x112092f0	ui_mp_battle_list_row_populate	ui	keys funds/padlock/players/friends/location/battle_type; state byte+0xb4 -> in-progress/incompatible_version; tooltip L"%S
+0x114ca490	render_rect_tile_flags_clear	render	rect test vs +0xc4..+0xd0; FUN_105d0080 collects {ptr,shift} tiles; zeroes byte at tile+this+0x9c<<shift
+0x11125eb0	ui_bodyguard_list_selection_sync	ui	keys bodyguard_list/list_box/unit_icon; items prefixed "bodyguard_candidate_0"; faction cmp +0x24; selected/inactive state walk
+0x10b966c0	campaign_diplomacy_marriage_option_get	campaign	intern "diplomatic_option_marriage" -> return entry+0x10
+0x10d9e970	campaign_map_regions_table_bind	campaign	L"campaign_map_regions_tables" fetch -> FUN_10c99c60; vtable PTR_FUN_117e0eb4; handler FUN_10da6de0 @+2
+0x10d38890	battle_db_unit_special_abilities_load	battle	lazy cache @+0x1574; "Loading database: %s" + PeekMessageW pump; 5 subloaders -> 0x58 recset FUN_10cc42b0; logs "(%d records)"
+0x10168150	battle_setup_victory_condition_kill_enemy_get	battle	TLS-guarded static rec init "BATTLE_SETUP_VICTORY_CONDITION_KILL_ENEMY"; returns &DAT_11afc0dc
+0x10fb4dc0	net_steam_auth_response_parse	net	jsoncpp readers: keys steamid/recheck_in/error -> u64@+0x40 u32@+0x48 FxName; iter FUN_116ca630
+0x10c96ac0	cai_construction_synergy_policies_table_bind	campaign	L"cai_construction_system_synergy_policies_tables"; builder FUN_10c9e410 -> this+3/+0xc
+0x10e1a080	battle_entities_table_bind_max_type9	battle	L"battle_entities_tables" builder FUN_10e25130; scans arr for type==9 (+0x10) keeping max float +0x48 -> ecx+0x16
+0x10170d40	member_ptr_getter_24	core	returns this+0x24 address
+0x10170d50	sel_check_current_type5	unknown	FUN_103eb8b0 idx via vtbl; bounds this+0x18, arr this+0x14; true if elem+4==5
+0x10170d90	battle_wind_level_update	battle	wind mag -> level0..4 names "wind_level_N", LCG(0x343fd) jitter clamped 2..17, normalized vec via FUN_1016ed90/ee30
+0x10170f00	unit_replenishment_transfer	battle	cap [ctx->1c]+0x34 minus budget this+0x678; rate = dByte(+0x8b0)/18*2; adds rounded amt to param_1+0x674
+0x111f06f0	ui_num_input_rows_init	ui	per item of list this+0x78: layout lookup key "num_input" then FUN_110358d0(param_1)
+0x10e585f0	campaign_startpos_naval_units_table_bind	campaign	L"start_pos_naval_units_tables" fetch; handler LAB_10e16f00 @+2; vtable PTR_FUN_117e0eb4
+0x11407190	render_ssao_blur_xy_passes_create	render	postproc objs "SSAOX_BLUR_X"/"SSAOX_BLUR_Y" (0x6c) + RTs via FUN_113caa10(0x15,...,0x84,0xd); stored +0x3e4/+1000/+0x3ec
+0x110ae1b0	ui_stance_factor_icons_row_build	ui	recs stride 44B w/ f32 weight; skin "UI/skins/default/%S"; sel gets dy_value neutral|positive|negative + L"%d%%"; x-advance cursor
+0x114e0aa0	vfx_references_instantiate	render	cfg "vfx_references" rows: vfx_ref/inst_name/scale>=0.01/start_time/infinite_life/pos_xyz/tint_rgba->byte RGBA; RB-map insert; proto defs stride 0x54 matched
+0x10005660	core_envvar_battle_camera_decrease_min_distance_reg	core	EnvironmentVariable.cpp:149 reg "battle_camera_decrease_min_distance <true|false>" desc "go down even more"; vt PTR_FUN_1173dac4 into DAT_119f1d10
+0x10171410	ui_sel_or_hover_id_get	ui	vtbl+0x88 (hover) -> [+0x4a8]->+0xd8 else vtbl+0x80 (selected) -> [+0x30]->+0xd8; 0 if none
+0x10171460	ui_vtbl78_field10_get	ui	vtbl+0x78 obj -> returns *(obj+0x10), -1 if none
+0x10171490	getter_2528	core	returns *(this+0x2528)
+0x10171e70	disp_vtbl1dc_call	unknown	vtbl+0x88 obj then jumptable call through *(obj+0x1dc); -1 if none
+0x10171ea0	disp_vtbl10_call	unknown	vtbl+0x80 obj then jumptable call through *(obj+0x10); -1 if none
+0x10172210	battle_order_move_set_target	battle	clears per-unit lists (FUN_10621820), optional vtbl dispatch via +0x30c slot; writes dest {vec,id,float} to this+0x188..1ac, links this+0x20c; FUN_1032ce70 path when smooth
+0x10172430	battle_order_move_wrapper	battle	calls FUN_10172210(param1..3, 0,1,0)
+0x10172460	battle_order_move_from_obj	battle	copies order obj fields +0x20..+0x34 into dest block this->4+0x188..1ac; speed FUN_10357e40; optional FUN_10621820 list sweep
+0x10172580	battle_order_move_wrapper_dup	battle	byte-identical thunk of 10172430 -> FUN_10172210(...,0,1,0)
+0x101725b0	battle_formation_move_compute	battle	formation dims from DAT_120351f0[type*8] scaled +0x184*0.5; pos/orient via FUN_103751a0/FUN_103372c0(5.0)/FUN_10356230; feeds FUN_10172210
+0x10174c10	battle_db_anim_flag_query	battle	FUN_102b8710 key -> FUN_112d98d0 resolve; pred vtbl deref +0x9c8 then [+0xc](obj) -> FUN_101749e0 map
+0x101728b0	core_hashmap_get_u32	core	hash FUN_100e10c0 % buckets(+0x25ec); 16B-stride probe, eq FUN_100f28a0, tombstone vs +0x25f0; value at entry+0xc
+0x10172990	core_vec_push_grow2_keys	core	FUN_101ac840 key copy then push_back into vec +0x25dc/25e0/25e4 w/ x2 growth (FUN_100fcc80/free)
+0x10172a60	core_hashmap_get_or_create_obj	core	same probe on +0x2638 set; miss: alloc 0x84 (FUN_100d12b0), init FUN_10e20000, push vec +0x262c..34
+0x10172c40	battle_obb_contains_unit	battle	vtbl+0x28 pos vs OBF at ctx->4d0 (+0x5c8..+0x5e8), half-extents +0x5d4/5d8 + radius vtbl+0x2c; outer-ring variant when FUN_10192e80()!=0
+0x10d14c90	campaign_db_diplomacy_negotiation_attitudes_load	campaign	lazy cache @+0x14a0; "Loading database:" + msg pump; builder FUN_10ea8100; "(%d records)" log
+0x10d04d90	cai_personalities_construction_pref_policies_load	campaign	lazy cache @+0x1240; table "cai_personalities_construction_preference_policies_table"; builder FUN_10e79850
+0x10a0cb10	script_region_list_operator_add	script	unwraps 2 script objs (FUN_101fe580), vt+4 add; err "Incompatible types passed to operator +, for object %s" REGION_LIST_SCRIPT_INTERFACE
+0x10e2c4d0	battle_prop_rope_anchor_bones_bind	battle	rec+0x100..+0x130 five names -> 0x44 objs FUN_1134f8a0 @+0x78..; per-bone arrays +0x8c/+0xa4 w/ "rope_anchor" fallback
+0x11236e90	ui_character_ancillary_cards_layout	ui	keys ancillary_card_%d/ancillaries/ancillary_base/wife_ancillary_card/btn_go_to_spouse; slot map by type apparel/companion; card FUN_11219690
+0x106011b0	battle_projectile_physics_integrate_bounce	battle	vel@+0x25 xyz; ent type==9 -> g*5; terrain q 0x303; reflect vs normal, drag DAT_11e11a08/af8, damp .7943, dt=0.05
+0x10172ea0	battle_obb_contains_bbox	battle	OBB test of bbox center (+0x68..+0x7c) with radius FUN_105e91e0+param; inner/outer ring logic like 10172c40
+0x101730e0	member_ptr_getter_18	core	returns this+0x18 address
+0x101730f0	battle_group_strength_totals	battle	per-item FUN_101731a0 then sums +0x250/+0x254/600 into this[0x10..12]; seeds this[0xf] when mode in {0,2,3,5}
+0x101731a0	battle_unit_strength_compute	battle	walks units(+0xec) skip type+0x8e8==7; FUN_105afca0 str split by +0x104 into melee/ranged bins; adds attached groups via ctx->68->c0->2524 (FUN_105afbc0)
+0x101733e0	battle_group_alive_counts_update	battle	counts flag0x20 survivors over lists +0x54/+0x104.. sums +0x410; writes ctx->2c {+0x44..+0x78,+0xbd} status block
+0x10173500	unit_flag_reset_walk	battle	FUN_105ad880(unit,0) for all ptrs in list this+0x130/12c
+0x10173990	battle_member_cap_sum_calc	battle	sums min(member+0x410, cap ctx->20->90->48->6c) into p1; p2 = *(this+0x5f8)*cap
+0x10173a10	battle_move_dist_cost_eval	battle	dist(target,unit pos +0x14/+0x16); formation dir dot via DAT_120351f0 table & cos(PI/6) gate; writes dist^2 (or x4 near) to this[2]
+0x10c2ff70	campaign_cdir_launch_dilemma_serialize	campaign	writes rec "CDIR_INTENTION_LAUNCH_DILEMMA" (+DAT_11f1aa14) + FxAnim::GetNumAnimCurves(this+0xac)
+0x10f7f9f0	net_purchase_event_json_serialize	net	json writers keys eventType/purchaseOption/itemType/itemId/bindType/bindId/quantity over FxActorInstances @+0x30..+0x6c
+0x10040810	script_register_ccq_finalise_pending_action	script	reg cb LAB_10827170 under "CCQ_FINALISE_PENDING_ACTION" in DAT_11eeda9c
+0x106cae10	campaign_season_name_to_value_get	campaign	PTR_s_season_spring_[this+0xc] -> entry+8 value
+0x10173c60	battle_projectile_step_spawn	battle	flag&8: dual set-membership FUN_1135cb70 on ctx->68->b0/bc -> FUN_103a8430 spawn; base path FUN_10349aa0/10349130 + FUN_1012cd80 over 0xc0-stride arr
+0x10173dc0	battle_member_strength_sum	battle	sums member+0x410 over this+0x44 list into p1; p2=*(this+0x600)
+0x10173e00	battle_projectile_trajectory_sim	battle	integrates p += v t + 1/2 g t^2 (grav _DAT_11935148..) for n=round(g*|v|/16) steps calling FUN_10173c60 each
+0x10174400	battle_rank_men_assignment	battle	rank count = clamp([ctx->1c]+0x2c / (+0x20)->0x44 ,1..3); purges lists +0x4c4/8, FUN_10177290, pairs alive members w/ pool +0xa8 via FUN_103cf910
+0x106b05a0	campaign_faction_select_list_build	ui	per faction id: find char tagged "faction_leader" (+0x5c); loc keys start_pos_factions_description_%S/random_localisation_strings_string_%S; entry builder FUN_106b0170
+0x101745a0	unit_vtbl4_mode_predicate	battle	vtbl+4 truthy && this[0x262]!=2 && mode(+ctx 68 c0 14) not in {1,4}
+0x101745e0	ability_available_check	battle	this+0x104==0 && mode!=0xc && (FUN_102947b0 || a2c==5 || !bit9(this+0x9a4))
+0x10174630	unit_is_active	battle	true iff state+0x48c!=2 and kind+0x8e8!=7
+0x10174650	order_type_resolve_or_17	battle	if ctx+0xa30 set -> its (+0x18)->+0x14 else 0x17; forwards to FUN_10174680
+0x10174680	battle_order_can_execute	battle	gates: bit6(+0x56), +0xe->e4, vtbl+9c8->28(4/0xe), anim slot +0x120, ROUND(a88)!=0; scans FUN_10d9a060 orders matching type
+0x101748b0	battle_target_selectable_pred	battle	multi-gate: flags +0x55/+0x15, vtbl+0x10, FUN_10168c80 modes {7,1}, ctx->20->1c->28, FUN_1018e920/FUN_10168c60(+0x94)
+0x10174990	order_pred_then_map_thunk	battle	vtbl deref +0x9c8 pred(param) then [+0xc](ctx) -> FUN_101749e0
+0x101749e0	battle_order_validity_check	battle	type=[p1+4]+0x34 in {1..7,0xc}; gates FUN_10634d30, bit4(9a4), FUN_102185c0==0x13 casualty pct vs this+0x44, FUN_101f9560, FUN_102fe350
+0x10126e30	core_cpuid_leaf_dispatch	core	switch on leaf id -> cpuid_basic/cache/brand_part1-3 etc, stores eax/ebx/ecx/edx
+0x10dbf810	battle_fatigue_kv_xml_dump	battle	builds "_kv_fatigue"+name+".xml"/"_kv_fatigue.xsd", writes via FUN_10ca6990 over flagged rows (+0x45)
+0x11196bf0	ui_pre_battle_popup_show	ui	layouts "popup_pre_battle"/"dialogue_box"; fallback 0x20 obj PTR_FUN_1187f17c; voice FUN_110d9d10
+0x10d023c0	campaign_db_building_instances_load	campaign	lazy cache @+0x1008; "building_instances_table" builder FUN_10e46a90; "(%d records)" log
+0x11118430	ui_battle_victory_outcome_apply	battle-end	margin float -> tier 1-4; popup "SP_victory_options" when DAT_12022568[0x246]==2; "3D_window" refresh; runs handler chain +700..0x2c0
+0x101750c0	battle_order_type_gate	battle	switch over order types {0-5,7,0xf,0x10,0x11-13} w/ FUN_105d1130 & vtbl+28(4/0xe) & anim +0x120 checks
+0x101751e0	ui_bit994_5_or_gate	ui	true if FUN_1018e8c0() else bit5(this+0x994)
+0x10175210	battle_special_mode_pred	battle	bit6(9a4)&&ROUND(a88)!=0; anim slot vtbl+0xe8 or FUN_10d99350(0x15)/FUN_1018df30
+0x10175300	battle_slot_or_state_pred	battle	+0x308 slot vtbl+0x4c, else !vtbl+4 && +0x48c!=0
+0x10175350	battle_mode_excl_6_10_pred	battle	mode notin{6,7,8,9,10} -> true; else bit0(a1c) w/ anim vtbl+0xf0, FUN_1018e140/FUN_1018ee00, a2c!=5
+0x10175400	battle_ui_gate_combo	ui	FUN_102947b0/a2c==5/mode28==0/FUN_10174ca0(9)/bit9(9a4); false if this+0x164 set
+0x10175450	order_type_state_pack	battle	reads order type (+a30)->18->14; packs float a88 sign/zero/nan bits<<8; excl types 0xf/0x10
+0x101754a0	vtbl9c8_pred_wrapper	battle	returns (*(deref this+0x9c8))(param)!=0
+0x101754c0	battle_same_target_check	battle	p[0x140]&&!p[0x501], mode28==0, no group; vtbl+0x17c id == ctx->20->90
+0x10175520	battle_attack_validate_complex	battle	FUN_102a0620, anim state==6 gate, owner cmp [p+144]->vtbl10 vs this->10 vtbl, flag0x20 alive, mode in {4,5} or FUN_1018deb0
+0x10175970	battle_gate_not_fun1018e140	battle	!FUN_1018e140 && (FUN_102947b0 || (a2c!=5 && !bit9(9a4))) && a2c!=5
+0x101759c0	battle_debug_a4_608_pred	battle	DAT_11afb698 && this+0xa4 && !byte+0x608
+0x101759f0	anim_slot_vtbl_f4_gate	anim	same triple gate as ui_gated_flag family; returns bool only
+0x10175a40	battle_bit7_aa8_pred	battle	vtbl+9c8->28(8) || bit7(9a4) w/ +0x308 vtbl+0x44, aa8 & 4d0->6b8, FUN_10634d30 negatives
+0x10e6bd00	campaign_advice_text_index_build	ui	per rec: key "advice_info_texts_localised_text_"+name; 0x20B txt objs (PTR_FUN_117ecd08) -> vec + hashmap(12B nodes)
+0x114191a0	core_static_seed_11bd13d4_init	unknown	TLS-lazy init 16B static: zeros + dword 0x1356548d; returns &DAT_11bd13d4
+0x10d033e0	cai_agent_recruitment_types_load	campaign	lazy cache @+0x12b4; table "cai_agent_recruitment_types_table"; builder FUN_10e79210
+0x115272d0	render_rigid_model_instance_create	render	loads "RigidModels/"+name; opt "ProjectedDecal" variant -> alloc 0x31/0x47 via vt+0x60; bbox extent/2 -> +0x68
+0x108207f0	render_default_weather_environment_apply	render	if env name (vt+0xf8) empty -> set "Weather_Default.environment" via vt+100
+0x11270740	ui_ingame_save_load_screen_open	ui	layouts "IngameSaveLoad"/"LoadGame"; buttons button_load/button_ok; FUN_10794bc0 launch
+0x10175ac0	battle_dir_query_default_vec	battle	FUN_10189010(p->4d0,idx,&vec{DAT_11afbf14/18}) direction lookup
+0x10175b00	state_bit_get_9a0	core	returns bit(param) of dword arr this+0x9a0
+0x10175b30	battle_order_type_allowed	battle	FUN_10294830 gate; linear scan of [ctx->1c+0x148..+0x144] for order type
+0x10175b90	flag_set54_after_fn	core	calls FUN_101affe0 then sets *(this+0x54)=1
+0x10175ba0	get_pos_xz_pair	battle	FUN_10620e70 ctx -> FUN_103751a0 pos; copies {x,z} to out
+0x10175bd0	state_bit_set_9a0	core	set/clear bit(param) in dword arr this+0x9a0 by bool
+0x10175c10	per_order_apply_walk	battle	FUN_103ab4c0(param) over list this+0x148/144
+0x10175c60	battle_toggle_run_recompute	battle	FUN_10174ca0(4)+bit4(9a4); sweeps unit arr stride 0x2830 w/ FUN_1017ed90 (type<10); sets bit; anim duration min like 1016efa0
+0x10175ea0	byte_setter_4c	core	writes param to *(this+0x4c)
+0x10175eb0	byte_setter_38	core	writes param to *(this+0x38)
+0x10175ed0	byte_setter_5c	core	writes param to *(this+0x5c)
+0x10175ee0	byte_setter_31	core	writes param to *(this+0x31)
+0x10175ef0	flag28_set_with_vcall	anim	if slot count this->c+0x120: vtbl+0x14(param); always sets *(this+0x28)=param
+0x10175f40	battle_state_set_2c_vdispatch	battle	sets +0x2c; vtbleq dispatch on this+0x1c (PTR_11935818/24): FUN_1039cde0 mount cmp or FUN_1137a930
+0x10175fd0	battle_unit_timer_adjust	battle	per unit stride 0x2830: t=FUN_1020fb70; f = t+param or max(param,t); FUN_102165a0(f)
+0x10176060	setter_23c4	core	writes param to *(this+0x23c4)
+0x10176080	facefx_mount_result_scan	middleware-facefx	FxMountResult ctor; groups stride 0x38 x items 0x22c; checks FUN_10dbff40/FUN_10dc6140 (subitems 0x330)
+0x10176190	core_rot_hash_items	core	u=FUN_10176650 seed; per item rot by ((u^FUN_10c802a0)+13)&31 then xor; returns digest
+0x10177180	battle_bitmask_clear_from_idx	battle	clears dwords this[(u16 idx>>5)] for entries in list +0x200c; count +0x2008 -> 0
+0x101771c0	battle_slotpool_recycle_ring	battle	ring of 10 slots stride 0x18: reset vtable PTR_FUN_1174bfd8, vcall(1) when flag+0x10 set
+0x10177240	core_vec_free_stride24_elems	core	FUN_100fcc50 each elem+8 over 0x18-stride vec (+4 count), zero count
+0x10177290	battle_objlist_return_to_pool	battle	for each ptr in +0xc list: vtbl+8(0) release; push onto global freelist [ctx->68->c0]+0x2c
+0x10d07d90	cai_technology_path_junctions_load	campaign	lazy cache @+0x12e0; "campaign_ai_technology_path_junctions_table"; builder FUN_10e7a3c0
+0x10e77bc0	campaign_map_tooltips_table_bind	campaign	L"campaign_map_tooltips_tables"; handler LAB_10e898e0; vtable PTR_FUN_117e1438
+0x1021e7d0	script_lua_ui_component_push	script	lua cfunc: 1 str arg -> FUN_11020900 lookup on DAT_1201b9b4; wraps TWUI::Component via UTILITYDLL::LUA::State operator<< udata_lookup
+0x111c1a60	ui_list_box_select_first	ui	key "list_box" -> +0x48; first item of +0x88 arr -> +0x44; FUN_11021ec0(item,1)
+0x10deee20	campaign_effect_bonus_caste_junctions_bind	campaign	L"effect_bonus_value_unit_caste_junctions_tables"; builder FUN_10df5530; vtable PTR_FUN_117e2a04
+0x101772e0	battle_release_five_refs	battle	vtbl+8(0) on members +0xa3c/a54/a44/a4c/a60
+0x10177340	ui_deselect_except_pair	ui	zeroes flags in 0x14-dword table +0x180 except key(p1,p2); rebuilds records {+134,+138,+144..} via FUN_101ad7a0 for others
+0x10177490	battle_orders_full_reset	battle	FUN_101771c0 + zero 0x314 + FUN_101a1cb0(0) + clear lists 4b4/4a0; opt resets orders +0x3f0=2, releases +0x24c
+0x10177570	zero_field_74	core	this->0x74 = 0
+0x10177580	battle_state_exit_cleanup	battle	if a2c==5: FUN_10179920; mode==0xc -> alloc 0x5c + FUN_10615dd0(this,1,0); FUN_101772e0; a2c=8
+0x10355910	battle_unit_steering_arc_avoidance	battle	rect probe +0x70..+0x7c via FUN_1036e9b0; blocked -> arc sweep sin/cos r=clearance (<=45deg steps), clamp FUN_101b1280, max range f[9]
+0x10177860	facefx_collect_nodes_to_vec	middleware-facefx	appends every group's node ptrs (+0x114/+0x118) into caller vector w/ x2 growth
+0x101779a0	facefx_collect_tracks_to_vec	middleware-facefx	same collector over track arrays (+0xec/+0xf0)
+0x10177ae0	getter_738_gated	core	FUN_1062de30() false -> *(this+0x738)
+0x10177b00	facefx_find_anim_record	middleware-facefx	scan +0xe4 arr (0x1e8) for kind+0x40 in{4,5} or +0xd8 arr (0x330) for {1,2}; return first/base
+0x10177ba0	battle_group_stats_aggregate	battle	rolls up 9 fields (+0xe8..+0x10c) from items (stride 0x140) into group entries (stride 0x48)
+0x10177d70	battle_soldier_stats_rollup	battle	sums per-soldier (+0x44,+0x4c,(+0x40-44),+0x7c,bytes 5e/5f/60) over 0xc0-stride arr into +0xe8..+0x10c
+0x10178570	ui_icon_draw_level_gate	ui	level = clamp(0x3b - ctx->68->54 delta, ..0x3c); draws list +0x2c via FUN_1017ee20/FUN_1016a250(alpha .1) + FUN_101834e0
+0x101786b0	ui_icon_draw_other_check	ui	variant of 10178570: early-out vtable PTR_PTR_119357bc; scans sibling groups for +0x60 before same draw loop
+0x112f4940	script_config_escape_tables_init	script	TLS-lazy build of escape pair tbl incl "&quot;" (FUN_1098a720) then FUN_112f07d0(param_1,param_2,&DAT_12035064)
+0x108a6800	campaign_region_manager_rec_get	campaign	TLS-guarded static "REGION_MANAGER"; returns &DAT_11ef008c
+0x110de880	ui_public_order_display_update	ui	keys dy_public-order_lowest/dy_public_order/icon_public_order; state happy|neutral|unhappy by val <0/<1
+0x101f2930	script_battle_colour_operator_eq	script	unwraps 2 objs; byte-wise RGBA cmp; err "Incompatible types passed to operator ==, for object %s" battle_colour
+0x10e5b530	campaign_startpos_faction_effects_bind	campaign	L"start_pos_faction_effects_tables"; builder FUN_10dcf230; vtable PTR_FUN_117e12fc
+0x10d8b650	campaign_settlement_building_trees_bind	campaign	L"campaign_settlement_display_building_trees_tables"; handler LAB_10d9b550; vtable PTR_FUN_117e25b8
+0x10178820	ui_lazy_cmp58_gate	ui	lazy FUN_10181ca0 into this->10; true when obj+0x58 == ctx idx
+0x10178850	ui_visibility_sibling_scan	ui	PTR_PTR_119357bc / x2 threshold test; scans sibling groups for +0x60 override
+0x10178940	ui_last_active_detect	ui	scans other groups for any nonempty tracks (+0xec); also 2524 list via FUN_102fe570/b0; sets this+0xc=1
+0x10178b90	ui_node_flag_scan	ui	like 10178940 but per-node byte +0x1203 and FUN_105d11c0 gates
+0x10178ce0	core_struct_copy_44	core	memberwise copy of 11 dwords (44B record)
+0x10178d30	core_struct_copy_45_b	core	copy 10 dwords + bytes +0x28..2a (45B record)
+0x10178d90	core_struct_copy_41	core	copy 10 dwords + byte (41B record)
+0x10178de0	core_struct_copy_with_str	core	4 dwords + flag byte + string copy FUN_100f2750(+5) + 6 dwords
+0x10178e50	core_struct_copy_56	core	copy 12 dwords + byte + dword (56B record)
+0x10178eb0	core_struct_copy_53	core	copy 13 dwords + byte (53B)
+0x10178f10	core_rec_copy_strings_vt	core	3 dwords + 2 x FUN_100f1aa0 + FUN_100f1700 + vtbl+4 clone (record w/ strings)
+0x10178f60	core_move_ctor_zero_vec3	core	12-dword move; zeroes src {0..2},{3..5},{6..8}
+0x10178ff0	core_big_move_ctor_a	core	move ~0x140B rec: FUN_101413f0/FUN_100f1a50/FUN_100f16b0 resets + bytes +12d..131
+0x101791f0	core_big_move_ctor_b	core	move rec w/ 2 strings FUN_100f1a50 x2 + FUN_100f16b0; bytes 5d-61,89-8a,bd-c0
+0x10179410	battle_obj_ctor_vt_dbc8	battle	zeroes fields, vtable PTR_FUN_1173dbc8, default dir {DAT_11afbf14/18}, FUN_1015a450 init
+0x10179470	core_rec_copy_subobj	core	copies 8 dwords then FUN_10132c50 subobj copy
+0x101794c0	core_concurrent_vec_12b	core	CS-guarded (this+0x10) resizable array of 12B records; count vtbl+4, idx vtbl+8; FUN_100d3b80 init
+0x101795b0	battle_point_in_obb	battle	|axis6.dot|<=half3/2 && |axis8/7 pair|<=half4/2 vs center {this[1],*this}
+0x10179650	getter_deref5c_d8_10	core	this+0x5c -> +0xd8 -> +0x10; -1 if null
+0x10179670	battle_unit_ready_pred	battle	!FUN_1062de30 && byte18 && +0x48c!=2 && +0x144 && +0x44
+0x101796b0	flags_1c_set_0101	core	writes word 0x101 to this+0x1c
+0x101796c0	getter_998	core	returns *(this+0x998)
+0x101796d0	battle_unit_engage_pred	battle	+0x47c notin{0,2}, !FUN_1062de30, +0x8dc!=4, +0x134 && +0x34
+0x10179720	battle_order_reposition_back	battle	compute rear pos: formation dims DAT_120351f0* -3 + OBB edge (4d0 5c8/5e4/5d8); FUN_10356230 orient -> FUN_10172210 move; FUN_10170a20(0) flags
+0x107be8c0	core_vector_pushback_move_20B	core	std::vector<Pod20> push_back w/ move (steals src +2..+4 ptrs, nulls them), x2 growth, elem dtor on [+4]
+0x107baf10	battle_ai_pick_best_target_tiered	battle	scans list @+0x7a4; tier via FUN_107240b0/350/310 (3/2/1); ties by +0x55c then +0x558 then FUN_1071d440; filter id==+0x554
+0x10b86630	unknown_stream_u16_counted_16B_lists	unknown	reads 2x u16 counts (FUN_1055bff0); per item str+u8 -> FUN_10961420 key; builds two 16B-elem growable arrays (ctor FUN_10b89450)
+0x10179920	battle_pending_orders_commit_clear	battle	flag+0x38=1 over lists +0xa70/a6c & a80/a7c; FUN_1012d1f0/dcd0 sweeps; FUN_10182ee0/932e0; anim FUN_1018bc70
+0x10179ad0	battle_reanchor_formation_move	battle	recompute anchor +0x178/17c from ctx->20->74 (or 24->24->18); FUN_101acdd0 + FUN_101725b0 move; clears bit3(9a4),byte99e
+0x10179be0	battle_merge_members_apply	battle	pair member list +0x48 with group items via FUN_103cf910; FUN_101b0fb0/b10e0 refresh; clears +0x38 flags; FUN_101a1b60/FUN_1017e740
+0x112d7560	core_vector_pushback_move_128B_poly	core	vector<0x80B> push_back x2 growth; move-ctor FUN_112a6240; virtual dtor **elem(0) on realloc
+0x11316590	png_read_sBIT_chunk	middleware-libpng	libpng sBIT: errs Missing IHDR/Invalid after IDAT/Out of place/Duplicate/Incorrect length; fills sig_bit @+0x17c
+0x10bb6e30	facefx_anims_sort_by_num_curves	middleware-facefx	introsort of FxAnim* cmp GetNumAnimCurves; insertion <33 elems, heap fallback FUN_10bb6d50
+0x109000c0	ui_localized_wtext_format_percent_l	ui	walks wide fmt, "%"->skip "l" specs; parse FUN_10105850, emit via handler FUN_100f5f20
+0x10c87f30	net_desync_error_prompt_checksum	net	thread-owner checks; err==2 -> msg "To help identify desyncs... checksum all your game files?" Retry -> FUN_10c88050(1)
+0x10b43fe0	engine_camera_cinematic_track_update	render	t=dt*0.001/dur clamp01 @+0x118; pan acc +0x10/+0x11 vs *(cam+0x58)+0x1be8; keyframes +0x110/+0x111 16B{t,v} lerp+prune; zoom ease +0xe1..e3
+0x1049f3c0	core_vector_insert_range_54B	core	insert n copies of tmpl param_3 into 0x54B-elem vector at pos; pow2 grow; copy ctors FUN_11188fa0(+4)/FUN_1134f7b0(+0x30); vt PTR_GetCstr_1177b468
+0x105945e0	unknown_paramcopy_component_init	unknown	copies 3 dw from p1; seeds DAT_11e11914/18/1c consts; -1.0f @+0x10; pulls vals via p4->+0x10 vt+0x20(+0x78)/vt+0x28
+0x1108aaa0	ui_queued_land_units_panel_rebuild	ui	per queued unit: find/create child "QueuedLandUnit "; card FUN_11136f10; {comp,unit} pairs -> vec +0xf..0x11; vt+0x40(0)
+0x1039d040	quad_corner_transforms_build	render	half-extents w*l*+-0.5; 4 corners via FUN_103a7940(idx 0-3); finalize FUN_103a0fb0(...,7)
+0x1038d3f0	battle_units_segment_clearance_test	battle	endpoints via vt+4/vt+0 of two objs; 4x seg-point dist2 FUN_11364920 >= (len/2)^2 -> clear
+0x11477350	d3d_renderstate_block_commit	render	dirty-cached SetRenderState via device vt+0xe4(ids 0x13/0x14/0x1b/0xa8/0xab/0xbe-0xc0/0xce-0xd1); per-state dirty bytes; hr special-cases -0x7789f7d9
+0x115be260	render_rt_readback_alpha_gather	render	caps-check objs +0x98/+0x9c/+0xa0(+0xf4); sizes 0x440x0x780 & 0x220x0x3c0 x2; map vt+0x20/unmap vt+0x24; copies every 4th byte (alpha) row-strided
+0x10dbc130	campaign_triple_name_records_index_build	campaign	names @rec+0x46/0x49/0x4c -> FUN_10db4970 objs (0x128 stride out); fallback FUN_112bb070; vec+hashmap(12B nodes)
+0x1131c740	image_pixel_channel_swap_bgr	render	in-place channel swap: fmt==6 -> 3byte rotate (or 8B reverse if bpp==8), fmt==4 -> 2B/4B pair swap
+0x10f9c200	unknown_grid_slot_pair_match_dispatch	unknown	mgr+0x660%%90 -> row/col of 90-slot tbl @+0x4f4; matches {id,id2}; type 1->FUN_10f64d50+vt14, 2->FUN_10fb0800/da0; else reset +0x65d..674
+0x1154d790	core_dutchflag_partition_by_dist2	core	3-way qsort partition of ptr array by dist2((x@+0x14,y@+0x18),pivot); median pass FUN_1154b3e0; returns equal range
+0x10c10b20	unknown_pair_link_endpoints_create	unknown	validates 2 handles (FUN_10960080/61370/62980 size-class eq); stores both xy @+0xd4..+0xe0; else dedup pair in sorted arr +0x4c/+0x50
+0x10ffef70	script_lua_call_ui_component_method	script	lua stack: FUN_112ae010 gettable, push arg FUN_112abf30, call FUN_112abd50 -> FUN_11035ec0(name,comp,bool,bool,char)
+0x10c47030	cai_route_edge_best_score_pick	campaign	node validators FUN_109d94xx; edges stride 0x48 via vt+8; score=dist/cost keep min (tie hi-speed); RB-map 0x28B rec {node,+0x14 score}
+0x1064fd80	facefx_paren_number_modifier_parse	middleware-facefx	lexer FUN_113719xx: "(num)" after name, atof->+0x10 must>0; fatal expect '('/')' + TerminateProcess
+0x11528c80	vfx_instance_detach_from_slots	render	per name(stride 0xc): find def in 0x54B tbl, rm from +0x24 list where vt+4==id; RB-map erase @def+0x40; clear own +0x24 slot vec
+0x10443920	core_timed_task_queue_push_threadsafe	core	EnterCS(+0x444); alloc 0x10 {p,id,clone vt+0x5c}; pos=*(vt obj+50/54/58)+t; multiset ins; growable arr +0x434..43c
+0x11064980	ui_tooltip_spawn_at_rect	ui	lazy create popup via FUN_11021610(DAT_1201b9b4); text from comp+0x38/+0x34(+suffix DAT_117d3220); FUN_11155240(text,rect +0xa8..+0xb8)
+0x10280630	render_rotated_rect_fill_quad	render	corners of rot rect {c,+[3] ang,+[4] len,[5]/[7] dirX,[6]/[8] dirY}; 4x FUN_101a9110; fill FUN_10280410(n=4)
+0x1057f010	core_stable_sort_16B_elems	core	__stable_sort: 32-chunk insertion sort {f32 key,u16,f32,f32}, buffer merges xN (FUN_10580fd0/105854f0), chunk sort FUN_1057fa40
+0x10be6880	net_state_maps_snapshot_verify	net	snapshots std::maps @+0xc4/+0xd0 (root,cnt), rebuilds via FUN_10be6100 over ids (+0xbc list), in-order cmp key/node[4] float -> changed
+0x114cbea0	gl_texture_cache_unbind_all	render	slots this+0x5c..(+0x68,9 dw ea): glBindTexture(target,0), zero; cur-slot cb (*DAT_12118740)(idx+0x84c0)
+0x107fca80	battle_event_payload_raise_to_target	battle	flag +0x4a8 picks src FUN_10979470/1097a330; target FUN_107baec0/e60; FUN_10716ee0 bind; 14-field payload -> FUN_1097cb10
+0x10283950	render_instanced_visible_compact_submit	render	visibility acc FUN_10565570; compact 0x18B entries @+0xa0; mats FUN_11366f20; FUN_1135a890/11381460/10242c60; submit vt+0x78(arr,n)
+0x1045c9a0	d3d9_device_reset_on_resize	render	FUN_102e1370 wxh; presparams {BB w/h,Windowed=1,...,0xd}; FUN_10337600; release dev @+0x388 (**vt)(1); FUN_1032bf50(+0x37c)
+0x103cd240	core_frame_linear_alloc_align	core	12000B arena pages 0x2ee8 (head *this/tail [1]); align 1<<param_2, bump +0x2ee4, new page on overflow; optional CS when [7]
+0x10356940	battle_entity_node_spawn_freelist	battle	node from freelist +0x72/73; init id/links (+8/+0xc,+3/+1); link into chain; ++counter (*(vt68)+200)+0x680
+0x1149a250	vfx_manager_dtor	render	dtor vt swap (118da1d0/1f8); free 0x3C @+e; release(**vt)(1) 16B-slot arrs +9/+c; FUN_10914c40(+7,+5,+6)
+0x11521d20	vfx_def_vector_pushback_move	render	vector<0x54B> push_back x2 grow; move FUN_1148b740; old-elem release FUN_114d9800
+0x1109ba60	ui_list_row_remove_by_entity	ui	scan pair arr +0x4c(stride 8) match (*(it+0x174)+0x78)==id; FUN_110cd8f0/11021ec0/1103b0f0; erase; parent vt-4+0x14
+0x101d7cc0	core_unordered_map_rehash	core	MSVC unordered rehash: "invalid hash bucket count"; pow2 mask @+0x18; bucket vec +0xc..0x14; 12B-key node splice/equiv-merge
+0x10c5abe0	campaign_diplomacy_attitude_score_aggregate	campaign	iter range FUN_10a37560/50; classify via FUN_10a4bbe0/ba60/baa0/bba0 vs player FUN_10834820; score=clamp((b-c/2)-d)+a,1..10 -> vec{p,score*0.1}
+0x10697c90	core_vector_pushback_move_32B_wname	core	vector<0x20B>{move3,wstr@+3 FUN_100f1aa0,+6,+7} x2 grow; dtor FUN_10458000/ctor FUN_106776e0
+0x10e38c10	battle_entity_vector_pushback_move_76B	battle	vector<0x4CB> x2 grow via alloc vt(*this); elem dual-vt (11779914->1181a1f0), FxName move FUN_100f16b0
+0x111b3590	campaign_replay_char_facefx_serialize	campaign	vis check FUN_107aa0d0 vs +0x110(+0x730); rec FUN_106c3690; DB write FUN_10cb8880; FxActorInstance::Serialize(this+0xed0)
+0x102c9970	battle_managed_list_prune_top4	battle	list +0xe4: key=*(o+8)+0xc; partial-sort keep 4 (FUN_10236880); per item vt(+4)+0x10 chk, vt+0xc(intop,flag) else release **vt(1)+unlink
+0x104fc340	core_heap_siftdown_score3	core	heap sift cmp = clamp0(sum obj+0xf8/+0xfc/+0x100); asc/desc via *param_3
+0x1088c7e0	core_record_deepcopy_refcounted	core	deep copy: scalar blk + clone arrs 0x18B(addref FUN_1079af80/release 1079aff0),8B,0x1c dw,0x10B{p,cnt},0xC3B + str FUN_101324d0
+0x10ef9750	facefx_name_intern_djb2_lookup	middleware-facefx	hash=0x1505; h=h*33+c; intern FUN_10edfb00 -> {this,0x800,h&0x7ff,e1,e2} FxName handles
+0x1012d400	unknown_pair_sets_match_collect_20B	unknown	merge id-list(this+8) x map(param_3) -> pairs{a,b,0}; sort FUN_1012df30(...,5,FLT_MAX); if FUN_102cead0(a,b): out {a,b+0x50,f:0.75*[+5c]+[+54],b+0x58,b}
+0x10b7e9d0	core_rec_copy_arrs_30B_8B	core	copy-ctor: str FUN_101324d0; clone 0x30B arr (elem ctor FUN_10b7f400); 15 dw + 2 byte; clone 8B arr

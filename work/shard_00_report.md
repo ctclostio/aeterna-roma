@@ -1,0 +1,11 @@
+# funcid shard_00 run report (solo)
+- Input: work/shard_00.txt (216 addrs) -> output: work/funcid_00.tsv (216 lines, 4-col TSV)
+- 2 addrs had no decompiled file: 0x10eeb290, 0x1168f62c (recorded as MISSING rows)
+- Subsystem mix: unknown 102 | middleware-facefx 47 | core 22 | battle 16 | render 11 | ui 4 | audio 4 | anim 3 | net 2 | crt 2 | campaign 2 | script 1
+- Notes for orchestrator:
+  - 0x100e8e80 logs "Finished sound init part 1" (audio init anchor).
+  - 0x10123730 is dlmalloc free/coalesce (boundary tags + smallbin/treebin) — allocator identified.
+  - Battle/deployment cluster ~0x1017a000-0x10430000 (threat footprints, spawn waves, octree, marker entities).
+  - Large FaceFX integration layer ~0x105a0000-0x11330000 incl FxEventManager/FxLogManager/FxAnimGroup/FxCompiledFaceGraph.
+  - 0x114a3ed0 = OpenGL wglGetProcAddress extension loader.
+  - Repeated deserializing-ctor family (this,uint* reader,int[,flag]) w/ shared shape: 10d51310..10eaacb0, 11568e00 — candidate for a common StreamRead base.

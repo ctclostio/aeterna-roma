@@ -1,0 +1,845 @@
+{
+  "$schema": "scripts/pi_wave3_config.schema.json",
+  "schema_version": 1,
+  "model": "openrouter/stealth/ox-alpha",
+  "prompt_preamble": "This is a supervisor-controlled JSONL sharing canary. The evidence.json root object must contain exactly five keys: worker_id, stage, conclusion, claims, blockers. Do not add schema_version, run_id, metadata, or prose. Do not use git, install packages, make network requests, expose credentials, or write outside the assigned directory.",
+  "stage_order": [
+    "E",
+    "O",
+    "I",
+    "R",
+    "G"
+  ],
+  "stages": [
+    {
+      "id": "E",
+      "depends_on": [],
+      "worker_count": 4,
+      "description": "Independently reproduce provenance, containment, startup-closure, and milestone-order facts."
+    },
+    {
+      "id": "O",
+      "depends_on": [],
+      "worker_count": 4,
+      "description": "Design disjoint external tests and critical mutants for the frozen selector contract."
+    },
+    {
+      "id": "I",
+      "depends_on": [
+        "E",
+        "O"
+      ],
+      "worker_count": 6,
+      "description": "Produce six isolated implementations using different risk charters."
+    },
+    {
+      "id": "R",
+      "depends_on": [
+        "I"
+      ],
+      "worker_count": 4,
+      "description": "Cross-review every implementation twice with executable reproducers."
+    },
+    {
+      "id": "G",
+      "depends_on": [
+        "E",
+        "O",
+        "I",
+        "R"
+      ],
+      "worker_count": 2,
+      "description": "Produce two independent integration candidates from validated components and findings."
+    }
+  ],
+  "workers": [
+    {
+      "id": "E01",
+      "stage": "E",
+      "role": "session_sharing_canary_e01",
+      "task": "This is a bounded Windows session-sharing canary, not a research task. Read the one admitted context file. By your third tool call, write evidence.json with exactly one atomic claim. The root object must contain exactly worker_id, stage, conclusion, claims, blockers; add no other key. Use fact_id canary.E01; kind session_sharing; value true; source_path docs/x64_entry_policy_dynamic_probe_spec.md; source_sha256 exactly as shown in your admitted context manifest; locator whole-file canary input; extractor_command read docs/x64_entry_policy_dynamic_probe_spec.md; inference false. Set conclusion to \"E01 session sharing canary completed\" and blockers to an empty array. Re-read evidence.json once, correct it if needed, then finish immediately. Do not perform broader analysis.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write"
+      ],
+      "thinking": "low",
+      "budget": {
+        "max_tokens": 20000,
+        "timeout_seconds": 180,
+        "max_tool_calls": 8,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "evidence/E01",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "evidence",
+          "source": "workspace",
+          "path": "evidence.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_evidence.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "E02",
+      "stage": "E",
+      "role": "session_sharing_canary_e02",
+      "task": "This is a bounded Windows session-sharing canary, not a research task. Read the one admitted context file. By your third tool call, write evidence.json with exactly one atomic claim. The root object must contain exactly worker_id, stage, conclusion, claims, blockers; add no other key. Use fact_id canary.E02; kind session_sharing; value true; source_path docs/x64_entry_policy_dynamic_probe_spec.md; source_sha256 exactly as shown in your admitted context manifest; locator whole-file canary input; extractor_command read docs/x64_entry_policy_dynamic_probe_spec.md; inference false. Set conclusion to \"E02 session sharing canary completed\" and blockers to an empty array. Re-read evidence.json once, correct it if needed, then finish immediately. Do not perform broader analysis.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write"
+      ],
+      "thinking": "low",
+      "budget": {
+        "max_tokens": 20000,
+        "timeout_seconds": 180,
+        "max_tool_calls": 8,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "evidence/E02",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "evidence",
+          "source": "workspace",
+          "path": "evidence.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_evidence.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "E03",
+      "stage": "E",
+      "role": "session_sharing_canary_e03",
+      "task": "This is a bounded Windows session-sharing canary, not a research task. Read the one admitted context file. By your third tool call, write evidence.json with exactly one atomic claim. The root object must contain exactly worker_id, stage, conclusion, claims, blockers; add no other key. Use fact_id canary.E03; kind session_sharing; value true; source_path docs/x64_entry_policy_dynamic_probe_spec.md; source_sha256 exactly as shown in your admitted context manifest; locator whole-file canary input; extractor_command read docs/x64_entry_policy_dynamic_probe_spec.md; inference false. Set conclusion to \"E03 session sharing canary completed\" and blockers to an empty array. Re-read evidence.json once, correct it if needed, then finish immediately. Do not perform broader analysis.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write"
+      ],
+      "thinking": "low",
+      "budget": {
+        "max_tokens": 20000,
+        "timeout_seconds": 180,
+        "max_tool_calls": 8,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "evidence/E03",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "evidence",
+          "source": "workspace",
+          "path": "evidence.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_evidence.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "E04",
+      "stage": "E",
+      "role": "session_sharing_canary_e04",
+      "task": "This is a bounded Windows session-sharing canary, not a research task. Read the one admitted context file. By your third tool call, write evidence.json with exactly one atomic claim. The root object must contain exactly worker_id, stage, conclusion, claims, blockers; add no other key. Use fact_id canary.E04; kind session_sharing; value true; source_path docs/x64_entry_policy_dynamic_probe_spec.md; source_sha256 exactly as shown in your admitted context manifest; locator whole-file canary input; extractor_command read docs/x64_entry_policy_dynamic_probe_spec.md; inference false. Set conclusion to \"E04 session sharing canary completed\" and blockers to an empty array. Re-read evidence.json once, correct it if needed, then finish immediately. Do not perform broader analysis.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write"
+      ],
+      "thinking": "low",
+      "budget": {
+        "max_tokens": 20000,
+        "timeout_seconds": 180,
+        "max_tool_calls": 8,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "evidence/E04",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "evidence",
+          "source": "workspace",
+          "path": "evidence.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_evidence.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "O01",
+      "stage": "O",
+      "role": "provenance_oracle",
+      "task": "Design eight independent provenance tests paired one-to-one with eight critical mutants for the selector contract. Cover offset/range, selector hash, literal hash, equality target, handler fallthrough, canonical index identity, startup-table identity, and stale corpus. Use IDs O01.T1-O01.T8 and O01.M1-O01.M8 with exact reciprocal pairs. Candidate code and candidate tests are never the oracle. blockers must be empty unless admitted evidence contradicts itself.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 225000,
+        "timeout_seconds": 600,
+        "max_tool_calls": 40,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "oracle/O01",
+      "context_files": [
+        "docs/x64_entry_policy_selector_spec.md",
+        "scripts/test_guest32_provenance.py",
+        "scripts/test_x64_entry_policy_provenance.py",
+        "scripts/test_gen_startup_audit.py"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "oracle",
+          "source": "workspace",
+          "path": "oracle.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_oracle.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "O02",
+      "stage": "O",
+      "role": "guest_memory_oracle",
+      "task": "Design eight safe external guest-memory tests paired one-to-one with eight mutants. Cover explicit little-endian unaligned read, partial unit, exact 2^32 view end, null/error precedence, unchanged output, checked guest overflow, real high host pointer, and bounded alias backing. Use IDs O02.T1-O02.T8 and O02.M1-O02.M8 with exact reciprocal pairs. Never describe a view larger than its allocation. blockers must be empty unless admitted evidence contradicts itself.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 225000,
+        "timeout_seconds": 600,
+        "max_tool_calls": 40,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "oracle/O02",
+      "context_files": [
+        "docs/x64_entry_policy_selector_spec.md",
+        "port/x64_runtime/guest32.h",
+        "port/x64_runtime/guest32.c",
+        "port/x64_runtime/test_guest32.c"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "oracle",
+          "source": "workspace",
+          "path": "oracle.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_oracle.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "O03",
+      "stage": "O",
+      "role": "selector_semantics_oracle",
+      "task": "Design eight selector tests paired one-to-one with eight mutants. Cover exact 44-byte match, first mismatch with a two-byte view, later mismatch with exact prefix extent, missing terminator, one-byte terminator, reversed policy, output preservation, and static rejection of wchar_t or unbounded scans. Use IDs O03.T1-O03.T8 and O03.M1-O03.M8 with exact reciprocal pairs. blockers must be empty unless admitted evidence contradicts itself.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 225000,
+        "timeout_seconds": 600,
+        "max_tool_calls": 40,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "oracle/O03",
+      "context_files": [
+        "docs/x64_entry_policy_selector_spec.md",
+        "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c",
+        "port/x64_runtime/test_guest32.c"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "oracle",
+          "source": "workspace",
+          "path": "oracle.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_oracle.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "O04",
+      "stage": "O",
+      "role": "build_containment_oracle",
+      "task": "Design eight build/containment tests paired one-to-one with eight mutants. Cover selector provenance fixture order, warning-hard x64 build, static test-only runtime linkage, unchanged four sparse bootstrap exports, KERNEL32-only DLL dependency, immutable explicit inputs without relying on git, LF provenance, and full regression execution. Use IDs O04.T1-O04.T8 and O04.M1-O04.M8 with exact reciprocal pairs. blockers must be empty unless admitted evidence contradicts itself; use no C backslash escapes in JSON prose.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 225000,
+        "timeout_seconds": 600,
+        "max_tool_calls": 40,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "oracle/O04",
+      "context_files": [
+        "docs/x64_entry_policy_selector_spec.md",
+        "CMakeLists.txt",
+        "scripts/build_x64_bootstrap.bat",
+        "docs/x64_bootstrap.md",
+        ".gitattributes"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "oracle",
+          "source": "workspace",
+          "path": "oracle.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_oracle.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "I01",
+      "stage": "I",
+      "role": "minimal_implementer",
+      "task": "Implement the frozen selector contract in your isolated directory with the smallest readable API/diff. Submit full revised guest32.h/c, new ported policy h/c, focused test_entry_policy.c, README.md, and submission.json with exact hashes and tests. Do not edit the repository copy.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "edit",
+        "powershell"
+      ],
+      "thinking": "high",
+      "budget": {
+        "max_tokens": 350000,
+        "timeout_seconds": 900,
+        "max_tool_calls": 45,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "candidates/I01",
+      "context_files": [
+        "docs/x64_entry_policy_selector_spec.md",
+        "port/x64_runtime/guest32.h",
+        "port/x64_runtime/guest32.c",
+        "port/x64_runtime/test_guest32.c",
+        "port/x64_ported/ported_1093c450.h",
+        "port/x64_ported/ported_1093c450.c"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "submission",
+          "source": "workspace",
+          "path": "submission.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_submission.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "I02",
+      "stage": "I",
+      "role": "boundary_first_implementer",
+      "task": "Implement the frozen selector contract in your isolated directory, prioritizing arithmetic/range proofs and unchanged-output semantics. Produce the same required full source/test/README set and submission.json. Do not edit the repository copy.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "edit",
+        "powershell"
+      ],
+      "thinking": "high",
+      "budget": {
+        "max_tokens": 350000,
+        "timeout_seconds": 900,
+        "max_tool_calls": 45,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "candidates/I02",
+      "context_files": [
+        "docs/x64_entry_policy_selector_spec.md",
+        "port/x64_runtime/guest32.h",
+        "port/x64_runtime/guest32.c",
+        "port/x64_runtime/test_guest32.c",
+        "port/x64_ported/ported_1093c450.h",
+        "port/x64_ported/ported_1093c450.c"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "submission",
+          "source": "workspace",
+          "path": "submission.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_submission.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "I03",
+      "stage": "I",
+      "role": "streaming_compare_implementer",
+      "task": "Implement the frozen selector contract in your isolated directory using an explicitly bounded streaming comparison that proves early mismatch does not over-read. Produce the full source/test/README set and submission.json. Do not edit the repository copy.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "edit",
+        "powershell"
+      ],
+      "thinking": "high",
+      "budget": {
+        "max_tokens": 350000,
+        "timeout_seconds": 900,
+        "max_tool_calls": 45,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "candidates/I03",
+      "context_files": [
+        "docs/x64_entry_policy_selector_spec.md",
+        "port/x64_runtime/guest32.h",
+        "port/x64_runtime/guest32.c",
+        "port/x64_runtime/test_guest32.c",
+        "port/x64_ported/ported_1093c450.h",
+        "port/x64_ported/ported_1093c450.c"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "submission",
+          "source": "workspace",
+          "path": "submission.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_submission.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "I04",
+      "stage": "I",
+      "role": "test_first_implementer",
+      "task": "Implement the frozen selector contract in your isolated directory with an adversarial table-driven test-first design. Produce the full source/test/README set and submission.json. Do not edit the repository copy or treat your tests as the oracle.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "edit",
+        "powershell"
+      ],
+      "thinking": "high",
+      "budget": {
+        "max_tokens": 350000,
+        "timeout_seconds": 900,
+        "max_tool_calls": 45,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "candidates/I04",
+      "context_files": [
+        "docs/x64_entry_policy_selector_spec.md",
+        "port/x64_runtime/guest32.h",
+        "port/x64_runtime/guest32.c",
+        "port/x64_runtime/test_guest32.c",
+        "port/x64_ported/ported_1093c450.h",
+        "port/x64_ported/ported_1093c450.c"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "submission",
+          "source": "workspace",
+          "path": "submission.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_submission.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "I05",
+      "stage": "I",
+      "role": "proof_oriented_implementer",
+      "task": "Implement the frozen selector contract in your isolated directory with comments/invariants limited to facts needed to prove bounds and state transitions. Produce the full source/test/README set and submission.json. Do not edit the repository copy.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "edit",
+        "powershell"
+      ],
+      "thinking": "high",
+      "budget": {
+        "max_tokens": 350000,
+        "timeout_seconds": 900,
+        "max_tool_calls": 45,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "candidates/I05",
+      "context_files": [
+        "docs/x64_entry_policy_selector_spec.md",
+        "port/x64_runtime/guest32.h",
+        "port/x64_runtime/guest32.c",
+        "port/x64_runtime/test_guest32.c",
+        "port/x64_ported/ported_1093c450.h",
+        "port/x64_ported/ported_1093c450.c"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "submission",
+          "source": "workspace",
+          "path": "submission.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_submission.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "I06",
+      "stage": "I",
+      "role": "simplicity_adversary_implementer",
+      "task": "Implement the frozen selector contract independently, minimizing helper/state complexity and actively avoiding patterns shared by the other charters. Produce the full source/test/README set and submission.json. Do not edit the repository copy.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "edit",
+        "powershell"
+      ],
+      "thinking": "high",
+      "budget": {
+        "max_tokens": 350000,
+        "timeout_seconds": 900,
+        "max_tool_calls": 45,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "candidates/I06",
+      "context_files": [
+        "docs/x64_entry_policy_selector_spec.md",
+        "port/x64_runtime/guest32.h",
+        "port/x64_runtime/guest32.c",
+        "port/x64_runtime/test_guest32.c",
+        "port/x64_ported/ported_1093c450.h",
+        "port/x64_ported/ported_1093c450.c"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "submission",
+          "source": "workspace",
+          "path": "submission.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_submission.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "R01",
+      "stage": "R",
+      "role": "range_review",
+      "task": "Review the assigned three candidates for guest/host range arithmetic, output preservation, over-read, aliasing, and pointer-width defects. Every nontrivial finding needs a reproducible test that passes a known-good interpretation and fails the candidate. Write and validate findings.json in the assigned workspace.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "powershell"
+      ],
+      "thinking": "high",
+      "budget": {
+        "max_tokens": 225000,
+        "timeout_seconds": 600,
+        "max_tool_calls": 35,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "reviews/R01",
+      "context_files": [
+        "docs/x64_entry_policy_selector_spec.md"
+      ],
+      "review_targets": [
+        "I01",
+        "I02",
+        "I03"
+      ],
+      "required_outputs": [
+        {
+          "name": "findings",
+          "source": "workspace",
+          "path": "findings.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_findings.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "R02",
+      "stage": "R",
+      "role": "semantic_review",
+      "task": "Review the assigned three candidates for exact literal/terminator semantics, early mismatch, status precedence, policy reversal, wchar_t leakage, and unbounded reads. Require executable reproducers. Write and validate findings.json in the assigned workspace.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "powershell"
+      ],
+      "thinking": "high",
+      "budget": {
+        "max_tokens": 225000,
+        "timeout_seconds": 600,
+        "max_tool_calls": 35,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "reviews/R02",
+      "context_files": [
+        "docs/x64_entry_policy_selector_spec.md"
+      ],
+      "review_targets": [
+        "I03",
+        "I04",
+        "I05"
+      ],
+      "required_outputs": [
+        {
+          "name": "findings",
+          "source": "workspace",
+          "path": "findings.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_findings.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "R03",
+      "stage": "R",
+      "role": "build_review",
+      "task": "Review the assigned three candidates for compilability under the hardened x64 flags, deterministic test construction, source ownership, manifest accuracy, and accidental bootstrap/export/canonical coupling. Require executable reproducers. Write and validate findings.json in the assigned workspace.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "powershell"
+      ],
+      "thinking": "high",
+      "budget": {
+        "max_tokens": 225000,
+        "timeout_seconds": 600,
+        "max_tool_calls": 35,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "reviews/R03",
+      "context_files": [
+        "docs/x64_entry_policy_selector_spec.md",
+        "CMakeLists.txt"
+      ],
+      "review_targets": [
+        "I05",
+        "I06",
+        "I01"
+      ],
+      "required_outputs": [
+        {
+          "name": "findings",
+          "source": "workspace",
+          "path": "findings.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_findings.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "R04",
+      "stage": "R",
+      "role": "adversarial_review",
+      "task": "Review the assigned three candidates against all hard rejection gates and actively seek correlated design failures missed by candidate-owned tests. Require executable reproducers and separate facts from style preferences. Write and validate findings.json in the assigned workspace.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "powershell"
+      ],
+      "thinking": "high",
+      "budget": {
+        "max_tokens": 225000,
+        "timeout_seconds": 600,
+        "max_tool_calls": 35,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "reviews/R04",
+      "context_files": [
+        "docs/x64_entry_policy_selector_spec.md",
+        "docs/pi_swarm_evaluation.md"
+      ],
+      "review_targets": [
+        "I02",
+        "I04",
+        "I06"
+      ],
+      "required_outputs": [
+        {
+          "name": "findings",
+          "source": "workspace",
+          "path": "findings.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_findings.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "G01",
+      "stage": "G",
+      "role": "minimal_integrator",
+      "task": "Produce an isolated integration candidate for the frozen selector contract using only hash-validated candidate components and accepted review findings. Include full final guest32 h/c, ported policy h/c, adversarial C test, provenance-test proposal, CMake integration fragment, README, and integration_manifest.json. Do not edit the repository copy.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "edit",
+        "powershell"
+      ],
+      "thinking": "high",
+      "budget": {
+        "max_tokens": 500000,
+        "timeout_seconds": 1200,
+        "max_tool_calls": 50,
+        "max_output_bytes": 524288
+      },
+      "writable_dir": "integrations/G01",
+      "context_files": [
+        "docs/x64_entry_policy_selector_spec.md",
+        "port/x64_runtime/guest32.h",
+        "port/x64_runtime/guest32.c",
+        "port/x64_runtime/test_guest32.c",
+        "CMakeLists.txt"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "integration",
+          "source": "workspace",
+          "path": "integration_manifest.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_integration.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "G02",
+      "stage": "G",
+      "role": "adversarial_integrator",
+      "task": "Independently produce an isolated integration candidate, preferring the simplest components that survive all accepted reproducers and central gates. Do not copy G01. Include the same complete file set and integration_manifest.json; do not edit the repository copy.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "edit",
+        "powershell"
+      ],
+      "thinking": "high",
+      "budget": {
+        "max_tokens": 500000,
+        "timeout_seconds": 1200,
+        "max_tool_calls": 50,
+        "max_output_bytes": 524288
+      },
+      "writable_dir": "integrations/G02",
+      "context_files": [
+        "docs/x64_entry_policy_selector_spec.md",
+        "port/x64_runtime/guest32.h",
+        "port/x64_runtime/guest32.c",
+        "port/x64_runtime/test_guest32.c",
+        "CMakeLists.txt"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "integration",
+          "source": "workspace",
+          "path": "integration_manifest.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_integration.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    }
+  ]
+}

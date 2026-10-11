@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "purpose": "Read-only byte provenance for the original x86 0x100edd70 -> 0x100ed3c0 boundary; this fixture does not authorize recovered-code execution or define a native ABI.",
+  "original_pe": {
+    "path": "Total War Rome II/empire.retail.dll",
+    "size": 28278272,
+    "sha256": "d0d9805f41b69f2e5e9a54fbe07c327f18e311e76116e219512ad328bde43528",
+    "machine": "0x014c",
+    "optional_magic": "0x010b",
+    "image_base": "0x10000000",
+    "text_section": {
+      "name": ".text",
+      "rva": "0x00001000",
+      "virtual_size": "0x0172d4ea",
+      "raw_offset": "0x00000400",
+      "raw_size": "0x0172d600"
+    }
+  },
+  "callee": {
+    "va_start": "0x100ed3c0",
+    "va_end_exclusive": "0x100ed550",
+    "file_offset": "0x000ec7c0",
+    "size": 400,
+    "hex": "81ec0c0900008d4c2404c605c8319f1101c605c5319f1101c7042400000000e82c4800008d4c2410e8234800008b8424100900008d4c243c8944241c894424348b0424894424388d44240450c644242400c744242800000000e8824600008d442410508d4c244ce8744600008b44241c8d4c2428ffb42418090000894424588a4424248844245c8b44242889442460c644246400e857470000508d442438508d4c246ce8081effff8d4c2428e84f480000568d4c2468e8e5cbffff6a006a006884007411e867f61e016a00e8d090feff83c410e888681f016a008bc88b10ff52548d44242c50e805571f0183c4048b08898c24080900008b40048984240c0900008d4c2468e8f6f0ffff83f802744c83f80175ed8b9424d80800008b8424d40800008d34823bf274220f1f80000000008b4efc83c6fc85c9740d8b016a01ff108b9424d80800003bf275e5c78424d408000000000000e957ffffff8d4c2468e82c31ffff8d4c244ce8934700008d4c2440e88a4700008d4c2414e8814700008d4c2408e8784700005e81c40c090000c3",
+    "sha256": "b606895706a18f44d27babaef870efc60b362733d01af389b96a10e7c0e5d206"
+  },
+  "caller_source_loads": [
+    {
+      "va": "0x100ede68",
+      "file_offset": "0x000ed268",
+      "bytes": "8b7508",
+      "sha256": "b0f751a22f9b1c30c903d25f5a91638e0aa8911a27e7138a5091739563f0f778",
+      "kind": "mov_reg_ebp_disp8",
+      "destination": "esi",
+      "ebp_offset": 8
+    },
+    {
+      "va": "0x100edec9",
+      "file_offset": "0x000ed2c9",
+      "bytes": "8b7508",
+      "sha256": "b0f751a22f9b1c30c903d25f5a91638e0aa8911a27e7138a5091739563f0f778",
+      "kind": "mov_reg_ebp_disp8",
+      "destination": "esi",
+      "ebp_offset": 8
+    },
+    {
+      "va": "0x100edecc",
+      "file_offset": "0x000ed2cc",
+      "bytes": "8b7d10",
+      "sha256": "5c02b85de284a33e6b0fa15a2bdb4ecd81ceb63b6e9872d9f3a1f1d120e5981a",
+      "kind": "mov_reg_ebp_disp8",
+      "destination": "edi",
+      "ebp_offset": 16
+    }
+  ],
+  "caller_packets": [
+    {
+      "branch": "handler_registered",
+      "va_start": "0x100edf20",
+      "va_end_exclusive": "0x100edf2d",
+      "file_offset": "0x000ed320",
+      "size": 13,
+      "hex": "ff752457ff750c56e893f4ffff",
+      "sha256": "262a2edbd145895bc99d265e80cefd88f94b44056e9b4824cc20bfac5f22f32e",
+      "pushes": [
+        {"va": "0x100edf20", "bytes": "ff7524", "source": "dword [ebp+0x24]", "machine_order": 1, "callee_position": 4},
+        {"va": "0x100edf23", "bytes": "57", "source": "edi (earlier authenticated load from dword [ebp+0x10]; no complete def/use proof)", "machine_order": 2, "callee_position": 3},
+        {"va": "0x100edf24", "bytes": "ff750c", "source": "dword [ebp+0x0c]", "machine_order": 3, "callee_position": 2},
+        {"va": "0x100edf27", "bytes": "56", "source": "esi (earlier authenticated load from dword [ebp+0x08]; no complete def/use proof)", "machine_order": 4, "callee_position": 1}
+      ],
+      "call": {"va": "0x100edf28", "bytes": "e893f4ffff", "next_va": "0x100edf2d", "rel32": -2925, "target_va": "0x100ed3c0"},
+      "window_through_cleanup": {
+        "va_start": "0x100edf20",
+        "va_end_exclusive": "0x100edf41",
+        "file_offset": "0x000ed320",
+        "size": 33,
+        "hex": "ff752457ff750c56e893f4ffff6a01e89c5702006860650d10e8b271020083c418",
+        "sha256": "52227b99b8d956f8926eb0f02b0f3b8c62a229dee20653b5608dc81a96e41084"
+      },
+      "grouped_cleanup": {
+        "continuation_va": "0x100edf2d",
+        "continuation_file_offset": "0x000ed32d",
+        "continuation_size": 20,
+        "continuation_hex": "6a01e89c5702006860650d10e8b271020083c418",
+        "continuation_sha256": "16059cc15e0932ce776ddaeb4f7e5e991eb8fe6776f279d8b3dacc4238826954",
+        "later_calls": [
+          {"push_va": "0x100edf2d", "push_bytes": "6a01", "pushed_bytes": 4, "call_va": "0x100edf2f", "call_bytes": "e89c570200", "rel32": 153500, "target_va": "0x101136d0"},
+          {"push_va": "0x100edf34", "push_bytes": "6860650d10", "pushed_bytes": 4, "call_va": "0x100edf39", "call_bytes": "e8b2710200", "rel32": 160178, "target_va": "0x101150f0"}
+        ],
+        "cleanup": {"va": "0x100edf3e", "bytes": "83c418", "operation": "add_esp_imm8", "immediate": 24},
+        "target_packet_bytes": 16,
+        "later_push_bytes": 8,
+        "total_cleanup_bytes": 24
+      }
+    },
+    {
+      "branch": "no_exception_handler",
+      "va_start": "0x100edf73",
+      "va_end_exclusive": "0x100edf80",
+      "file_offset": "0x000ed373",
+      "size": 13,
+      "hex": "ff752457ff750c56e840f4ffff",
+      "sha256": "fa01caa591667fe272ef633abfc90e01d240d674b6a71aa4adb370b09d914d58",
+      "pushes": [
+        {"va": "0x100edf73", "bytes": "ff7524", "source": "dword [ebp+0x24]", "machine_order": 1, "callee_position": 4},
+        {"va": "0x100edf76", "bytes": "57", "source": "edi (earlier authenticated load from dword [ebp+0x10]; no complete def/use proof)", "machine_order": 2, "callee_position": 3},
+        {"va": "0x100edf77", "bytes": "ff750c", "source": "dword [ebp+0x0c]", "machine_order": 3, "callee_position": 2},
+        {"va": "0x100edf7a", "bytes": "56", "source": "esi (earlier authenticated load from dword [ebp+0x08]; no complete def/use proof)", "machine_order": 4, "callee_position": 1}
+      ],
+      "call": {"va": "0x100edf7b", "bytes": "e840f4ffff", "next_va": "0x100edf80", "rel32": -3008, "target_va": "0x100ed3c0"},
+      "window_through_cleanup": {
+        "va_start": "0x100edf73",
+        "va_end_exclusive": "0x100edf94",
+        "file_offset": "0x000ed373",
+        "size": 33,
+        "hex": "ff752457ff750c56e840f4ffff6a01e8495702006860650d10e85f71020083c418",
+        "sha256": "76a454a3f06c1c8de33f0b3b0ab432e059de9abca52b342b8cac0e9f50198d6a"
+      },
+      "grouped_cleanup": {
+        "continuation_va": "0x100edf80",
+        "continuation_file_offset": "0x000ed380",
+        "continuation_size": 20,
+        "continuation_hex": "6a01e8495702006860650d10e85f71020083c418",
+        "continuation_sha256": "2bb4e7d91eb623e2d1bb5e99c1c71431bd06fb60fb1ae5316da895dcdad3e7ba",
+        "later_calls": [
+          {"push_va": "0x100edf80", "push_bytes": "6a01", "pushed_bytes": 4, "call_va": "0x100edf82", "call_bytes": "e849570200", "rel32": 153417, "target_va": "0x101136d0"},
+          {"push_va": "0x100edf87", "push_bytes": "6860650d10", "pushed_bytes": 4, "call_va": "0x100edf8c", "call_bytes": "e85f710200", "rel32": 160095, "target_va": "0x101150f0"}
+        ],
+        "cleanup": {"va": "0x100edf91", "bytes": "83c418", "operation": "add_esp_imm8", "immediate": 24},
+        "target_packet_bytes": 16,
+        "later_push_bytes": 8,
+        "total_cleanup_bytes": 24
+      }
+    }
+  ],
+  "critical_instructions": [
+    {"va": "0x100ed3c0", "file_offset": "0x000ec7c0", "bytes": "81ec0c090000", "kind": "sub_esp_imm32", "esp_delta_before": 0, "immediate": 2316, "stack_effect": -2316, "esp_delta_after": -2316},
+    {"va": "0x100ed3ed", "file_offset": "0x000ec7ed", "bytes": "8b842410090000", "kind": "esp_disp32", "access": "read", "displacement": 2320, "esp_delta_before": -2316, "entry_esp_offset": 4, "classification": "caller_position_1"},
+    {"va": "0x100ed434", "file_offset": "0x000ec834", "bytes": "ffb42418090000", "kind": "push_esp_disp32", "access": "read", "displacement": 2328, "esp_delta_before": -2316, "entry_esp_offset": 12, "classification": "caller_position_3", "stack_effect": -4},
+    {"va": "0x100ed471", "file_offset": "0x000ec871", "bytes": "56", "kind": "push_esi", "esp_delta_before": -2316, "stack_effect": -4, "esp_delta_after": -2320, "classification": "delayed_saved_register"},
+    {"va": "0x100ed4b0", "file_offset": "0x000ec8b0", "bytes": "898c2408090000", "kind": "esp_disp32", "access": "write", "displacement": 2312, "esp_delta_before": -2320, "entry_esp_offset": -8, "classification": "local"},
+    {"va": "0x100ed4ba", "file_offset": "0x000ec8ba", "bytes": "8984240c090000", "kind": "esp_disp32", "access": "write", "displacement": 2316, "esp_delta_before": -2320, "entry_esp_offset": -4, "classification": "local"},
+    {"va": "0x100ed4d4", "file_offset": "0x000ec8d4", "bytes": "8b9424d8080000", "kind": "esp_disp32", "access": "read", "displacement": 2264, "esp_delta_before": -2320, "entry_esp_offset": -56, "classification": "local"},
+    {"va": "0x100ed4db", "file_offset": "0x000ec8db", "bytes": "8b8424d4080000", "kind": "esp_disp32", "access": "read", "displacement": 2260, "esp_delta_before": -2320, "entry_esp_offset": -60, "classification": "local"},
+    {"va": "0x100ed500", "file_offset": "0x000ec900", "bytes": "8b9424d8080000", "kind": "esp_disp32", "access": "read", "displacement": 2264, "esp_delta_before": -2320, "entry_esp_offset": -56, "classification": "local"},
+    {"va": "0x100ed50b", "file_offset": "0x000ec90b", "bytes": "c78424d408000000000000", "kind": "esp_disp32_imm32", "access": "write", "displacement": 2260, "immediate": 0, "esp_delta_before": -2320, "entry_esp_offset": -60, "classification": "local"},
+    {"va": "0x100ed548", "file_offset": "0x000ec948", "bytes": "5e", "kind": "pop_esi", "esp_delta_before": -2320, "stack_effect": 4, "esp_delta_after": -2316, "classification": "restore_saved_register"},
+    {"va": "0x100ed549", "file_offset": "0x000ec949", "bytes": "81c40c090000", "kind": "add_esp_imm32", "esp_delta_before": -2316, "immediate": 2316, "stack_effect": 2316, "esp_delta_after": 0},
+    {"va": "0x100ed54f", "file_offset": "0x000ec94f", "bytes": "c3", "kind": "ret", "esp_delta_before": 0, "ret_immediate": 0, "callee_cleanup_bytes": 0}
+  ],
+  "large_esp_disp32_scan": {
+    "minimum_displacement": 2304,
+    "maximum_displacement": 4096,
+    "references": [
+      {"va": "0x100ed3ed", "opcode": "8b", "access": "read", "displacement": 2320, "esp_delta_before": -2316, "entry_esp_offset": 4},
+      {"va": "0x100ed434", "opcode": "ff", "access": "read", "displacement": 2328, "esp_delta_before": -2316, "entry_esp_offset": 12},
+      {"va": "0x100ed4b0", "opcode": "89", "access": "write", "displacement": 2312, "esp_delta_before": -2320, "entry_esp_offset": -8},
+      {"va": "0x100ed4ba", "opcode": "89", "access": "write", "displacement": 2316, "esp_delta_before": -2320, "entry_esp_offset": -4}
+    ]
+  },
+  "entry_stack_positions": [
+    {"position": 1, "entry_esp_offset": 4, "read_vas": ["0x100ed3ed"]},
+    {"position": 2, "entry_esp_offset": 8, "read_vas": []},
+    {"position": 3, "entry_esp_offset": 12, "read_vas": ["0x100ed434"]},
+    {"position": 4, "entry_esp_offset": 16, "read_vas": []}
+  ],
+  "limitations": [
+    "The full body and selected instruction semantics are authenticated without executing x86; this is not a general-purpose x86 decoder.",
+    "Canonical/decompiler variable names are not evidence for stack direction, argument type, exported name, or a native x64 calling convention.",
+    "The ESI and EDI source loads are authenticated prior-load observations; this fixture does not prove an unclobbered register def/use path to each push."
+  ]
+}

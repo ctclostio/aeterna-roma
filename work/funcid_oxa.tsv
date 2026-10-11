@@ -1,0 +1,300 @@
+0x1000add0	cmd_pause_bink_video_register	core	bink video pause handler reg
+0x1000b690	cmd_take_custom_screenshot_register	render	static cmd reg "take_custom_screenshot <filename> <sizeX> <sizeY>" cat=engine
+0x1000b790	init_twitch_error_log_path	net	ApplicationInitialisers.cpp:0x84 registers twitch log path
+0x1000b890	global_obj_zero_init	unknown	tiny static zero-init of global obj (275B)
+0x1000bb30	config_ALLIANCE_COLOUR_ALLY_init	battle	float RGB triple init via config mgr (EmpireBattleSetup.cpp)
+0x1000bb90	config_ALLIANCE_COLOUR_DESTROYED_init	battle	float RGB triple init via config mgr (EmpireBattleSetup.cpp)
+0x1000bbf0	config_ALLIANCE_COLOUR_ENEMY_init	battle	float RGB triple init via config mgr (EmpireBattleSetup.cpp)
+0x1000bc50	config_ALLIANCE_COLOUR_NEUTRAL_init	battle	float RGB triple init via config mgr (EmpireBattleSetup.cpp)
+0x1000bcb0	config_ALLIANCE_COLOUR_PLAYER_init	battle	float RGB triple init via config mgr (EmpireBattleSetup.cpp)
+0x1000d2f0	config_enraged_threshold_init	battle	amok-points threshold config float (battle_logic)
+0x1000d580	global_obj_zero_init_2	unknown	tiny static zero-init of global obj (274B)
+0x1000d6b0	global_flag_byte_init	unknown	tiny static init @globals (185B)
+0x1000d950	veg_shrub_proxy_ctor	render	static vegetation proxy singleton key L"SHRUB_PROXY"
+0x1000da50	veg_smallveg_proxy_ctor	render	static vegetation proxy singleton key L"SMALL_VEG_PROXY"
+0x1000dab0	global_obj_zero_init_3	unknown	tiny static zero-init of global obj (275B)
+0x1000dbe0	veg_tree_proxy_ctor	render	static vegetation proxy singleton key L"TREE_PROXY"
+0x1000df30	cmd_Exit from battle after it is finished without showing results screen. Useful for automated replay runs._register	core	static cmd reg "exit_after_battle <true/false>" cat=
+0x1000ec00	global_flag_byte_init_2	unknown	tiny static init @globals (187B)
+0x1000ec90	global_floatpair_init	unknown	globals := {9664.0f,200.0f,1820}; likely campaign date/turn limits
+0x1000ecd0	global_year_const_init	unknown	global word := 2731 (0xaab); calendar/year constant
+0x1000ed70	veg_shrub_proxy_ctor_2	render	static vegetation proxy singleton key L"SHRUB_PROXY"
+0x1000edd0	veg_smallveg_proxy_ctor_2	render	static vegetation proxy singleton key L"SMALL_VEG_PROXY"
+0x1000f6e0	veg_tree_proxy_ctor_2	render	static vegetation proxy singleton key L"TREE_PROXY"
+0x1000fcb0	cmd_replay_speed_register	battle	static cmd reg "replay_speed <multiplier>" cat=battle
+0x10010210	global_obj_zero_init_4	unknown	tiny static zero-init of global obj (274B)
+0x100102a0	global_flag_byte_init_3	unknown	tiny static init @globals (185B)
+0x10010700	veg_smallveg_proxy_ctor_3	render	static vegetation proxy singleton key L"SMALL_VEG_PROXY"
+0x10010c60	global_obj_zero_init_5	unknown	tiny static zero-init of global obj (275B)
+0x10010d90	veg_tree_proxy_ctor_3	render	static vegetation proxy singleton key L"TREE_PROXY"
+0x10010df0	global_flag_byte_init_4	unknown	tiny static init @globals (187B)
+0x10011510	cmd_cr_register	core	static cmd reg "create_settlement_breach <x> <y> <facing_x> <facing_y> " cat=create_settlement_breach
+0x10011bb0	core_sentinel_lists_init_x4	core	builds+frees 4 intrusive sentinel lists (static container init)
+0x10012820	global_obj_zero_init_6	unknown	tiny static zero-init of global obj (274B)
+0x10012b80	veg_shrub_proxy_ctor_3	render	static vegetation proxy singleton key L"SHRUB_PROXY"
+0x10012be0	veg_smallveg_proxy_ctor_4	render	static vegetation proxy singleton key L"SMALL_VEG_PROXY"
+0x10012c40	global_flag_byte_init_5	unknown	tiny static init @globals (187B)
+0x10012de0	veg_tree_proxy_ctor_4	render	static vegetation proxy singleton key L"TREE_PROXY"
+0x10012f70	cmd_battle_camera_track_file_register	battle	static cmd reg "battle_camera_track_file <filename>" cat=battle
+0x10013880	cmd_battle_fov_register	battle	static cmd reg "battle_fov <fov in degrees>" cat=battle camera manager
+0x10013a10	cmd_campaign_camera_placeholder_register	battle	placeholder cmd for campaign map settings (cat battle)
+0x10014030	cmd_mp_sync_logging_battles_register	net	mp_network_sync_logging_in_battles cmd (multiplayer sync debug)
+0x100141e0	animtype_camel_params_init	anim	mount/fauna model params: radii+angles(pi/4,pi)+scale floats
+0x10014300	animtype_model_params_init	anim	model params block; name via DAT ref
+0x10014420	animtype_model_params_init_2	anim	model params block; name via DAT ref
+0x10014540	animtype_elephant_adult_params_init	anim	mount/fauna model params: radii+angles(pi/4,pi)+scale floats
+0x10014660	animtype_elephant_baby_params_init	anim	mount/fauna model params: radii+angles(pi/4,pi)+scale floats
+0x10014780	animtype_model_params_init_3	anim	model params block; name via DAT ref
+0x100148a0	animtype_lanky_man_params_init	anim	mount/fauna model params: radii+angles(pi/4,pi)+scale floats
+0x100149c0	animtype_model_params_init_4	anim	model params block; name via DAT ref
+0x10014ae0	animtype_milan_params_init	anim	mount/fauna model params: radii+angles(pi/4,pi)+scale floats
+0x10014c00	animtype_peasant_params_init	anim	mount/fauna model params: radii+angles(pi/4,pi)+scale floats
+0x10014d20	animtype_seagull_params_init	anim	mount/fauna model params: radii+angles(pi/4,pi)+scale floats
+0x10014e40	animtype_turtle_dove_params_init	anim	mount/fauna model params: radii+angles(pi/4,pi)+scale floats
+0x10014f60	animtype_vulture_params_init	anim	mount/fauna model params: radii+angles(pi/4,pi)+scale floats
+0x10015080	animtype_whale_params_init	anim	mount/fauna model params: radii+angles(pi/4,pi)+scale floats
+0x100151a0	animtype_model_params_init_5	anim	model params block; name via DAT ref
+0x100152c0	cmd_output_sync_logs_register	net	output_sync_logs toggle cmd
+0x100153a0	cmd_play_unit_cutscene_register	anim	static cmd reg "play_unit_cutscene <filename> <length (ms)> <unit index>" cat=play_unit_cutscene
+0x10015a40	global_obj_zero_init_7	unknown	tiny static zero-init of global obj (272B)
+0x10015ff0	veg_shrub_proxy_ctor_4	render	static vegetation proxy singleton key L"SHRUB_PROXY"
+0x10016050	veg_smallveg_proxy_ctor_5	render	static vegetation proxy singleton key L"SMALL_VEG_PROXY"
+0x100161a0	global_obj_zero_init_8	unknown	tiny static zero-init of global obj (275B)
+0x10016330	cmd_add_crew_register	core	static cmd reg "add crew to ships <true|false>" cat=add crew to ships
+0x10016950	cmd_pathfinder_unit_to_debug_id_register	battle	pathfinder debug hook global
+0x100171d0	global_flag_byte_init_6	unknown	tiny static init @globals (187B)
+0x10018810	global_flag_byte_init_7	unknown	tiny static init @globals (185B)
+0x10018bc0	veg_shrub_proxy_ctor_5	render	static vegetation proxy singleton key L"SHRUB_PROXY"
+0x10018c20	veg_smallveg_proxy_ctor_6	render	static vegetation proxy singleton key L"SMALL_VEG_PROXY"
+0x10018c80	global_flag_byte_init_8	unknown	tiny static init @globals (188B)
+0x10018da0	veg_tree_proxy_ctor_5	render	static vegetation proxy singleton key L"TREE_PROXY"
+0x10019300	battle_pool_build_400	battle	loops FUN_1039d040(i,1.0,1.0) i=7.. building >=400 pooled objects
+0x10019400	cmd_override_normal_stance_register	battle	named handler override_normal_stance
+0x100194f0	cmd_test_square_meta_data_register	battle	named handler test_square_meta_data
+0x1001bff0	config_entity_firearc_colour_init	render	firearc display colour config (entity display)
+0x1001c860	envvar_force_facial_pose_init	anim	named global FORCE_FACIAL_POSE + vtable + atexit dtor
+0x1001d8d0	global_obj_zero_init_9	unknown	tiny static zero-init of global obj (274B)
+0x1001d990	global_obj_zero_init_10	unknown	tiny static zero-init of global obj (274B)
+0x1001e050	global_obj_zero_init_11	unknown	tiny static zero-init of global obj (272B)
+0x1001e3d0	cfg_num_attempt_conversational_vo_init	audio	named int config global
+0x1001f060	veg_shrub_proxy_ctor_6	render	static vegetation proxy singleton key L"SHRUB_PROXY"
+0x1001f160	veg_smallveg_proxy_ctor_7	render	static vegetation proxy singleton key L"SMALL_VEG_PROXY"
+0x1001f880	global_obj_zero_init_12	unknown	tiny static zero-init of global obj (275B)
+0x1001f9d0	veg_tree_proxy_ctor_6	render	static vegetation proxy singleton key L"TREE_PROXY"
+0x1001fa30	fx_triggereffect0_prsmoke_bind	render	EffectsDisplay.cpp binds TRIGGER_EFFECT_0 -> "Prsmoke"
+0x1001fa80	fx_triggereffect1_deckfire_bind	render	EffectsDisplay.cpp binds TRIGGER_EFFECT_1 -> "DeckFire"
+0x100227a0	cfg_battle_cinematic_display_dir_init	anim	EmpireBattleView.cpp:0xac default "animated_scenes"
+0x10022800	cfg_battle_prop_override_model_init	render	BattleTerrainDisplay.cpp:0x69 prop override model key cfg
+0x10022cf0	cfg_debug_replay_init	core	named debug_replay global
+0x10022dd0	cmd_disable_battle_cursor_intersection_register	battle	disables cursor vs 3D object intersection
+0x10024ab0	cmd_set_unit_dirty_register	battle	static cmd reg "set_unit_dirty <unit_id> <dirty>" cat=empire_battle
+0x100251f0	cmd_toggle_building_shadow_capsules_register	render	debug draw building shadow capsules
+0x100258b0	cfg_ae_record_init	audio	named AE_RECORD global (audio event record)
+0x10026220	global_obj_zero_init_13	unknown	tiny static zero-init of global obj (274B)
+0x10026480	veg_shrub_proxy_ctor_7	render	static vegetation proxy singleton key L"SHRUB_PROXY"
+0x10026530	veg_smallveg_proxy_ctor_8	render	static vegetation proxy singleton key L"SMALL_VEG_PROXY"
+0x100266d0	veg_tree_proxy_ctor_7	render	static vegetation proxy singleton key L"TREE_PROXY"
+0x10026880	cfg_cop_debug_attack_dir_init	battle	CombatOutcomePrediction.cpp debug enum default "front"
+0x10026970	cfg_cop_debug_situation_init	battle	CombatOutcomePrediction.cpp debug enum default "land_melee_vs_melee"
+0x100269c0	cfg_cop_debug_unit_attacker_init	battle	CombatOutcomePrediction.cpp debug enum (attacker)
+0x10026a10	cfg_cop_debug_unit_defender_init	battle	CombatOutcomePrediction.cpp debug enum (defender)
+0x10026c20	cmd_toggle_building_lites_capsules_register	render	debug draw building lights shadow capsules
+0x10027330	global_obj_zero_init_14	unknown	tiny static zero-init of global obj (274B)
+0x10027870	veg_smallveg_proxy_ctor_9	render	static vegetation proxy singleton key L"SMALL_VEG_PROXY"
+0x100278d0	global_obj_zero_init_15	unknown	tiny static zero-init of global obj (275B)
+0x10027ba0	veg_tree_proxy_ctor_8	render	static vegetation proxy singleton key L"TREE_PROXY"
+0x10027dd0	battle_profile_clone_init	battle	clones global template floats; ints {2,11,11,11,17,0,17}; scans rdata arr term 0x1a
+0x10027ec0	battle_profile_clone_init_2	battle	clones global template floats; ints {2,11,11,11,17,0,17}; scans rdata arr term 0x1a
+0x10027fb0	battle_profile_clone_init_3	battle	clones global template floats; ints {2,11,11,11,17,0,17}; scans rdata arr term 0x1a
+0x100280a0	battle_profile_clone_init_4	battle	clones global template floats; ints {2,11,11,11,17,0,17}; scans rdata arr term 0x1a
+0x10028430	battle_profile_clone_static	battle	ints {4,11,11,11,17,0,17} + rdata array ref DAT_11781f20
+0x10028960	battle_profile_clone_init_5	battle	clones global template floats; ints {2,11,11,11,17,0,17}; scans rdata arr term 0x1a
+0x10028a20	battle_profile_clone_init_6	battle	clones global template floats; ints {2,11,11,11,17,0,17}; scans rdata arr term 0x1a
+0x10028ae0	battle_profile_clone_init_7	battle	clones global template floats; ints {2,11,11,11,17,0,17}; scans rdata arr term 0x1a
+0x10028ba0	battle_profile_clone_init_8	battle	clones global template floats; ints {2,11,11,11,17,0,17}; scans rdata arr term 0x1a
+0x1002a1c0	battle_profile_clone_init_9	battle	clones global template floats; ints {2,11,11,11,17,0,17}; scans rdata arr term 0x1a
+0x1002a280	battle_profile_clone_init_10	battle	clones global template floats; ints {2,11,11,11,17,0,17}; scans rdata arr term 0x1a
+0x1002a340	battle_profile_clone_init_11	battle	clones global template floats; ints {2,11,11,11,17,0,17}; scans rdata arr term 0x1a
+0x1002a400	battle_profile_clone_init_12	battle	clones global template floats; ints {2,11,11,11,17,0,17}; scans rdata arr term 0x1a
+0x1002a720	battle_profile_clone_init_13	battle	clones global template floats; ints {2,11,11,11,17,0,17}; scans rdata arr term 0x1a
+0x1002a7e0	battle_profile_clone_init_14	battle	clones global template floats; ints {2,11,11,11,17,0,17}; scans rdata arr term 0x1a
+0x1002a8a0	battle_profile_clone_init_15	battle	clones global template floats; ints {2,11,11,11,17,0,17}; scans rdata arr term 0x1a
+0x1002a960	battle_profile_clone_init_16	battle	clones global template floats; ints {2,11,11,11,17,0,17}; scans rdata arr term 0x1a
+0x1002bd00	battle_profile_clone_static_b	battle	same template family; scan DAT_11781f24 term 0x1a
+0x1002be70	battle_profile_clone_init_17	battle	clones global template floats; ints {2,11,11,11,17,0,17}; scans rdata arr term 0x1a
+0x1002bf40	battle_profile_clone_init_18	battle	clones global template floats; ints {2,11,11,11,17,0,17}; scans rdata arr term 0x1a
+0x1002c100	cmd_toggle_projectiles_damage_register	battle	toggle projectile damage cmd
+0x1002c560	global_obj_zero_init_16	unknown	tiny static zero-init of global obj (274B)
+0x1002c850	global_obj_zero_init_17	unknown	tiny static zero-init of global obj (275B)
+0x1002ce20	global_flag_byte_init_9	unknown	tiny static init @globals (187B)
+0x1002cf10	global_flag_byte_init_10	unknown	tiny static init @globals (185B)
+0x1002d180	veg_shrub_proxy_ctor_8	render	static vegetation proxy singleton key L"SHRUB_PROXY"
+0x1002d1e0	veg_smallveg_proxy_ctor_10	render	static vegetation proxy singleton key L"SMALL_VEG_PROXY"
+0x1002d240	global_obj_zero_init_18	unknown	tiny static zero-init of global obj (275B)
+0x1002d400	veg_tree_proxy_ctor_9	render	static vegetation proxy singleton key L"TREE_PROXY"
+0x1002d540	cfg_bombard_projectile_init	battle	OfffieldBombardManager.cpp:0x44 default projectile "fireball"
+0x1002dea0	singleton_strkey_ctor_2dea0	unknown	FUN_11354c20 + interned str DAT_117420a4; unclear
+0x1002e390	cmd_toggle_unit_lanterns_register	render	toggle unit lanterns cmd
+0x1002e500	global_obj_zero_init_19	unknown	tiny static zero-init of global obj (275B)
+0x1002e5f0	global_obj_zero_init_20	unknown	tiny static zero-init of global obj (275B)
+0x1002eae0	cmd_Sets up campaign rendering_register	core	static cmd reg "render_campaign <out_folder> <frame_name> <frames_per_second" cat=
+0x1002ebc0	global_obj_zero_init_21	unknown	tiny static zero-init of global obj (275B)
+0x1002ecb0	global_obj_zero_init_22	unknown	tiny static zero-init of global obj (275B)
+0x1002eee0	global_obj_zero_init_23	unknown	tiny static zero-init of global obj (275B)
+0x1002f260	global_obj_zero_init_24	unknown	tiny static zero-init of global obj (275B)
+0x1002f390	global_obj_zero_init_25	unknown	tiny static zero-init of global obj (275B)
+0x1002f6e0	global_obj_zero_init_26	unknown	tiny static zero-init of global obj (275B)
+0x1002fa30	global_obj_zero_init_27	unknown	tiny static zero-init of global obj (275B)
+0x1000ac20	cmd_game_startup_mode_register	core	startup mode selector cmd <battle|campaign|campaign_edit|frontend|naval>
+0x10013af0	cmd_cycle_local_player_register	battle	console cmd cycle_local_player - advance local player to next army/alliance
+0x1002c980	cfg_break_on_cannon_id_init	battle	debug break config from SquadTaskBatteryAttackShip.cpp:0x34
+0x1002fd80	global_flag_3000_init	unknown	sets global dword =0x3000
+0x100300d0	global_flag_3000_init_2	unknown	sets global dword =0x3000
+0x10030420	global_flag_3000_init_3	unknown	sets global dword =0x3000
+0x10030770	global_flag_3000_init_4	unknown	sets global dword =0x3000
+0x10030cb0	global_flag_3000_init_5	unknown	sets global dword =0x3000
+0x10031010	cfg_debug_female_chance_spawn_init	campaign	agent spawn gender debug config
+0x10031100	cmd_kill_army_general_register	campaign	console command kill_army_general
+0x10031510	campscript_type_SHRUB_PROXY_init	campaign	script metadata ctor key "SHRUB_PROXY" (455B)
+0x10031570	campscript_type_SMALL_VEG_PROXY_init	campaign	script metadata ctor key "SMALL_VEG_PROXY" (459B)
+0x100315d0	global_flag_3000_init_6	unknown	sets global dword =0x3000
+0x10031af0	global_flag_3000_init_7	unknown	sets global dword =0x3000
+0x10031f30	cfg_campaign_cam_heightmap_init	campaign	heightmap camera toggle config
+0x10032300	global_flag_3000_init_8	unknown	sets global dword =0x3000
+0x10032430	campscript_type_campaign_cam_move_init	campaign	script metadata ctor key "campaign_cam_move" (608B)
+0x10032730	global_flag_3000_init_9	unknown	sets global dword =0x3000
+0x10032ce0	global_flag_3000_init_10	unknown	sets global dword =0x3000
+0x10033180	cmd_set_expenditure_register	campaign	console cmd set_expenditure <amount> <target key> cat=Faction
+0x10033410	cfg_music_tracks_before_unlock_init	audio	music unlock count config
+0x10033730	global_flag_3000_init_11	unknown	sets global dword =0x3000
+0x10033ad0	global_flag_3000_init_12	unknown	sets global dword =0x3000
+0x10033e20	global_flag_3000_init_13	unknown	sets global dword =0x3000
+0x10034250	cmd_show_campaign_selection_bounds_register	ui	debug draw selection bounds
+0x100345c0	global_flag_3000_init_14	unknown	sets global dword =0x3000
+0x10035370	global_flag_3000_init_15	unknown	sets global dword =0x3000
+0x10035750	cfg_cai_strength_autoresolver_test_init	campaign	CAI autoresolver test config
+0x10035870	global_flag_3000_init_16	unknown	sets global dword =0x3000
+0x10035e10	campscript_type_building_init	campaign	script metadata ctor key "building" (541B)
+0x10036060	campscript_type_target_faction_init	campaign	script metadata ctor key "target_faction" (547B)
+0x10036120	campscript_type_region_init	campaign	script metadata ctor key "region" (539B)
+0x10036270	campscript_type_ability_init	campaign	script metadata ctor key "ability" (540B)
+0x100362d0	campscript_type_attribute_init	campaign	script metadata ctor key "attribute" (549B)
+0x10036360	campscript_type_mission_result_critial_failure_init	campaign	script metadata ctor key "mission_result_critial_failure" (570B)
+0x100363c0	campscript_type_mission_result_critial_success_init	campaign	script metadata ctor key "mission_result_critial_success" (563B)
+0x10036420	campscript_type_mission_result_failure_init	campaign	script metadata ctor key "mission_result_failure" (555B)
+0x10036480	campscript_type_mission_result_opportune_failure_init	campaign	script metadata ctor key "mission_result_opportune_failure" (565B)
+0x100364e0	campscript_type_mission_result_success_init	campaign	script metadata ctor key "mission_result_success" (555B)
+0x10036600	campscript_type_pending_battle_init	campaign	script metadata ctor key "pending_battle" (547B)
+0x100367e0	campscript_type_character_init	campaign	script metadata ctor key "character" (542B)
+0x100368a0	campscript_type_relationship_init	campaign	script metadata ctor key "relationship" (545B)
+0x10036900	campscript_type_ability_init_2	campaign	script metadata ctor key "ability" (540B)
+0x10036960	campscript_type_attribute_init_2	campaign	script metadata ctor key "attribute" (549B)
+0x100369f0	campscript_type_mission_result_critial_failure_init_2	campaign	script metadata ctor key "mission_result_critial_failure" (570B)
+0x10036a50	campscript_type_mission_result_critial_success_init_2	campaign	script metadata ctor key "mission_result_critial_success" (563B)
+0x10036ab0	campscript_type_mission_result_failure_init_2	campaign	script metadata ctor key "mission_result_failure" (555B)
+0x10036b10	campscript_type_mission_result_opportune_failure_init_2	campaign	script metadata ctor key "mission_result_opportune_failure" (565B)
+0x10036b70	campscript_type_mission_result_success_init_2	campaign	script metadata ctor key "mission_result_success" (555B)
+0x10036bd0	campscript_type_garrison_residence_init	campaign	script metadata ctor key "garrison_residence" (551B)
+0x10036d50	campscript_type_region_init_2	campaign	script metadata ctor key "region" (539B)
+0x10036db0	campscript_type_tradition_point_spent_on_init	campaign	script metadata ctor key "tradition_point_spent_on" (557B)
+0x10036ed0	campscript_type_spouse_init	campaign	script metadata ctor key "spouse" (539B)
+0x10036f60	campscript_type_political_action_init	campaign	script metadata ctor key "political_action" (549B)
+0x10036fc0	campscript_type_repetition_init	campaign	script metadata ctor key "repetition" (543B)
+0x100370e0	campscript_type_spouse_init_2	campaign	script metadata ctor key "spouse" (539B)
+0x100371a0	campscript_type_target_character_init	campaign	script metadata ctor key "target_character" (549B)
+0x10037230	campscript_type_target_character_init_2	campaign	script metadata ctor key "target_character" (549B)
+0x100372f0	campscript_type_target_character_init_3	campaign	script metadata ctor key "target_character" (549B)
+0x10037380	campscript_type_province_init	campaign	script metadata ctor key "province" (541B)
+0x100374a0	campscript_type_target_character_init_4	campaign	script metadata ctor key "target_character" (549B)
+0x10037530	campscript_type_get_trait_level_init	campaign	script metadata ctor key "get_trait_level" (555B)
+0x100375c0	campscript_type_target_character_init_5	campaign	script metadata ctor key "target_character" (549B)
+0x10037650	campscript_type_target_character_init_6	campaign	script metadata ctor key "target_character" (549B)
+0x100376e0	campscript_type_target_character_init_7	campaign	script metadata ctor key "target_character" (549B)
+0x10037740	campscript_type_destination_faction_init	campaign	script metadata ctor key "destination_faction" (552B)
+0x10037800	campscript_type_province_init_2	campaign	script metadata ctor key "province" (541B)
+0x10037890	campscript_type_target_character_init_8	campaign	script metadata ctor key "target_character" (549B)
+0x10037a70	campscript_type_character_init_2	campaign	script metadata ctor key "character" (542B)
+0x10037b30	campscript_type_skill_point_spent_on_init	campaign	script metadata ctor key "skill_point_spent_on" (553B)
+0x10037c20	campscript_type_target_character_init_9	campaign	script metadata ctor key "target_character" (549B)
+0x100392e0	campscript_type_liberating_character_init	campaign	script metadata ctor key "liberating_character" (553B)
+0x10039460	campscript_type_other_faction_init	campaign	script metadata ctor key "other_faction" (546B)
+0x100394f0	campscript_type_faction_init	campaign	script metadata ctor key "faction" (540B)
+0x10039610	campscript_type_initiative_key_init	campaign	script metadata ctor key "initiative_key" (547B)
+0x10039670	campscript_type_province_init_3	campaign	script metadata ctor key "province" (541B)
+0x10039730	campscript_type_action_key_init	campaign	script metadata ctor key "action_key" (543B)
+0x100398b0	campscript_type_other_faction_init_2	campaign	script metadata ctor key "other_faction" (546B)
+0x10039940	campscript_type_model_init	campaign	script metadata ctor key "model" (538B)
+0x100399d0	campscript_type_world_init	campaign	script metadata ctor key "world" (538B)
+0x10039a60	campscript_type_military_force_init	campaign	script metadata ctor key "military_force" (547B)
+0x10039ac0	campscript_type_stance_adopted_init	campaign	script metadata ctor key "stance_adopted" (547B)
+0x1003a3c0	campscript_type_garrison_residence_init_2	campaign	script metadata ctor key "garrison_residence" (551B)
+0x1003aca0	campscript_type_campaign_model_init	campaign	script metadata ctor key "campaign_model" (547B)
+0x1003ad00	campscript_type_faction_init_2	campaign	script metadata ctor key "faction" (540B)
+0x1003ae50	campscript_type_model_init_2	campaign	script metadata ctor key "model" (538B)
+0x1003b030	campscript_type_model_init_3	campaign	script metadata ctor key "model" (538B)
+0x1003b090	campscript_type_pending_battle_init_2	campaign	script metadata ctor key "pending_battle" (547B)
+0x1003b120	campscript_type_is_alliance_init	campaign	script metadata ctor key "is_alliance" (544B)
+0x1003b180	campscript_type_is_military_access_init	campaign	script metadata ctor key "is_military_access" (551B)
+0x1003b1e0	campscript_type_is_peace_treaty_init	campaign	script metadata ctor key "is_peace_treaty" (548B)
+0x1003b240	campscript_type_is_trade_agreement_init	campaign	script metadata ctor key "is_trade_agreement" (551B)
+0x1003b2a0	campscript_type_proposer_init	campaign	script metadata ctor key "proposer" (541B)
+0x1003b300	campscript_type_recipient_init	campaign	script metadata ctor key "recipient" (542B)
+0x1003b4c0	campscript_type_region_init_3	campaign	script metadata ctor key "region" (539B)
+0x1003b610	campscript_type_region_slot_init	campaign	script metadata ctor key "region_slot" (551B)
+0x1003c5e0	global_flag_3000_init_17	unknown	sets global dword =0x3000
+0x1003ca80	campscript_cond_compare_init	campaign	compares two singleton-derived values, stores bool DAT_11eeccee
+0x1003cf20	campscript_type_world_init_2	campaign	script metadata ctor key "world" (538B)
+0x1003d100	cfg_pass_all_traits_init	campaign	EmpireCampaignTriggers.cpp:0xe3 trigger flag pass_all_traits
+0x1003d4e0	global_flag_3000_init_18	unknown	sets global dword =0x3000
+0x1003d830	global_flag_3000_init_19	unknown	sets global dword =0x3000
+0x1003d990	ccq_ccq_active_rebel_character_register	campaign	registers campaign command constant CCQ_ACTIVE_REBEL_CHARACTER
+0x1003da10	ccq_ccq_add_campaign_skill_point_register	campaign	registers campaign command constant CCQ_ADD_CAMPAIGN_SKILL_POINT
+0x1003da90	ccq_ccq_add_character_trait_points_register	campaign	registers campaign command constant CCQ_ADD_CHARACTER_TRAIT_POINTS
+0x1003db10	ccq_ccq_add_region_trait_points_register	campaign	registers campaign command constant CCQ_ADD_REGION_TRAIT_POINTS
+0x1003db90	ccq_ccq_adjust_faction_treasury_register	campaign	registers campaign command constant CCQ_ADJUST_FACTION_TREASURY
+0x1003dc10	ccq_ccq_adopt_general_register	campaign	registers campaign command constant CCQ_ADOPT_GENERAL
+0x1003dc90	ccq_ccq_agent_embark_at_port_register	campaign	registers campaign command constant CCQ_AGENT_EMBARK_AT_PORT
+0x1003dd10	ccq_ccq_agent_options_closed_register	campaign	registers campaign command constant CCQ_AGENT_OPTIONS_CLOSED
+0x1003dd90	ccq_ccq_army_leave_garrison_register	campaign	registers campaign command constant CCQ_ARMY_LEAVE_GARRISON
+0x1003de10	ccq_ccq_assign_post_register	campaign	registers campaign command constant CCQ_ASSIGN_POST
+0x1003de90	ccq_ccq_attach_to_force_register	campaign	registers campaign command constant CCQ_ATTACH_TO_FORCE
+0x1003df10	ccq_ccq_attack_trade_route_register	campaign	registers campaign command constant CCQ_ATTACK_TRADE_ROUTE
+0x1003df90	ccq_ccq_building_cancel_construction_register	campaign	registers campaign command constant CCQ_BUILDING_CANCEL_CONSTRUCTION
+0x1003e010	ccq_ccq_building_construct_register	campaign	registers campaign command constant CCQ_BUILDING_CONSTRUCT
+0x1003e090	ccq_ccq_building_dismantle_register	campaign	registers campaign command constant CCQ_BUILDING_DISMANTLE
+0x1003e110	ccq_ccq_building_repair_register	campaign	registers campaign command constant CCQ_BUILDING_REPAIR
+0x1003e190	ccq_ccq_build_siege_item_register	campaign	registers campaign command constant CCQ_BUILD_SIEGE_ITEM
+0x1003e210	ccq_ccq_campaign_appoint_dictator_register	campaign	registers campaign command constant CCQ_CAMPAIGN_APPOINT_DICTATOR
+0x1003e290	ccq_ccq_campaign_elect_consuls_register	campaign	registers campaign command constant CCQ_CAMPAIGN_ELECT_CONSULS
+0x1003e310	ccq_ccq_campaign_execute_government_action_register	campaign	registers campaign command constant CCQ_CAMPAIGN_EXECUTE_GOVERNMENT_ACTION
+0x1003e390	ccq_ccq_campaign_pathfinder_heuristic_cache_ready_register	campaign	registers campaign command constant CCQ_CAMPAIGN_PATHFINDER_HEURISTIC_CACHE_READY
+0x1003e410	ccq_ccq_campaign_politics_action_register	campaign	registers campaign command constant CCQ_CAMPAIGN_POLITICS_ACTION
+0x1003e490	ccq_ccq_campaign_politics_action_subject_faction_register	campaign	registers campaign command constant CCQ_CAMPAIGN_POLITICS_ACTION_SUBJECT_FACTION
+0x1003e510	ccq_ccq_campaign_politics_action_subject_family_member_register	campaign	registers campaign command constant CCQ_CAMPAIGN_POLITICS_ACTION_SUBJECT_FAMILY_MEMBER
+0x1003e590	ccq_ccq_campaign_politics_action_subject_political_party_register	campaign	registers campaign command constant CCQ_CAMPAIGN_POLITICS_ACTION_SUBJECT_POLITICAL_PARTY
+0x1003e610	ccq_ccq_campaign_politics_action_subject_province_register	campaign	registers campaign command constant CCQ_CAMPAIGN_POLITICS_ACTION_SUBJECT_PROVINCE
+0x1003e690	ccq_ccq_campaign_set_politics_government_type_register	campaign	registers campaign command constant CCQ_CAMPAIGN_SET_POLITICS_GOVERNMENT_TYPE
+0x1003e710	ccq_ccq_campaign_subject_dilemma_choice_register	campaign	registers campaign command constant CCQ_CAMPAIGN_SUBJECT_DILEMMA_CHOICE
+0x1003e790	ccq_ccq_cancel_action_register	campaign	registers campaign command constant CCQ_CANCEL_ACTION
+0x1003e810	ccq_ccq_cancel_mission_register	campaign	registers campaign command constant CCQ_CANCEL_MISSION
+0x1003e890	ccq_ccq_cancel_recruitment_item_register	campaign	registers campaign command constant CCQ_CANCEL_RECRUITMENT_ITEM
+0x1003e910	ccq_ccq_cancel_research_register	campaign	registers campaign command constant CCQ_CANCEL_RESEARCH
+0x1003e990	ccq_ccq_cancel_siege_item_register	campaign	registers campaign command constant CCQ_CANCEL_SIEGE_ITEM
+0x1003ea10	ccq_ccq_change_military_force_stance_register	campaign	registers campaign command constant CCQ_CHANGE_MILITARY_FORCE_STANCE
+0x1003ea90	ccq_ccq_change_state_religion_register	campaign	registers campaign command constant CCQ_CHANGE_STATE_RELIGION
+0x1003eb10	ccq_ccq_character_attack_register	campaign	registers campaign command constant CCQ_CHARACTER_ATTACK
+0x1003eb90	ccq_ccq_character_attack_garrison_residence_register	campaign	registers campaign command constant CCQ_CHARACTER_ATTACK_GARRISON_RESIDENCE
+0x1003ec10	ccq_ccq_character_end_blockade_register	campaign	registers campaign command constant CCQ_CHARACTER_END_BLOCKADE
+0x1003ec90	ccq_ccq_character_end_siege_register	campaign	registers campaign command constant CCQ_CHARACTER_END_SIEGE
+0x1003ed10	ccq_ccq_character_join_garrison_residence_register	campaign	registers campaign command constant CCQ_CHARACTER_JOIN_GARRISON_RESIDENCE
+0x1003ed90	ccq_ccq_character_leave_garrison_register	campaign	registers campaign command constant CCQ_CHARACTER_LEAVE_GARRISON
+0x1003ee10	ccq_ccq_character_locomote_to_register	campaign	registers campaign command constant CCQ_CHARACTER_LOCOMOTE_TO
+0x1003ee90	ccq_ccq_character_target_agent_action_register	campaign	registers campaign command constant CCQ_CHARACTER_TARGET_AGENT_ACTION
+0x1003ef10	ccq_ccq_clear_faction_action_log_data_register	campaign	registers campaign command constant CCQ_CLEAR_FACTION_ACTION_LOG_DATA
+0x1003ef90	ccq_ccq_continue_game_selected_register	campaign	registers campaign command constant CCQ_CONTINUE_GAME_SELECTED
+0x1003f010	ccq_ccq_declare_war_register	campaign	registers campaign command constant CCQ_DECLARE_WAR
+0x1003f090	ccq_ccq_decline_attack_of_opportunity_register	campaign	registers campaign command constant CCQ_DECLINE_ATTACK_OF_OPPORTUNITY
+0x1003f190	ccq_ccq_deploy_agent_register	campaign	registers campaign command constant CCQ_DEPLOY_AGENT
+0x1003f210	ccq_ccq_diplomacy_accept_deal_register	campaign	registers campaign command constant CCQ_DIPLOMACY_ACCEPT_DEAL
+0x1003f290	ccq_ccq_diplomacy_begin_negotiation_register	campaign	registers campaign command constant CCQ_DIPLOMACY_BEGIN_NEGOTIATION
+0x1003f310	ccq_ccq_diplomacy_clear_negotiation_register	campaign	registers campaign command constant CCQ_DIPLOMACY_CLEAR_NEGOTIATION

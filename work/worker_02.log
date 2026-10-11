@@ -1,0 +1,18 @@
+**Mission complete.** Summary of the solo funcid pass:
+
+## Executed
+1. **Diagnosed** the failed 20:30 dispatch — all 25 workers launched but produced zero output; took over the queue solo.
+2. **Extracted evidence** (`work/fx_extract.py`) from all **5,398** batch1 decompiled `.c` files: string literals, imports, named calls, full FUN_ callee address lists, vftable refs.
+3. **Key insight**: Ghidra already renamed FaceFX export callees to short names (`Serialize`, `GetNameEntry`), and clustered the 375 OC3Ent exports into **5 SDK address bands** (1,764 of 63k funcs live in-band) → reliable `facefx_sdk_internal` classification by callee-band fraction.
+4. **Rule engine + token families**: distinctive-string rules run *before* structural heuristics (fixed an ordering bug that swallowed 80 game functions into facefx); `CAI_/CND_/CDIR_/VAR_OBJECTIVE_/SPRAWL_` literal families became precise names; math-intrinsic cluster (`SQRT/fpatan/fsin/fcos`) → `core-math`.
+5. **Validated 7/7 category spot-checks** against real code (sun shader `sun_VS`/`g_sun_scale` ✓, battle replay block ✓, steam metrics URL builder ✓…), with manual refinements.
+
+## Output
+- **`work/funcid_batch1_final.tsv` — 5,452 functions identified** (1,998 prior deep-reads preserved verbatim + 3,453 new + manual)
+- Subsystem map: ~820 core · 592 facefx · 440 campaign · 390 battle · 304 render · 156 ui · 109 anim …
+- Notables: mission condition-table triplets (~22.8KB each), CAI world serialization, zlib inflate family, socket layer, political-event payload resolution
+- **`docs/funcid_report.md`** — methodology, distribution, limitations
+- README progress updated; committed as `6981bc5`
+
+## Remaining (honest)
+~2,135 `unknown_opaque` leaves (no strings/imports) genuinely require caller-xref data or manual reads — review cards are one command away: `python work/fx_cards.py opaque 40`. Prior git history confirms engine RTTI is off (`/GR-`), so class-name propagation won't extend beyond the 305 known vftables without new xref exports from Ghidra.

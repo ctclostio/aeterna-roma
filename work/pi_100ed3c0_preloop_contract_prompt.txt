@@ -1,0 +1,76 @@
+You are reviewing the next bounded implementation slice in a 32-bit game
+decompilation being rehosted safely in a 64-bit test-only runtime. Do not grade
+models and do not discuss process. Produce a concise engineering contract and
+identify only concrete correctness blockers.
+
+Authenticated original interval: function 0x100ed3c0 is 400 bytes. The next
+slice is its straight-line pre-loop [0x100ed3c0,0x100ed471), 177 bytes at raw
+0x000ec7c0, SHA-256
+b9f107e7f54c3896399c1a4692ca17580ef266963522a744a3010ddf14a75626.
+The excluded loop starts at 0x100ed471 and is 223 bytes through 0x100ed54f.
+
+Exact disassembly of the admitted interval:
+
+100ED3C0  sub esp,90Ch
+100ED3C6  lea ecx,[esp+4]
+100ED3CA  mov byte ptr [119F31C8h],1
+100ED3D1  mov byte ptr [119F31C5h],1
+100ED3D8  mov dword ptr [esp],0
+100ED3DF  call 100F1C10
+100ED3E4  lea ecx,[esp+10h]
+100ED3E8  call 100F1C10
+100ED3ED  mov eax,[esp+910h]        ; callee stack position 1
+100ED3F4  lea ecx,[esp+3Ch]
+100ED3F8  mov [esp+1Ch],eax
+100ED3FC  mov [esp+34h],eax
+100ED400  mov eax,[esp]
+100ED403  mov [esp+38h],eax
+100ED407  lea eax,[esp+4]
+100ED40B  push eax
+100ED40C  mov byte ptr [esp+24h],0
+100ED411  mov dword ptr [esp+28h],0
+100ED419  call 100F1AA0
+100ED41E  lea eax,[esp+10h]
+100ED422  push eax
+100ED423  lea ecx,[esp+4Ch]
+100ED427  call 100F1AA0
+100ED42C  mov eax,[esp+1Ch]
+100ED430  lea ecx,[esp+28h]
+100ED434  push dword ptr [esp+918h] ; callee stack position 3
+100ED43B  mov [esp+58h],eax
+100ED43F  mov al,[esp+24h]
+100ED443  mov [esp+5Ch],al
+100ED447  mov eax,[esp+28h]
+100ED44B  mov [esp+60h],eax
+100ED44F  mov byte ptr [esp+64h],0
+100ED454  call 100F1BB0
+100ED459  push eax
+100ED45A  lea eax,[esp+38h]
+100ED45E  push eax
+100ED45F  lea ecx,[esp+6Ch]
+100ED463  call 100DF270
+100ED468  lea ecx,[esp+28h]
+100ED46C  call 100F1CC0
+100ED471  push esi                 ; excluded loop begins
+
+The 0x90c-byte frame layout makes the child packet frame+0x34 (0x2d bytes)
+and the child receiver frame+0x64 (0x8a8 bytes), exactly filling the frame.
+The two packet sequence descriptors at +0x08/+0x14 are empty triplets copied
+from frame+4/frame+0x10. The descriptor at frame+0x28 is safely constructible
+without allocation only when the bounded UTF-16 input at stack position 3 is
+empty; then it is {0,0,0x11af4090}, and cleanup is the admitted non-owning
+no-op. Nonempty input is outside this slice. Stack positions 2 and 4 are not
+read in the parent body. Existing ports cover 0x100f1c10, empty 0x100f1aa0,
+bounded measurement of 0x100f1bb0, non-owning 0x100f1cc0, and the complete
+0x100df270 as injected prefix + deterministic middle + injected suffix.
+
+Assess the best narrow API: either (A) a nine-step typed injected transcript
+that exposes two global stores, two triplet calls, two empty copies, empty
+bounded descriptor construction, child call, and cleanup; or (B) a composed
+adapter over a caller-owned guest frame that invokes the admitted existing
+ports and injects only the global/child effects. Focus on faithful ordering,
+frame offsets, all-or-nothing prevalidation, view/control/physical aliasing,
+callback snapshots, and whether option B can remain allocation/platform/
+original-call free. Recommend one, list an exact API/state contract, and say
+BLOCKER only if the supplied evidence makes even a bounded empty-input slice
+unsound.

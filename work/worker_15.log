@@ -1,0 +1,19 @@
+**SHARD COMPLETE 216**
+
+Mission executed solo on `work/shard_00.txt` (216 addresses — the parallel dispatch had died: all 25 worker TSVs were empty, so I took shard_00 myself).
+
+**Output**
+- `X:/decompilation/work/funcid_00.tsv` — 216 lines, validated 4-col TSV (`addr \t name \t subsystem \t evidence`), appended incrementally in batches as required
+- `X:/decompilation/work/shard_00_report.md` — run notes for the orchestrator
+
+**Coverage**: 214 analyzed + 2 `MISSING_NO_DECOMP_FILE` rows (0x10eeb290, 0x1168f62c have no `.c` in `src_out`).
+
+**Key identifications**
+- `audio_init_part1` (0x100e8e80) — literal `"Finished sound init part 1"` anchor
+- `mem_heap_free_chunk_coalesce` (0x10123730) — dlmalloc boundary-tags/smallbins/treebins
+- Battle/deployment cluster (0x1017a000–0x10430000): threat-footprint collection, 2D circle-vs-rect proximity, wave spawners with fixed-point headings (`atan2*10430.378`, sincos LUT `DAT_120351f0`), octree subdivision, queued marker→entity instantiation
+- Large **FaceFX integration layer** (~47 funcs): FxEventManager/FxLogManager/FxAnimGroup/FxCompiledFaceGraph, battle kill-cam shot selection (`UNIT_SHOT`/`COMMANDER_SHOT`)
+- A repeating **deserializing-ctor family** `(this, uint* reader, int[, flag])` spanning 0x10d51310–0x11568e00 — likely one StreamRead base class worth a follow-up pass
+- `gl_wgl_getprocaddrs` (0x114a3ed0), net socket/select proc, CRT qsort & math helpers
+
+**Honesty note**: ~102 funcs are marked `unknown` (no strings/types/signals survived decompilation); all named entries carry concrete evidence (constants, API calls, type names) per analyst rules.

@@ -1,0 +1,978 @@
+{
+  "$schema": "scripts/pi_wave3_config.schema.json",
+  "schema_version": 1,
+  "model": "openrouter/stealth/ox-alpha",
+  "milestone": "entry-policy-dynamic-probe-v1",
+  "allowed_requirement_ids": [
+    "DP-PROV-001",
+    "DP-ARCH-001",
+    "DP-ABI-001",
+    "DP-SEM-001",
+    "DP-MEM-001",
+    "DP-LOAD-001",
+    "DP-TEST-001",
+    "DP-PE-001",
+    "DP-CONT-001",
+    "DP-NOGO-001"
+  ],
+  "prompt_preamble": "Implement and review only the frozen test-only x64 guest32 entry-policy DLL probe. The bootstrap DLL and original/canonical corpus are immutable. Artifact transport is exact JSON; do not add schema_version, run_id, prose, or any key absent from the required schema.",
+  "stage_order": [
+    "E",
+    "O",
+    "I",
+    "R",
+    "G"
+  ],
+  "stages": [
+    {
+      "id": "E",
+      "depends_on": [],
+      "worker_count": 4,
+      "description": "Audit dynamic-probe provenance-fixture, ABI, containment, and test-boundary facts."
+    },
+    {
+      "id": "O",
+      "depends_on": [],
+      "worker_count": 4,
+      "description": "Design independent dynamic, PE, memory, and containment tests with paired mutants."
+    },
+    {
+      "id": "I",
+      "depends_on": [
+        "E",
+        "O"
+      ],
+      "worker_count": 6,
+      "description": "Produce six isolated probe DLL/host implementations without editing repository sources."
+    },
+    {
+      "id": "R",
+      "depends_on": [
+        "I"
+      ],
+      "worker_count": 4,
+      "description": "Review every implementation twice against validated evidence and independent reproducers."
+    },
+    {
+      "id": "G",
+      "depends_on": [
+        "E",
+        "O",
+        "I",
+        "R"
+      ],
+      "worker_count": 2,
+      "description": "Produce two isolated integration candidates from validated components and findings."
+    }
+  ],
+  "workers": [
+    {
+      "id": "E01",
+      "stage": "E",
+      "role": "probe_provenance_fixture_audit",
+      "task": "Audit only the frozen provenance fixture contract and sequencing claims in the dynamic-probe specification; do not claim you independently rehashed binary inputs that are not admitted. Verify from the admitted sources that the supervisor fixture must authenticate the x86 corpus before implementation, that both future probe artifacts are x64 while guest addresses remain 32-bit, that the original x86 DLL must not be loaded, and that this milestone precedes startup linkage. Use 6-9 atomic single-source claims; fact_id is a unique evidence identifier, not a DP requirement ID. The root evidence object must contain exactly worker_id, stage, conclusion, claims, blockers and no other keys. Write it by tool call 6, re-read once, finish.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 120000,
+        "timeout_seconds": 420,
+        "max_tool_calls": 20,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "evidence/E01",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "docs/x64_entry_policy_selector_spec.md",
+        "scripts/test_x64_entry_policy_provenance.py",
+        "port/startup_audit/startup_summary.json"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "evidence",
+          "source": "workspace",
+          "path": "evidence.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_evidence.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "E02",
+      "stage": "E",
+      "role": "probe_abi_safety",
+      "task": "Audit the exact two-export diagnostic ABI, numeric status/policy values, host-pointer borrowing rule, guest32 widths, unchanged-output rule, and prohibited ownership/state. Keep each claim single-source and mark conclusions that are inferences. The root evidence object must contain exactly worker_id, stage, conclusion, claims, blockers and no other keys. Write it by tool call 6, re-read once, finish.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 120000,
+        "timeout_seconds": 420,
+        "max_tool_calls": 20,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "evidence/E02",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "port/x64_runtime/guest32.h",
+        "port/x64_runtime/guest32.c",
+        "port/x64_ported/ported_100edd70_policy.h",
+        "port/x64_ported/ported_100edd70_policy.c"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "evidence",
+          "source": "workspace",
+          "path": "evidence.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_evidence.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "E03",
+      "stage": "E",
+      "role": "probe_binary_containment",
+      "task": "Audit CMake/link/binary containment for a BUILD_TESTING-only probe DLL and host in 6-10 atomic claims. Separate current bootstrap facts from future probe acceptance requirements. Verify the bootstrap has no direct library dependency now; do not predict an unmeasured probe import table. State exact PE/export/object-membership gates needed after build. Every source_path must copy the repository-relative declared_inputs.path string exactly; never write an absolute X:/decompilation path into evidence.json. The root evidence object must contain exactly worker_id, stage, conclusion, claims, blockers and no other keys. After one re-read confirms it, finish immediately without another tool call or revision.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 160000,
+        "timeout_seconds": 420,
+        "max_tool_calls": 20,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "evidence/E03",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "docs/x64_bootstrap.md",
+        "CMakeLists.txt",
+        "port/x64_bootstrap/empire_bootstrap.c",
+        "port/x64_bootstrap/empire_bootstrap.def",
+        "port/x64_bootstrap/smoke_loader.c"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "evidence",
+          "source": "workspace",
+          "path": "evidence.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_evidence.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "E04",
+      "stage": "E",
+      "role": "probe_test_closure",
+      "task": "Audit the dynamic test matrix and non-goals in exactly 8 atomic claims. Distinguish behavior observable through LoadLibrary/GetProcAddress from facts that require an independent PE gate, and identify which existing static tests remain required. Treat a valid arbitrary native pointer as a caller precondition; do not propose dereferencing invalid pointers. The root evidence object must contain exactly worker_id, stage, conclusion, claims, blockers and no other keys. Write evidence.json by tool call 8, re-read it once, then finish immediately without another validation or revision turn.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 200000,
+        "timeout_seconds": 420,
+        "max_tool_calls": 20,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "evidence/E04",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "port/x64_runtime/test_entry_policy.c",
+        "scripts/x64_entry_policy_static_gate.py",
+        "scripts/test_x64_entry_policy_provenance.py",
+        "CMakeLists.txt"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "evidence",
+          "source": "workspace",
+          "path": "evidence.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_evidence.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "O01",
+      "stage": "O",
+      "role": "probe_pe_oracle",
+      "task": "Design exactly eight independent PE/export/import/load-boundary tests and eight one-to-one paired mutants for the frozen probe. Include AMD64 identity, exact two-name export allowlist, name-only resolution, bootstrap byte/export/import preservation, no original middleware imports, and exclusion of unrelated ported_1093c450 code. Root keys must be exactly worker_id, stage, tests, mutants, blockers. Do not implement code. Use only canonical DP-* requirement IDs from the specification.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 150000,
+        "timeout_seconds": 540,
+        "max_tool_calls": 24,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "oracle/O01",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "CMakeLists.txt",
+        "port/x64_bootstrap/empire_bootstrap.def"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "oracle",
+          "source": "workspace",
+          "path": "oracle.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_oracle.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "O02",
+      "stage": "O",
+      "role": "probe_guest_memory_oracle",
+      "task": "Design exactly eight guest/native boundary tests and eight reciprocal mutants. Cover borrowed x64 host pointer versus uint32 guest coordinates, malformed extents, numeric host overflow without dereference, output/input preservation, unaligned access, exact 2^32 end, checked +2 overflow, and a genuine allocation above 4 GiB. Root keys exactly match the schema; no implementation. Use only canonical DP-* requirement IDs from the specification.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 150000,
+        "timeout_seconds": 540,
+        "max_tool_calls": 24,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "oracle/O02",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "port/x64_runtime/guest32.h",
+        "port/x64_runtime/guest32.c",
+        "port/x64_runtime/test_entry_policy.c"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "oracle",
+          "source": "workspace",
+          "path": "oracle.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_oracle.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "O03",
+      "stage": "O",
+      "role": "probe_semantics_oracle",
+      "task": "Design exactly eight dynamic selector tests and eight reciprocal mutants. Cover exact/prefix/suffix/case/space/quote cases, early mismatches with unread suffixes, truncations, repetition/concurrency, absolute/relative loads, deterministic status/policy, and frozen expected data rather than a second selector. Root keys exactly match the schema; no implementation. Use only canonical DP-* requirement IDs from the specification.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 150000,
+        "timeout_seconds": 540,
+        "max_tool_calls": 24,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "oracle/O03",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "docs/x64_entry_policy_selector_spec.md",
+        "port/x64_runtime/test_entry_policy.c"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "oracle",
+          "source": "workspace",
+          "path": "oracle.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_oracle.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "O04",
+      "stage": "O",
+      "role": "probe_build_regression_oracle",
+      "task": "Design exactly eight build/containment/regression tests and eight reciprocal mutants. Cover BUILD_TESTING-only targets, hardened x64 flags, ordinary archive linkage, no recovered work in DllMain, exact bootstrap hash/status before and after, provenance fixture ordering, full CTest behavior, and immutable originals. Root keys exactly match the schema; no implementation. Use only canonical DP-* requirement IDs from the specification.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 150000,
+        "timeout_seconds": 540,
+        "max_tool_calls": 24,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "oracle/O04",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "docs/x64_bootstrap.md",
+        "CMakeLists.txt",
+        "scripts/build_x64_bootstrap.bat"
+      ],
+      "review_targets": [],
+      "required_outputs": [
+        {
+          "name": "oracle",
+          "source": "workspace",
+          "path": "oracle.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_oracle.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "I01",
+      "stage": "I",
+      "role": "minimal_probe_implementer",
+      "task": "Implement the smallest readable wrapper and host that satisfy the frozen dynamic-probe contract. Work only in your isolated directory. Produce exactly probe_contract.h, probe_dll.c, probe_exports.def, probe_host.c, probe_pe_gate.py, CMakeLists.txt, README.md, and submission.json. The standalone CMake candidate may accept ROME2_REPOSITORY_ROOT to compile the admitted existing guest32/policy sources; do not duplicate or edit them. Build and run with the installed MSVC x64/CMake/Ninja toolchain. The PE gate is mandatory and must independently check DP-ARCH-001, DP-PE-001, and DP-CONT-001. Use only canonical DP-* requirement_ids. In submission.json, milestone must be entry-policy-dynamic-probe-v1 and files must list every non-manifest file exactly once without submission.json itself. By tool call 24 finish source, build, tests, and deletion of every object, executable, cache, and build directory. Only then compute final hashes, write schema-exact submission.json with successful test commands and no unresolved decisions by call 30, re-read once, and finish immediately. Do not add schema_version or run_id.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "edit",
+        "powershell"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 650000,
+        "timeout_seconds": 1200,
+        "max_tool_calls": 40,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "candidates/I01",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "docs/x64_entry_policy_selector_spec.md",
+        "port/x64_runtime/guest32.h",
+        "port/x64_runtime/guest32.c",
+        "port/x64_ported/ported_100edd70_policy.h",
+        "port/x64_ported/ported_100edd70_policy.c",
+        "port/x64_runtime/test_entry_policy.c",
+        "CMakeLists.txt",
+        "scripts/build_x64_bootstrap.bat"
+      ],
+      "review_targets": [],
+      "expected_workspace_files": [
+        "probe_contract.h",
+        "probe_dll.c",
+        "probe_exports.def",
+        "probe_host.c",
+        "probe_pe_gate.py",
+        "CMakeLists.txt",
+        "README.md",
+        "submission.json"
+      ],
+      "required_outputs": [
+        {
+          "name": "submission",
+          "source": "workspace",
+          "path": "submission.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_submission.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "I02",
+      "stage": "I",
+      "role": "abi_first_probe_implementer",
+      "task": "Implement the probe with explicit ABI/layout/status assertions and strong output/input preservation checks. Work only in your isolated directory. Produce exactly probe_contract.h, probe_dll.c, probe_exports.def, probe_host.c, probe_pe_gate.py, CMakeLists.txt, README.md, and submission.json. The standalone CMake candidate may accept ROME2_REPOSITORY_ROOT to compile the admitted existing guest32/policy sources; do not duplicate or edit them. Build and run with the installed MSVC x64/CMake/Ninja toolchain. The PE gate is mandatory and must independently check DP-ARCH-001, DP-PE-001, and DP-CONT-001. Use only canonical DP-* requirement_ids. In submission.json, milestone must be entry-policy-dynamic-probe-v1 and files must list every non-manifest file exactly once without submission.json itself. By tool call 24 finish source, build, tests, and deletion of every object, executable, cache, and build directory. Only then compute final hashes, write schema-exact submission.json with successful test commands and no unresolved decisions by call 30, re-read once, and finish immediately. Do not add schema_version or run_id.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "edit",
+        "powershell"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 650000,
+        "timeout_seconds": 1200,
+        "max_tool_calls": 40,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "candidates/I02",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "docs/x64_entry_policy_selector_spec.md",
+        "port/x64_runtime/guest32.h",
+        "port/x64_runtime/guest32.c",
+        "port/x64_ported/ported_100edd70_policy.h",
+        "port/x64_ported/ported_100edd70_policy.c",
+        "port/x64_runtime/test_entry_policy.c",
+        "CMakeLists.txt",
+        "scripts/build_x64_bootstrap.bat"
+      ],
+      "review_targets": [],
+      "expected_workspace_files": [
+        "probe_contract.h",
+        "probe_dll.c",
+        "probe_exports.def",
+        "probe_host.c",
+        "probe_pe_gate.py",
+        "CMakeLists.txt",
+        "README.md",
+        "submission.json"
+      ],
+      "required_outputs": [
+        {
+          "name": "submission",
+          "source": "workspace",
+          "path": "submission.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_submission.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "I03",
+      "stage": "I",
+      "role": "loader_boundary_implementer",
+      "task": "Implement the probe emphasizing absolute/relative LoadLibraryEx, exact GetProcAddress behavior, unload, and binary containment. Work only in your isolated directory. Produce exactly probe_contract.h, probe_dll.c, probe_exports.def, probe_host.c, probe_pe_gate.py, CMakeLists.txt, README.md, and submission.json. The standalone CMake candidate may accept ROME2_REPOSITORY_ROOT to compile the admitted existing guest32/policy sources; do not duplicate or edit them. Build and run with the installed MSVC x64/CMake/Ninja toolchain. The PE gate is mandatory and must independently check DP-ARCH-001, DP-PE-001, and DP-CONT-001. Use only canonical DP-* requirement_ids. In submission.json, milestone must be entry-policy-dynamic-probe-v1 and files must list every non-manifest file exactly once without submission.json itself. By tool call 24 finish source, build, tests, and deletion of every object, executable, cache, and build directory. Only then compute final hashes, write schema-exact submission.json with successful test commands and no unresolved decisions by call 30, re-read once, and finish immediately. Do not add schema_version or run_id.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "edit",
+        "powershell"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 650000,
+        "timeout_seconds": 1200,
+        "max_tool_calls": 40,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "candidates/I03",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "docs/x64_entry_policy_selector_spec.md",
+        "port/x64_runtime/guest32.h",
+        "port/x64_runtime/guest32.c",
+        "port/x64_ported/ported_100edd70_policy.h",
+        "port/x64_ported/ported_100edd70_policy.c",
+        "port/x64_runtime/test_entry_policy.c",
+        "CMakeLists.txt",
+        "scripts/build_x64_bootstrap.bat"
+      ],
+      "review_targets": [],
+      "expected_workspace_files": [
+        "probe_contract.h",
+        "probe_dll.c",
+        "probe_exports.def",
+        "probe_host.c",
+        "probe_pe_gate.py",
+        "CMakeLists.txt",
+        "README.md",
+        "submission.json"
+      ],
+      "required_outputs": [
+        {
+          "name": "submission",
+          "source": "workspace",
+          "path": "submission.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_submission.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "I04",
+      "stage": "I",
+      "role": "adversarial_test_implementer",
+      "task": "Implement the probe test-first with a table-driven adversarial matrix and safe high-address/guarded fixtures. Work only in your isolated directory. Produce exactly probe_contract.h, probe_dll.c, probe_exports.def, probe_host.c, probe_pe_gate.py, CMakeLists.txt, README.md, and submission.json. The standalone CMake candidate may accept ROME2_REPOSITORY_ROOT to compile the admitted existing guest32/policy sources; do not duplicate or edit them. Build and run with the installed MSVC x64/CMake/Ninja toolchain. The PE gate is mandatory and must independently check DP-ARCH-001, DP-PE-001, and DP-CONT-001. Use only canonical DP-* requirement_ids. In submission.json, milestone must be entry-policy-dynamic-probe-v1 and files must list every non-manifest file exactly once without submission.json itself. By tool call 24 finish source, build, tests, and deletion of every object, executable, cache, and build directory. Only then compute final hashes, write schema-exact submission.json with successful test commands and no unresolved decisions by call 30, re-read once, and finish immediately. Do not add schema_version or run_id.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "edit",
+        "powershell"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 650000,
+        "timeout_seconds": 1200,
+        "max_tool_calls": 40,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "candidates/I04",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "docs/x64_entry_policy_selector_spec.md",
+        "port/x64_runtime/guest32.h",
+        "port/x64_runtime/guest32.c",
+        "port/x64_ported/ported_100edd70_policy.h",
+        "port/x64_ported/ported_100edd70_policy.c",
+        "port/x64_runtime/test_entry_policy.c",
+        "CMakeLists.txt",
+        "scripts/build_x64_bootstrap.bat"
+      ],
+      "review_targets": [],
+      "expected_workspace_files": [
+        "probe_contract.h",
+        "probe_dll.c",
+        "probe_exports.def",
+        "probe_host.c",
+        "probe_pe_gate.py",
+        "CMakeLists.txt",
+        "README.md",
+        "submission.json"
+      ],
+      "required_outputs": [
+        {
+          "name": "submission",
+          "source": "workspace",
+          "path": "submission.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_submission.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "I05",
+      "stage": "I",
+      "role": "concurrency_probe_implementer",
+      "task": "Implement the probe emphasizing deterministic repeated and concurrent calls without global state. Work only in your isolated directory. Produce exactly probe_contract.h, probe_dll.c, probe_exports.def, probe_host.c, probe_pe_gate.py, CMakeLists.txt, README.md, and submission.json. The standalone CMake candidate may accept ROME2_REPOSITORY_ROOT to compile the admitted existing guest32/policy sources; do not duplicate or edit them. Build and run with the installed MSVC x64/CMake/Ninja toolchain. The PE gate is mandatory and must independently check DP-ARCH-001, DP-PE-001, and DP-CONT-001. Use only canonical DP-* requirement_ids. In submission.json, milestone must be entry-policy-dynamic-probe-v1 and files must list every non-manifest file exactly once without submission.json itself. By tool call 24 finish source, build, tests, and deletion of every object, executable, cache, and build directory. Only then compute final hashes, write schema-exact submission.json with successful test commands and no unresolved decisions by call 30, re-read once, and finish immediately. Do not add schema_version or run_id.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "edit",
+        "powershell"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 650000,
+        "timeout_seconds": 1200,
+        "max_tool_calls": 40,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "candidates/I05",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "docs/x64_entry_policy_selector_spec.md",
+        "port/x64_runtime/guest32.h",
+        "port/x64_runtime/guest32.c",
+        "port/x64_ported/ported_100edd70_policy.h",
+        "port/x64_ported/ported_100edd70_policy.c",
+        "port/x64_runtime/test_entry_policy.c",
+        "CMakeLists.txt",
+        "scripts/build_x64_bootstrap.bat"
+      ],
+      "review_targets": [],
+      "expected_workspace_files": [
+        "probe_contract.h",
+        "probe_dll.c",
+        "probe_exports.def",
+        "probe_host.c",
+        "probe_pe_gate.py",
+        "CMakeLists.txt",
+        "README.md",
+        "submission.json"
+      ],
+      "required_outputs": [
+        {
+          "name": "submission",
+          "source": "workspace",
+          "path": "submission.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_submission.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "I06",
+      "stage": "I",
+      "role": "simplicity_probe_adversary",
+      "task": "Implement an independent minimal design and actively avoid unnecessary helpers, exports, state, and duplicated selector logic. Work only in your isolated directory. Produce exactly probe_contract.h, probe_dll.c, probe_exports.def, probe_host.c, probe_pe_gate.py, CMakeLists.txt, README.md, and submission.json. The standalone CMake candidate may accept ROME2_REPOSITORY_ROOT to compile the admitted existing guest32/policy sources; do not duplicate or edit them. Build and run with the installed MSVC x64/CMake/Ninja toolchain. The PE gate is mandatory and must independently check DP-ARCH-001, DP-PE-001, and DP-CONT-001. Use only canonical DP-* requirement_ids. In submission.json, milestone must be entry-policy-dynamic-probe-v1 and files must list every non-manifest file exactly once without submission.json itself. By tool call 24 finish source, build, tests, and deletion of every object, executable, cache, and build directory. Only then compute final hashes, write schema-exact submission.json with successful test commands and no unresolved decisions by call 30, re-read once, and finish immediately. Do not add schema_version or run_id.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "edit",
+        "powershell"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 650000,
+        "timeout_seconds": 1200,
+        "max_tool_calls": 40,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "candidates/I06",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "docs/x64_entry_policy_selector_spec.md",
+        "port/x64_runtime/guest32.h",
+        "port/x64_runtime/guest32.c",
+        "port/x64_ported/ported_100edd70_policy.h",
+        "port/x64_ported/ported_100edd70_policy.c",
+        "port/x64_runtime/test_entry_policy.c",
+        "CMakeLists.txt",
+        "scripts/build_x64_bootstrap.bat"
+      ],
+      "review_targets": [],
+      "expected_workspace_files": [
+        "probe_contract.h",
+        "probe_dll.c",
+        "probe_exports.def",
+        "probe_host.c",
+        "probe_pe_gate.py",
+        "CMakeLists.txt",
+        "README.md",
+        "submission.json"
+      ],
+      "required_outputs": [
+        {
+          "name": "submission",
+          "source": "workspace",
+          "path": "submission.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_submission.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "R01",
+      "stage": "R",
+      "role": "probe_range_review",
+      "task": "Review exactly assigned candidates for guest/native range arithmetic, pointer width, preserved outputs/inputs, high-address fixtures, and safe rejection order. Run independent commands; report exact schema only. Use only canonical DP-* requirement_id values and set candidate_sha256 to the reviewed candidate submission artifact hash from the admitted I manifest.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "powershell"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 125000,
+        "timeout_seconds": 720,
+        "max_tool_calls": 32,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "reviews/R01",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "scripts/x64_entry_policy_static_gate.py",
+        "scripts/test_x64_entry_policy_provenance.py",
+        "CMakeLists.txt"
+      ],
+      "review_targets": [
+        "I01",
+        "I02",
+        "I04"
+      ],
+      "required_outputs": [
+        {
+          "name": "findings",
+          "source": "workspace",
+          "path": "findings.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_findings.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "R02",
+      "stage": "R",
+      "role": "probe_semantic_review",
+      "task": "Review exactly assigned candidates for the frozen selector matrix, early-stop behavior, status/policy constants, repeated/concurrent determinism, and absence of a second selector oracle. Use only canonical DP-* requirement_id values and set candidate_sha256 to the reviewed candidate submission artifact hash from the admitted I manifest.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "powershell"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 125000,
+        "timeout_seconds": 720,
+        "max_tool_calls": 32,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "reviews/R02",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "scripts/x64_entry_policy_static_gate.py",
+        "scripts/test_x64_entry_policy_provenance.py",
+        "CMakeLists.txt"
+      ],
+      "review_targets": [
+        "I04",
+        "I05",
+        "I06"
+      ],
+      "required_outputs": [
+        {
+          "name": "findings",
+          "source": "workspace",
+          "path": "findings.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_findings.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "R03",
+      "stage": "R",
+      "role": "probe_build_review",
+      "task": "Review exactly assigned candidates for x64 hardening, standalone build truth, DLL/host PE identity, export/import allowlist, normal archive extraction, and bootstrap containment. Use only canonical DP-* requirement_id values and set candidate_sha256 to the reviewed candidate submission artifact hash from the admitted I manifest.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "powershell"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 125000,
+        "timeout_seconds": 720,
+        "max_tool_calls": 32,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "reviews/R03",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "scripts/x64_entry_policy_static_gate.py",
+        "scripts/test_x64_entry_policy_provenance.py",
+        "CMakeLists.txt"
+      ],
+      "review_targets": [
+        "I01",
+        "I03",
+        "I06"
+      ],
+      "required_outputs": [
+        {
+          "name": "findings",
+          "source": "workspace",
+          "path": "findings.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_findings.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "R04",
+      "stage": "R",
+      "role": "probe_adversarial_review",
+      "task": "Review exactly assigned candidates adversarially for loader lifecycle, invalid cleanup, DllMain work, extra state/exports, unsafe tests, stale artifacts, and false pass claims. Use only canonical DP-* requirement_id values and set candidate_sha256 to the reviewed candidate submission artifact hash from the admitted I manifest.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "powershell"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 125000,
+        "timeout_seconds": 720,
+        "max_tool_calls": 32,
+        "max_output_bytes": 262144
+      },
+      "writable_dir": "reviews/R04",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "scripts/x64_entry_policy_static_gate.py",
+        "scripts/test_x64_entry_policy_provenance.py",
+        "CMakeLists.txt"
+      ],
+      "review_targets": [
+        "I02",
+        "I03",
+        "I05"
+      ],
+      "required_outputs": [
+        {
+          "name": "findings",
+          "source": "workspace",
+          "path": "findings.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_findings.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "G01",
+      "stage": "G",
+      "role": "minimal_probe_integrator",
+      "task": "Produce an isolated integration candidate for the frozen dynamic probe from only hash-validated candidate components and accepted findings. Include complete probe_contract.h, probe_dll.c, probe_exports.def, probe_host.c, a repository CMake.patch, a mandatory independent probe_pe_gate.py, README.md, and integration_manifest.json. The PE gate must check DP-ARCH-001, DP-PE-001, and DP-CONT-001. In integration_manifest.json, requirement_ids must use only canonical DP-* IDs; files must list every non-manifest file exactly once and MUST NOT list integration_manifest.json itself; selected component hashes must exactly match admitted dependency artifacts. Build/test in a temporary subdirectory below your isolated writable directory, remove all products before final inventory, never edit repository sources, and keep bootstrap bytes/inert behavior unchanged.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "edit",
+        "powershell"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 750000,
+        "timeout_seconds": 1500,
+        "max_tool_calls": 50,
+        "max_output_bytes": 524288
+      },
+      "writable_dir": "integrations/G01",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "CMakeLists.txt",
+        "scripts/test_x64_entry_policy_provenance.py",
+        "scripts/build_x64_bootstrap.bat"
+      ],
+      "review_targets": [],
+      "expected_workspace_files": [
+        "probe_contract.h",
+        "probe_dll.c",
+        "probe_exports.def",
+        "probe_host.c",
+        "CMake.patch",
+        "probe_pe_gate.py",
+        "README.md",
+        "integration_manifest.json"
+      ],
+      "required_outputs": [
+        {
+          "name": "integration",
+          "source": "workspace",
+          "path": "integration_manifest.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_integration.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    },
+    {
+      "id": "G02",
+      "stage": "G",
+      "role": "adversarial_probe_integrator",
+      "task": "Independently produce the simplest complete integration candidate that survives validated evidence, oracles, and review reproducers. Include complete probe_contract.h, probe_dll.c, probe_exports.def, probe_host.c, a repository CMake.patch, a mandatory independent probe_pe_gate.py, README.md, and integration_manifest.json. The PE gate must check DP-ARCH-001, DP-PE-001, and DP-CONT-001. In integration_manifest.json, requirement_ids must use only canonical DP-* IDs; files must list every non-manifest file exactly once and MUST NOT list integration_manifest.json itself; selected component hashes must exactly match admitted dependency artifacts. Do not copy G01. Build/test in a temporary subdirectory below your isolated writable directory, remove all products before final inventory, never edit repository sources, and leave no unresolved decisions.",
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls",
+        "write",
+        "edit",
+        "powershell"
+      ],
+      "thinking": "medium",
+      "budget": {
+        "max_tokens": 750000,
+        "timeout_seconds": 1500,
+        "max_tool_calls": 50,
+        "max_output_bytes": 524288
+      },
+      "writable_dir": "integrations/G02",
+      "context_files": [
+        "docs/x64_entry_policy_dynamic_probe_spec.md",
+        "CMakeLists.txt",
+        "scripts/test_x64_entry_policy_provenance.py",
+        "scripts/build_x64_bootstrap.bat"
+      ],
+      "review_targets": [],
+      "expected_workspace_files": [
+        "probe_contract.h",
+        "probe_dll.c",
+        "probe_exports.def",
+        "probe_host.c",
+        "CMake.patch",
+        "probe_pe_gate.py",
+        "README.md",
+        "integration_manifest.json"
+      ],
+      "required_outputs": [
+        {
+          "name": "integration",
+          "source": "workspace",
+          "path": "integration_manifest.json",
+          "format": "json",
+          "schema": "scripts/pi_wave3_integration.schema.json",
+          "max_bytes": 262144
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,250 @@
+0x103b5e90	unit_turn_toward_target_tick	battle	__thiscall per-unit tick: gate vs sim-tick this+0x74==world->+0x54, atan2 bearing *10430.378 fixed-point heading, vtbl+0x50 pos / +0x5c move-cmd, sets done flag +0x10
+0x103b78c0	audio_anim_asset_play_at_nearest_bbox_point	audio	FxAnim::GetAudioAssetPath on unit anim (+0x5ac); nearest-point-of-4-rect-bounds solve, extends ray 5000u, plays via FUN_10356170(pos,0,1,0)
+0x103b88a0	battle_entity_arc_contour_trace	battle	per-entity 2-point arc solve (acos/sin half-angle, radius=chord/sin capped by seg len) + marching-squares dir-code pairs appended to global growable DAT_11df890c
+0x103b9e70	facefx_actor_audio_event_locate_play	middleware-facefx	FxActorInstance::GetActor x3, cached lookup FUN_1039e1d0 else 15 retries FUN_10328c40/FUN_10344bf0 then positional play FUN_10356170; returns 0x14 result rec
+0x103ba680	battle_units_cached_objs_sweep_init	battle	one-shot DAT_11df5e38 init: option query FUN_10d99350(0x15)+quality gates, iterates army list this+0x44->+0x18, matches cache table +0x69c via FUN_102cead0, releases via FUN_100d9d90
+0x103baad0	battle_bbox_corner_dir_vectors_build	battle	reads mgr +0x494/+0x20c/+0x5a8, builds 4 normalized corner-direction vectors from OBB half-extents around unit pos (FUN_103751a0)
+0x103bb740	unit_anim_state_apply_ids	anim	state field this+0x84: 1->gate blob +0x8f9c then play 0x5fb w=1 & map FSM(8,e,f,10,11,2b)->ids 5d9/58d/59b/59c/59d/751; 2->default pose {0,0,0x7f3,1.0,0x10}; sets busy bit +0x98|2
+0x103bc2b0	unit_anim_state_random_variant_pick	anim	same state cluster + MSVC LCG rand (0x343fd*seed+0x269ec3) picks among variant ids; SUB41 blend helper; sets bits +0x98
+0x103bd2a0	unit_anim_state_machine_dispatch	anim	large FSM switch over states incl ids 3ea/3eb/3ec/3f3; resolver FUN_103dbd70 (state->id switch) x5 + player FUN_103e73e0 x6; jumptable WARNINGs only
+0x103be520	unit_anim_set_entries_play_all	anim	guard +0x98|4; validates anim-set version *(unit+0x2e4)->+0x74 vs this+0x80, walks hash table (stride 0x18, bucket %cnt), per-entry vtbl+0x170 out rec -> FUN_105946e0 dispatch w/ weights
+0x103bf870	unit_idle_fidget_anim_trigger	anim	guard vtbl+400 + cooldown this+0xc < (unit+0x1f8)%3+5; aborts if vtbl+0xdc->vtbl+0x280==9; plays anim id 0x604 scaled x10 via FUN_103baf40
+0x103c0420	battle_unit_pair_relation_check	battle	compares two unit objs: flags +0xf&8/+0x30&0x20, link fields [0x80]/[0x86] cross-refs, writes relation result *param_3=1
+0x103c0d80	render_node_hierarchy_xform_compose	render	recursive child-list walk this[0x6e], composes child world matrices (4x4 mul of pf[0xc..0xf] cols), per-node dist calc, priority-insert FUN_113632a0(list,dist,2)
+0x103c1f40	battle_unit_pair_mutual_link	battle	symmetric bind: both flags &0x20 -> FUN_10618570(a,b,1) twice; group field [0x13] equality gate; fallback FUN_103dda60/FUN_103d9500 pair resolve
+0x103c25e0	battle_attach_target_pose_init	anim	stores target this+0x220, copies its pos param[0x14/16] into +0x1f8..+0x204, reads fixed-point heading via vtbl+0x50, builds sin/cos basis into stack pose struct
+0x103c2d30	battle_anim_ids_validate_all_units	anim	walks global unit-list FUN_10cffcf0() (+0x10 cnt/+0x14 arr); for each id range in param_2 checks presence in anim hash table (+0x28 cnt, stride 0x18 bucket+0x14)
+0x103c30f0	anim_slot_descriptor_table_init	anim	static table fill: 24x FUN_103c2b90(idx,nameA@11938d94|11938dbc,nameB,f1,f2,0x88,0x88) + 6x FUN_103c2d30(idx,name,0) slot entries
+0x103c3540	battle_obj_pool_0xb0_build	core(memory)	magic-static guarded; iterates mgr FUN_10cff650()+0xf8 list (+0x104 cnt), news 0xb0-byte objs (FUN_100d12b0) init via FUN_103970d0
+0x103c43d0	geom_segment_segment_closest_distance	core(math)	segment-segment closest-point: zero-length deg checks for both segs, optional second seg param_5, flag param_7&1 clamps, out point param_6
+0x103c4f40	geom_aabb_grow_uniform_2d	core(math)	__thiscall: min/max over param_1[0..3] two 2D pts, expand by param_2*0.5 each side, stores box fields at this+0x1c..
+0x103c54b0	spatial_grid_circle_cellrange_query	core(math)	converts world (param_1Â±radius param_2) to cell indices via scale this+0x24, clamps to grid dim this+0x14 base this+0x10; returns bounded cell range
+0x103c81b0	render_lod_step_table_build	render	global mgr +0x14 -> count = max(1,round(v*0.025+0.5)) w/ FPU ctrl save; fills static table PTR_PTR_119393f8 up to cap DAT_11939400 via vtbl+0x54
+0x103c87a0	unit_type_float_param_lookup	anim	switch(param_2[8]) cases 5..9 return per-type float consts, gated by this+0x3b; partial decomp (unaff_EBX)
+0x103c8c40	audio_anim_volume_by_distance_pick	audio	FxAnim::GetAudioAssetPath(mgr+0x494->+0x5ac); unit pos vs radius *(mgr+0x5f4) clamp option FUN_1017f8e0; per-slot {vol,pitch} table DAT_120351f0[ushort this+0x18] stride 8
+0x103cb2a0	battle_units_obb_overlap_query	battle	magic-static init then per-unit SAT test: half-extent products (+0x5d4..+0x5e8)*0.5 vs 4 axis dots of query rect param_2; candidate list via FUN_10602f80
+0x103cc2c0	unit_anim_state_offset_compute	anim	link check [0x86] vtbl+0xf8; state byte this+0x77&0xff in {71,72,73,74}; slot ushort -> vol table 120351f0; side sign by FUN_103730d0()<0x32; builds lateral offsets (-4/-5u)
+0x103cce10	unit_anim_state_reset_reload	anim	if state FUN_103b23e0()!=0x7a re-pick id FUN_103dbd70+FUN_103dcac0; if no set (+0x2e4==0) FUN_103d5060; else clear masks +0x1d4/+0x1dc, copy +0x1e4->+0x2f0, icall dispatch
+0x103cd6e0	unit_attach_transform_solve	anim	consumes stored target pose this+0x220, gate FUN_10404590; ~13 ROUND fixed-point + fpatan heading solves; writes large stack transform block (963 lines)
+0x103cee00	unit_target_transform_ring_push	anim	target obj fields +0x1b5/+0x1bb -> fpatan*10430.378 fixed heading; copies 16B xform into 2-slot ring this+0x454[(cnt&1)*0x10], bumps cnt +0x450
+0x103cf4a0	spatial_hash_collect_unique_units	battle	triple loop over hash buckets (idx %param_2, entry stride 0x10), identity-dedup vs param_4, walks piVar9[0x89]+4 anim-hash tables; magic-static guarded
+0x103cf990	battle_engage_condition_gate	battle	gates on flags this[0x88]/this[0x10d] + option query FUN_101023d0(0xe), sets +0x124; angle math via FUN_10ca9b90 (sin/cos); returns bool
+0x103cfcf0	battle_env_state_query	anim	builds param struct via FUN_103a37e0(worldtime field +0x643a8 *0.001); validates ~6 bool result flags; NAN guard + CONCAT packing
+0x103d0430	unit_obstacle_pushout_resolve	battle	iterates obstacle arr this+0x3a0 (stride 0x14 {x,y,type,radius,influence}); if within radius+this+0x35c pushes pos this+0x1f8/+0x1fc out to circle edge
+0x103d0fe0	debug_first_person_camera_update	ui	refs cmds 'toggle_first_person_mode'/'context_camera'; builds rotation from this+0x210..0x21c quaternion math (1-2y^2...), scales by *(world+0x64398)*this+0x36c; state machine on +0x484/+0x48c
+0x103d1790	unit_behavior_flag_tick_dispatch	anim	flag-byte FSM at +0xfb (bits 2/4/8 set-clear), gate vtbls +0x100/+0xf0 on linked [0x86]; indirect vtbl calls [0xdf]/[0x90]; dist thresholds 4.0/8.0, speed *(this[0x85]+0x14)*1.2
+0x103d2660	variantmeshdef_load_parse	render	1544-line loader: FxName/FxNameEntry ops x18 GetNameEntry, paths 'VariantMeshes/VariantMeshDefinitions/*.VariantMeshDefinition', fcos/fsin basis build
+0x103d4ad0	variantmesh_userspec_mount	render	'/user_spec.xml': FxActorInstance::GetActor -> FxMountResult array at this+0x1dc indexed by count +0x1d8; FUN_1011fe40 spec fetch
+0x103d5060	unit_anim_playback_state_tick	anim	playback state this[0x9d] (1/4/5) FSM: flags +0x6c&1,+0x4e&8,+0xa5&2,+0x139&4; sets +0xc2 bit from short +0x1e2 != 0x11 idle id
+0x103d98e0	anim_id_bitmask_filtered_iter	anim	walks arr this[5] cnt this[4]; per-item bitset test table this[0x20][(id>>5)*4]&1<<(id&31); vtbl gates +0x1c/+0x14/+0x8
+0x103d9f00	unit_anim_state84_vector_setup	anim	state byte this+0x77&0xff==0x84: normalizes -(this[0x26],this[0x28]) dir vector, default id 0x7f3 w/ weight -1, then FUN_103da4d0 x7 pose fill
+0x103da690	battle_anim_ids_scale_validate	anim	scale = *param_3 * *(this+0x168) (half if param_1[4]==0); loops id range param_2 validating presence in unit anim hash (+0x28 cnt, stride 0x18)
+0x103dab00	unit_turn_anim_pick_by_heading	anim	magic-static thresholds 0x71c/0x3555/0x6aab (~10/75/150 deg fixed-point); allowed anim-type byte +0x1dd set {0..6,7,8,c,d,e,f}; fallback idle 0x7f3
+0x103db300	unit_heading_fixedpoint_for_state	anim	state u8 (this+0x1dc)&0xff==0x2d returns short +0x2ee; excludes states 1e/1f and hi-byte 67/68/69; clamps +-0x8000 w/ globals DAT_11df3970
+0x103dbd70	unit_anim_state_to_id_map	anim	FUN_103d20e0 state read w/ DAT_11df5338 override; switch 8/e/f/10/11/2b -> ids 5d9/58d/59b/59c/59d/751 else idle 7f3
+0x103dc5c0	unit_locomotion_state_transition	anim	sets state byte this+0x77 = -0x7a+(speed>=0.01) on linked-gate vtbls +0x100/+0xf0/+0xf8; speed field this[0x6f]; anim presence checks FUN_1038d3d0(0x22/0x2a)
+0x103dcac0	unit_anim_type_remap	anim	switch on type byte this+0x1dd cases 0..6.. writing identity/remapped value back to this+0x1dc
+0x103dd040	battle_entities_grid_cells_mark	battle	per-entity in list (+0x40 arr,+0x3c cnt, gates +0x24/+0x5c): pos via FUN_11365250, cell = round(2*r*x-0.5)>>1 radius this[9], clamps to [this+4,this+5] cell window
+0x103de350	battle_nearby_units_query_excl_group	battle	magic-static growable cand list 11939414 via FUN_103b83f0(radius=this[0x18]+0.5+param_3); filters out same [0x80] and same group [0x13]; caps at param_4
+0x103de810	battle_melee_pair_eligibility_check	battle	returns 0/1: needs >=2 entries this[4..], mix of childless (+0x4c->+0x10==0) and parented, time*0.1 gate, flag +0xc0&0x20, FUN_103e8050 validate
+0x103df130	unit_anim_full_reset_idle	anim	1090-line reset: clears +0x2b4 pending, idle id 0x11 -> +0x1e2, masks +0x1dc bits 0x400000/0x1000000, FUN_1037c7c0(0)+FUN_10384a20(0), full re-init walk
+0x103e1070	unit_anim_variant_cycle_pick	anim	clears unit+0x1dc bits (0xff3fffff/~fcffffff); rotating DAT_11dff19c 0..3 picks ids 0x53+n from anim table (+0x28/+0x2c hash)
+0x103e1860	unit_random_idle_variant_play	anim	rand loop (LCG 0x343fd @world+0x4c) until |v| crosses +-0.5 within DAT_11dff244 tries; picked id==0x7f3 -> cleanup else play FUN_103e73e0(id,0,0,1.0)
+0x103e1d20	unit_anim_blend_flags_apply	anim	692 lines: sets +0x330 snapshot + flag 0x40000 in unit+0x1d4 when this+0x2c==1; clears +0x1dc masks; SUB41 blends + sin/cos basis
+0x103e2d10	unit_anim_check_play_id_7c	anim	gates on anim id 0x7c present in hash (offset 0xbb4==0x7c*0x18+0x14) then dispatches it; sets done +8 when missing
+0x103e33e0	unit_anim_state_to_id_map_force25	anim	same state->id switch as 103dbd70 but seeds FUN_103d20e0 with state 0x25; DAT_11df5338 fallback
+0x103e3930	unit_combat_anim_state7_trigger_a	anim	gate unit+0x200->+0x9bc + FUN_103ab370; forces state 7 into resolver; 643-line multi-anim dispatch
+0x103e4840	unit_turn_rate_threshold_check	anim	heading delta |vtbl+0x50 - this+0x34| vs *(FUN_10d1a700()+0x1e04)*10430.378 fixed-point; ROUND clamp +-0x8000
+0x103e57b0	unit_combat_anim_state7_trigger_b	anim	clears +0x4c then same pattern: +0x9bc gate, FUN_103ab370, forced state 7, state->id resolution
+0x103e62f0	unit_anim_repick_on_transition	anim	if unit[6]!=0 early-out; state!=0x7a -> FUN_103dbd70(state,1,0); bit test unit[0x75]>>6&1 gates FUN_103dd670(0)
+0x103e7c70	battle_same_group_neighbor_scan	battle	FUN_103b83f0 radius query DAT_11df45b8; filters candidate[0x13]==this+0x4c group; validates vtbl+0x100 + FUN_10404780 + tick +0xb9->+0x74
+0x103e8050	battle_units_group_by_anim_type	battle	722 lines: walks arr this+0x10 cnt +0x24, buckets entries by type byte +0x1dd, CONCAT31 packing of per-group records
+0x103e96c0	battle_proximity_random_trigger_check	battle	probabilistic gate: LCG rand*1.5259e-05 <= param_1, dist^2<=2500 (50u), flags +0x4e&8/[0x105]+0x1cd/[0xb9]->+0x74 chain, then vtbl+0x50 slot read
+0x103ea570	battle_desc_pick_by_mount_state	battle	quality gates FUN_1018eb40/1018ddb0; vtbl+0xdc->+0x280==1; selects descriptor &DAT_11938f94 vs 11938f8c by linked +0x218->vtbl+0xf8==1
+0x103ebab0	unit_dual_slot_anim_play	anim	ids from table this+0x30[this+0x118] & [this+0x11c]; presence FUN_103a50d0; plays via FUN_10353760/10343f40(this+0x88,id,0); icall x2
+0x103ec120	unit_locomotion_blend_start	anim	presets flags [0x12]=0x10000, masks [0xf]/[0x10]/[0x75]; state char +0x77=='w' + [0x105] gate; sin/cos/fpatan blend solve (538 ln)
+0x103ed670	unit_anim_state_dispatch_big	anim	vtbl+0xec -> id = linked[0x86]?0x33:0 via FUN_103dbd70 early return; vtbl+0xe8/+0xf0 gates; SUB41 x6 (1102 ln)
+0x103ef3d0	battle_proximity_scan_counter_gate	battle	counter this+0xc>10 clears unit+0x3c/+0x40 low bits; radius query FUN_103b83f0(119394a8, *(unit+0x60)+0.5); candidate walk
+0x103ef750	unit_combat_anim_state7_trigger_c	anim	third +0x9bc/FUN_103ab370/forced-state-7 variant (590 ln), DAT_11df5338 fallback
+0x103f0390	unit_type_state_audio_anim_dispatch	anim	flag unit+0x138&8 or option; if *(unit+0x3bc)<=0 && type!=this+0x20 re-resolve FUN_103dbd70; heading DAT_11df5d98*10430.378; GetAudioAssetPath
+0x103f2e40	unit_mount_state_gated_update_a	anim	early-out chain vtbl +0xec/+0xf8/+0xe8 + linked +0x218->f8; mounted flags +0x4e&0x10; 799-line body
+0x103f3eb0	unit_combat_anim_state7_trigger_d	anim	slot u16 FUN_103730d0()&0xffff; +0x200->FUN_101aee30/103c5b90 pre-gate; +0x9bc/state-7 family (682 ln)
+0x103f50e0	unit_mount_state_gated_update_b	anim	same prologue as 103f2e40 (vtbl ec/f8/e8, +0x218->f8, +0x4e&0x10); divergent body (564 ln)
+0x103f5c40	unit_flag_gated_anim_update	anim	gates: +0x218->f8, +0x4e&0x10 (+0x4c&1, +0x4e&8 subcases), unit[0xb9]!=0; switch on type byte incl case 0xf (552 ln)
+0x103f6d70	unit_combat_anim_state7_trigger_e	anim	fourth +0x9bc/FUN_103ab370/forced-state-7 variant (565 ln)
+0x103f8a20	battle_child_list_metric_accum	battle	vtbl+0x3c or this[0x7b] seed; walks this[0x70] cnt this[0x6f]; per-item +0x3c->+0x38 metric, inner loop over +0x34 entries
+0x103f94e0	unit_render_orientation_build	render	world time *0.001 -> FUN_103a37e0/103fc590; quaternion basis from this+0x210..21c; identity fallback {1,1,0,1} if DAT_11df3c00; reads +0x1e0/+0x1f8
+0x103f9920	heading_ring_lerp_sample	core(math)	2-slot ring at this+0x444/0x450: frac (u&0xfff)*0.000244 (1/4096), wraps short heading diff clamped +-0x8000, lerps between slots
+0x103f9fa0	unit_cached_heading_recompute	anim	frees cached 0x1c obj in_ECX[200] when [0x8a]+4!=1 or world +0x64408/+0x640d8==1 (checked delete); vtbl pos getters + fpatan x3 rebuild heading
+0x103fa8b0	unit_type_to_animid_switch	anim	gates (+0x200==0||option) && !DAT_11df5b18; vtbl+0x24 on this[0x234] -> anim at *(this+0x374)+0x5ac; else switch(type byte) cases 0-7/18/19/23.. pick ids
+0x103fb370	unit_periodic_pose_recompute_64t	anim	parity gate (*(world tick ^ unit[0xd])&0x3f)==0 (every 64 ticks); unit[100]/unit[6] gates; fpatan x8 pose solve (513 ln)
+0x103fc590	unit_obstacle_box_setup	anim	copies param pos -> this+0x1f8..0x204, id -> +0x1f4; if id==0 builds +-0.5 corner box via FUN_103c0230 x2; gate this+0x370 && this+0x228
+0x103fda20	unit_group_partner_xform_calc	anim	per member of arr this+0x30 cnt +0x38: FUN_103d1480 finds index sharing group id (+0x34); weight from this+0x140+8+i*4; flag (v+0x14)&0xf0==0x30; sin/cos delta pos
+0x103fe0f0	unit_member_pair_xform_build	anim	same arr walk w/ FUN_103d1480 partner search; heading base this+0x124+0x58; sets +0x1cf=1; per-pair transforms via sin/cos
+0x103feab0	battle_group_member_pair_scan	battle	walks arr this+0x3c cnt this+0x48 backwards; group match [0x13]==this[0x30]->[0x13]; per-pair 7-dword recs at (i*7+0x60)*4; fpatan x3 + ROUND x4
+0x103ff6d0	battle_periodic_0x40_list_scan	anim	time*0.1 cooldown vs this[0x59]; cap *(obj+0xa8) <= this[0x4f]+1; scans 0x40-stride entries validating ids via FUN_10e2e2a0
+0x103ffe00	unit_flagged_state_trigger	anim	requires unit +0xc0&0x20; clears bits +0x3c/+0x40 &~3 when param==0 && +0x138&8; states 6/7 @+0x274 + flags 139&4 branch
+0x10400710	unit_audio_event_vol_table_dispatch	audio	slot u16 via vtbl+0x50 -> vol/pitch DAT_120351f0[slot*8]; FUN_103b8160(&11939448,DAT_11df40b8,entry,0,1); 927-line jumptable dispatch
+0x10402370	battle_entrylist_xform_math	battle	world-flag early-out (+0x64408/+0x640d8==1); iterates cnt [0x10f], stride 0x24 arr [0x110]; per-entry fcos/fsin + ROUND, FUN_1135dbc0 x6
+0x104033b0	unit_target_state_sync	anim	this+0x38 = this+0x20 target ptr; invalid (target !+0xc0&0x20) -> null + ret 1; gate this+0x35; magic-static init
+0x10403bf0	unit_proximity_trigger_periodic_check	anim	every 8 ticks ((tick^this[0xd])&7)==0; vtbl+0x184/+0xa0/+0x100 gates; *(id+0x8e8)==4; pos offset (+0x5ec,+5f0*50); feeds FUN_103e96c0 proximity check
+0x10404030	unit_anim_record_resolve_icall	anim	picks set obj unit+0x2e4 or hash bucket (ushort +0x1e0 %cnt via +0x1f8 seed); reads u32 +0x1e4; guard_check_icall dispatch
+0x10404cd0	battle_unit_pair_compat_check	battle	compares units param_1/param_2: linked vtbl+0x30 or null, +0x18==0, +0xc0&2 both required; FUN_1036b770 x2 refine
+0x104051e0	unit_type_ghi_pose_solve	anim	1645 ln; clears bit 0x20 flags [0xf]/[0x10]; float via [0x105] vtable; type byte in {'g','h','i'}(67/68/69) special-cased; SUB41 x8
+0x10408400	anim_desc_fields_lerp	anim	lerps ~12 descriptor fields param_2->param_3 by param_4: floats +0xf8..+0x11c, shorts +0x48 delta, u32s +0x110..11c passthrough
+0x104093f0	int_range_quicksort_driver	crt	recursive range halving (>41 elems splits, else FUN_104090b0); 5 sub-range calls per level over int[] stride 4
+0x1040a140	ptrpair_range_quicksort_driver	crt	same divide pattern for 8-byte elements (stride 8, threshold 33) via FUN_10409320
+0x1040b380	rec12_insertion_sort	crt	insertion phase for 12-byte records sorted by float key at +8; falls back when span <33 records
+0x1040b6c0	rec8_insertion_sort	crt	insertion phase for 8-byte elements (dword pair), span <33; classic std::sort inlining shape
+0x1040bf40	sorted_seq_merge_walk	core(container)	iterator init FUN_105eb970(param_1); alternates dual-stream advance FUN_105de610/105de670 with comparator FUN_10643240 into ~12 out lists
+0x1040c6a0	render_instanced_rgba_pack_submit	render	walks ptr list param_2..3; flag (*(it+0xc)->+0xd8&0x10); scales by DAT_11dff850*_DAT_11e00c80; packs RGBA *255 via ROUND; vtbl call on param_6+0xa8
+0x1040cde0	render_flag_color_variant_pick	render	16B rec walk; world global +0x6432c->+0xd8; FUN_1044ff50 color build; picks +0x1ac vs +0x1a4 via nested flag chain +0xb0->+0x24->+0x24->+0x14->+0x118
+0x1040e490	ship_hull_material_load_a	render	strings Hull_copper/Hull_iron/Hull_wood; iterates param_1+0xe0 cnt / +0xe4 arr; string ctor/dtor pairs x8; registers material variants via FUN_100ff8f0
+0x1040ec60	ship_hull_material_load_b	render	near-twin of 1040e490 (same hull strings, same structure, second ship class/table)
+0x104127b0	anim_set_ptrlist_build	anim	builds vector of FxAnimSet*/int* pairs from param_1 head; GetAnimGroupName lookup; 440 lines of list stitching
+0x104137c0	render_obj_ctor_11779988	render	ctor: vtable PTR_FUN_11779988; copies two 12B members from DAT_11e06efc/f04; news 0xc sub-obj w/ vtable PTR_LAB_1177b864
+0x10413c40	rec_0xc0_array_alloc	core(memory)	allocs n*0xc0 via FUN_100fcc80; stores {n,n,arr} triple at this; clamps negative n to 0
+0x10413fa0	battle_composite_obj_graph_build	battle	zeroes 9 fields then 18 sized news (FUN_100d12b0) wiring child objs via 1016f420/10170460 pairs; ROUND x2
+0x104152a0	battle_preset_army_vegetation_load	battle	strings etruscan/pun_samnites/pro_samnites/main_invasion + 'Vegetation Display/Enabled'; FxArchive serialize of preset lists
+0x10427a60	battle_cinematic_shot_parser	cinematic	parses shot scripts: keys shot_type/battle_type/facing/keyframe_sequence/vector_offset_origin; enums INTRODUCTION/COMMANDER/UNIT/CONCLUSION/GATES_OPENED_SHOT, RANDOM_UNIT_*; 88x GetNameEntry
+0x1042a060	cinematic_ctx_ctor_1177da98	cinematic	ctor stores 6 params + FUN_1016f7e0()==0 flag; 2 string ops FUN_100f1c10
+0x1042a890	cinematic_subject_ctor_11754018	cinematic	ctor vtables 11754018/1177c2cc; copies subject bytes param_2 +0x78/+0x79/+0xd8; gate param_2+0x20->vtbl+0xb0
+0x1042c720	cinematic_actor_mount_tables_init	cinematic	fills ~20 static desc slots &DAT_1177a48c..stride 8 when param_3; 2 InitCS + timeGetTime; FxMountResult mounting
+0x1042d990	debug_tree_place_all_cmd	render	console handler 'Tree Display - place all; (variations: %u)(total: %u)'; iterates tree instances placing variations
+0x1042e6b0	battle_locomotion_animname_map	anim	FxName map infantry_walking/running/charging/melee + cavalry_* + artillery_melee -> per-type anim names; atof on facing errors
+0x1042f660	audio_battle_bank_vo_setup	audio	12 desc slots &DAT_1177b51c..stride8; banks Battle_Unit.bnk/Battle_VO_Generals_Speech.bnk; audio calls 10fef3b0 x37
+0x10430350	battle_ui_spline_arrows_build	ui	1480 ln: builds 3DUI splines - move arrows land (body/head/head_fast), fire arcs, artillery trajectory body/head from UI/3DUI textures
+0x10432d20	cinematic_track_ctor_1177b484	cinematic	ctor vtable PTR_FUN_1177b484; stores 7 params; flag byte FUN_1018db30
+0x10433340	variantmesh_role_def_load	render	paths VariantMeshes/VariantMeshDefinitions/*.VariantMeshDefinition; role switch officer/standard_bearer/musician/soldier; e3_elephant/horse_test fallbacks
+0x104342f0	facefx_battle_orders_path_build	middleware-facefx	builds L'facefx/%sEN_Battle_Orders_PC.%s' and Battle_Conversation_PC.%s paths; InitCS + timeGetTime
+0x10434800	facefx_facegraph_actor_ctor	middleware-facefx	FxFaceGraph ctor chain PTR_FUN_1175cf18 : PTR_FUN_11754018; desc slots &DAT_11779e60..
+0x10435e80	cinematic_obj_array_dtor	cinematic	dtor: checked-delete 0x54 obj at [0x4c]; walks [0x4b]+0x14 arr stride 0xbc calling vtbl[0](0) per elem then free
+0x104369f0	cinematic_handler_vtbl_table_init	cinematic	fills 17 slots &PTR_LAB_11779b58..stride c with handler vtables; base PTR_FUN_11754018
+0x10436de0	cinematic_entrylist_destruct	cinematic	frees [0x19]-count 8B elems; resets [0x1d] entries to vtable 11779ed0 and checked-deletes 0x20 objs
+0x10437ea0	cinematic_tracklist_ctor_dtor_1177a3a0	cinematic	ctor fills 20 slots &PTR_LAB_1177a3ac..stride c under vtable PTR_FUN_1177a3a0; pairs w/ 2 DeleteCriticalSection
+0x10438910	rec_0x30_record_copy	core(memory)	field-wise deep copy of 0x30-byte rec: 7 dwords, u64 @+4, bytes @+7/+0x1d..1f, +8,+9,+10
+0x10439150	battle_member_xform_variant_build	battle	FUN_11354460 on member +0x30/+0x3c vec pair; branches on +0x4c==-1 selecting alt block copy into 11-float xform
+0x10439d20	vegetation_instance_attr_scatter	render	LCG seed 0x49710ae3 per instance (*10 stride); rand*1.5259e-05 lerp DAT_11e07db8/_DAT_11e07f08; byte*1/127 attr unpack via FUN_11366c10; mgr FUN_112e1830
+0x1043a530	bezier_seg_subdivide_emit	core(math)	splits 2D segment at t=1/3,2/3 into 3 sub-segs ({fx,fy} pairs stride 8), emits via FUN_102e3740
+0x1043ad60	battle_state_dependent_data_copy	battle	state gate *(param+0x5c)==6/!=0; linked vtbl+0xec + +0xb0->+0x4c8 flag; bulk-copies arrays from obj into locals
+0x1043b830	vegetation_scatter_threaded_init	render	mgr FUN_112e1830; InitializeCriticalSectionAndSpinCount x2 + Enter/Leave x4; fcos/fsin placement solve (496 ln)
+0x1043c680	instance_normal_rand_jitter	render	2x FUN_10422020 pre-pass; LCG 0x49710ae3; per-item stride 10 {dword,u16,byte*1/127}; normal unpack FUN_11366c10
+0x1043d930	unit_batch_process_with_copy	anim	range walk: zeroes obj+0x730, FUN_104548c0 big build, vtbl+0x24; success path FUN_10438910 copy + cnt++ else FUN_1048f270 teardown
+0x1043de30	unit_field5_copy_offset_calc	anim	stride 0x30 walk; selects base [3]+0x4c vs +0x40 by flag this[2]; vtbl+0x88 copies 5 floats from obj+0x80; delta vs this[5] pos
+0x1043fe90	battle_faction_hashed_unit_pick	battle	compares FxName hash of unit vs hardcoded 3c_* roster (Gallic_Imperial_Guard, Taifali_Cavalry, Scythed_Chariots...); L'Zenobia' check; timeGetTime x2
+0x10441710	battle_parsed_param_select	anim	vtbl+0x30 parse via FUN_104467d0; flag-byte struct select: kinds 8/2 -> this+0x4e0/0x4d8 else 0x4c8/0x4d0 defaults
+0x10441ec0	battle_lazy_indexed_lookup_cache	battle	caches result at this+0x6f8 from world +0x6432c->+0xe4 table[idx*0x10+0xc]->vtbl+0xc; guard +0x6f8==0; FUN_10244270 pre-clear
+0x10442600	audio_volpitch_param_pack	audio	reads {vol,pitch} DAT_120351f0[ushort param+2]; packs ~10 float** stack records for downstream audio call
+0x10442fa0	fxname_list_substr_build	core(string)	walks name array param_3+0xe4 cnt +0xe0: FxName entry, prefix-skip via FUN_100ff8f0 lens, substr FUN_101155a0
+0x10443de0	facefx_orders_bigbuf_init	middleware-facefx	news {vtable PTR_FUN_11779af8, buf}; allocs 0x6b90 bytes; fills via FUN_104342f0 battle-orders paths; stores at this+0x200
+0x10444e90	battle_id_gated_trigger_dedup	battle	gates +0x218/+0x3d0, weight +0x20c in (0,1]; ids 0x38/0x33; 0.2s dedup window vs _DAT_11e0a774 w/ id match DAT_11e0a778
+0x10445990	unit_state52_5a_gate_query	anim	state u8 unit+0x1dc&0xff: pass-all if 0x77 else only 0x52/0x5a with pos +0x1fc > _DAT_11e05820; walks world +0x6432c->+0xb8 list
+0x10446c00	anim_ring_flags_unpack_7bit	anim	ring slots stride 0x68 @this+0x74; frac (u&0xfff)*1/4096; unpacks 7 flag bits per byte (b>>6..>>1) + next-slot bit0
+0x104484a0	rec_0x20_batch_emit	anim	iterates 0x20-stride recs at param+8 cnt param+4; emits 16B {[-2],[-1],[1],[2]} blocks through FUN_105f5cf0 mgr vtbls
+0x104493e0	battle_member_counters_bucket_sum	battle	sums 12 dwords from this+0x94 into 14-dword rec; buckets idx 5..7 & 8 into slot [0xc] when FUN_104a1260 true
+0x10449980	battle_debug_stats_reset_capture	battle	gate DAT_11e01e18; magic-static memset 0x2004 stats buf @11e08760 w/ atexit dtor; clears this+1000/+0x3f4; vtbl+0xcc pos fetch
+0x1044a170	anim_ring_value_or_chain_walk	anim	if ring cnt *(p+0x450)==want return cur +0x44c; else walks linked [0x119]-count [0x11a] arr chaining up to 0x20 entries
+0x1044acb0	battle_preset_threshold_table	anim	default weights 10000.0 x12 when param_5; special param_2==0 -> preset {75,90,25,30,...}; returns selected set
+0x1044b540	battle_dir_to_point_weight_calc	anim	parse via vtbl+0x30/FUN_104467d0; dist to point param_2 (gate >=5), normalized dir dot products under flag combos
+0x1044bc90	unit_master_blend_tick_big	anim	2094 ln: LCG jitter (343fd) x3, 0.1 lerp factors (0x3e99999a), vec ops FUN_113545d0 x4, id-validity FUN_1136ee20 x7, FUN_104c9d00(0,0.1)
+0x10450890	unit_basis_matrix_compose	render	composes basis matrix from fields this[0x37..0x40] (scale/angles), identity init {1,0,0}, fcos/fsin x5
+0x104548c0	battle_record_packer_big	battle	4x FUN_10412570 pre-passes; reads unit+0xc->+0x10a8/10ac/10b0; CONCAT31 x26 packing of u16/u32 records (730 ln)
+0x104561b0	audio_source_select_gated	audio	gates char *(this[0xb0]+0x16d), this+0x334!=-1, +0xc6==0, vtbl chain + FUN_10175450/1018dba0(6); copies block _DAT_119396b0; GetAudioAssetPath x3
+0x104573d0	ptrpair_array_build_from_count	core(container)	allocs n<<3 via FUN_100fcc80 from count this+0x488 (neg->0); fills pointer pairs in walk
+0x104582b0	battle_rec0x48_dist_weight_accum	anim	records stride 0x48 at this[10] cnt this[9]; 3D dist^2 between +0x20.. and tail pts; tiny-weight guard; accumulates this[6]/[7]
+0x10458a70	unit_pos_orient_multi_case	anim	pos via vtbl+0x134 or FUN_1035aea0(*(this+8)->+0x20); linked gates f8/f0; fcos/fsin x7 orientation solve
+0x104595f0	fxname_hash_event_dispatch_big	anim	hash-dispatch: outer *(this+0xac)==0xbc422f24 then ~10 hardcoded event hashes (9ca19a79,e63885d,...); 840-line switch
+0x1045a190	battle_nested_list_obj_build	battle	walks world nested lists (+0x68->+0xc0->[slot]->+0xb0 -> +0x20 -> +0xec/+0xf0); builds objs w/ vtable PTR_FUN_11754394
+0x10463c20	obj_bounds_serialize_vtbl	render	pulls min/max via vtbl +0x40/+0x3c and +0x1c/+0x14 pairs, emits through vtbl+0x14/+0x1c; Serialize present
+0x10464600	battle_ringlist_gate_sample	anim	vtbl+0x68 pre-call; world +0x6432c->+0xb8 list gate; samples ring +0x450/+0x454 with vtbl+0x3c seed
+0x10465900	skeleton_full_matrix_rebuild	anim	1899 ln: builds full bone matrices; heavy CONCAT22/44 packing, FUN_103a1bd0 x14 + FUN_103cd500 x11, sin/cos
+0x10469fb0	audio_pos_jitter_offset_calc	audio	vol/pitch table *3.3 offsets added to param pos; clamp to +-2 via FUN_10404b30/103c0230
+0x1046a7b0	battle_member_spread_offsets_calc	anim	gate DAT_11e06620/world+0xb8; walks 7-float stride member arr; +-2 offsets; fcos/fsin x10 spread solve
+0x1046b800	unit_flagged_global_pick_calc	anim	picks global vec DAT_11e03198 vs DAT_11e01e68 by byte this+0x1d; optional FUN_104471d0; sin/cos finish
+0x1046ce70	battle_world_blend_update_big	battle	1032 ln multi-stage: world glob +0x6432c x4, blend weights 0.5/0.8 (3f4ccccd), vec lerps FUN_113545d0, sub-updates 105e7170/104f6760/104d8ee0
+0x10470490	battle_dirtycheck_update_path	battle	gate flag +0x14 && *(world+0x64348)->+0x2e==0 && counters +0x8a4!=+0x8ac; vtbl+0xec fetch then conditional math path
+0x104715d0	facefx_actorlist_weight_fade	middleware-facefx	world +0x64414/+0x64410 gates + vtbl+0x3c; weight this[9]>=1 -> -5.0 fade; FxActorList ops + GetReferences
+0x10473430	audio_gated_asset_fetch	audio	zero-fallback via FUN_104737b0; gates vtbl+0x2c, FUN_1018db30, mode FUN_10ca7a30()==8||0x47; GetAudioAssetPath
+0x104737b0	facefx_actorlist_dist_clamp	middleware-facefx	same world gates (+0x64414->+0x414 / vtbl+0x3c); dist param -=5 clamp >=1; magic-static guarded
+0x10473ba0	battle_flagpath_chain_build	battle	gate this+0x484!=-1; param flags select paths; FUN_104dd850/103211f0 probes; builds chain from this+0xa8 vtbl+0x10
+0x10474340	battle_proximity_trigger_fire	battle	dist^2 vs radius *((this[3]+0x9c)+0x250) around pos this[3]+0x88..90; fires FUN_10479de0/1048a460/10479c10
+0x104746b0	battle_reclist_threaded_process	anim	walks arr this+0x184 cnt +0x180; per-rec flags [10]/[-1 check]/[8]; EnterCS guards; 463-line threaded body
+0x104758c0	slot0x40_copy21_items	anim	slot = idx*0x40 into table this+0x18; vtbl chains +0xc/+8 gate; bulk copy vtbl+0x84(dst, src+0x14, 0x15 items, ...)
+0x10476310	facefx_actorlist_gate_dup	middleware-facefx	duplicate of actorlist gate pattern (+0x64414->+0x414 / +0x64410 / FUN_103a0030 / vtbl+0x3c); forces param_2=0
+0x104766f0	circle_points_emit_global	core(math)	samples N=DAT_11e07ff8 points at (i/N)*2pi on circle radius param_1[5]; emits into global growable DAT_11e0ad4c
+0x10476b80	parsed_flag_vec_build	anim	FUN_104467d0 parse of vtbl+0x30 string; value FUN_1030fe20; flag combos cStack_30b/c/2e0 select vec paths via FUN_113545d0
+0x10479de0	battle_ringflag_trigger_eval	battle	vtbl+0x17c level<3; ring slot (cnt-1&1)*0x68 flags +0x7c/+0x80/+0x90 (&0xe,&0x10); id via vtbl+0xc4; fires downstream
+0x1047ac10	unit_weighted_rand_reclist	anim	weight = 1-clamp(vtbl+0x40*2,0,0.2); walks recs p+0x71c cnt +0x718; per-item LCG from this+0xb4->+0xac
+0x1047bf20	locked_fnptr_job_build	core(memory)	FUN_104b72b0(1) gate; EnterCriticalSection; packs {fn-ptr,param} job structs into locals
+0x1047c350	battle_dispatch13_gated	battle	FUN_104dd8d0 validity then FUN_10490480 13-arg dispatch; EnterCS/LeaveCS around body
+0x1047d9c0	battle_multitarget_solve_big	battle	842 ln: fpatan x4 headings, dense float stack solve; helpers 102128c0/10441450/104467d0/102df760/1024eb90
+0x1047f980	slot_param_box_halfsize_calc	anim	slot idx = u16(short+0x4000 bias); table DAT_120351f0[f2]*param*0.5 -> +-halfsize box; ROUND x10 refine
+0x104806d0	timed_ring_rec_pick	anim	frac = clamp((p+0x18 - vtbl+0x30 now)*p+0x20)*4096; picks rec ((cnt+1+(frac>>12)&1)*7+10)*4 via FUN_102964f0
+0x10480e40	facefx_actorlist_gate_dup3	middleware-facefx	third actorlist-gate duplicate (+0x64414->+0x414 / +0x64410 / FUN_103a0030 / vtbl+0x3c)
+0x10481220	magic_matrix_triple_apply	anim	gate 0.1<param+0x24 && byte +0x296; LCG>0.75; applies 3 fixed-coef matrices (1.33151/-9.01975/6.22573 etc) via FUN_104dea10
+0x10482030	vtable_bundle_build_big	render	721 ln packing ~30 code* slots (pcStack_*) into a dispatch/vtable bundle
+0x10483dc0	battle_dir_point_offset14	battle	this+0x494!=-1; validates via FUN_104dd7d0; normalizes dir (p - p+3) and emits point offset *14.0
+0x10484260	parse_wire_subobjs_many	render	642 ln: parses then wires ~15 sub-object ptrs (puStack_*), helpers FUN_10446870 x3 / FUN_104467d0
+0x104856b0	entrylist_timeout_process	anim	walks arr p+0x118 cnt p+0x114; per-entry +0xd0==1 gate and age vs +0x38 timeout; 616-line body
+0x104883e0	battle_pair_pick_capacity_gate	battle	world +0xb8 flags +0x2c5/+0x2c9; capacity DAT_11939e10+e0c vs count; pair via FUN_1016f540 or globals DAT_11e034a0
+0x10488ac0	rec_matrix_vec_transform	anim	gates byte (p+0xc)->+0x294 & 0.1<param+0x24; walks (p+0x268)->+0x108 recs cnt +0x104 transforming vec by per-rec 3x4 rows +0x1c..2c
+0x10489090	parsed_fields_stringfree_check	ui	slot equality FUN_1016f420()->+0x10==FUN_1016f7e0(); parse vtbl+0x30/FUN_104467d0; frees parsed string fields via FUN_100eaf40
+0x104894c0	battle_flagpage_arr_clear_big	battle	clears bit 0x40 @param+0x1a1; arr walk this+0x15c/164/168; zeroes *(obj+0x40004) flag-page entries; 547 ln
+0x1048a460	ring_slot_flag_guards	anim	ring slot (cnt-1&1)*0x68 stride 0x1a dw; early-outs on +0x15/+0x16 nonzero and flag bits &0xe / &0x10==0
+0x1048a850	battle_gated_listrec_build	battle	this+0x344!=-1; gates param sums +0xdc/+0xd4, flag +0xf0, FUN_104dd850; walks this+0xa8 building code*-bearing recs
+0x1048c2f0	unit_classify_5byte	anim	classifies unit -> 5B rec: flags &0x20, type byte +0x1dd window [0x3d,0x65), state 'Y' special {0,6}; vtbl+0x100/FUN_103c1ef0
+0x1048ccf0	battle_time_accum_dispatch	anim	acc time +0xac += vtbl+0x40 delta; opt vtbl+0x118; FUN_10490480(this+0x59,...) + 104901b0/10490280/vtbl+0x16c chain; id<0x7f3 -> FUN_103a1bd0
+0x1048d700	facefx_actor_animgroup_load	middleware-facefx	FxResourceManager/FxActor/FxAnimGroup; '%s%s.%s' paths 'facefx_ingame','rome_man'; FxAllocate x4 + LoadActorFromMemory + Begin/EndAnimations + SetAudioAssetName
+0x1048dfd0	facefx_animset_mount_load	middleware-facefx	'%s%s.%s' path build; LoadAnimSetFromMemory + Mount onto FxActor; guard this+0x2b0->+8
+0x1048e460	facefx_clientevent_play_locked	middleware-facefx	lazy-load FUN_1048d700 under FUN_101150a0 lock(0/1); builds FxName+FxClientEvent; StopAllClientEvents + FindAnim + PlayClientEvent; 2x EnterCS
+0x1048e870	facefx_clientevent_play_once	middleware-facefx	single-shot variant: FUN_104b72d0(0) fetch; FxClientEvent build; FindAnim/PlayClientEvent; 1x EnterCS
+0x1048f270	battle_rec6_bulk_copy	battle	copies 6-dword records from param arr into this+0x31c region (piVar11[-0xc6]...), fixed 2 iterations
+0x10490940	audio_assetpath_pos_play_a	audio	GetAudioAssetPath(param+0x4d0->+0x5ac); pos FUN_103751a0; 3 strings 100f1c10/1018aa10; functor PTR_FUN_1177baec; play FUN_1016f440
+0x10490c90	audio_assetpath_pos_play_b	audio	twin of 10490940 with extra gate *(param+0x1c)->+0x1a0 != 1
+0x10491fb0	battle_armyslot_sublist_scan	battle	world nested nav (+0xc->+0xc0->+0xb0[army]->+0x20[unit]); collects +0xd0 fields, -1 defaults
+0x10492430	battle_unitslot_chain_walk	battle	same nav; walks unit +0xec cnt / +0xf0 arr -> +0x44 chain
+0x104927a0	battle_armyslot_fetch_zero	battle	nav to army[unit] slot; zero-inits {0,0,null} result struct when absent
+0x10493090	battle_pairquery_count_nonnull	battle	FUN_10492bc0(0,10000,slot,...) query; counts non-null entries in pair array (this+0x84)+100 stride 2
+0x10493750	rec6_pack_range	anim	packs 6-dword recs from this[4] (count this[3], -1 if param) into locals w/ DAT_11e06efc fill
+0x10493f40	unit_flagbit_anim_trigger_set	anim	flag byte *(this+4): bits 2/4/8 -> per-source flags &1/&2 trigger anims 0x54/0x5a/0x57/0x5d via FUN_10442ef0
+0x10494320	unit_flagbit_anim_trigger_set2	anim	continuation set: sources FUN_10298b90/102a8380 flags &4/&8 -> anims 0x96/0x97/0xa3/0xa4
+0x10494750	clamped_weight_arr_walk	anim	clamps weight param [0.01,1]; bound check vs DAT_11e01a80; TLS-footer guarded walk of +0x48 array
+0x10494f90	battle_nearest_entity_search	battle	hash gate !=0xd2329fc5; FUN_10299640 list walk filtering +0xc0&0x20; tracks min over +0x50/+0x58 floats (FLT_MAX init)
+0x104957f0	faction_name_table_parse	battle	parses binary blob + faction strings (inv_rome, emp_palmyra_dura, pro_latium_latium...); 12x FUN_10491040, 7x 104c9970
+0x1049600d	battle_hashflag_perunit_set	battle	mid-func (unaff ebp/ebx/edi); hashes 0xd52518f5/0x958256f8 vs FUN_10491040; sets flag bytes at this+0xd8+0xf+i*0x10
+0x10496860	battle_actionlist_firstmatch_fire	battle	walks this+0x110 list; vtbl+0x60 gate / +0x68 commit / +0x58 fire w/ FUN_104d6700; breaks on first match ('rom_macedon' ctx)
+0x104990d0	battle_audio_banks_and_props_init	audio	2718-ln mega-init: loads 8 Battle*.bnk banks (10fef330/10fef3b0), builds siege props incl 'arrow_tower', deep ptr-graph wiring
+0x1049d060	battle_class_filtered_obj_news	battle	'large'/'light' class strings; world +0xc0->+0x25c0 list filter [0x184]+0x20==0; news 0x38-byte objs
+0x1049d630	battle_all_units_full_walk	battle	triple-nested walk world+0xc0: armies +0xb0 -> units +0x20 -> subitems +0xec (full order census)
+0x1049db00	cinematic_tracks_create_all	cinematic	same full walk; per subitem news 0x324 and constructs track via FUN_10432d20 (ctor 1177b484)
+0x1049dee0	class_obj_news_2c_list	battle	iterates FUN_101a0440/10184a30 entries; news 0x2c-byte objs per item; 'large'/'light' classing
+0x1049f3c0	vec_reserve_double_0x54	core(container)	capacity doubling: while cap < need cap*=2 (0->1); reallocs 0x54-stride element vector
+0x1049f7b0	vec_reserve_double_0x34	core(container)	same growth policy for 0x34-stride vector
+0x104a5520	rec_build_ringfrac_sample	anim	packs {short +0xc, floats, ptr} rec; frac = clamp(*(ptr+0x1c)-0.1)*[2] in 1/4096 units for ring pick
+0x104a5ad0	quat_slerp_arrays	anim	dot of two 4-vec arrays (this+0x314 vs param+0x318, stride 0x28); |dot|<=0.993 gate; slerp via sin((1-t)th)/sin(th)/sin(t*th)
+0x104a6cf0	index_usedmask_two_pass	core(container)	pass1 marks used ids (acStack[id]=0 from arr p+0xc), pass2 consumes free slots
+0x104a7820	idle_reorient_every10s	anim	per obj in this+0x18 arr: if now-vtbl+0x14 > [0x15]+10 re-rand heading +-22.5deg (LCG), rotates [0x16]/[0x17] dir vec
+0x104a7be0	option_gated_node_fetch	render	option byte -> this+0x91; vtbl chain fetch -> FUN_106036a0/104c4a30 -> this+0x94/98; node 0xdc vs 0xc4 by empty-list; 0x2c-stride validation
+0x104a84c0	slot_rec_writer_0x40_0x84	anim	slots idx*0x40 @+0x18; inner 0x84-stride recs: writes src[5] -> rec+0x58 when byte<u19; tick*100-[6] age calc
+0x104a9060	battle_bigframe_dispatch	battle	1009 ln; one-shot reset DAT_11dff5ca; mid-func unaff ebx/esi/edi; ~10 code* stack slots dispatched per frame
+0x104ab350	anim_curve_multibone_eval	anim	1138 ln: evals curve/multi-bone chains from param_2 float arr ([6],[0x14]); fpatan x4 + ROUND x8 + SUB42 x3
+0x104ad270	icall_guarded_callset_build	render	guard_check_icall x1; assembles stack set of code*/int* callables with CFG-guarded invocations
+0x104ade20	cinematic_objs_reset_release	cinematic	gate FUN_10303370; resets objs in this+0x24 arr to base vtables 11754018/1177c2cc, releases [0x43]/[0x45] subobjs
+0x103d20e0	unit_anim_state_normalize	anim	normalizes state: gate FUN_103c6010 -> {2b,2c}->0xf, 0xf kept, else 0xe; flag +0x75&4 clears 0x32->0
+0x104178e0	cinematic_shot_ctor_11779f84	cinematic	ctor vtable PTR_guard_check_icall_11779f84 : PTR_FUN_11754018; seeds 0.1f; helper FUN_10454850
+0x10418820	cinematic_keyframe_rec_pack	cinematic	packs keyframe rec: 7 dwords copy + ~10 param bytes/dwords at fixed offsets
+0x104192b0	battle_impact_effectname_resolve	battle	FxName resolution of impact fx names door_smash/splash_small|medium|large; 1244-line multi-table lookup
+0x1041b8b0	ship_marker_uiset_build	ui	strings ship_mouse_over/selected_marker_ellipse|capsule; builds 4-marker UI set w/ desc slot &DAT_1177a004
+0x1041cf80	render_ctor_11768574	render	ctor vtable PTR_FUN_11768574; zeroes fields [3..0xa]
+0x1041d6b0	cinematic_tracksub_ctor_1177caf0	cinematic	base ctor FUN_1041e890 then vtable PTR_FUN_1177caf0; caches linked +0xb0->+0x4dc and param+0x90
+0x1041deb0	unit_animtrack_ctor_1177a00c	anim	base ctor + vtable PTR_FUN_1177a00c; inits [0x85]=0x7fffffff, anim id [0x8b]=0x7f3 idle
+0x1041e890	animtrack_base_ctor_11779cc0	anim	base ctor chain PTR_FUN_11779cc0:11754018; snapshots unit flags (+0xc0>>5, +0x1dc&0xff); indexes table p+0x2d4 by unit->+0x34*0xdc
+0x1041f9d0	cinematic_event_ctor_1177b260	cinematic	ctor PTR_FUN_1177b260; timeGetTime stamp; pairs FUN_1030d460/FUN_1042d840 handles
+0x1041ff00	cinematic_shot_ctor_11779e78	cinematic	sibling of 104178e0: vtable PTR_guard_check_icall_11779e78; walks FUN_100e81f0 list w/ FUN_102eb2b0
+0x10421750	variantmesh_ref_ctor	render	ctor holding '.VariantMeshDefinition' ext string + default DAT_11939728; param path + flags
+0x10423050	battle_fxrec_ctor	render	small rec ctor: id from FUN_105a47f0(); colors DAT_11e06efc/f04; flag bytes incl FUN_1059f780()
+0x10423490	texture_path_default_fallback	ui	builds texture paths '_image.tga' with 'default_image.tga'/'default' fallbacks via FxName ops
+0x10423d00	ship_fx_models_setup	render	naval fx/model graph: .rigid_model_v2 + _furled variants, sea_wreck, shipspray_large/small, ShipForwardSpray, DeckFire/DeckSmoke
+0x10426460	flag_renderobj_ctor_1177b270	render	'flag' obj ctor chain guard_check_icall_11763cc8 -> PTR_FUN_1177b270; two color triples DAT_11e06efc/f04
+0x10426cf0	audiovo_descslots_fill_1177b37c	audio	desc slots &DAT_1177b37c..stride 8 (VO/audio descriptors) when param_6; world handle FUN_1030d460
+0x10497ff0	battletree_weightpair_accum	battle	walks param tree (+4 head/+8 children) accumulating float pairs into locals per node

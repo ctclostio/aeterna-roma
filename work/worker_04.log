@@ -1,0 +1,19 @@
+Mission complete. Summary of what was done:
+
+## FuncID session results
+
+**Phase 1 — Direct analysis (~139 functions).** Processed the solo queue in order, reading decompiled C and appending TSV rows incrementally to `work/funcid_solo.tsv`. Highlights: FaceFX audio-asset chains, battle controller factories (`switch(type)` ctors 0x102dxxxx family), pose slerp/anim-timeline samplers (0x104a5ad0, 103a37e0), savegame writers (`BATTLE_SETUP_UNIT`/`FACTION`, REINFORCEMENTS/UNITS/SHIPS blocks), the seg-seg closest-point/OBB math cluster, and debug-render helpers keyed to the cos/sin table @ `DAT_120351f0`.
+
+**Phase 2 — Pivot to consolidation.** Discovered concurrent analyst workers finishing the same queue (worker logs active mid-session), so I stopped duplicating and switched to merge/QC:
+
+| Deliverable | Contents |
+|---|---|
+| `work/funcid_merged.tsv` | **970/970 queue addresses** with one canonical proposal each (scored best-of-N across all result files) |
+| `work/funcid_adjudicated.tsv` | 6 disputed addresses re-verified against code with verdicts |
+| `work/funcid_qc_report.md` | Full conflict taxonomy, methodology, verification results |
+
+**Key adjudications** (code-verified): `100f7510` is a surface-blit format converter **not** a printf engine; `100fa730/100fb690` are bilinear resamples **not** float formatters (the `DAT_1173e300[-(x>>31)]` idiom fooled one analyst — it's Ghidra's int→double conversion); `103d0fe0` is a camera-command dispatcher (`"toggle_first_person_mode"` string verified) — correcting my own earlier anim guess.
+
+**Verification:** 12-row random sample → 0 hallucinated callee/global references; subsystem distribution of final merge: core 358 / battle 270 / render 108 / anim 65 / audio 35 / cine 29 / facefx 26, remainder spread across ai/ui/script/fs/net.
+
+Recommended next step (in report §6): RTTI/vtable class recovery to anchor the structural `battle_ctrl_*` names to real class names.

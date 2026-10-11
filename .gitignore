@@ -5,7 +5,40 @@ ghidra_12.1.3_PUBLIC/
 Total War Rome II/
 # Generated outputs (regenerable via scripts/full_pipeline.bat)
 src_out/
+src_canonical_out/
+generated/
+out/
 logs/*.log
 logs/*.err.log
 __pycache__/
 *.pyc
+
+# Native/MSVC build artifacts emitted into the source tree
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.dll
+*.exe
+*.nativecodeanalysis.xml
+
+# Generated buildable skeleton, ~63k files (regenerable:
+# scripts/gen_build_skeleton.py)
+buildable/
+
+# Local build/test scratch trees
+build_test/
+
+# Per-milestone compile / ASan / analysis output under work/
+work/*_compile/
+work/*_asan/
+work/*_build/
+work/*_analyze/
+work/quicktest/
+work/rollback_check/
+work/suffix_runtime_candidate/
+work/pi_100df270_suffix_core_candidate/
+
+# Agent scratch
+.pi/

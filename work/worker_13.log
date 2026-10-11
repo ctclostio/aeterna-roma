@@ -1,0 +1,25 @@
+**Mission complete.** Summary of the solo funcid run:
+
+## What I did
+1. **Recon** — mapped project state: batch1 decompilation (`src_out/empire.retail.dll/decomp/`, 63,326 funcs indexed), analyst rules in `~/.pi/agent/agents/funcid.md`, prior fleet output in `work/funcid_*.tsv`.
+2. **Queue** — derived pending set from `work/solo_todo_now.txt`: **694 unnamed addrs** → `ox_pending.txt`. Detected a live concurrent fleet mid-run (my `solo_ctx.py` got overwritten), so I built collision-proof helpers and re-checked names before every function.
+3. **Analyzed 55 functions first-hand** (read each `.c`, classified with concrete evidence: constants, API calls, string literals, struct layouts) — appended incrementally to `work/funcid_solo2.tsv`.
+
+## Highlights
+| Finding | Functions |
+|---|---|
+| Animation pose snapshot/slerp pipeline (quat dot ≤0.993 → `fsin` slerp, double-buffered poses, frac=(tick&0xfff)/4096) | `104a5ad0`, `104467d0`, `10489090`, `102f45f0` |
+| Army serialization (`"REINFORCEMENTS"/"UNITS"/"SHIPS"` arrays) + `"BATTLE_RESULT_UNIT"` type registration | `1015b610`, `10138c30` |
+| **Brad angle convention**: ×10430.378 (=65536/2π), sincos table @ `DAT_120351f0` | `10272df0`, `103ac6e0`, `101e4990`, +6 more |
+| Soldier melee pairing pipeline (contact dxz²≤2e-4 → 0x70 pair objs → mgr lists) | `103529c0`, `10375840`, `1035e8f0` |
+| Threat direction histogram (f32[32] bins, idx=atan2×32/2π) | `103a3280`, `103ac6e0` |
+| Explosive charge fuse w/ HUD `"Explosion in : %u"` | `10319670` |
+
+## Final state
+- `ox_pending.txt` = **0 left**; batch1 (1000 addrs) shows **0 unnamed** across all worker TSVs; `todo_solo.txt` (5364) also fully covered fleet-wide.
+- QA on output TSV: 348 rows / 316 unique addrs, 0 malformed.
+- Added: `work/ox_ctx.py`, `work/ox_next.py`, `work/OX_FUNCID_REPORT.md`; committed to git.
+
+One caveat flagged in the report: Ghidra-propagated FaceFX export names (e.g. `GetAudioAssetPath`) land on non-FaceFX call sites and should be treated as untrusted.
+
+SHARD COMPLETE 694 (55 analyzed first-hand this run, remainder verified named by concurrent workers and skipped)

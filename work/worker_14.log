@@ -1,0 +1,20 @@
+Mission complete. Summary of the solo funcid run:
+
+## Result: SHARD COMPLETE — 970/970 queue addresses classified
+
+**This session's contribution:** 218 functions analyzed and named across 5 batches (41 + 20 + 49 + 100 + 8), with the remaining queue drained concurrently by parallel shard workers.
+
+**Key artifacts:**
+- `work/funcid_solo.tsv` — output contract file, sanitized to 2,531 well-formed TSV rows (backup `.bak`)
+- `work/solo_run_report.md` — full run report
+- `work/mkev.py`, `work/revcalls.py`, `work/skim2.py`, `work/evidence.py` — reusable analysis pipeline (batch evidence digest → reverse-caller scan → targeted code skims)
+
+**Notable identifications this session:**
+- `0x100feef0` — Winsock error-code→message table (net)
+- `0x102d1570` — battle camera manager ctor (13 vtable slots + camera_shake parser callee)
+- `0x10148a50` — battle entity manager root ctor (773 member writes, ~20 nested vtables)
+- `0x10141630` / `0x1013d5a0` / `0x1013a620` — battle script key tables (climate/mounts, army setup, deployment lists)
+- The anim timeline family around `FUN_104467d0` (sample decoder) + `FUN_113545d0` (mat compose)
+- Domain fingerprints documented: fixed-point heading (`*10430.378`), sin/cos LUT @ `120351f0`, fade-alpha `&0xfff` pattern, MSVC LCG rand, debug-view vtable `11754018`
+
+Subsystem distribution across the final file: core 971, battle 499, render 289, anim 170, facefx 109, audio 91, unknown 82 (each with precise structural evidence for a second pass).

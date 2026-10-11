@@ -1,0 +1,216 @@
+0x10058fe0	core_init_callback_table	core	Builds static table @DAT_1194e270 of ~45 16-byte-stride {callback_fn,0,0,0} records terminated by -1; global handler/vtable registration
+0x100e8e80	audio_init_part1	audio	PeekMessageW flush loop then mass vtable setup of sound objs; literal log "Finished sound init part 1"
+0x10108c30	render_tex_conv_rgb555_to_rgba32	render	Reads 16bpp pixels from buffered reader (refill FUN_116bd8d0), unpacks 5-bit channels w/ rotate-shifts, writes 32bpp +0xff alpha; x/y flip flag variants
+0x101171b0	render_write_bgr24_as_rgb555_file	render	Per-pixel 24bit->15bit pack (>>3 fields) _fwrite 2 bytes to FILE*; row-pitch loops, flip flags
+0x10123730	mem_heap_free_chunk_coalesce	core(dlmalloc)	Boundary tags (hdr&3 flags), smallbins<32 + treebins w/ bitmask roots, size>>3 / size>>8 bin index calc = dlmalloc insert-free-chunk
+0x1013a620	facefx_obj_ctor	middleware-facefx	8.6KB ctor zero-inits hundreds of fields (floats 584.0/166.0/1.0f), uses FxName/FxNameEntry locals
+0x10164ab0	battle_group_strength_exceeds_check	battle	Sums float@+0x5e4 and int@+0x4c0 over entity lists (self vs other-army children via +0xac/+0xb0), sets bool if counterpart larger; guard FUN_112ae010/ac140
+0x1018e330	battle_circle_rect_proximity_2d	battle	Early-out on center dist^2 vs (halfext+radius)^2, builds 4 corners of 2 rects, corner-dist & edge-cross-product tests vs r^2
+0x101b8b90	battle_collect_nearby_threat_footprints	battle	TLS-guarded; scans global unit list DAT_119358b0 + own subunits, switch@+0x9ac picks radius fn (150/30 default), calls FUN_1018e330 rect-proximity, appends hits to array @this+0x20
+0x101e6a40	battle_debug_draw_threat_links	battle	Draws threat rects (FUN_1016cb70 w/ color consts, sizes 0.5/8.0), pairwise dot*10430.378 fixed-point angle check vs DAT_11b037e4, line draw FUN_1016ae90
+0x1017a2a0	battle_deploy_build_group_entries	battle	Creates 0x8c-byte objs per slot (FUN_101332a0), scans 0x38-stride groups x 0x22c-stride units for blockers (FUN_10d99350(0xb), flag+0x244), builds per-unit ref lists @+0x50/54/58
+0x10204d10	audio_anim_sound_source_raymarch	audio	Calls OC3Ent::Face::FxAnim::GetAudioAssetPath; rotates dir by +/-pi/2 via DAT_120351f0 angle LUT, marches pt 10u steps vs circle colliders & bounds rect
+0x10224850	ui_draw_fullscreen_image_quad	ui	Allocs 0x34 draw-obj vtable@1175614c, tex lookup FUN_100f1800("la_gioconda"), builds ortho fullscreen quad (aspect 0.42553), 4x FUN_11407c70 draws
+0x1023bb80	campaign_draw_influence_graph	campaign	Gradient color ramp over stops by (v-min)/(max-min); polyline edge draw FUN_1016b3a0 + midpoint label "im_edge_%d"; circle node "im_node_%d"
+0x1024c8c0	obj_ctor_join_global_reg_lists	unknown	Ctor: vtable@11754018, links this+0xc into singleton lists @+0x1174/78 & +0x1194/98, builds 12-byte-stride bucket lists; purpose unclear
+0x10288680	render_grid_transform_normals	render	Transforms verts (stride 0xc) by 4x4 matrix into out array @+0x88 (stride 0x10); cross-product face normals normalized + plane d over grid dims @+0x68/70/6c; color 0xff00ff00
+0x1029dc70	battle_spawn_wave_entries	battle	Strided 0x28 countdown entries @this+0xc0; dist^2<=900 gate vs unit pos(+0x4b4); spawns via FUN_10337350(10.0f), heading=ROUND(atan2*10430.378), FUN_10596530 set rot
+0x102bb620	scene_octree_subdivide_node	render	Builds 8 box corners from center/extents, distributes items (FUN_11382c80 test) into 8 bucket lists, allocs 0xa0 child nodes vtable@1175afb0 w/ corner pts
+0x10266330	battle_place_typed_footprint_box	battle	Switch on type@*(p3+0x14)+4 (2/0xb=0.8, 3=+2, 8/0x13/0x14/0x1d shrink+2): scales box extents, mat-mul w/ param_1, FUN_102a94e0 place
+0x10277430	battle_instantiate_queued_marker_entities	battle	Reads pending arrays (counts @+0xc0..0x114 of mgr+0x250c), allocs 0x13c entities via FUN_1068b180, builds tagged lists (tags 0/2/3/5) via FUN_1023b970
+0x102cdfb0	battle_group_prune_attach_units	battle	4 passes over triple-array @+0x144: prune non-members & dead (FUN_1028f290), state gates (0/3,+0x6e0,flag 0x20@+0xc0), allocs 0x3c attach records {owner,unit,1.0f} into list
+0x102e7070	transform_pair_sync_wrapped	unknown	Syncs cur/target vec3 pairs (+0x1b4 vs +0x1cc, +0x1c0 vs +0x1d8) w/ angle-wrap FUN_103c0230 & dir flags +0x1a4/+0x1a8; vtable+0x20/24 callbacks
+0x102f6c60	render_keyframed_path_draw	render	Lerps 0x1c-stride keyframe tracks (frac*1/4096 clamp 0xfff), lazy-creates per-entity components, draws segments w/ colors unpacked *0.00392 (DAT_11937af8)
+0x10309980	mapedit_brush_clear_region	campaign	Rounds uv->cell rect (clamp to dims@+5, shift@+2), zeroes u16 halfwords in grid rows, converts cell rect->world via scales @+7/+8
+0x1031d2f0	battle_typed_variant_object_create	battle	Dist-based scale (*0.1*DAT_11bcf8b8), switch@+0x8d0 allocs 0x1d8-0x1f8 objs via variant builders (FUN_102d2700/d0980/d0830/480e0/d5920), pos+dir args
+0x10427a60	facefx_battle_shot_select	middleware-facefx	40KB; FxName map lookups FUN_100f28a0 for UNIT_SHOT/FRONT/COMMANDER_SHOT/RANDOM_UNIT_*; err string "unexpected battle type: "
+0x10338db0	render_mirror_plane_reflect	render	Plane fields p2[0..3] @this+0xd..10, reflects pts d=-(y*c+x*a+w)/b, allocs 0x68 children vtable@11768890 linked via FUN_1037a0c0
+0x10353760	core_concat_id_arrays	core	Appends 3 source arrays (@+0x14,+0x24,+0x34) into growable array @+0x70/74/78; pure container merge
+0x10368cc0	geom_collect_segment_rect_hits	unknown	Segment-vs-AABB test (dir-cosine SAT), appends {x1,y1,x2,y2} records to growable arr param_2; flag gates (&4,&0x10,+0xf==1)
+0x103845f0	battle_node_relpos_reach_check	battle	Transforms node pairs by parent mats (+0x2c rows), dot>=0 gate then dist^2<25 snap; FUN_103319d0 ground query
+0x103b5e90	battle_unit_gate_advance_state	battle	Compares this+0x74 id vs army table (+0x68/+0x54), flag&4 @+0x30, path FUN_1036bd30 on float@+0x68 sets +0x10=1
+0x103cc2c0	anim_unit_transition_update	anim	Sets sentinel anim ids (u16@+0x1e2=0x11, 0x7f3), flag-driven transitions (bits 0x40/8/2/0x100 of param_1+4), FUN_101920e0/FUN_1068f080
+0x103df130	anim_pick_state_anim_ids	anim	30KB state machine: switch state->anim-id table (8->0x5d9, 0xe->0x58d...), resets +0x2b4/+0x274, bitfield 0x400000/0x1000000
+0x103f8a20	render_matrix_update_recursive	render	Chained 4x4 mat mul w/ lifetime-clamped dt (vs +0x6c), recursive tree walk FUN_103f8a20
+0x1040c6a0	ui_draw_entity_markers	ui	Packs RGBA*255 ROUND, vtable+0x60 draw cmds w/ scale clamped by DAT_11dff850, flag gates (params 4/5/9, byte+0x1a1&0x10)
+0x1043fe90	typehash_map_to_variant_id	unknown	Compares hash id @*(p1+0x30)+0xd0)+0x224 vs magic consts (0xBFC8672E,0x064D0987,...) returns variant hashes (0x9C06690D,0x5DE570AB)
+0x10464600	battle_mgr_conditional_update	battle	Ghidera-confused frame; gates on battle mgr @-4)+0x6432c and +0x458, vtable+0x17c>2, reads list +0xb8
+0x10481220	fx_gradient_noise_sample	render(fx)	MSVC LCG (x*343fd+269EC3), rand>>16*1/65536 >0.75 branch, gradient dots w/ weights 1.33151/-9.01975/6.22573
+0x10493f40	anim_stance_ids_from_flags	anim	Bit tests (&2/&4/&8) -> lookup FUN_10298b90 byte@+0xc bits -> pose ids 0x54/0x5A/0x57/0x5D via FUN_10442ef0
+0x104ae170	core_pingpong_swap_records	core	Copies 0x28-byte records between slots keyed by counter&1 vs (counter-1)&1 at this+0x40/+0x50
+0x104c2ca0	math_matrix_to_quaternion	core	Trace=m0+m5+m10+1, largest-diag axis perm, SQRT diag combos = standard mat->quat conversion (then more math)
+0x104e5560	facefx_stop_actor_instances	middleware-facefx	dt timers, iter +0xa18 triples, EnterCriticalSection + OC3Ent::Face::FxActorInstance::StopAllClientEvents, sets +0xb3=-1
+0x104f3280	geom_shape_project_bounds	core	Switch on shape type picks half-extents (+0x14/20/24/28), projects verts via 3 dot-product rows tracking min/max AABB
+0x10508220	sort_float_array_inplace	crt	QuickSort: 32-elem insertion cutoff, partition w/ FUN_116bde50 memmove-like moves over float*
+0x105175b0	script_closure_ctor	script	Ctor vtable@117819dc + FUN_100f1700 push-arg preamble; 13 params incl flag chars
+0x1052b110	unknown_large_proc_1052b110	unknown	18KB, no strings/switches/signals extracted; heavy pointer/list churn
+0x1053c1b0	obj_init_four_bucket_lists	core	Alloc 0x20 obj then 4x FUN_101a9110 sub-list inits keyed 0..3
+0x1054e890	audio_event_switch_by_type	audio	GetAudioAssetPath(FxAnim@p2+0x4d0+0x5ac) then switch dispatch ~idx1978
+0x10568c00	battle_fit_oriented_box_pts	battle	2D min/max pt scan -> atan2*10430.378 fixed angle, DAT_120351f0 sincos LUT rotates half-extents to OBB center
+0x1057a2c0	audio_voice_pair_distance_check	audio	Two FxAnim GetAudioAssetPath calls, pos diff dist^2 gate w/ FUN_1018b460/FUN_10634d30 checks
+0x1058bf60	facefx_large_anim_proc	middleware-facefx	34KB; OC3Ent::Face::FxName::GetNameEntry usage throughout
+0x105a3850	battle_unit_dir_to_target	battle	Flag 0x20@param+0xc0 gate, FUN_103a1b00, normalizes p2[3..5]-p2[0..2], uses +0x54/+0x5c half-extents
+0x105b4b60	geom_multi_param_query	unknown	7 params (6 floats), dense float locals, bool gates; unresolved purpose
+0x105c7a80	ringbuf_entry_read_angle	unknown	Ring idx clamp (this+8/c/10), reads 0x14-stride rec, fpatan angle calc
+0x105ec470	iter_float_array_update	unknown	TLS-guarded statics; loops array @+0x20/+0x24 floats
+0x105fb700	unknown_float_proc_105fb700	unknown	Dense float locals, no strings; unresolved
+0x10612f80	flags_collect_from_iterator	unknown	Zeros this[0..5], iterates FUN_112b5130 results setting bool flags
+0x106283b0	unknown_query_106283b0	unknown	7 params, 132B local blobs, float math; unresolved
+0x1063d620	battle_mgr_set_enabled	battle	Huge-obj (>=0x4733) state: sets +0x4730=1,+0x471c=1.0f, vtable dtor path if +0x48c==1, FUN_106367f0(0)
+0x106507b0	facefx_actor_instance_create	middleware-facefx	Uses FxActor*/FxActorInstance*, HANDLE create path
+0x1066bc30	list_scan_flag_filter	unknown	Iterates arr @+0xdc cnt+0xd8, filters on byte rec[0xc]==0
+0x1067e110	facefx_instance_pair_init	middleware-facefx	FxActor* + two stack FxActorInstance objs, vtable compares gated by param_4
+0x1068fcd0	facefx_anim_name_resolve	middleware-facefx	18KB; dense FxName/FxNameEntry/FxActorInstance usage
+0x106a4520	unknown_vec_proc_106a4520	unknown	Float* params 3/4, mixed int/float math; unresolved
+0x106c12c0	facefx_actor_op	middleware-facefx	FxActor* var + unreachable-block-pruned control flow
+0x106dab10	facefx_name_entry_query	middleware-facefx	FxNameEntry* usage, returns bool
+0x10705f50	unknown_longmath_10705f50	unknown	11KB; longlong arithmetic, char flag param
+0x107260b0	validate_state_chain	unknown	Null-checks +0x1e4, FUN_1084f110 gate, twice-called FUN_10723f90 equality check -> bool
+0x1073a010	build_struct_blob_1073a010	unknown	15KB; fills many char/uint fields in local struct blob
+0x10756a90	float_table_merge_cmp	unknown	Two float* args + uint* arrays; interleave/compare loops
+0x1078d3d0	rec24_process_loop	unknown	0x24-stride records from this[1]; gate via *(*(this[0]+8)+0x18)
+0x107a84e0	facefx_eventmgr_handler_a	middleware-facefx	26KB; FxEventManager locals, char-flag blob args
+0x107c3670	unknown_loopproc_107c3670	unknown	14KB; thiscall uint array loops
+0x107e5c40	facefx_eventmgr_handler_b	middleware-facefx	27KB; FxEventManager this-ptr locals
+0x108082d0	facefx_big_update	middleware-facefx	37KB; FxActor* among dense ptr math
+0x10848a80	facefx_eventmgr_query	middleware-facefx	Small FxEventManager stack vars query
+0x10866620	query_result4_from_chain	unknown	Zeroes 4-int out, gated chain via FUN_1084f180 on this+0x38
+0x1087c460	text_widearg_build	ui	wchar_t* param + many ptr/char stack slots
+0x10895e90	unknown_10895e90	unknown	No signals extracted
+0x108b1680	unknown_108b1680	unknown	float param + int churn
+0x108cc3b0	facefx_actor_event_proc	middleware-facefx	FxActor local + flag blob
+0x108e5080	rand_pick_among_groups	core	MSVC LCG (343FD), 4x FUN_108684d0, count-sum guard (min 1)
+0x108fda70	unknown_blobfill_108fda70	unknown	char/uint local blob fill
+0x1090a250	facefx_eventmgr_proc	middleware-facefx	FxEventManager locals + char flags
+0x109255f0	unknown_floatlist_109255f0	unknown	float + int-list mixing
+0x109410f0	unknown_huge_109410f0	unknown	41KB, type-prop failure; unresolved
+0x109594d0	unknown_charargs_109594d0	unknown	char*/uint* args, mixed loops
+0x10975d00	unknown_ptrtable_10975d00	unknown	20KB; uint** table churn
+0x10999eb0	facefx_eventmgr_pair_check	middleware-facefx	Two FxEventManager vars -> bool
+0x109b8b50	stackblob_build_7args	unknown	alloca_probe; 7 params building stack blob
+0x109cd6f0	intlist_walk_109cd6f0	unknown	int** linked lists walk
+0x109e2ac0	pair_return_109e2ac0	unknown	returns 8-byte pair, switch w/ 0xd default
+0x109f2820	buffer128_build	unknown	128B local buffer fill from params
+0x10a04a60	floatlist_walk_10a04a60	unknown	float* arg + list iteration
+0x10a2fae0	mixed_math_10a2fae0	unknown	float/int gates; unresolved
+0x10a49f80	facefx_logmgr_proc	middleware-facefx	FxLogManager/FxLogLevel types in signature
+0x10a65fd0	facefx_actor_setup	middleware-facefx	Takes FxActor* param_2 explicitly
+0x10a7bcf0	container_tick_all	core	Iterates arr@+0xb0 cnt+0xac calling vtbl+8 on each item
+0x10a9ba20	parse_chars_10a9ba20	unknown	char* param + uint parsing loops
+0x10ab22c0	ushort_recs_10ab22c0	unknown	uint/ushort record loops
+0x10afaa30	facefx_name_lookup_bool	middleware-facefx	FxName this-ptr, returns bool
+0x10b2f0e0	vtbl_float_proc_10b2f0e0	unknown	code-ptr call + float stack args
+0x10b3d070	obj_ctor_11792800	unknown	Ctor sets vtable PTR_LAB_11792800, copies fields from param_1+4
+0x10b57b60	obj_ctor_10b57b60	unknown	Ctor-style field inits
+0x10b6af90	uintblob_10b6af90	unknown	uint local blob processing
+0x10b84650	intlist_10b84650	unknown	int list walks
+0x10b9fce0	uintarr_pair_10b9fce0	unknown	uint* arrays + undefined8 ret
+0x10bb35c0	facefx_name_from_str	middleware-facefx	char* arg + FxName-sized (12B) locals
+0x10bfa490	facefx_actorinstance_proc	middleware-facefx	Explicit FxActorInstance *this
+0x10c1fa90	unknown_huge_ptrs_10c1fa90	unknown	24KB, type-prop failure
+0x10c3ee00	facefx_animset_giant	middleware-facefx	46KB; FxNameEntry/FxAnim types throughout
+0x10c5b0e0	dbl_uint_mix_10c5b0e0	unknown	doubles + uint ptrs
+0x10c70ce0	small_float_10c70ce0	unknown	float math on params
+0x10c89680	parse_sizes_10c89680	unknown	size_t + uint* record parsing
+0x10ca6990	facefx_actor_proc_10ca6990	middleware-facefx	FxActor* local
+0x10cc50e0	obj_dtor_117e34c8	core	Dtor: resets vtable, frees this[0x14d] sub-objs via thunk free
+0x10cd10d0	floatsonly_10cd10d0	unknown	pure float math
+0x10ce4cf0	intpp_walk_bool	unknown	int** chains -> bool
+0x10d3e540	obj_ctor_11subs	unknown	Ctor vtable@117efc9c + 11x default member ctors (FUN_100f1850)
+0x10d51310	facefx_streamread_a	middleware-facefx	Shared (this,uint* stream,int) shape w/ FxName(12B) stack locals
+0x10d57b20	facefx_streamread_b	middleware-facefx	Same family as 10d51310
+0x10d5e510	facefx_streamread_c	middleware-facefx	Same family, code-ptr call inside
+0x10d6a3b0	geom_7float_10d6a3b0	unknown	7 float args vector math
+0x10d880b0	obj_ctor_gate_global	unknown	Ctor vtable@117f4ffc gated on DAT_12031ab8
+0x10d937b0	facefx_streamread_retint	middleware-facefx	Family shape, returns int
+0x10da13c0	facefx_streamread_d	middleware-facefx	Family shape + FxNameEntry*
+0x10db4970	unknown_16k_10db4970	unknown	16KB proc
+0x10dbc8e0	facefx_streamread_e	middleware-facefx	Family shape, returns int
+0x10dcdda0	facefx_streamread_f	middleware-facefx	Family shape
+0x10ddc5e0	stream_read_ctor_g	core	(this,uint* reader,int,flag) deserializing-ctor family (shared shape 10d51310)
+0x10de2960	stream_read_ctor_fxnameentry	core	Family member w/ FxNameEntry* local
+0x10df71c0	stream_read_ctor_h	core	Family member, returns int*
+0x10e07040	obj_ctor_copy2_11801920	unknown	Ctor vtable@11801920, two FUN_10597e60 sub-copies
+0x10e113c0	stream_read_ctor_i	core	Family member w/ FxNameEntry*
+0x10e29e50	walk_bools_12k	unknown	12KB param_1 chain walk w/ bool gates
+0x10e44730	obj_ctor_streamgrow_1181c778	core	Ctor vtable@1181c778; reader cap check piVar2[2]<[3]+4 -> vtbl+0x18 grow(4)
+0x10e51d90	flagpack_3chars	unknown	(uint,byte,uint*,char,char,char) bit packing
+0x10e5fd90	stream_read_ctor_j	core	Family member
+0x10e6c590	stream_read_ctor_k	core	Family member
+0x10e742d0	obj_ctor_buf64	unknown	Ctor + local 64B buffer
+0x10e7fbb0	stream_read_ctor_l	core	Family member
+0x10e92ca0	uintproc_10e92ca0	unknown	(uint,int*,undef4) shape
+0x10e9a340	stream_read_ctor_m	core	Family member
+0x10eaacb0	stream_read_ctor_n	core	Family member
+0x10ecafa0	giant_loader_96k	unknown	96KB fn returning buffer ptr; massive deserialization-like body
+0x10eeb290	MISSING_NO_DECOMP_FILE	unknown	No decompiled .c present in src_out for this addr
+0x10f0dd90	byteparse_10f0dd90	unknown	byte-array parse loops
+0x10f2cbf0	net_socket_select	net	timeval* timeout + DWORD params -> winsock select-style socket proc
+0x10f47870	bytes_uints_10f47870	unknown	byte/uint loops
+0x10f674c0	obj_ctor_11849d98	unknown	Ctor vtable@11849d98 + OS sync-object call
+0x10f8e390	blob72_10f8e390	unknown	72B local blob processing
+0x10faad40	ptrlevels_10faad40	unknown	Ghidra-confused multi-level pointers
+0x10fca990	facefx_giant_actorinstance	middleware-facefx	91KB fn taking FxActorInstance* param_3
+0x1100cf10	facefx_nameentry_factory	middleware-facefx	Returns FxNameEntry*, 4 code* callback params
+0x1102b5d0	ushort_walk_1102b5d0	unknown	ushort** chains
+0x1104fd50	winapi_loader_30k	unknown	30KB, BOOL/DWORD winapi-flavored
+0x110768d0	small_110768d0	unknown	unresolved
+0x1108e860	typeprop_fail_1108e860	unknown	Type propagation failure
+0x110aac40	fxnamelocals_110aac40	unknown	FxName-sized (12B) stack locals
+0x110c37a0	facefx_actor_local	middleware-facefx	FxActor* local + float
+0x110d7850	facefx_name_ops_110d7850	middleware-facefx	FxName/FxNameEntry usage
+0x110e9030	facefx_name_pair	middleware-facefx	Two FxName locals
+0x1110ad10	facefx_facegraph_op	middleware-facefx	FxCompiledFaceGraph type in body
+0x11126b30	ui_load_faction_status_panel	ui	FUN_100f1800("faction_left_status_panel") then FUN_11020900 load
+0x1114a7b0	unknown_1114a7b0	unknown	unresolved
+0x1115fa90	unknown_1115fa90	unknown	unresolved
+0x1116ce10	facefx_name_proc_1116ce10	middleware-facefx	FxNameEntry* + FxName local
+0x11187aa0	fourptr_11187aa0	unknown	4 int* args
+0x111a0bc0	vtblchain_111a0bc0	unknown	vtable chain calls
+0x111d0b80	prunedblocks_111d0b80	unknown	unreachable-block-pruned body
+0x111efe50	eightarg_flags	unknown	8 args incl char flag params
+0x111fe440	facefx_instance_boolquery	middleware-facefx	bool f(FxActorInstance*, int)
+0x1121d000	eightarg_floatptrs	unknown	float*/undef1* mix, likely render submit
+0x11230a90	facefx_name_proc_11230a90	middleware-facefx	FxNameEntry* + FxName locals
+0x11240bc0	charparse_uint	unknown	uint id + char* parsing
+0x11253300	facefx_animgroup_op	middleware-facefx	FxAnimGroup *this explicit
+0x112713a0	stackargs_112713a0	unknown	in_stack params
+0x1128af80	floatlistproc	unknown	float arg + undefined8* lists
+0x1129cb10	ebpframe_1129cb10	unknown	unaff_EBP frame confusion
+0x112bf6e0	facefx_typeprop_fail	middleware-facefx	Type-prop fail but FxNameEntry present
+0x112edb70	obj_init_zero	unknown	Zero-inits fields at param_1+4..
+0x11306df0	byte3_flags_query	unknown	(int*,byte,byte,byte)->uint bitflag op
+0x11322c80	shortarr_loops	unknown	short array iteration math
+0x11341a20	shortptr_11341a20	unknown	short* args
+0x113626d0	floats_to_u16	unknown	float math -> undefined2* out (vertex pack?)
+0x1137b0a0	charflag_floatproc	unknown	(int,float*,char*,char)
+0x11399170	render_register_blend_shader	render	FUN_113bfc50("texture_blend_PS"), field "texture0_blend_height"
+0x113a6dd0	facefx_13arg_name	middleware-facefx	FxName* param among 13 args
+0x113b2e50	two_blob24	unknown	two 24B locals
+0x113c26d0	shader_mgr_init_entry	render	Sets sub-obj vtable@118a60c0 @this+0x32c (=2); same module as blend-shader reg
+0x113d86c0	mgr7subs_hugeoffsets	unknown	7x FUN_113e0530 sub-inits; field @+0x5e44
+0x11400b90	lazy_alloc_47c	unknown	Lazy 0x47c alloc at this+0x41c
+0x11410a80	eightarg_floats2	unknown	float-heavy 8 args
+0x1142b160	facefx_name_alloca	middleware-facefx	FxName local + alloca_probe (weak signal)
+0x114506a0	typeprop_fail_114506a0	unknown	Type propagation failure
+0x11477710	bigstack_charparam	unknown	char param + large stack frame
+0x114854c0	bytegate_uintproc	unknown	byte gate + uint loops
+0x114a3ed0	gl_wgl_getprocaddrs	net	wglGetProcAddress("glColorP3ui") etc -> GL ext loading into DAT table
+0x114b9680	facefx_nameentry_114b9680	middleware-facefx	FxNameEntry* local + float arg
+0x114ce350	ebpframe_114ce350	unknown	unaff_EBX/EBP register-arg confusion
+0x114e5f10	facefx_two_names	middleware-facefx	Two FxName this-ptrs + FxNameEntry
+0x115064b0	facefx_nameentry_115064b0	middleware-facefx	FxNameEntry* local
+0x11524bf0	unknown_11524bf0	unknown	unresolved
+0x115413e0	floatsonly_115413e0	unknown	pure float math
+0x115598c0	retaddr_confused	unknown	unaff_retaddr frame confusion
+0x11568e00	stream_read_ctor_o	core	Family shape (this,uint* reader,int)
+0x1157b780	vtblcheck_bool_small	unknown	Small bool via vtable+0x1c gates
+0x11593930	facefx_name_bool_11593930	middleware-facefx	FxName/FxNameEntry -> bool
+0x115bbbe0	floatproc_charflag	unknown	Floats + char flag param
+0x115d0b40	ushortproc_115d0b40	unknown	ushort fields processing
+0x115fd9c0	vec3_math_3ptr	unknown	3 float* args vector-ish math
+0x11630490	cs_guard_bigproc	core	39KB; LPCRITICAL_SECTION usage
+0x1165fb60	stacktrack_fail_1165fb60	unknown	alloca_probe_16, stack tracking failure
+0x1168f62c	MISSING_NO_DECOMP_FILE_2	unknown	No decompiled .c present for this addr
+0x116b3b2e	crt_math_helper_dbl	crt	double->float10 SSE numeric helper (exp/pow-family)
+0x1039b830	fx_waterfall_instances_process	render(fx)	FUN_100f1bb0(L"waterfall") handle lookup (FUN_100ffa60, -1 guard) then 0x18-stride instance loop w/ ushort fields

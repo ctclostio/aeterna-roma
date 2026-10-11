@@ -34,7 +34,7 @@ def try_compile(path, env):
 def main():
     n = int(sys.argv[1]) if len(sys.argv) > 1 else 200
     env = msvc_env()
-    d = Path('src_out/empire.retail.dll/decomp')
+    d = Path('buildable')
     files = sorted(str(p) for p in d.glob('*.c'))
     random.seed(42)
     sample = random.sample(files, n)

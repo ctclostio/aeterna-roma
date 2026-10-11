@@ -1,0 +1,70 @@
+{
+  "artifacts": {
+    "empire.retail.exports.def": {
+      "bytes": 50333,
+      "sha256": "26f8ffa9316f7c52ab87b0811282c1eb4697111a32aa476be9fe352527f952cc"
+    },
+    "export_manifest.tsv": {
+      "bytes": 116429,
+      "sha256": "e1df5a9e9e20c555a7d1d97a106b469e961c4abf88dcd03889c3a126d152b117"
+    }
+  },
+  "contract": {
+    "alias_rows_beyond_unique_targets": 88,
+    "code_rows": 493,
+    "data_rows": 29,
+    "duplicate_target_groups": 44,
+    "first_ordinal": 1,
+    "last_ordinal": 522,
+    "rows": 522,
+    "unique_code_targets": 405,
+    "unique_data_targets": 29,
+    "unique_targets": 434
+  },
+  "generator": {
+    "path": "scripts/gen_x64_export_contract.py",
+    "sha256": "f1791b1f517109a7c29ab82a7c04bb187ae1f81de1d54e902141d6decf7f51e2"
+  },
+  "inputs": {
+    "canonical_data_index": {
+      "path": "src_canonical_out/empire.retail.dll/canonical_data_index.tsv",
+      "rows": 4143,
+      "sha256": "3e9268f5475d75ea88d3c85289133622e92333dbbd1d2e77b46d20eea8522f07"
+    },
+    "canonical_function_index": {
+      "path": "src_canonical_out/empire.retail.dll/canonical_function_index.tsv",
+      "rows": 63326,
+      "sha256": "d6f066172d632800ec9c614afebfc8cf3bb88ca11ce243a47845071958a66de5"
+    },
+    "canonical_snapshot": {
+      "executable_sha256": "d0d9805f41b69f2e5e9a54fbe07c327f18e311e76116e219512ad328bde43528",
+      "mapping_fingerprint": "0a7281990e144bc4ed54d432c4fd59aaa98b32c7bb9711e565bae2a304c2ff70",
+      "path": "src_canonical_out/empire.retail.dll/canonical_snapshot.tsv",
+      "sha256": "07962ba802e0ea39771a2ad2488b17f2be93da07d44488f3703cc6f15b49aca4"
+    },
+    "original_dll": {
+      "bytes": 28278272,
+      "path": "Total War Rome II/empire.retail.dll",
+      "sha256": "d0d9805f41b69f2e5e9a54fbe07c327f18e311e76116e219512ad328bde43528"
+    }
+  },
+  "pe_export_directory": {
+    "address_of_functions_rva": "01926618",
+    "address_of_name_ordinals_rva": "01927668",
+    "address_of_names_rva": "01926e40",
+    "characteristics": "00000000",
+    "coff_timestamp": "6480e696",
+    "dll_name": "empire.retail.dll",
+    "export_rva": "019265f0",
+    "export_size": 36488,
+    "export_timestamp": "ffffffff",
+    "function_count": 522,
+    "image_base": "10000000",
+    "machine": "014c",
+    "name_count": 522,
+    "ordinal_base": 1,
+    "size_of_image": 35864576,
+    "version": "0.0"
+  },
+  "schema": "rome2-x64-export-contract-v1"
+}

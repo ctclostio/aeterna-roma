@@ -1,0 +1,8 @@
+; Test-only diagnostic export allowlist for rome2_guest32_probe64.dll.
+; Exactly these two names; ordinals are implementation-local and unused.
+LIBRARY rome2_guest32_probe64
+EXPORTS
+    Rome2Guest32ProbeAbiVersion
+    Rome2Guest32ProbeSelectEntryPolicy
+
+

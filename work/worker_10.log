@@ -1,0 +1,29 @@
+Mission executed. Final status:
+
+## Funcid Analyst — Session Report
+
+**Fleet triage first:** the 25 dispatched workers were mostly dead-on-arrival (`worker_09`: `network_error`; only worker_00 ever produced output). I verified zero overlap risk, then claimed the two **unassigned** shards and ground them solo.
+
+### Completed work
+| Work item | Result |
+|---|---|
+| `shard_extra_00.txt` | **45/45 classified** → `work/funcid_extra_00.tsv` |
+| `shard_solo_00.txt` | **40/40 classified** → `work/funcid_solo_00.tsv` |
+| `shard_01` (claimed, partial) | 21 classified → `work/funcid_alpha_s1.tsv` |
+| **Consolidation** | Merged 16 overlapping/duplicated TSV lanes (2,178 raw rows incl. broken multi-line rows + mixed `0x` prefixes) → **`work/funcid_master.tsv`: 1,418 unique addrs, 0 malformed** |
+
+### Tooling built (reusable)
+- `work/va_strings.txt` — 247k VA→string mappings from section-header math
+- `work/annotate.py` — inline resolver of `DAT_` refs + named-callee cross-refs for any decompiled file
+
+### Intelligence gained
+1. **Static libcurl telemetry module** (~0x100d5000–0x100d7000): `"Game Session-Close"` JSON POST, version `"1.22.01"`, enable flag **`DAT_119ef8d7`**, event-record vector pusher.
+2. **`.text` start = GPU driver-detection block**: NVAPI QueryInterface wrappers (incl. SLI `BeginResourceScene` id `0xd7c61344`), setupapi/advapi32 driver-store & service-version probes.
+3. **JMC annotation goldmine**: `guard_check_icall("About to create controllers")`, `"After Warscape registration end"` etc. — confirms engine codename **Warscape** and names whole handler chains (e.g. `frontend_open_handler_create_mvc`).
+4. FaceFX utility cluster mapped (FxString/FxWString numeric formatters, archive type-size resolver), plus CRT staples (`_u64toa`, `std::string::append`) and STL container variants catalogued by stride.
+
+Subsystem spread of master: battle 287 · core 221 · render 213 · facefx 123 · anim 110 · ui 85 · audio 36 · script 31 · campaign 29 · crt 25 · net 23 · unknown 202.
+
+**Open:** ~4,670 batch1 addresses across shards 01–24 remain (workers presumed dead — recommend relaunch or continued solo grind from `work/todo_s1.txt`). Master re-merge after any new lane: rerun the dedup script against `funcid_master.tsv`.
+
+SHARD COMPLETE 106 (solo-assigned shards 100%; extra claim in progress)

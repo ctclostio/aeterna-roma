@@ -1,0 +1,38 @@
+Act as a bounded decompilation design reviewer, not a code grader. We are
+building a native x64, BUILD_TESTING-only guest32 model of original x86
+function 0x100df270. The deterministic middle [0x100df343,0x100df46d) and
+final injected suffix [0x100df46d,0x100df4f0) are already implemented and
+fully tested. Analyze only the remaining prefix [0x100df270,0x100df343).
+
+Proposed next slice: one typed injected transcript covering both the normal and
+duplicate-instance branches. It validates a complete 0x80c-byte receiver and
+0x2d-byte packet in a borrowed guest32 view, snapshots effects, writes only the
+deterministic receiver cells +0 (initial vtable 0x1173f208), +4 (packet dword
++0), and +0x808 (injected CreateMutexW result), and emits by-value observer
+steps rather than calling Win32 or recovered code. Normal route steps are two
+LoadStringW call shapes, the first 0x100edfe0 formatting call shape,
+CreateMutexW with injected handle result, GetLastError with injected result,
+and the two SystemParametersInfoW call shapes. When last_error==0xb7 and packet
+byte +0x2c==0, insert the second formatting shape, MessageBoxW shape, and
+0x10102850 termination-helper shape before the two SPI steps. The original
+helper can return if TerminateProcess fails, so the transcript continues.
+Resource-string and local stack-buffer contents are deliberately not
+fabricated; typed endpoint kinds preserve the data-dependency identities.
+Callbacks are total observers and cannot mutate guest bytes. Output receiver
+is committed only after the final callback. Validation failures are no-effect;
+post-start work has committed-prefix semantics.
+
+Using the attached canonical source and existing raw-provenance constants as
+context, answer:
+1. Is the 7-step normal / 10-step duplicate ordering exact? If not, give the
+   corrected count/order.
+2. List every required argument/result identity and state write that the
+   transcript must expose.
+3. Identify any semantic blocker that makes this boundary dishonest even when
+   explicitly documented as a call-shape transcript rather than a full Win32
+   emulation.
+4. Give the highest-value runtime cases and reciprocal static-gate mutants.
+5. End with exactly either BLOCKER: <reason> or NO BLOCKER.
+
+Do not propose native Win32 calls, x86 execution, exports, production linkage,
+or model evaluation. Do not edit files.

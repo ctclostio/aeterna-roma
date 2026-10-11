@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "purpose": "Read-only byte provenance for the original x86 empty-source path 0x100ed3c0 -> 0x100f1aa0 -> 0x100ef330; this fixture does not authorize recovered-code execution, the nonempty allocator path, or a native ABI.",
+  "original_pe": {
+    "path": "Total War Rome II/empire.retail.dll",
+    "size": 28278272,
+    "sha256": "d0d9805f41b69f2e5e9a54fbe07c327f18e311e76116e219512ad328bde43528",
+    "machine": "0x014c",
+    "optional_magic": "0x010b",
+    "image_base": "0x10000000",
+    "text_section": {
+      "name": ".text",
+      "rva": "0x00001000",
+      "virtual_size": "0x0172d4ea",
+      "raw_offset": "0x00000400",
+      "raw_size": "0x0172d600"
+    }
+  },
+  "canonical_index": {
+    "path": "src_canonical_out/empire.retail.dll/canonical_function_index.tsv",
+    "sha256": "d6f066172d632800ec9c614afebfc8cf3bb88ca11ce243a47845071958a66de5"
+  },
+  "copy_wrapper": {
+    "va_start": "0x100f1aa0",
+    "va_end_exclusive": "0x100f1ac0",
+    "file_offset": "0x000f0ea0",
+    "size": 32,
+    "hex": "8b44240456578bf98b1089178b70088d04565056e877d8ffff8bc75f5ec20400",
+    "sha256": "cec1214bba5a2c2c8c45487abf0da2412df9dcb634da206f6f6e74f6c619e92e",
+    "canonical_source": {
+      "path": "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100f1aa0.c",
+      "sha256": "42a3bfb8a5e82cd1cc46e40022641169bddbb0af62e42f3d1ea53ce98c7e0fd4"
+    },
+    "helper_call": {
+      "va": "0x100f1ab4",
+      "bytes": "e877d8ffff",
+      "next_va": "0x100f1ab9",
+      "rel32": -10121,
+      "target_va": "0x100ef330"
+    }
+  },
+  "sequence_helper": {
+    "va_start": "0x100ef330",
+    "va_end_exclusive": "0x100ef3ac",
+    "file_offset": "0x000ee730",
+    "size": 124,
+    "hex": "578bf98b0789470485c0750bc747089040af115fc208005355568d04450a0000006a0050e827d900008b5c242033ed83c40833d28d700883e6fc8946fc8b4424142bd843897708d1eb3b4424180f47dd85db74152bf0668b088d40024266894c06fe3bd375f08b77088b0f66a18c40af116689044e5e5d5b5fc20800",
+    "sha256": "b343025d84a700b1a9e37ffcafc5222ad53a23643c1c99aede37ab1e2193b93d",
+    "canonical_source": {
+      "path": "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100ef330.c",
+      "sha256": "cd306dafa21f1ceeaf16c4f66840cab347d12a264baaa80b690dba6f7ab58f3b"
+    },
+    "empty_prefix": {
+      "va_start": "0x100ef330",
+      "va_end_exclusive": "0x100ef347",
+      "file_offset": "0x000ee730",
+      "size": 23,
+      "hex": "578bf98b0789470485c0750bc747089040af115fc20800",
+      "sha256": "4453992ce0b1a2df255117ba5d3a67c837b9f9b582dbc178fd42d5cd65533db2"
+    },
+    "zero_branch": {
+      "test_va": "0x100ef338",
+      "test_bytes": "85c0",
+      "branch_va": "0x100ef33a",
+      "branch_bytes": "750b",
+      "branch_target_va": "0x100ef347",
+      "sentinel_store_va": "0x100ef33c",
+      "sentinel_store_bytes": "c747089040af11",
+      "guest_identity": "0x11af4090",
+      "return_va": "0x100ef343",
+      "return_bytes": "5fc20800",
+      "callee_cleanup_bytes": 8
+    },
+    "nonempty_boundary": {
+      "va_start": "0x100ef347",
+      "prefix_through_allocator_call": "5355568d04450a0000006a0050e827d90000",
+      "prefix_size": 18,
+      "prefix_sha256": "a3131497e9dbcdb76c0381f4dc4fcb776b7e9625c7d65fc249ee0075891572b4",
+      "allocator_call_va": "0x100ef354",
+      "allocator_call_bytes": "e827d90000",
+      "allocator_next_va": "0x100ef359",
+      "allocator_rel32": 55591,
+      "allocator_target_va": "0x100fcc80"
+    }
+  },
+  "parent_window": {
+    "va_start": "0x100ed3f4",
+    "va_end_exclusive": "0x100ed42c",
+    "file_offset": "0x000ec7f4",
+    "size": 56,
+    "hex": "8d4c243c8944241c894424348b0424894424388d44240450c644242400c744242800000000e8824600008d442410508d4c244ce874460000",
+    "sha256": "c3106d9e62cf34416f1dff3cfc016a4807845c69a0bddb10c0c0c4dbe88724be",
+    "calls": [
+      {
+        "va": "0x100ed419",
+        "bytes": "e882460000",
+        "next_va": "0x100ed41e",
+        "rel32": 18050,
+        "target_va": "0x100f1aa0",
+        "source_address_setup_va": "0x100ed407",
+        "source_address_setup_bytes": "8d44240450",
+        "destination_prior_load_va": "0x100ed3f4",
+        "destination_prior_load_bytes": "8d4c243c"
+      },
+      {
+        "va": "0x100ed427",
+        "bytes": "e874460000",
+        "next_va": "0x100ed42c",
+        "rel32": 18036,
+        "target_va": "0x100f1aa0",
+        "source_address_setup_va": "0x100ed41e",
+        "source_address_setup_bytes": "8d44241050",
+        "destination_prior_load_va": "0x100ed423",
+        "destination_prior_load_bytes": "8d4c244c"
+      }
+    ]
+  },
+  "limitations": [
+    "All original x86 bytes are parsed as inert data and are never loaded or executed.",
+    "The parent setup instructions authenticate two direct call sites and prior address loads, not complete register def/use paths or a callable parent ABI.",
+    "Only the helper branch taken when the copied count is zero is admitted; 0x100ef347 and the allocator call to 0x100fcc80 remain outside the port boundary.",
+    "The original ret immediates describe x86 stack mechanics and do not define the native x64 API."
+  ]
+}

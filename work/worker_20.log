@@ -1,0 +1,12 @@
+**Mission complete.** All 250 claimed functions (`solo_claim_addrs.txt`) are classified into `work/funcid_solo.tsv` — 250/250 covered, 0 missing, all rows well-formed `addr → name / module / rationale`.
+
+**Method:** read each function's Ghidra decompiled C directly (`solo_show.py`, my own viewer after the shared `show.py` got clobbered by a parallel worker), identified via strings + callee graphs + vtable/globals cross-refs (e.g. pairing dtors to ctors by shared inline-vtable pointers), appended in batches via `append_tsv.py`.
+
+**Key identifications (highlights):**
+- **Audio/Wwise:** `battle_audio_all_banks_load` (posts the full Battle_*.bnk set incl. culture VO_Orders banks), naval/unit bankset builders, `battle_vo_variant_by_faction` (Zenobia/Cenobia special-cases), eventset ctor family (vtbls b260/b484…)
+- **FaceFX middleware:** facegraph viewer ctor (`GetDecompiledFaceGraph`), actor-per-session cache, user-spec mount binary search, anim audio asset rebinds, actor-channel assign (CS-guarded list @+0x60e0)
+- **Battle sim/UI:** input state machine tick + state→cursor map, hotkey dispatchers (vk T/Z/W/V…), camera family (keyframe ring lerp w/ i16 12-bit frac, pan-by-delta, freelook node pool, time advance), unit card groups + status codes, selection circles/rings, formation permutation gen + slot assign, unit-class census, pick candidate collection
+- **Naval/render:** ship hull material register ×2 (byte-twins), rider-mount attach quat compose, rigid_model_v2 variant loader, marker mesh loads (`ship_*_marker_{ellipse,capsule}`)
+- **Core infra:** vtable-key heapsort/introsort pair, TLS-guarded radial cone queries, grid cell coverage fill, generic growable record vectors
+
+Note: `funcid_solo.tsv` is a shared sink — parallel workers were appending concurrently, so some addresses now have multiple independent classifications (expected; merges downstream). My additions used consistent module tags (`battle`, `audio`, `middleware-facefx`, `core`, `render`, `input`, `ui`, `campaign`) matching the existing taxonomy.

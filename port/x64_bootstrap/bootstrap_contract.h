@@ -1,0 +1,14 @@
+#ifndef ROME2_BOOTSTRAP_CONTRACT_H
+#define ROME2_BOOTSTRAP_CONTRACT_H
+
+#define ROME2_PORT_ABI_VERSION UINT64_C(0x00010000)
+#define ROME2_PORT_STATUS \
+    "canonical-corpus-ready;startup=inert;entry=inert;gameplay=not-linked"
+#define ROME2_LEGACY_ENTRY_RESULT 0
+
+#define ROME2_LEGACY_ENTRY_ORDINAL 520
+#define ROME2_ABI_VERSION_ORDINAL 523
+#define ROME2_FINGERPRINT_ORDINAL 524
+#define ROME2_STATUS_ORDINAL 525
+
+#endif

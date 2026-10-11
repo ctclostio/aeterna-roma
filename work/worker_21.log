@@ -1,0 +1,26 @@
+## Mission Report — funcid analyst, solo run
+
+**Queue protocol used:** pop from tail of `work/solo_remaining.txt` (claim file `solo2_claimed.txt`) → analyze decompiled C → append TSV rows to `work/funcid_solo2.tsv` via `append_tsv.py` → prune claims. This avoided collision with the 25-worker fleet (`funcid_00–24.tsv`, only worker 00 producing) and the concurrent `funcid_ox.tsv` writer.
+
+**Throughput:** 4 claim-batches, **~50 functions classified** by me (317 total rows in `funcid_solo2.tsv` incl. another writer's; 0 malformed; merge-safe).
+
+**Notable identifications (high confidence):**
+| Addr | Identity | Evidence |
+|---|---|---|
+| `0x116d3f30` | Lua lstrlib pattern matcher | verbatim `%b/%f`, `"invalid capture index"` |
+| `0x116ccfd0/116cbb10/116cb6d0/116cc1c0` | **jsoncpp** Json::Reader cluster | verbatim error strings ("Missing ':' after object member name"…) |
+| `0x116bde50/116bd8d0` | UCRT memmove twins | overlap-check + 32B-chunk copy |
+| `0x116ba4ba` | UCRT parse_floating_point engine | `__clearfp`, MXCSR, digit FSM |
+| `0x116b35ce / 0x116b3b2e` | fdlibm acos / asin | π/2 constants, `__libm_error_support` |
+| `0x104990d0` | battle soundbank loader | full `.bnk` set incl. culture VO variants |
+| `0x103d2660` | VariantMeshDefinition parser | `VariantMeshes/VariantMeshDefinitions/` |
+| `0x100f7510` + `0x1010f000` | texture format-convert + 16bpp decode pair | 5-6-5 bit-expand loops |
+| `0x10427a60` | battle cinematic shot-key lookup | COMMANDER_SHOT/RANDOM_UNIT_* fallback chain |
+| `0x116c2d00–116c5da0` | audio peak-envelope/limiter family (2/3/12/16-ch) | gain·clamp·max-abs window+ramp state |
+
+**Coordination notes for orchestrator:**
+1. Two writers share `funcid_solo2.tsv` — dedupe by addr at merge (first-writer-wins or prefer non-unknown).
+2. Fleet workers 01–24 still show 0-byte TSVs after ~20 min — worth checking worker health.
+3. `unknown` rate ~15% here (string-less 700–3000-line megafunctions); structural evidence recorded in col 4 for later re-pass.
+
+Results survive interruption (incremental appends). Ready to continue claiming from the queue tail on request.

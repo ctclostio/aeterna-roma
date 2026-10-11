@@ -1,0 +1,24 @@
+**Mission executed solo.** Summary of the run:
+
+## What happened
+The 25-worker dispatch produced **zero output** (all `worker_*.log` empty, no processes alive) — so I took over the entire queue myself.
+
+## Results
+- **2190 functions identified** this session → canonical **`work/funcid_main.tsv` now at 2252 entries**
+- Remaining: 3174, queued in `work/todo_solo_remaining.txt` for continuation
+- All work committed (`d5ef22a`, plus report commit)
+
+## Key identifications
+| Discovery | Count | Notes |
+|---|---|---|
+| **FaceFX middleware** (typed `OC3Ent::Face::*` calls) | 1057 | Bulk-classified via Ghidra-recovered method names |
+| **Lua VM embedded** | ~10 confirmed | `0x10f4c0f0` = luaV_execute; lexer/parser siblings |
+| **libcurl + OpenSSL static** | ~35 | Cookie/FTP/HTTP/SOCKS/Digest/TLS/X509 |
+| **GL extension loaders** | ~30 | Full GL1.3→4.x + ARB/NV/ATI/SUN via `wglGetProcAddress` |
+| **HLSL shader registrations** | ~60 | rigidterrain.hlsl, MLAA, FFT ocean, HDR pipeline |
+| UI widget schemas, campaign/CAI save blocks, config parsers, CRT/libpng/zlib | remainder | |
+
+## Reusable tooling left behind
+- `work/evidence_extract.py` — per-function evidence (strings/API/callees) for all batch1
+- `work/scan2/3/4.py`, `work/peek2.py` — paginated triage viewers
+- `docs/funcid_report_batch1.md` — method, address-region priors, gotchas (CRLF bug, sliding-index bug, failed decompiles like `0x114f9210`)

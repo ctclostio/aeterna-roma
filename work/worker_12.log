@@ -1,0 +1,30 @@
+**SHARD COMPLETE 970**
+
+## Mission summary
+
+**Queue:** `work/funcid_solo_queue.txt` — 970 function addresses → **all 970 covered** in `work/funcid_solo.tsv` (1,465 unique addresses total after merging concurrent-writer entries; pre-dedup backup at `funcid_solo.tsv.bak`).
+
+### Workflow used
+1. Loaded references (`docs/engine_architecture.md`, RTTI/vftables, symbol map), calibrated on sample functions.
+2. Built a bulk-evidence scanner (`work/solo_scan.py`: strings, call-frequency, Win32 APIs, globals) + incremental append helper (`work/solo_append.py`) honoring the every-batch TSV contract.
+3. Deep-read ambiguous functions; discovered and anchored the engine's core runtime primitives mid-run, which sharpened all later evidence lines.
+
+### Key identifications (highlights)
+| Anchor | Finding |
+|---|---|
+| `0x10124e50` | **THE engine global `free()`** — header at ptr-8, coalescing, VirtualQuery/VirtualFree; called ubiquitously |
+| `0x100fcc50/fcc80` | engine delete / TLS-aware alloc pair |
+| `0x100f1c80/f1cc0` | refcounted narrow/wide string release (count at ptr−4/−2) |
+| `0x101040a0` | config/script lexer (hex/float/comments/operators) |
+| `0x1011fef0`, `0x10120e10` | VFS data search-path setup (`data\boot.pack`, `working_data_rome2`, …) |
+| `0x10139ac0…10427a60` | battle setup/deployment/camera/cinematic parsers (ARMIES, UNIT_LIST, deployment_area, tickets, victory conditions) |
+| `0x104990d0` | master load of all 12 battle `.bnk` audio banks |
+| `0x102d6f50` | desync debugging: `SYNC LOG FOR TICK %d` → `sync_log%d.txt` |
+| `0x102ae540`, `0x103d2660`, `0x10423d00` | siege-equipment anims, VariantMeshDefinition loader (1.5K lines), naval model set |
+| `0x10106920…10118580`, `0x101164b0…` | ~45-function family: bitstream→surface texture decoders per pixel format + fwrite converters |
+| `0x104957f0` | campaign region registration (`emp_latium_roma`, `rom_africa_zeugitana`…) |
+
+### Notes for the coordinator
+- Concurrent writers hit the same TSV → I deduped keeping the richest-evidence line per address (their deep-dive entries won several where my fast-pass labels were too coarse, e.g. `0x103f9920` is fixed-point heading interpolation, not a stub).
+- Subsystem tags now include finer buckets from merged entries: ai, cine, model, naval, replay, physics, input, vfx.
+- Remaining known gap: many generic ctor/dtor/table-op functions are named by shape+globals table rather than semantic purpose — good targets for a second pass once class layouts are recovered via RTTI.

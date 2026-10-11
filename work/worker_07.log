@@ -1,0 +1,32 @@
+**SHARD COMPLETE 250**
+
+Mission executed solo across the full `work/solo_claim_addrs.txt` queue.
+
+## Deliverable
+`X:/decompilation/work/funcid_solo_results.tsv` — **250 rows**, verified:
+- ✅ every queue address covered exactly once (0 missing, 0 dupes)
+- ✅ strict 4-column TSV (`addr`, `snake_case_name`, `subsystem`, `evidence`)
+- ✅ incremental appends throughout (crash-safe)
+
+## Address block analyzed
+`0x103b5e90 – 0x104ade20` — the **battle unit/animation engine block** of `empire.retail.dll`.
+
+| subsystem | count | | subsystem | count |
+|---|---|---|---|---|
+| anim | 100 | | audio | 12 |
+| battle | 59 | | middleware-facefx | 12 |
+| render | 26 | | core(math/container/memory/string) | 16 |
+| cinematic | 16 | | ui / crt | 9 |
+
+## Key reusable identifications (decoded once, paid off batch-wide)
+- `103e73e0` = play-anim-by-id(weight), `103d20e0` = read unit anim-state FSM, `103dbd70` = state→anim-id switch (idle=`0x7f3`)
+- Fixed-point heading idiom: `atan2 * 10430.378`, ±`0x8000` clamp; ring buffers stride `0x68` with 1/4096 frac lerp
+- MSVC LCG rand `seed*0x343fd+0x269ec3` used for idle variants & scatter jitter
+- `100f1c80`=std::string dtor, `100fcc80/50`=alloc/free, `11683a32/98`=magic-static TLS guards
+- Per-slot scalar table `DAT_120351f0[ushort*8]` = {vol,pitch}/extents; world singleton via `FUN_10115e00` / global `+0x6432c`
+- Digest "API: WARNING" = Ghidra jumptable comments (noise), not logging
+
+## Notable finds
+- `10427a60` **battle_cinematic_shot_parser** (1019 ln, 88× GetNameEntry) + surrounding ctor family → new `cinematic` subsystem cluster
+- `104990d0` **battle_audio_banks_and_props_init** — loads all 8 `Battle*.bnk` banks + siege props
+- `10423d00` naval FX model graph (shipspray/DeckFire/sea_wreck), `1042e6b0` locomotion anim-name map, `1043fe90` hardcoded 3c_* DLC roster pick

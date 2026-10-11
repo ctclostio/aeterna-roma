@@ -1,0 +1,21 @@
+1023c2b0	battle_interp_waypoints_sample_pairs	unknown	walks Vec3 list param_2..3 stride-3, lerp factor f<1 branches, FUN_10190580 sample twice per pt into out pair; returns {flag,ptr}
+1024d410	render_debug_draw_tris_midpoint_edges	render	repeating pattern FUN_10c771c0->102acfb0->1025ba70->10312d50 x2 + FUN_10c8d1b0(...,0x48,&A,&B,0/2,PTR_PTR_119e281c); midpoints (a+b)/2 between tri corner fields +4/+28/+34/+40
+1028a530	unknown_grid_neighbor_count_emit	unknown	byte-grid walk w/ 4-neighbor count; state switch: emit {x,y,flag} triples to growing vector when count>2 (states 0/1) or <3 (2/3) = contour/cell pass
+1029e170	battle_offset_pos_terrain_heading	battle	radius this+0x2f4*0.5 * table DAT_120351f0[idx] offset; terrain min/max FUN_103c0230/10404b30; fpatan quat->yaw w/ 10430.378 fixed-point
+102cef40	unknown_pair_dedup_deferred_task	unknown	compares obj pairs (+0x40/+0x44, +4/+8) for equality; builds functor w/ DAT_11bce874/78 and indirect vtbl+8 call
+102e74c0	unknown_vecpair_dirty_recompute	unknown	compares vec3 @+0x1ac vs +0x1c4 and +0x1b8 vs +0x1d0 + type ints +0x19c/+0x1a4; writes derived float this+0xc
+102f74b0	unknown_timed_weight_cap_fff	unknown	delta = vtbl+0x30() - this+0xd8 clamped >=0, * this+0xe4, ROUND cap 0xfff; builds large float stack struct
+1054fcb0	battle_unit_reset_from_prototype	battle	copies ~25 proto fields (this+0x3d obj: +0x44,+0x664,+0x8b0,+0x94x3,+0x9a0/4,+0xa2c,+0x308) into unit state block + flag resets
+10706a10	render_register_texture_format_loaders	render	builds {FxName,loader} table entries for ".png" and ".tga" (DAT_11798d90 base)
+10b2f730	render_assign_default_texture_paths	render	sets "commontextures/default_normal.dds" and "UI/3DUI/textures/default/..." via FUN_104df800 vtbl+0x58 (ids 0x2f, lens 0x100/0x2100)
+10c41750	facefx_anim_single_curve_check	middleware-facefx	FxAnim::GetNumCompressedAnimCurves==1 gate + name lookup in this+4/5 id list
+1099a3f0	facefx_eventmgr_find_client_event	middleware-facefx	walks FxEventManager 0x14-stride events w/ FUN_108d0f70(0x90) type check
+10a4b110	facefx_anim_curve_stats_collect	middleware-facefx	sums FxAnim::GetNumAnimCurves over anim @+0xbc + vector@+0xc8 (0x3fffffff cap mask) into stat builders
+1073b1b0	facefx_event_desc_from_anim	middleware-facefx	FUN_1073b520(dst,param_2+0x88) + GetMaxNumClientEvents; event-capacity descriptor build
+10690e40	facefx_actor_params_to_game	middleware-facefx	GetActor(FUN_11371980()) -> atof-style numeric reads written to float* param_1 (type-confused Ghidra output)
+106c2020	facefx_instantiate_actor_by_name	middleware-facefx	FxName arg -> stack FxActorInstance array ctor + GetActor; flag bytes param_3/param_4
+1087ca70	unknown_wstr_param_passthru	unknown	garbled literal (encrypted/mis-decoded) + FUN_1087a820; param_3 wstr -> float* out
+1058d7b0	unknown_ctor_vtable_pair_name	unknown	ctor sets vtbls PTR_FUN_1175adf0/1174dd88, FUN_101ac700(this+9); FxName use later
+10ce5340	facefx_actor_instance_bool_check	middleware-facefx	stack FxActorInstance + FUN_101b9270 -> char result; presence/validity check
+10977300	facefx_eventmgr_local_query	middleware-facefx	FxEventManager locals + GetMaxNumClientEvents; event capacity/query path
+10a9c6c0	facefx_animcurve_iter	middleware-facefx	GetNumAnimCurves-driven loop over curve records

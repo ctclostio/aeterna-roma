@@ -1,0 +1,23 @@
+Mission executed. Session summary:
+
+## FuncID analyst session — results
+
+**Queue status:** `work/solo_queue.txt` (976 addrs) → **fully claimed and processed** across all workers this session. Unclaimed pool is now **0**.
+
+### My direct output — `work/funcid_ox_alpha.tsv`
+**299 functions analyzed** (read + classified individually), appended incrementally in 11 batches. Highlights:
+- **Texture decode library cracked**: bit-reader `FUN_116bd8d0` feeds a family of 30+ 16/24/32bpp pixel blitters (`tex16_decode_*`, `texsave_*`) with flip flags, plus the 62KB format-matrix dispatcher `0x100f7510` and master orchestrator `0x1010f000`.
+- **Constant dictionary established**: `10430.378`=rad→BAM16, `0x343fd` LCG=rand(), `1.5259e-05`=1/65535, squared-range thresholds (150²/200²/400²), etc.
+- **Named key gameplay code**: `battle_formation_line_place` caller, `unit_steering_velocity_blend_tick` driver, `phys_obb_pair_sweep_query` caller, `variantmeshdef_parse_randomize`, `battle_sim_controller_factory` frame step, cheat-gated speed multiplier, camera options UI builder.
+
+### Cross-cutting deliverables
+1. **`work/FUNCID_KNOWLEDGE_BASE.md`** — hub-function identity table (alloc/free, string ops, samplers, geometry prims), constant cheat-sheet, region map of the DLL. This multiplies future analysts' speed.
+2. **QA pass over all 30+ worker TSVs** found:
+   - ~1,663 rows corrupted by embedded newlines in evidence fields
+   - 1,438 duplicate addresses with conflicting names (mechanical fallback pass vs real analyses)
+3. **`work/funcid_merged.tsv`** — canonical repaired merge: **5,879 unique named addresses**, deduped with priority policy (analyzed names > generic fallbacks).
+
+### Recommended next steps
+- Re-run merge as more shards land; consider re-analyzing the ~3,130 entries still holding mechanical names (`unknown_calls_*`)
+- The tex-decode block (0x100ef000–0x10120000) is ready for header reconstruction into `include/`
+- RTTI vtable pass would resolve the many `vtbl117xxxx` placeholders I tagged

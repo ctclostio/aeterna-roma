@@ -1,0 +1,18 @@
+Mission complete. Final report:
+
+## funcid analyst — solo run results
+
+**Queue: `work/funcid_solo_queue.txt` — 970/970 addresses classified** ✅ (verified: zero missing, all rows well-formed TSV)
+
+### What I did
+1. **Built evidence pipeline** (`work/digest_solo.py`): strings + Win32 APIs + C++ types + callee-resolution over all 966 pending decompiled bodies; slice viewers (`ox_show.py`, `ox_peek.py`) and race-safe dedup appender (`add_rows.py`). Renamed my tools `ox_*` after a fleet worker clobbered shared `peek.py` mid-run.
+
+2. **Decoded the texture-conversion family** (~29 funcs, `0x10106920–0x1010df10`): D3DFORMAT-style repacking over a `{ptr,w,h,stride}` this-call descriptor with flip flags — A8R8G8B8↔5551/4444/565, R3G3B2→8888 bit-replication, L8 gray replication, ITU-601 luma (0x96/0x4c/0x1c), forced-opaque variants. Named individually as `texconv_<src>_to_<dst>`.
+
+3. **RTTI survey** (`work/rtti_scan.py`, full PE parse): 181 type descriptors exist but only **15 COLs / 14 vftables — all CRT/std**. The engine is effectively `/GR-`; the README's "class names recoverable from vftables" assumption is now formally ruled out in `docs/engine_architecture.md`.
+
+4. **Classified the hard tail**: FaceFX `.fxa` curve parser ("expecting max amplitude"), client-event play/stop pairs, FxMountResult flow, the 9-member `facefx_nodecheck_warn_*` family (shared callee cluster + WARNING), battle audio eventset linkers, ~15 `math_atan2/sin/cos` geometry solvers, CRT lazy-init wrappers, plus honest structural names with explicit low-confidence evidence where identity wasn't provable.
+
+### Notes
+- The **fleet dispatcher (PID 13792) was still live** and racing me on overlapping addresses — expected per pipeline design; duplicates in `funcid_solo.tsv` (multi-proposal) are reconciled by the later naming pass.
+- Committed as `c3d0bcb` with docs update; artifacts: `rtti_scan.py`, `rtti_classes.tsv`, `rtti_vtable_slots.tsv`, batch TSVs, tooling.

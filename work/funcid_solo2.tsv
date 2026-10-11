@@ -347,3 +347,70 @@
 103a50d0	battle_unit_repulse_vector_calc	battle	cooldown +0x101>0; range vtbl+100/0x68; dir to target 103751a0 or brad sincos (flag +4e&8); result vec -> ECX[0x101]
 1033a070	battle_entity_spawn_ctor	battle	allocs id from mgr ([*p+0x68]+0xc0: +0x2650/+0x2654 else ++ +0x210); vtbls 117617ac/11768598; copies world pos + 3x RGB pairs DAT_11bd2484
 102eac80	event_type_gated_dispatcher	unknown	switch on evt id 0x2b..0x46 w/ gates (difficulty>=3 FUN_101867b0, mode flags); 10KB scratch built by FUN_105de1f0; tail FUN_102185c0/102e3450/101a0270
+101c9f40	battle_compound_serialize_ctor	battle	base 101ca4e0; builds 4+ sub-records w/ PTR_Serialize_* vtbs (0x5f4/0xa0/0x94/0xd0); flag param_4 raises two size fields to >=7; from mgr loop 10677e70
+10396cf0	battle_ai_controller_ctor_t10	battle	base ctor FUN_102d06b0(type 10) fed 4 floats from mgr vtbl +0x48..+0x54; name member FUN_10121510(+0x6b); clears 4 lists
+103cf990	camera_opt_autorotate_orient_upd	render	gates on option id 0xe; edge-detects +0x491; branches FUN_103d00f0/103cfcf0 by +0x88/+0x10d; writes sin/cos rot into +0x84..+0x87
+10279f30	battle_dir_vector_lines_draw	render	per-entry: normalize dir +0x84, rotate by FUN_113545d0 quat-mat * len, emit prims via FUN_10173c60 into TLS statics DAT_11bce990
+1032d780	battle_flank_facing_score	battle	bearing atan2*10430.378 between units (+0x50/58); wrapped dAng vs facing+DAT_11bd17fc; score 1-|d|/32768 -> out[0..2]; side-flag gates 0x10/8/1
+10283ca0	naval_wind_apply_per_ship	battle	logs L"Naval Wind strength: %%f, direction: %%f"; per 0x4C entry short dir *0.005493164 deg; applies via FUN_10238c90 x2 + FUN_100f6130
+1025e2e0	battle_army_subrecord_load_v9	battle	reader ver 9 (FUN_10c99710); loads ~5 strings (tag 0xf FUN_10cba0a0) at +0..+0x3c + ints; invoked by battle_army_serialize 1015b610
+102234c0	battle_order_arrow_icon_build	battle	FUN_101d8ee0 x2 for endpoints; dedupe vs +0x3b4 (0xC stride); builds sprite obj w/ "Cindy_icons_sprite_vfx.png" (FUN_101c8c90)
+102e8330	obj_local_pts_world_xform	render	applies mat4 @this+0x7b..0x86 to local vecs -> +0x6b..0x74; gated by byte +0x9b; fallback pivot path via vtbl+0x1bc/0x1a0/0x11c
+102689e0	battle_group_collect_matching_entry	battle	match FUN_100f28a0 vs param_2+0x59c; moves 0x30B rec (from FUN_10250790) fields into new node linked at this+0x3c/0x40
+1034f460	ui_stroke_join_tessellate	render	2D normal math w/ join-type switch (0 half/1 full/2); feeds static-scratch builder FUN_10361460; caller 1034acd0 emits vert-pair fans
+10317d70	cine_cam_target_smooth_update	render	lerps cur->tgt triples (+0x68..6a, +0x6f..71) by weighted factors (+0x56/58 x +0x6e/+0x75); vtbl +0xa0/a4/a8 + pos getters +0x148/14c
+103c8c40	battle_cone_ray_target_scan	battle	src via GetAudioAssetPath-pos helper; dir=sintab[ushort +0x18]; radius gate vs FUN_1017f8e0; per-unit ray to +dir*5000 -> FUN_10356170/FUN_1032c400, tgt vtbl+0x148
+10269620	seglist_raycast_nearest_2d	core	raycasts vs stride-2 pt pair list (param_1+8/+4) via FUN_1136e120; tracks min-t hit then final compare
+10474340	battle_unit_update_dispatch	battle	dist2 gate vs radius ([+9c]+0x250) -> 3 fx calls; clamps param vs vtbl+0x150/+0x8c bounds; state-dispatch FUN_1047c2d0/1047bf20/1047d1b0
+101e4990	battle_ray_march_pick_clear_spot	battle	marches step-10 along sintab[*param_3] (±45deg fan if !param_4); stops at obstacle circles (stride16, enabled +3); outputs farther side if in region rect
+1024c0a0	battle_siege_deploy_fit_scan	battle	base ctor 10399000, vtbl PTR_FUN_1175dc3c; marches +30 steps to 2*len+30 fitting via FUN_10328c40/FUN_10344bf0; clears flag 0x2000
+102f42a0	debug_overlay_arrays_flush	render	flushes 3 dbg tables: 0x1C-stride pts (FUN_10190580), 0x14 lines (FUN_1016ae90 w=8), 0x1C polys w/ bytes/255 colors
+102390f0	battle_fx_cached_emit_jitter	render	spawns per cached 5-stride TLS entries (DAT_11bcea50); MSVC LCG 0x343fd jitter; scale arg*5215.189; emitter FUN_1032ca80; gate FUN_10272450
+10175620	battle_pick_test_other_armies	battle	state gate {0,3,5}; iter armies(+0xb0)/units(+0x20); hit-tests FUN_105cf8d0(pos,(1,2)|(4,8)); ret 2 when blocked
+1030d750	battle_idle_random_behav_tick	battle	3x LCG draws (seed [c+0x68]+0x4c); terrain h FUN_10404b30/103c0230; gate [+120]+0x10>=3; ctr +0x12f wrapdown; emits vtbl+100(rand angle)
+102d5520	battle_ai_controller_ctor_t7_pair	battle	base 102d06b0(type 7); vtbls 117655d4/1176578c; links 2 objs (+0x67/+0x68), mins their vtbl+0x60/+100 vals -> +0x24
+102f8930	battle_deployable_line_place	battle	dir=sintab[ushort+8]; half-width edges (vtbl+0x18); terrain-slope normal via FUN_103c0230 x3; loops 2N placements FUN_105946e0(pi)+FUN_105944c0
+10145880	campaign_character_record_ctor	campaign	21-arg ctor; copies 3 strs (FUN_100f1700/1850); FxName GetNameEntry -> valid bit +0x14; sibling of faction ctor 10145c70
+101b50b0	battle_filtered_set_recount	battle	per-entry counts mgr(+0x50/+4c 8-stride) items f>+0x10; on delta vs cached +0x18 resets +14/+24, copies best idx & range via FUN_1012d820
+10171ee0	battle_cam_angle_clamp_sel_check	render	angle*10430.378 fixed-pt; clamp vs DAT_11afe28c(def 0x6000) / state==5 ->0x2000; selected-obj vtbl+0x138 gate; FUN_102947b0 follow
+103ef3d0	battle_area_effect_emit_front	battle	grid query FUN_103b83f0->DAT_119394b4; keeps hits in front half-plane (dot w/ +3c/+40 dir); emits FUN_10353760+103443f0(<20)|10344190+1034e6b0; once-flag +0x44
+1043d930	battle_unit_tick_vis_dbg	battle	per-unit: clr +0x730; pos via FUN_104548c0; branch FUN_10438910(ctr++0x68)|FUN_1048f270; sets +0x72c; dbg flag -> plane |dot|<2 vs [+0xc]+0xcc8
+103c81b0	battle_sampled_emitters_refresh	audio	2.5%% sample (n*0.025+0.5 min1) w/ budget DAT_11939400; subset pick FUN_10254890(session+0x494); per-entry emit FUN_1032c910(+0x240)
+1030e070	battle_ai_focus_controller_pick	battle	validates ctrl +0x8c4 (vtbl+0x18/3c, char+0xa0) else repicks from [+0x148]+0x64298 list via FUN_104e15b0; compares active +0x8b0/+0x22b
+10187bb0	battle_marker_rect_prune	battle	vis gate vtbl+8==1; expand rect FUN_11365250 +-1; spatial query FUN_103633d0->DAT_11afc180; removes foreign-owner (+0xc) hits FUN_1036d360
+104a7820	battle_ambient_drifters_update	render	10s throttle (vtbl+0x14 vs +0x15); LCG jitter +-22.5deg rotates vel; wobble clamp +-0.31416rad; move *0.1; bounce off region rect margin 2
+101f6750	battle_find_unit_deploy_rect	battle	march till slope>FUN_10680500 vs p2^2; pull back in region rect; bearing*10430.378; half-diag sizing; fit test FUN_10328c40/10344bf0 <=5 tries
+10278c00	naval_flag_obj_get_or_create	render	name-lookup in list +0x2c else builds naval_faction_flag.rigid_model_v2 w/ <faction>_mon_256.png + naval_flag_diffuse.png via vtbl+8(0xe6,0xf,0x48)
+103f94e0	cine_path_orient_update	render	t=ms*0.001 -> path eval FUN_103a37e0+103fc590; quat(+0x210..21c) angle math; flag DAT_11df3c00 branch w/ FUN_10312d50
+104a5520	anim_track_pair_blend	anim	t*rate->4096 frames; 0x5c-stride key sample FUN_1042bb80; blends pos+shortAng(FUN_10348f50)+floats against 2nd track by param_3
+10284600	battle_decal_mat_cache_apply	render	caches 16-dw mat from param_1 when +0x34<0; 35deg sign-flip gate; builds FUN_10c7de60 then applies via FUN_104c2ca0
+103b9e70	facefx_actor_attach_xform	middleware-facefx	GetActor->unit[+0x4d0]; pos via vtbl+8(actor+0x144)+dir sintab[p3]; offsets 40/20*scale; ok? write via FUN_1039e1d0 : FUN_10337230/FUN_103558d0
+10156840	unit_extra_record_dtor_13c	core	dtor of 0x13C rec: clears ~12 vectors (str FUN_100f1c80 x2 / refcount FUN_100f1cc0); freed via delete in 10da0740 loop
+103cfcf0	cine_path_key_state_apply	render	samples cine path FUN_103a37e0(t=[mgr+0x643a8]ms); tests 5 key flags; clears +0xc4; lookup FUN_103f9fa0; branch of camera-opt 103cf990
+103af360	facefx_bone_proximity_scan	middleware-facefx	GetActor; per-bone (actor+0x148) vtbl+0xe4 obj; walk its +0x778 list; range test FUN_103a5620(+0x45c) vs unit pos; counts hits
+102de7e0	spatial_grid_init_pow2	core	grid init: dim=1<<p2, cell=p3; stores half-cell offs + mask n-1; allocs n^2 x 4B cells (ctor FUN_102de7d0)
+1029c080	facefx_actor_lod_update	middleware-facefx	GetNumBones; bone-name lookup FUN_1028deb0(DAT_11bce280); dist2 vs unit[+0x44]+0x60 LOD gate; FxAnimGroup::GetNumAnims+audio path
+102f3ef0	debug_overlay_pts_lines_flush	render	sibling of 102f42a0: flushes 0x10-stride pts (FUN_10190580), 0x28 lines (FUN_1016cb70 w=8), 0x14 (FUN_10168d00)
+102fdd30	obb4corner_pt_test_fallback	core	builds 4 OBB corners (half-ext*axes); if pt outside all -> axis-proj test; else FUN_101795b0 x2 / FUN_101a2d20 x5 fallback path
+101ae2f0	battle_units_near_obb_collect	battle	3-level walk armies(+0xb0)->units(+0x20)->+0x118; vis gate; OBB@+0xbf4: 0 if inside else min4 FUN_11364920; collect dist<p3
+1036af00	battle_frontage_seg_closest_t	battle	eff-width mods (mode1 min2, mode3 0.65x same-player or *DAT_11bd2110); seg-seg closest via FUN_10351130; out clamped t
+10399e60	battle_spawn_order_ctor	battle	copies 0x4B desc (param_2); vtbls 1176e3ac/1176fa64; ver-gated probes >=0x60c/0x610/0x614; count*0.1->+0x24
+102e5290	battle_steer_heading_compute	battle	dir to tgt (+0x14..16) or circ waypoint buf (+0x120,0xC stride, ctrs 0x12f/130); sintab dir from ushort arg; emits via vtbl+0x50/FUN_10308a60
+10176200	facefx_actor_state_hash	middleware-facefx	rolling rot13/xor hash over lists +0xd4/e0/f8, recursive +0x17c, FxNameEntry, GetActor, fields +0xa4..+0xb0; change-detect checksum
+102bce70	facefx_vis_cone_gate	middleware-facefx	angle delta vs DAT_11bcdc68 cone; dist tests r*1.3 / r*1.6 (FUN_102899a0); checks unit +0x48c/+0x488 flags; gates face sim
+1017ce00	battle_spawn_table_instantiate	battle	walks 5-dw entries ([+4]+0x170 cnt+0x16c); resolve FUN_10d145f0; ctor FUN_105187c0 (0x11C); terrain h FUN_103c0230->+0x5c
+1021ffd0	battle_obstacle_circles_draw	render	walks 0x10-stride {x,y,r,enabled} circles -> FUN_1020c9a0 each; second list at p1+0x14/0x18
+104137c0	cine_editor_component_ctor	ui	vtbl PTR_FUN_11779988; copies colour DAT_11e06efc/f04 pairs; allocs 0xC sub-obj (PTR_LAB_1177b864); caller in BattleCinematicEditorUI
+101839e0	battle_dbg_alliance_pts_print	battle	counts pts (+0x58==0/1) in list +0x2c; draws L"Alliance 0/1 ---->>> %%u points" via FUN_10190580
+104766f0	debug_circle_strip_build	render	apps circle verts (2pi i/N)*p1[5]+center into TLS f32 dyn arr DAT_11e0ad4c (3 per vert)
+101cf470	battle_ring_decal_terrain_build	render	vtbl 117541f0; default r=10; circle verts w/ terrain h FUN_103c0230; 9-float stride; centroid avg; conforms ring to ground
+1017e810	climate_path_split_fxnames	core	walks climate list ([*this]+0x642ac, FUN_10cf2010); finds "\\climate\\\\" in paths; splits into 2 FxNames, re-concats (FUN_100f1720)
+10200b80	battle_zone_point_contain	battle	pt vs OBB ([+0xb8]+0x14/18 halves,+0x1c.. axes) OR within 50 of anchor(+8/c); then tgt checks FUN_106723e0/10687640, flag +0x5c6
+1027ca40	battle_assault_link_build	battle	pairs A/B objs (siege "pipe_climb"); nearest-face queries FUN_1034a0d0 both ends; makes 0x60 link FUN_1024dd40; hooks via FUN_10338c50(+0x24)
+1030c520	battle_unit_stateobj_factory	battle	switch unit[+0x34] type 0..8 -> ctors 1024b360(60)/10615be0(6c)/10613320/1024f620/1024f5f0/10396ae0(74); mode id -> singleton+0x50
+10319670	battle_enemies_in_obb_count	battle	armies!=own via mgr+0xb0; collect FUN_105ca6e0; per-soldier pos FUN_103751a0; pt-in-OBB this+0x48..5c; counts hits
+102005a0	battle_flank_pos_compute_order	battle	rot dir +-deg by mode; obstacle hittest FUN_101fbf30; pos=tgt-dir*p7/2 (sintab); bearing*10430.378 -> +0x59e; order FUN_10228400
+10270410	battle_dangermap_sample_byte	battle	cell=(coord<<+0x24)-off(+0x38); crit-sec singleton DAT_11bce9b4; query FUN_1018ce70; avg clamp01 *255 -> byte
+103192d0	battle_anim_event_fire_window	anim	edge +0x461; anim t window [+0x79]*0.1..+0.1; interp FUN_1137ae50; rot facing*9.58738e-05; fires evt hash 0x1effaa9b (FUN_102de260)
+1017a960	battle_units_spawn_from_list	battle	per-entry alloc 0x498 via FUN_10592860 (seed FUN_10dbf7b0); L"empty" fallback; appends to vec +0x60
+101b5400	battle_ai_pick_withdraw_army	battle	walk armies(+0xb0)/units(+0x20); flags +0x25d&&!+0x25c; ratio +0x250/+0x24c vs g+0x19dc; picks army -> +0x23bc mode 8

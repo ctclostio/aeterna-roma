@@ -1,0 +1,6 @@
+0x100f7510	surface_blit_convert_format	render	ADJUDICATED: nested switch(src[4]xdst[4]) fmt tags over {ptr,w,h,stride,fmt}; span helpers 100ef* take rects; NOT printf engine
+0x100fa730	image_rescale_rgba_two_pass	render	ADJUDICATED: peak-alloc stats DAT_119f3ee4/f30 + x/w bilinear weights + 2 passes; DAT_1173e300 idiom is int2dbl magic not pow10
+0x100fb690	swsurface_resize_bilinear_b	render	ADJUDICATED: twin of 100fa730 resample, alt scan order
+0x10107ca0	tex_decode_bitstream_to_gray8_bt601	render	ADJUDICATED canonical name: luma out w/ 0x1c/0x96/0x4c /0xfe weights (BT.601-ish), bit-reader+flip family
+0x103d0fe0	battle_cam_cmd_first_person_context	battle	ADJUDICATED: strings toggle_first_person_mode/context_camera verified x2; my earlier anim_channel claim was WRONG
+0x101839e0	battle_score_status_text	battle	ADJUDICATED: strings 'Alliance 0 ---->>> %u points' '#Contested' '#Timer ---->>> %u seconds' verified verbatim

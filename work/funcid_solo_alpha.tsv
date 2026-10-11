@@ -1,0 +1,178 @@
+0x10375bc0	attachment_local_to_world_xform	core	xforms 2 local pts (+14/+1c,+28/+30) by optional parent 4x3 matrices (+24/+38 ptrs)
+0x102e7ed0	orbit_delta_pos_update	unknown	vtbl+1bc get pos; flag +79; [6]=vtbl+1a4(+78 offset); delta vs stored pos; quat seed DAT_11bcf2ec + ecx[100]+20
+0x103ac6e0	fxanim_sample_buffer_zero_build	middleware-facefx	FPU cw save; FxAnim audio path on selected +5ac; zeroes float[33] buffer around entity pos
+0x102bdb90	nodeset_branch_path_build	unknown	FUN_102a6510 two nodesets compare-pick branch; allocs; edge math FUN_113660a0 x2
+0x103a3280	fxanim_radius_check_variant	middleware-facefx	gate FUN_1018da70; FxAnim path +4d0+5ac; dist2<=r2 && >0; branch on +144==1
+0x10331270	stats_defaults_table_init	battle	ctor stores ctx+68; fills default stat pairs 100/200/1000 at +46..60
+0x10357690	formation_slot_xform_variant	battle	TLS statics; FUN_1016f420 gate; composes big stack transform like 102f8930 scatter variant
+0x1031c570	gridentry_notify_0x80000_handler	core	grid-cell object handler invoked w/ tag 0x80000 from 10309980 dirty-rect walk; per-entry update
+0x1038d780	query_fill_record_packet	unknown	3x FUN_1018c1e0 queries fill packet fields (shorts/floats); FUN_11373030 x2
+0x10371e50	proximity_flag_set_near_types	battle	dist2 <= (1.5v+1.5)^2 of (+c)+38 pos; type checks +50==0xb/8; sets bit4 at +c2
+0x1035e8f0	bulk_collect_stack_8k	unknown	loops count +f calling FUN_10358910 into 8KB stack buffer
+0x102c0140	state_gate_packet_build	unknown	param_1==0 gate sets flag+10; builds stack packet from entity pos FUN_103751a0
+0x10360050	pair_merge_limit250	unknown	FUN_10372720 equality gate; zeroes +d0/+dc; copies obj+20 -> +e4; default limit 0xfa(250)
+0x10380f00	hashtable_bucket_lookup	core	key field +1c % buckets, 0xc-stride bucket chains, ptr compare walk; null-key hash 0x305a9c4b
+0x10327e60	record_copy_ctor_flat	core	copies 7-dword param block + flag byte(+9) into new obj, zero tail
+0x102c2da0	alloc_quad_records	unknown	FUN_100fcc80 x4 allocs + 3 frees; record build loop
+0x10375840	order_dispatch_multi	unknown	reads p1+24 chain; builds stacked sub-records (uStack block); many callee fan-out 10345a80..1037b7b0
+0x1030e810	ai_target_select_spawn	battle	mirrors 1030e070 family: FUN_1030afa0 reset, FUN_102d06b0 spawn, big float packet build
+0x103ae630	range_band_check_flags	battle	in_EAX arg; band checks [15]/[17] vs p1+54/+5c with ABS tolerance; sets flags per band
+0x103572e0	tls_list_scan_pairs	unknown	TLS static DAT_11df1718; walks *param_3 list pairwise with float compares
+0x102f8d80	ctx_list_collect_filtered	unknown	zeroes +180; ctx+64298 list counts (+114,+ec); gate +148->68->c0+1b4; FUN_10182e60/FUN_104dd5f0 picks
+0x102e03d0	facefx_mgr_shutdown	middleware-facefx	named thunks CollectGarbage/DestroyAllActors/DestroyAllAnimSets; FxName::GetNameEntry checks; vtable PTR_FUN_11761538
+0x1031ba40	unit_packet_build_gated	unknown	gate chain FUN_101796c0/101b0150/102feac0; builds multi-field packet incl code* callbacks
+0x1034c140	threshold_band_pos_calc	unknown	reads (+788)+2c; _DAT_11bd2480 threshold; float band calc into locals
+0x10340da0	heading_sync_short_angle	battle	clears bits &0xb8 at +6c; copies [6f]->[6e]; short angle diff via vtbl+50 twice, fixed-point
+0x102c1b80	pos_match_global_check	unknown	FUN_10452f60 gate; compares obj+94/98/9c to globals DAT_11bcd444..c or vtbl+cc getter
+0x1029c990	anim_bone_packet_build	middleware-facefx	builds large bone/float packet (local_f8..a4), GetAudioAssetPath + FUN_1017f8e0 radius in ctx
+0x103605e0	alloc_pair_tls_minmax	unknown	TLS static; FUN_100fcc80 allocs x2; FUN_1038e5f0 query; free pair
+0x1031cec0	self_recursive_walk	unknown	single self-recursive FUN_1031cec0 walker, no imports
+0x10341220	target_query_radius_scan	battle	FUN_10407790 x2 queries; FUN_103d4e90 radius scan; FUN_1135dbc0 helper
+0x102edd50	waypoint_objs_create_defaults	battle	ctx+250c arr stride 0xc; allocs 0x20 objs vtbl 11762488 w/ defaults [1]=0x4f80, 50.0/200.0/3.0; array growth +3/+4/+5
+0x1029d760	ai_order_packet_rand_build	battle	big packet build; FUN_105xxxx family x6; LCG rand FUN_11683b10; pos FUN_103751a0 x3
+0x102dff90	obj_subdtors_chain_free	core	for members +9,+f,+10,+15: set vtbl 11754018, typed dtor (FUN_102df980 etc), operator_delete sized 8/0xf4/0x110
+0x10393980	kdtree_partition_nearest_scan	core	FUN_10391610 partition; nearest dist2 scan both sides vs param_4 point on {+4,+8,+c} records
+0x10325d90	unit_list_iter_gate_scan	battle	walks ecx+b4 list w/ gate chain FUN_10241630 x3 / FUN_10291720 / float checks
+0x10340970	pos_shortangle_pair_calc	unknown	reads (+7c vec,+80 cnt); computes pos deltas and short angle into stack fields
+0x103abc50	unit_mount_gate_check	battle	gates: (ecx[d]^ctx68+54)&7==0, +4e&8==0, short+1e2==0x11, [8b]!=0x15, [86]==0; FxMountResult in ctx
+0x102bb220	record_alloc_field_copy_chain	unknown	allocs FUN_100fcc80/FUN_100d12b0; copies fields via FUN_10243b70/10243d00/10253110 chain
+0x10389990	bounds_from_corners_calc	unknown	defaults DAT_11bd2484/88 pairs at +38..4c; mode==1: corner diffs from obj(+20) via FUN_10339ac0
+0x102e4260	xform_compose_stack_packet	unknown	composes stack matrix packet from float ptrs; FUN_102ef620 x3 / FUN_102ef520
+0x10328d20	query_fill_multi_record	unknown	FUN_1018c1e0 queries fill record; FUN_11365250 bounds + FUN_113660a0 edge math
+0x102a12c0	gate_triple_pos_packet	unknown	FUN_1018db30/dba0/e920 gates; FUN_105cf880 x3; builds ~0xa8B float packet
+0x103292c0	log_dup_list_scan	unknown	logs FUN_100f1800(&DAT_1173dad0) twice; walks two ptr lists w/ float compares; FUN_10338db0/10340970
+0x10494750	weight_clamp_count_query	unknown	clamp p3 to [0.01,1.0]; count check +44 vs DAT_11e01a80; FUN_103eb8b0 class compare; FUN_10497da0/1040abc0
+0x102fcd10	float_table_interp_calc	unknown	local tables local_ec[5]/d8[4]; interp math w/ ROUND; calls FUN_1030b1d0
+0x1034a580	self_recursive_float_walk	unknown	self-recursive walker over floats, no imports; zero-inits out params
+0x103a4510	pair_state_compat_check	battle	returns 7 on id cross-match ([12]==[d]); flag +4e&0x10 branches; FUN_103c1f20 x6 state queries
+0x103a50d0	target_pick_pos_packet	battle	pos FUN_103751a0 x5; FUN_10d1a700 x2 gates; FUN_103c1f20 pair-state; builds stack target packet
+0x102e4d30	tls_quad_minmax_calc	unknown	4 TLS statics (FUN_11683a32/x39e8); FUN_103c0230 clamps x2
+0x10488ac0	atan2_pair_rotate_calc	unknown	FUN_1168cad5 x2 (atan2 helpers); FUN_1027ee00 apply
+0x104ade20	alloc_scan_notify_chain	unknown	FUN_100fcc50 x5/fcc80 x3; scans FUN_1025bc50/FUN_10303370 gates; FUN_104ae170/104d6740 notify
+0x103b5110	state_query_matrix_build	unknown	checks +4a4!=-1, +220/+434; FUN_10312d50 x9 + FUN_102198e0 x9 matrix/state queries
+0x10395340	self_recursive_sort_walk	unknown	self-recursion x4 (FUN_10395340); FUN_10391f30/FUN_103948e0 partition helpers
+0x102c5ef0	selected_entity_packet_build	battle	selected ctx FUN_10115e00; FUN_10513280 x2; builds packet via FUN_10526cd0/1053b630/10569810 chain
+0x102c5a50	actor_strings_record_build	battle	GetActor in ctx; string ops FUN_100f1700/1800/1c80 x7; FUN_10cc1ae0/cff560/10e2b0b0 engine queries
+0x10385720	radius_minmax_unit_check	battle	FUN_1018d1a0(pos) unit query; FUN_10404b30 min clamp; FUN_1036b3f0 radius calc; ROUND
+0x10399790	spawn_transformed_records	battle	pos FUN_103751a0 x5; world->local FUN_1034a0d0 x2; creates records FUN_103455b0/10338c50; FUN_105d1300 submit
+0x10483dc0	state_query_matrix_build_b	unknown	FUN_102198e0 x12 + FUN_101a5c60 x4 queries; gates +FUN_104dd7d0/1040be50/10445ee0/103211f0
+0x103259e0	unit_list_iter_gate_scan_b	battle	twin of 10325d90: FUN_10241630 x3 walk, FUN_1035bf70/10365330/10380c20 branch work
+0x102faa40	alloc_quad_interp_records	unknown	FUN_100fcc80 x4 allocs; FUN_102b4f20 x2; ROUND interp math
+0x10310c10	clamp_chain_calc	unknown	FUN_103c0230 clamp x6 chain over float params
+0x10327060	alloc_triple_records	unknown	FUN_100fcc80 x3 allocs + FUN_100fcc50 x2 frees; record fill loop
+0x10355370	grid_cells_edge_build	core	EnterCriticalSection guarded; FUN_100d12b0 x4 allocs; edge math FUN_11354a70/11364e70/113660a0
+0x10313600	order_handlers_fanout	battle	FUN_103cf910 x3 gate; fan-out FUN_103e9cb0/105c5510/103d9380 handlers; alloc/free pairs
+0x1048e870	facefx_clientevent_play_animfind	middleware-facefx	FxActor/FxAnimGroup/FxClientEvent/FxName types; FindAnim + PlayClientEvent thunks
+0x1048f270	alloc_pair_gate_notify	unknown	FUN_100fcc80/FUN_100fcc50 pair; FUN_10438540 gate then notify
+0x103aad70	formation_slot_scatter_variant	battle	FUN_105944c0/946e0/9eb40 scatter trio; FUN_101a5c60 x3 queries; min/clamp FUN_10404b30/103c0230
+0x1041deb0	anim_component_refresh_chain	anim	FUN_101150a0 x2; refresh chain FUN_10453200..10453870 / FUN_1048ef40 / FUN_1049ecf0 / FUN_104dd280
+0x1048e460	facefx_clientevent_stopall	middleware-facefx	StopAllClientEvents + FindAnim + FxClientEvent thunks; FxAnimGroup this
+0x102a18f0	tls_gate_pos_collect	unknown	3 TLS statics; gates FUN_1018de70/1018eb60/101903f0; pos collect FUN_10592c70/1059d980; FUN_106168a0 x2
+0x102ad660	record_serialize_strings_write	core	serializer family FUN_10cb60c0/10ca2c70/10cafa30 x3 each; 3 strings via FUN_100f1850
+0x102c7c30	facefx_curvesend_selection_scan	middleware-facefx	GetCurvesEndTime thunk; FUN_10337350(+b4,2.0,1); walks +f4/+f0 list, flag (obj+38+110>>12)&1
+0x10373f50	debug_point_marker_draw	render	draws point markers FUN_10190580 x2 w/ FUN_1059e270/105e1400 calc; ROUND
+0x1047bf20	alloc_quad_anim_refresh	anim	FUN_100fcc80 x4; FUN_104b72b0 x2 anim queries; FUN_10439150 gate; FUN_104901b0
+0x10372890	curve_eval_triple	unknown	FUN_11381600 x3 + FUN_101b1280 x3 curve/state evals; FUN_10356170 apply
+0x1037ba60	pair_free_with_dtor	unknown	FUN_100eaf40 gate; dtor delete FUN_116835d7; FUN_1033e160/1033e600 sub-handlers
+0x1035c7b0	unit_scan_radius_minmax	battle	FUN_1016f440 ctx; FUN_101a1720/101b1280 gates; FUN_10298ee0 x2 scans; min/max FUN_1136e120 x2
+0x1049db00	alloc_pair_class_query	unknown	FUN_100fcc80 x4 allocs; FUN_10432d20 x2 class queries; frees x2
+0x102e9560	actor_record_strings_build	battle	string builds FUN_100f1700/1c80; engine queries FUN_10cc1ae0/cff560/10e2b0b0; pos FUN_103751a0
+0x1035f9e0	hashtbl_pair_merge_scan	core	FUN_10326380 x4 walk; equality FUN_10372720; hashtable lookup FUN_10380f00; FUN_10337730 x2
+0x10376ac0	ctx_gates_unit_scan	battle	gates FUN_1016f420/f440/f980/f9c0; unit scans FUN_10344970/10346970/10353510; links to 1035f9e0
+0x103a2610	neighbors_overlap_multi_scan	battle	FUN_1034e6b0 x6 member ops; spatial query FUN_103b83f0; TLS statics; FUN_105aabb0
+0x103895b0	order_dispatch_subfns	battle	FUN_101a0b50 x3 gates; dispatch FUN_10375840/10376310/1039dac0/10345b80 sub-orders
+0x103a5620	event_radius_query_packet_build	battle	big packet (locals to +13c); allocs fcc80 x4; world->local FUN_1034a0d0; callee of 103af360 counter
+0x103a4960	pair_state_angle_check	battle	FUN_103c1f20/e9eb0 pair-state x2 each; FUN_1137e110 x3 angle evals; FUN_102bca10/b58c0 checks
+0x103431a0	edge_math_twin_10340970	unknown	same helper set as 10340970: FUN_11385da0 x2 / 113660a0 / 113847c0 / 1137c3a0
+0x102e9a30	slot_scatter_tls_variant	unknown	TLS FUN_1169c43b; FUN_105944c0/946e0/9eb40/a2d70 scatter quartet; FUN_103c0230 clamps x3
+0x103ab520	facefx_clientevent_scan	middleware-facefx	GetNumClientEvents thunk; FUN_1018de70/1018ea90 gates; event walk FUN_103d20e0/103ea530
+0x102fd5c0	tls_alloc_bounds_calc	unknown	TLS statics; FUN_100fcc80 x2 allocs; bounds FUN_1136e440 x3; ROUND
+0x10391610	kdtree_partition_split	core	self-recursive partition around pivot param_4 on {+4,+8,+c} records; callee of 10393980 nearest scan
+0x103319d0	unit_scan_tls_minmax	battle	TLS statics; FUN_10336950/10353b70 scans; min/max FUN_1136e120; FUN_10177180 gate
+0x103a1e10	fxanim_radius_pos_calc	middleware-facefx	gate FUN_1018da70; pos FUN_103751a0; GetAudioAssetPath ctx; ROUND radius math
+0x103028b0	alloc_triple_gate_notify	unknown	FUN_100fcc80 x3 allocs; FUN_1018a8b0 gate; FUN_102d9060/102d98f0 handlers
+0x102c9970	alloc_quad_gate_scan	unknown	FUN_100fcc50 x9 / fcc80 x4; gates FUN_1018de70 x2; FUN_10236880 apply
+0x102f9d30	interp_pair_calc	unknown	FUN_102f9a20 x2 pair evals; FUN_102fed60 clamp; FUN_102f1f90; ROUND
+0x10330790	record_flat_copy_ctor	core	flat field copy ctor: 2 strings (FUN_100f1700) + ~30 dwords copied verbatim
+0x104178e0	string_record_query_build	unknown	2 strings + logs FUN_100f1800; queries FUN_10298be0/FUN_112d98d0; sub-handlers FUN_1041b720/10418770
+0x1037af80	self_recursive_matrix_walk	unknown	self-recursion x3 over matrix-ish params, no imports
+0x10349aa0	grid_mgr_cells_init	core	InitializeCriticalSectionAndSpinCount; mgr FUN_112e1830 x12; FUN_1018a6d0 lookups x8; FUN_100d12b0 x5 allocs
+0x104715d0	facefx_getrefs_alloc_scan	middleware-facefx	GetReferences thunk; 4 TLS statics; FUN_100fcc80 x3 allocs; FUN_10312d50 x3
+0x10299900	quad_engine_query_calc	battle	FUN_10c82370/10c900b0/1030d460 x4 each engine query set; FUN_113545d0; ROUND
+0x10327730	unit_state_scan_chain	battle	scan chain FUN_103088a0/1034cd10/10371bf0/105df680; string FUN_100f1aa0; FUN_112d98d0
+0x10377aa0	ctx_gates_unit_scan_b	battle	gates FUN_1016f420/f440; scans FUN_10328490/10337670/1033b690/1039b560; twin of 103771e0
+0x103771e0	ctx_gates_unit_scan_c	battle	twin of 10377aa0: same gate/scans + FUN_1034fb20/1033c4b0/1033e340
+0x10373510	tls_class_radius_scan	battle	4 TLS statics; FUN_1136b670 x3; class cmp FUN_103eb8b0; pos FUN_103751a0; FUN_1035d4c0 x2
+0x1036c780	state_machine_multi_branch	battle	FUN_10404a90 x8 state reads; branches FUN_10387420 x3/1032bdc0 x3/103d0fc0 x2
+0x10356230	unit_scan_minmax_gated	battle	FUN_1034e430 x3 ops; FUN_101a2d50/101b1280 gates; FUN_10407790 query; min/max FUN_1136e120
+0x10301510	tls_alloc_curve_eval	unknown	TLS FUN_1169c43b; FUN_100fcc80 x3; curve/state FUN_102d9000/102d97d0; FUN_1168cad5
+0x10343770	list_push_seven_regs	unknown	FUN_100d9d90 register-calls x7 — pushes built objects into list
+0x10302400	alloc_six_records_gated	unknown	FUN_100fcc80 x6 allocs + frees x3; gate FUN_103856d0; FUN_10301c40/102d9220 fills
+0x10363770	ctx_scan_minmax	battle	gates FUN_1016f420/10183180; scans FUN_10360420/10379420; min/max FUN_1136e120 x2; FUN_10404b30
+0x1039e370	quad_subfn_fanout	unknown	FUN_103a04a0 x4 + FUN_10cff970/b80/c30/cf0 x3 each — four-way sub-dispatch
+0x103236e0	matrix_build_recursion	unknown	FUN_10321ff0 x5 helper recursion; CONCAT-packed fields build
+0x102bd300	spline_ctrl_walk	unknown	FUN_10274ff0 + FUN_113545d0; walks ctrl points (self-recursive FUN_102bd300)
+0x1036dec0	unit_state_scan_chain_b	battle	twin of 10327730: FUN_103088a0/1034cd10/10371bf0/105df680 chain + ROUND
+0x102a71d0	class_match_multi_scan	battle	FUN_103eb8b0 class cmp x6; many gates (10173c60/1018ecc0/1028f3f0); FUN_104e15b0 pick; FUN_10337600
+0x102f0920	radius_gated_collect_chain	battle	FUN_1017f8e0/10191040 radius gates; collect FUN_102fe520/102fe8e0/10304750; FUN_10337600 x2
+0x102dbc50	spline_segment_alloc_build	unknown	FUN_100fcc50 x6/fcc80 x4; FUN_102de390/102df330 segment helpers; FUN_102e3740 append; FUN_103c0230 clamps
+0x103149b0	obj_teardown_subdtors	unknown	dtor fan-out FUN_103150e0/1030b850/1030bcb0/1030e3f0/104c59b0; delete FUN_116835d7
+0x102c8290	tls_alloc_rand_fill	unknown	FUN_1169c2e4 rand x3; FUN_100fcc80 x5 allocs; FUN_1029fe40 x2 fills
+0x1035f360	order_dispatch_multi_b	battle	FUN_10328430 x6 gates; dispatch fan-out FUN_1033aec0..103605e0; allocs fcc80 x6; sibling of 10375840
+0x102cb880	gate_quad_alloc_scan	unknown	gates FUN_1018db30/de70/ecc0; FUN_102b8050 x4 scans; alloc/free pairs x4; FUN_1054d690/10564a70
+0x1039a930	spawn_component_ctor	battle	FUN_102d06b0 create; FUN_1039a590/1039c6a0 sub-ctors; FUN_10356170 apply; allocs fcc80 x4
+0x103254d0	unit_list_iter_gate_scan_c	battle	twin of 10325d90 family: FUN_10241630 x3 walk; FUN_10365a00/103692b0/10372ed0 branch work
+0x104806d0	tls_alloc_rand_pos_calc	unknown	2 TLS statics + rand FUN_11683b10; FUN_102964f0/105ba470 calc; FUN_113545d0; ROUND
+0x103acfa0	scatter_range_band_calc	battle	FUN_10404670 x3 range queries; scatter trio FUN_105944c0/946e0/9eb40; gate FUN_10d99ff0; FUN_1036af00 mode adj
+0x10324e80	unit_list_iter_gate_scan_d	battle	twin family: FUN_10241630 x3; FUN_1035c010/103654a0 branch work; hashtable FUN_10380f00
+0x10376310	order_dispatch_multi_c	battle	fan-out FUN_10356830/10376ac0/10377aa0/10377010/10384990; pos FUN_103751a0; sibling dispatcher
+0x1041d6b0	anim_class_scan_build	anim	class cmp FUN_103eb8b0 x2; FUN_102128c0 x5 matrix ops; FUN_10d3a110/d39d30 engine queries; logs FUN_100f1800
+0x102b6010	selected_radius_collect	battle	selected ctx FUN_1018db30; radius collect FUN_103633d0 query; FUN_1025f1b0 x2; FUN_10192f10 time
+0x102f90c0	alloc_pair_subfn	unknown	FUN_100fcc80 x2 allocs; FUN_102929c0/FUN_10308f30 sub-ops
+0x10381d80	constructobject_dispatch	battle	ConstructObject thunk; gates FUN_1016f420/1018ddd0; handlers FUN_103dd700/dd810/1037a010/105cdff0
+0x102f1780	unit_query_bounds_calc	battle	FUN_1018d1a0 unit query; bounds FUN_1136e5c0 x4; allocs fcc80 x4/fcc50 x3; gate FUN_1016f420
+0x10345b80	order_state_machine_big	battle	FUN_101a0b50 x4 gates; state fan-out FUN_10398030/1039b410/103a1200/1034e660; TLS statics
+0x10497ff0	self_recursive_walk_pure	unknown	pure self-recursive walker, no imports/callees beyond itself
+0x1035c010	unit_scan_gate_chain	battle	FUN_10298ee0 x4 scans; FUN_10337930 x4; gates FUN_100eaf40 x3; FUN_1135d6f0
+0x10354af0	alloc_register_push_six	unknown	FUN_100d9d90 x6 register-pushes; FUN_100d12b0 x5 allocs; FUN_1037c710 x2
+0x1034acd0	curve_family_dispatcher	unknown	FUN_1034ead0 x9 dominant callee; FUN_1135d6f0 x4; TLS statics x3; siblings 1034a580/1034f460
+0x1049d630	engine_query_pair_build	unknown	FUN_112d98d0 x2 engine queries; FUN_10cffc30 x2; allocs d12b0 x2/fcc80 x4
+0x10306a90	config_strings_block_parse	core	18 string assigns FUN_100f1cc0 + 8 FUN_100f1bb0; FUN_1012dbd0 x7 field sets; FUN_100e1050 x4 lookups
+0x103360f0	edge_math_packet_build	unknown	FUN_11354a70/b90/49e0/b00/660a0 edge-math set; FUN_10298be0 x4 scans; FUN_11365250 bounds
+0x102be720	minmax_pair_alloc_scan	unknown	FUN_100fcc80 x6 allocs; min/max FUN_1136e120 x2; FUN_101a9110/102b7f60 pair evals
+0x102fafe0	interp_minmax_alloc_build	unknown	FUN_102f9a20/102f9d30 interp pair; min/max FUN_10404b30/103c0230; allocs fcc80 x6; GetAudioAssetPath ctx
+0x10473ba0	state_matrix_query_dense	unknown	FUN_102198e0 x15 queries; FUN_104408c0 x3 / 1025c170 x3; CONCAT-packed record build
+0x10479de0	anim_notify_inrange	anim	callee of 10474340 LOD notify; FUN_104dea10 x5 + FUN_10495410 x2; ROUND
+0x10476b80	anim_refresh_fanout	anim	fan-out FUN_1044b540/10441710/104df690 x3 each; gates FUN_1016f420/f7e0; FUN_1027ee00 x2
+0x103a39b0	mount_check_twin	battle	twin of 103abc50 mount gate: FUN_103c4f40/10372690 x2 checks; min/max FUN_1136e120 x2; FUN_1036d890 x2
+0x102cbec0	component_alloc_triple	battle	FUN_1028a4a0/1028c4f0 x3 component ops; FUN_101cb320/cb3f0/101e3070 gates; FUN_1068b180 register
+0x10318250	debug_marker_draw_animstate	render	draws marker FUN_10190580; anim-state reads FUN_103dba50/ec120/eb530/eb590; FUN_1168cad5 atan2 x2
+0x103781c0	order_dispatch_multi_d	battle	dispatcher: FUN_10344bf0 x4; pos x3; FUN_10355730/558a0 pairs; gates FUN_1014ac50/101a0b50
+0x1035cd90	unit_scan_gate_chain_b	battle	FUN_10298ee0 x4 scans; FUN_10365a00 x3; gates FUN_101b1280/101b9190; min/max FUN_1136e120; twin of 1035c010
+0x103a04a0	state_read_dense_dispatch	battle	FUN_10298be0 x39 state reads! dispatch to FUN_1032de90..e930 ladder (12 handlers); allocs fcc80 x4
+0x102a07d0	spawn_transformed_records_b	battle	world->local FUN_1034a0d0 x2; record fills FUN_10338c50/10338870/10338400/10337fb0; strings FUN_100f1700; bounds FUN_10389990
+0x103886c0	curve_eval_minmax	unknown	FUN_11385e00/FUN_1135db30 curve evals; gate FUN_1018b5c0; FUN_103aa3d0 apply; ROUND
+0x103229c0	helper_recursion_5x	unknown	FUN_10321f90 x5 helper recursion w/ ROUND; no imports
+0x102d3dd0	spline_segment_compose	unknown	FUN_102d2700 create + FUN_102f26e0 segment eval + FUN_102e8330 local->world; ROUND
+0x103970d0	centroid_heading_apply	battle	uses FUN_103aa9b0 (group centroid heading); FUN_1039dcc0 x2; FUN_10394aa0/103b1a70/103d82f0
+0x1038a6a0	pair_eval_small	unknown	FUN_101a2d50 + FUN_1038a450 pair evals; SUB41
+0x1038c3d0	tls_class_radius_scan_b	battle	FUN_1136b670 x5; TLS statics; class cmp via FUN_10177180; clamps FUN_10404b30/103c0230; FUN_11381720 x2
+0x102ef6a0	alloc_heavy_gate_scan	unknown	FUN_100fcc50 x12 / fcc80 x4; gates FUN_1018ecc0 x5; collect FUN_10304750 x3 / 102e5e20 x2
+0x104758c0	matrix_query_dense_anim	anim	FUN_102128c0 x7 matrix ops; FUN_104c2ca0/c00f0 x3; engine queries FUN_10c7de60/10c84070/10c8df60
+0x10301e70	alloc_ten_records	unknown	FUN_100fcc80 x10 allocs + fcc50 x5 frees — bulk record build
+0x102c8a30	bigstruct_build_round	unknown	large CONCAT-packed struct build; FUN_1135fac0; ROUND
+0x1047f980	tls_alloc_rand_query	anim	TLS statics + rand FUN_11683b10; FUN_102198e0 x4 queries; FUN_101a5c60 x2; allocs fcc80 x8
+0x1047ac10	anim_notify_inrange_b	anim	FUN_104dea10 x6 dominant notify; FUN_1136e8f0 x2; FUN_10442400; sibling of 10479de0
+0x10470490	matrix_pair_anim_calc	anim	FUN_102128c0 x2 + FUN_10417ef0 x2 pairs; rand thunk FUN_1169c79e
+0x1047c350	cs_guarded_anim_refresh	anim	EnterCriticalSection guarded; FUN_10490480/104b72b0 anim ops; FUN_104dd8d0/104df8c0; FUN_11354460
+0x10362350	scan_family_dispatcher_e	battle	FUN_1034f7f0 x4 scans; allocs fcc80 x8/fcc50 x4; shared family FUN_10336950/10353cc0/10357b80
+0x103609d0	scan_family_dispatcher_f	battle	twin of 10362350 w/ FUN_1034f970 x4; same family callees
+0x10329f30	hot_inner_loop_242x	battle	FUN_10340480 called 242x in loop — dense per-element processing; FUN_10339c30 setup
+0x104a84c0	engine_query_triple_scan	battle	FUN_10c82370/10c900b0/1030d460 x6 each triple query set; strings FUN_100f1700 x2; FUN_105cb390 x2
+0x10351740	sixway_scan_dispatcher	battle	6x pattern: FUN_1034cca0/10335510/10298be0 + FUN_1135d6f0; allocs fcc80 x8
+0x10347160	self_recursion_3x_round	unknown	self-recursion x3 + FUN_1033cae0 + FUN_113545d0; ROUND
+0x10341c30	unit_state_big_dispatch	battle	big dispatcher: FUN_10340270/1033fd90 x5 each; 4 TLS statics; min/max FUN_10404b30/103c0230
+0x10484260	anim_refresh_matrix_chain	anim	FUN_10446870 x3/104467d0 x2 refresh chain; FUN_102128c0 matrix; FUN_10672890/106aa370; ROUND
+0x1035d4c0	alloc_twelve_class_scan	battle	FUN_100fcc80 x12 allocs + fcc50 x6; FUN_101a2d50 x6 pair evals; 6 TLS statics; FUN_10177180 x4 gates
+0x10366060	mega_dispatch_overlap	battle	largest fan-out: FUN_105cd0d0/105cf880 overlap checks x3; FUN_10407790/11356230/11364920 queries; many sub-handlers
+0x1047d9c0	anim_pipeline_mega	anim	842L pipeline: FUN_102128c0 x5, FUN_10441450 x5, FUN_104467d0 x4, FUN_10498ea0 x4; recursive self-call

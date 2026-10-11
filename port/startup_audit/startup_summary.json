@@ -1,0 +1,67 @@
+{
+  "generator": {
+    "sha256": "b6f421b10cc95221a393530b16ca57a6959f8d28f4d0f13944169a0a3da7be67"
+  },
+  "inputs": {
+    "dll": {
+      "byte_count": 28278272,
+      "sha256": "d0d9805f41b69f2e5e9a54fbe07c327f18e311e76116e219512ad328bde43528"
+    },
+    "function_index": {
+      "byte_count": 8344450,
+      "sha256": "d6f066172d632800ec9c614afebfc8cf3bb88ca11ce243a47845071958a66de5"
+    }
+  },
+  "invocation_order": [
+    "initterm_e_int",
+    "initterm_void"
+  ],
+  "schema": "rome2-startup-audit-v1",
+  "startup_slots": {
+    "data_row_count": 9874,
+    "sha256": "453de546bbbd64e858aa80cd2ce09552904098e02cb0861689c24bd21e67ff6b"
+  },
+  "tables": [
+    {
+      "end_va": "11739450",
+      "exact_join_count": 1,
+      "first_raw_value": "00000000",
+      "id": "initterm_e_int",
+      "last_raw_value": "116bd4c4",
+      "nonzero_count": 7,
+      "null_count": 1,
+      "null_indices": [
+        0
+      ],
+      "signature": "int __cdecl(void)",
+      "slot_count": 8,
+      "start_va": "11739430",
+      "unique_nonzero_count": 7,
+      "unresolved_exact_count": 6
+    },
+    {
+      "end_va": "1173942c",
+      "exact_join_count": 1110,
+      "first_raw_value": "00000000",
+      "id": "initterm_void",
+      "last_raw_value": "100d1290",
+      "nonzero_count": 9865,
+      "null_count": 1,
+      "null_indices": [
+        0
+      ],
+      "signature": "void __cdecl(void)",
+      "slot_count": 9866,
+      "start_va": "1172fa04",
+      "unique_nonzero_count": 9865,
+      "unresolved_exact_count": 8755
+    }
+  ],
+  "totals": {
+    "exact_join_count": 1111,
+    "nonzero_count": 9872,
+    "null_count": 2,
+    "slot_count": 9874,
+    "unresolved_exact_count": 8761
+  }
+}

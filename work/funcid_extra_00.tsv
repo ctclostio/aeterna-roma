@@ -1,0 +1,47 @@
+10100110	facefx_fxstring_assign_u64_decimal	middleware-facefx	u64->decimal ASCII via magic-div 0xcccccccd loop into 64B stack buf; range-assign via FUN_100ef2c0; zero->"0"; facefx cluster (FxActorInstance export @10101a40)
+10100280	const_return_7	unknown	single 'return 7' thunk amid facefx string utils; likely version/type-id constant
+10100290	const_return_c	unknown	single 'return 0xc' thunk amid facefx string utils; likely size/type constant
+101002b0	facefx_fxstring_assign_u32_decimal	middleware-facefx	u32->decimal ASCII div-by-10 loop, 64B buf, FUN_100ef2c0 assign; zero case -> empty literal DAT_117410d4
+10100380	facefx_fxstring_assign_u32_radix	middleware-facefx	generic base convert: param/param_3 loop w/ digit lookup table param_4, 33-byte buf
+10100420	facefx_fxstring_assign_f32_fixed	middleware-facefx	_fcvt_s digits + manual decimal-point insert at dec pos, '-' sign, leading '0.' fix; narrow string out
+101004f0	facefx_archive_type_size_resolver	middleware-facefx	switch on type byte @+2 (1/9 vs 3/0xb) x flag combo (+0x13&0xf | +8*2) -> sizes 4 / 12 / 13
+10100620	facefx_fxwstring_assign_u32_decimal	middleware-facefx	u32->decimal into short/wide buffer, wide assign FUN_100ef330; zero -> L"" @DAT_11745200
+10100700	facefx_fxwstring_assign_u32_radix	middleware-facefx	wide variant of radix convert w/ wide digit table (stride-2 lookups)
+101007b0	facefx_fxwstring_assign_f32_fixed	middleware-facefx	fcvt_s fixed-decimal + optional trailing-zero trim, then SSE2 byte->wide unpack into FxWString
+101009a0	win32_destroycursor_wrapper	core	trivial wrapper around DestroyCursor(HCURSOR)
+101009b0	unknown_status_or_index_getter	unknown	thiscall: ret &this+0x28 unless *it==-1 or 5 -> NULL; purpose unclear
+10100b50	software_surface_get_pixel32	ui	reads BGRA pixel: buf@this+0x10, pitch dwords @this+4, off=(pitch*y+x)*4; copies 4 bytes out
+10100c30	hashtable_u32key_lookup	core	open-addressed {u32 key,u32 val} stride-8 probes from key%cap, sentinel @this[2], wraparound; ret val-slot or NULL
+10100cb0	hashtable_strkey_lookup	core	same probing on char* keys w/ inline strcmp + hash FUN_100f3040, 0x18-stride buckets; ret value slot
+10100e20	net_sockaddr_get_ip_port	net	copies ip u32 @+8 and ntohs(port u16 @+6) -> classic sockaddr_in accessor
+10100e40	win32_get_client_rect	ui	GetClientRect(this->hwnd@+4, out RECT)
+10100e50	cpu_detect_topology_vendor	core	cpuid vendor check GenuineIntel/AuthenticAMD; fills per-core 0x820-stride topology cache via FUN_101267b0; AMD/fallback uses GetProcessAffinityMask popcount
+101010d0	capture_cursor_image_bgra	ui	GetCursorInfo+GetIconInfo+GetObjectW+GetDIBits pipeline copying current cursor bitmap into allocated BGRA buffer w/ BITMAPINFO
+10101330	ui_get_cursor_pos_f32	ui	GetCursorPos -> out floats x/y
+10101a40	facefx_fxactorinstance_get_actor	middleware-facefx	named export OC3Ent::Face::FxActorInstance::GetActor - returns actor ptr @this+8
+10101360	ui_get_cursor_pos_hotspot_clamped	ui	GetCursorInfo+GetIconInfo hotspot adjust, ScreenToClient(hwnd@arg+4), clamp to client rect; 0 on failure
+101014f0	ui_get_client_size	ui	GetClientRect -> {0,0,w,h} quad
+10101530	core_cmdline_arg_atof	core	atof(wide arg[this+0xc][i]) bounds-checked vs count@this+0x10; empty L"" default
+10101560	net_gethostbyname_or_throw	net	gethostbyname(name); NULL -> construct exception obj FUN_100feef0 + CxxThrowException
+101015c0	win32_get_module_path_wide	core	GetModuleFileNameW -> wide string assign; frees prior buf via FUN_10124e50 + global dtor fnptr DAT_119f3eb0
+10101660	ui_get_monitor_workarea	ui	GetWindowRect(hwnd@this+4) -> MonitorFromRect(NEAREST) -> GetMonitorInfoW rcWork copied out
+101016c0	fs_get_user_documents_ca_path	fs	SHGetFolderPathW + PathAppendW "The Creative Assembly\\" + product dir (FUN_10122e30), SHCreateDirectoryExW; cmdline flag appends "_auto_tests"; ret wide path
+10101a20	core_cmdline_arg_get	core	wide arg[this+0xc][i] bounds vs count@this+0x10, default &DAT_1173dad0
+10101a50	win32_get_window_rect	ui	GetWindowRect(hwnd@this+4,out)
+10101a60	core_time32_now	core	_time32(NULL) - current wallclock read wrapper
+10101a70	core_wstr_setter_wrapper	unknown	FUN_10103ec0 stringify param_2 -> FUN_10101ad0(param_1,wstr) bool; frees temp wide buf
+10101e30	ui_dialogbox_messagebox_custom	ui	stack-built wide title/msg strings + FUN_100f6220 in-memory DLGTEMPLATE -> DialogBoxIndirectParamW(GetActiveWindow parent); custom MessageBox impl
+10101f10	stl_vector_uint_insert	core	std::vector<uint>::insert: doubling growth via FUN_100fcc80, memmove-style shift of tail from insert pos
+101021b0	win32_errcode_to_internal_map	core	maps Win32 last-error ids (0,2,3,5,6,8,13,14,22,32,38,87,123,183,995,996,997,998) -> small internal enum
+10102310	core_version_atleast_check	core	singleton FUN_10103220 {maj@+8,min@+0xc}: true if min>param_2 or (== and maj>=param_1)
+10102330	ui_is_window_focused	ui	GetActiveWindow?:GetForegroundWindow == hwnd@this+4
+10102350	core_os_version_tls_init_flag	core	TLS-guarded once-init of DAT_11af4229 from OS-version fields in FUN_10103220 singleton (+0x28/+0x2c)
+101023c0	ui_is_window_minimized	ui	IsIconic(hwnd@this+4)
+101023d0	ui_key_state_check	ui	toggle flags DAT_119344d3-d7 for vkeys 0/0x1c/0x29; foreground==cached hwnd -> keymap row &0x80
+10102450	ui_translate_wm_key_event	ui	WM_KEY(0x100/1/4/5): scancode+extended map (arrows/numpad/0x145 NUMLOCK...) -> internal key codes; ret {down,code}
+101016c0	fs_get_user_documents_ca_path	fs	SHGetFolderPathW + PathAppendW "The Creative Assembly\\" + product dir FUN_10122e30 + SHCreateDirectoryExW; cmdline flag appends "_auto_tests"
+10102760	ui_keyname_to_code_prefix	ui	scans key-name table PTR_s_ESCAPE_117409e0 (prefix match, NUL=DAT_11af4088) -> code @DAT_117409d8[i*3], default 0x90
+101027e0	ui_keyname_to_code_exact	ui	strcmp variant of key-name table lookup -> engine key code
+10102850	win32_terminate_process_self	core	GetCurrentProcess + TerminateProcess(self,0)
+10101980	win32_get_power_status	core	GetSystemPowerStatus -> {onAC, batteryState(1=low,2=high..), charging, BatteryLifeTime}
+10102160	core_dispatch_named_handler	core	singleton guard FUN_10115820 + u32 hashtable lookup (FUN_10100c30) -> indirect call of resolved handler w/ {PTR_LAB_11741e08,args}

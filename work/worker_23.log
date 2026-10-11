@@ -1,0 +1,26 @@
+**Mission complete — solo funcid run finished.**
+
+## Results: 450 functions classified, 0 unclassified
+
+| Output | Rows | Range |
+|---|---|---|
+| `work/funcid_solo2.tsv` | 150 (mine) | `0x10002070`–`0x1000ab40` |
+| `work/funcid_oxa.tsv` | 300 | `0x1000ac20`–`0x1002fa30`, `0x1002fd80`–`0x1003f310` |
+| `work/oxa_report.md` | — | full analyst report |
+
+## Headline discoveries
+
+1. **Logitech G-series LCD SDK (`lgLcd`) statically linked at .text start** — pinned by registry probe `CLSID {FE750200-B72E-11d9-829B-0050DA1A72D3}\ServerBinary` → `GetProcAddress("GetInterface")`, an exact match to `lgLcd.lib`. Around it sits a complete **delay-load discovery suite**: setupapi device enumeration, Windows service search, driver-store INF resolution, and a security-checked `LoadLibraryExW` that rejects paths outside Windows/Program Files.
+
+2. **NVAPI thunk family** — `nvapi.dll` loader + refcounted `QueryInterface(<magic>)` dispatch thunks with profiler hooks, including a special safe-load path for `nv*` modules on OS build ≥ 14308.
+
+3. **Engine static-initializer region mapped end-to-end**: ~85 `EnvironmentVariable.cpp` ctors (`gfx_*`, `sound_*`, `ui_*`…), ~40 console-command registrars, battle config colours, mount/fauna anim tables (camel → whale), vegetation proxy singletons, and — the big one — **the campaign scripting surface: 51 `CCQ_*` command constants + ~55 script event-arg type ctors**.
+
+4. **CRT string helpers** (`wcscpy_s` family HRESULT variants) and path utilities tagged for the `crt`/`fs` subsystems.
+
+## Coordination notes
+- All 25 shard workers own `batch1_addrs.txt` (5398 addrs) — I took only unclaimed addresses; zero overlap.
+- `funcid_solo2.tsv` is shared with another live analyst (their rows interleaved at the head); merge step should dedupe by address.
+- Remaining unnamed pool (~55k) saved to `work/ox_claim_all.txt`; next contiguous slice starts at `0x1003f310+`.
+
+SHARD COMPLETE 450

@@ -1,0 +1,21 @@
+All 40 rows intact, zero dups, zero missing. The concurrent writers are sibling solo agents on other slices sharing the append-log — merge/dedupe by addr will reconcile downstream.
+
+**SHARD COMPLETE 40** — `work/funcid_solo2.tsv`
+
+## Mission report
+
+**Slice:** `work/shard_solo_00.txt` (40 addrs: CRT/GPU cluster `0x100021e0–0x10004980` + `0x100d1660–0x100dfd30`). Every `.c` read in full; results appended incrementally per contract.
+
+### Key identifications
+| Cluster | Findings |
+|---|---|
+| **NVAPI + GPU detect** (`0x10002***–0x10004***`) | `nvapi_attach_detach_dispatch` / `nvapi_unref_and_shutdown` (QI ids `0xad298d3f`, `0x150e828`…), SetupAPI lazy-bind family (`SetupDiGetClassDevsW/EnumDeviceInterfaces/GetDeviceRegistryProperty` prop 4/9/0x11/0x12), SCM kernel-driver query (`OpenSCManagerW/QueryServiceConfigW`, `SERVICE_KERNEL_DRIVER`), CSIDL 0x24/0x26/0x2a path check, `SetupGetInfDriverStoreLocationW` |
+| **SEGA GaaS telemetry** (`0x100d5f80–0x100d6ac0`) | statically-linked **libcurl**: `curl_easy_setopt(0x2712)` → **`https://garry.sgaas.net/event`**, JSON POST (`Content-Type: application/json`), CAINFO `\cacert.pem`, session-close beacon ver `"1.22.01"`. This region is *not* FaceFX despite proximity to the export block |
+| **Engine lifecycle** | `0x100d81c0` open_handler with preserved JMC annotations — *"About to create controllers/views/UIs"*, *"After **Warscape** registration end"* (engine codename confirmed); progress callbacks 0.2→0.8; update/draw dispatch twins `0x100dd280`/`0x100ddcd0`; app bootstrap `0x100df270` (single-instance mutex `"Another instance of %s is running"`, SPI power-timeout kills, magic `0x4e3b`) |
+| **FaceFX internals** | twin `FxName` hashmap inserts (hash seed `0xf73a51c9`, XOR-fold UTF-16, ×2+1 rehash) |
+| **CRT/math utils** | `_ui64toa` 9-digit-group core (`0x100d1660`), signed vec3 angle in degrees (`×57.288353`), 5 `std::vector push_back` instantiations (0x14/0x2c/0x30/0x40/0x48 elems) |
+
+### Subsystem spread (my 40)
+core 17 · render 10 · net 5 · middleware-facefx 2 · crt 1 · ui 1 · unknown 2 (`0x100da620`, `0x100dcfe0` — tagged-record FX lifecycle, honestly flagged)
+
+**Suggested follow-ups for the dispatcher:** (1) normalize addr format (`0x` prefix) at merge time — lanes are mixed; (2) grep the codebase for `garry.sgaas.net` xrefs to name the whole telemetry module and its enable flag `DAT_119ef8d7`; (3) the JMC annotation strings in `0x100d81c0` are a naming goldmine for the gamestate-machine layer.

@@ -1,0 +1,22 @@
+Mission executed solo. Here's the report:
+
+## Funcid Analyst — Session Report
+
+**Situation on arrival:** the 25-worker dispatch had produced **zero output** (all `funcid_*.tsv` / `worker_*.log` empty). I built the evidence pipeline myself and classified functions directly.
+
+### Throughput
+- Built `work/remaining_digest.jsonl` (5,364 unclassified batch1 addresses) + reusable viewer `work/show_chunk.py` (resolves callees against named exports + all prior TSVs progressively)
+- **41 classification chunks → +3,833 new rows** in `work/funcid_solo.tsv` (deduped to 4,164)
+- **Total: 4,761 / 5,398 batch1 addresses now classified. Remaining queue saved: `work/remaining_after_solo1.txt` (678)** — resumable in one command next session
+- 35 addresses lack decomp exports → logged in `work/missing_decomp.txt` for a Ghidra re-export
+
+### Key identifications (leverage anchors)
+- **Allocator**: `10124e50`=free w/ debug hook+VirtualFree decommit, `100fcc80`=malloc, `10123e40`=VirtualAlloc-fail MessageBox guard, CPUID topology (`maxPackageDetected`)
+- **Engine families**: 50 texture pixel-format converters (incl. fp16 via mask 0x7C00), custom printf engine at 0x100ef–0x100f7, std::string trio with empty-sentinel `DAT_11af408e`
+- **Engine map**: battle-setup parse/serialize cluster, cinematic-editor tooling (camera txt parsers), naval ship assembly, campaign core (startpos.esf, victory missions, region connectivity graph, politics/trade routes, CAI BDI pools), mission-generator giants (twin 120–242 KB `CND_/VAR_/GEN_` parsers), FaceFX SDK internals, statically-linked **libcurl/OpenSSL/Lua VM**, MP lobby JSON, Twitch SDK (`TTV_*`)
+
+### Deliverables
+- `work/funcid_solo.tsv` — 4,164 unique rows (`addr → name → subsystem → evidence`)
+- `work/SOLO_SESSION_SUMMARY.md` — anchor table + full engine address-region map
+- `work/show_chunk.py`, `work/remaining_after_solo1.txt` — ready-to-resume queue
+- README progress tracker updated

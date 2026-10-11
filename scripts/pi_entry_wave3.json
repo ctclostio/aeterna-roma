@@ -1,0 +1,122 @@
+[
+  {
+    "id": "w01",
+    "role": "launcher_abi",
+    "focus": "Map the nine values pushed at the Rome2.exe call to entry_point to caller variables and callee argument positions. Explain the apparent eight-parameter callee versus nine pushed values without guessing a purpose for an unused value.",
+    "evidence": ["src_out/Rome2.exe/decomp/00402250_FUN_00402250.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "port/x64_bootstrap/empire_bootstrap.c"]
+  },
+  {
+    "id": "w02",
+    "role": "launcher_memory",
+    "focus": "Recover the launcher reservation-mode algorithm and conservatively identify the meanings and widths of entry arguments 4 through 7. Decide what is obsolete on x64 and what must be represented as guest32 state.",
+    "evidence": ["src_out/Rome2.exe/decomp/00402250_FUN_00402250.c", "port/x64_runtime/guest32.h", "docs/guest32_slice.md"]
+  },
+  {
+    "id": "w03",
+    "role": "launcher_return",
+    "focus": "Prove how the launcher consumes entry_point's return value, when it starts another process, and what the bootstrap return value currently means. Propose a falsifiable x64 host test for this contract without spawning a process.",
+    "evidence": ["src_out/Rome2.exe/decomp/00402250_FUN_00402250.c", "port/x64_bootstrap/empire_bootstrap.c", "port/x64_bootstrap/smoke_loader.c"]
+  },
+  {
+    "id": "w04",
+    "role": "launcher_signature",
+    "focus": "Audit calling convention, stack cleanup, WinMain-style inputs, and the extra pushed argument at the original call site. State only what can be proven and define the safest internal x64 adapter signature.",
+    "evidence": ["src_out/Rome2.exe/decomp/00402250_FUN_00402250.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "port/x64_bootstrap/bootstrap_contract.h"]
+  },
+  {
+    "id": "w05",
+    "role": "entry_control_flow",
+    "focus": "Recover the exact high-level phase order in entry_point, including early return, exception-handler branch, engine-dispatch call, state setters, COM cleanup, and final byte result. Mark every side-effect boundary.",
+    "evidence": ["src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "generated/canonical/0a7281990e144bc4ed54d432c4fd59aaa98b32c7bb9711e565bae2a304c2ff70/references.tsv"]
+  },
+  {
+    "id": "w06",
+    "role": "entry_arguments",
+    "focus": "Trace each original entry argument to every read, write, dereference, and downstream call. Identify which current bootstrap parameter names are proven, inferred, or misleading.",
+    "evidence": ["src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "port/x64_bootstrap/empire_bootstrap.c", "port/x64_bootstrap/smoke_loader.c"]
+  },
+  {
+    "id": "w07",
+    "role": "entry_com_boundary",
+    "focus": "Isolate the COM/Game Explorer preflight behavior and its early-return rule. Design a dependency seam and deterministic tests; do not propose calling real Game Explorer or modifying the machine.",
+    "evidence": ["src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "docs/x64_bootstrap.md"]
+  },
+  {
+    "id": "w08",
+    "role": "entry_exception_branch",
+    "focus": "Audit the exact comparison against -no_exception_handler and the two downstream branches. Determine which behavior is pure enough for the first executable startup checkpoint and which remains unsafe.",
+    "evidence": ["src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_11687a4a.c", "docs/x64_bootstrap.md"]
+  },
+  {
+    "id": "w09",
+    "role": "candidate_100d6900",
+    "focus": "Adjudicate decomp_fn_100d6900 as a first native startup helper using canonical source and pinned bytes B0 01 C3. Specify exact C semantics, return width, linkage boundary, and negative tests.",
+    "evidence": ["src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100d6900.c", "src_canonical_out/empire.retail.dll/canonical_function_index.tsv"]
+  },
+  {
+    "id": "w10",
+    "role": "candidate_101136d0",
+    "focus": "Adjudicate the one-byte startup flag setter at 0x101136d0, pinned bytes 8A442404 A28E3D9F11 C3. Design explicit state ownership and tests without introducing a process-global legacy address.",
+    "evidence": ["src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_101136d0.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c"]
+  },
+  {
+    "id": "w11",
+    "role": "candidate_101150f0",
+    "focus": "Adjudicate the four-byte callback-cell setter at 0x101150f0, pinned bytes 8B442404 A35C3F9F11 C3. Decide whether the port should store a guest address, a typed host callback, or neither at this milestone, and justify with ABI evidence.",
+    "evidence": ["src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_101150f0.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100d6560.c", "port/x64_runtime/guest32.h"]
+  },
+  {
+    "id": "w12",
+    "role": "candidate_100d6560",
+    "focus": "Audit the one-byte RET body at 0x100d6560 and its many export aliases. Explain why its recovered use as a callback does or does not permit a native typed no-op implementation without claiming the legacy C++ export ABIs.",
+    "evidence": ["src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100d6560.c", "port/x64_exports/export_manifest.tsv", "docs/x64_export_contract.md"]
+  },
+  {
+    "id": "w13",
+    "role": "startup_state",
+    "focus": "Derive the smallest explicit startup-state capsule needed for offsets 0x38, 0x58, 0x5c, 0x60, and 0x64 used by entry_point. Preserve original cell widths and reject any unproven surrounding object layout.",
+    "evidence": ["src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100e8240.c", "port/x64_runtime/guest32.h"]
+  },
+  {
+    "id": "w14",
+    "role": "reservation_handoff",
+    "focus": "Audit the entry_point VirtualFree path through the argument-5 cell. Define a safe x64 representation and explain whether freeing launcher-created reservations belongs in the first checkpoint.",
+    "evidence": ["src_out/Rome2.exe/decomp/00402250_FUN_00402250.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "port/x64_runtime/guest32.h"]
+  },
+  {
+    "id": "w15",
+    "role": "command_line",
+    "focus": "Specify the exact observed command-line comparison semantics, including null handling uncertainty and full-string versus token behavior. Propose a pure port helper and table-driven tests that do not over-generalize it.",
+    "evidence": ["src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "port/x64_bootstrap/empire_bootstrap.c"]
+  },
+  {
+    "id": "w16",
+    "role": "checkpoint_design",
+    "focus": "Compare two bounded checkpoints: a diagnostic DLL export for the already-proven 0x1093c450 to 0x100e81a0 guest32 chain, and a static pure selector for the 0x100edecc to 0x100edf05 exception-handler branch. Select or order them using execution value, semantic progress, ABI risk, and testability.",
+    "evidence": ["docs/x64_bootstrap.md", "docs/guest32_slice.md", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c"]
+  },
+  {
+    "id": "w17",
+    "role": "observability_contract",
+    "focus": "Propose a versioned diagnostic ABI for reporting startup checkpoint phases and results without polluting the eventual 1-522 legacy export contract. Include compatibility and removal strategy.",
+    "evidence": ["port/x64_bootstrap/bootstrap_contract.h", "port/x64_bootstrap/empire_bootstrap.def", "port/x64_bootstrap/smoke_loader.c", "docs/x64_export_contract.md"]
+  },
+  {
+    "id": "w18",
+    "role": "adversarial_entry",
+    "focus": "Falsify the proposal to call or mechanically compile the full original entry_point now. Enumerate concrete corruption/crash modes from pointer width, CRT, SEH, globals, dependencies, and launcher reservations, each tied to evidence.",
+    "evidence": ["src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "docs/compile_island.md", "docs/startup_audit_spec.md", "docs/x64_bootstrap.md"]
+  },
+  {
+    "id": "w19",
+    "role": "acceptance_oracle",
+    "focus": "Design independent acceptance oracles for both candidate checkpoints: original-byte provenance, canonical hashes, pure behavioral tests, x64 binary checks, export containment, and negative cases. Identify what candidate-owned tests must not be trusted as the oracle.",
+    "evidence": ["scripts/test_guest32_provenance.py", "port/x64_runtime/test_guest32.c", "CMakeLists.txt", "docs/pi_swarm_evaluation.md"]
+  },
+  {
+    "id": "w20",
+    "role": "milestone_selector",
+    "focus": "Rank the candidate next steps using a decision matrix: diagnostic DLL bridge for the proven guest32 chain, pure entry preflight selector, launcher contract lock, 100d6900, 101136d0, 101150f0/100d6560, COM preflight, full entry_point, or full exports. Select an ordering and list hard rejection gates.",
+    "evidence": ["docs/x64_bootstrap.md", "docs/guest32_slice.md", "docs/pi_swarm_evaluation.md", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c"]
+  }
+]

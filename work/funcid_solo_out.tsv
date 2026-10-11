@@ -1,0 +1,966 @@
+0x104a5ad0	anim_pose_frame_slerp_lerp	anim	sampler callee of 104467d0: per 0x28-stride pose entry quat-dot |d|<=0.993 -> fsin shortest-arc slerp w/ 12-bit t, lerps pos fields +0x24/+0x2c into dst
+0x103288e0	ctor_init_21_identity_mat4_bank	unknown	__thiscall ctor: copies 2 vec3 globals (DAT_11bd193c..,119382d8..), writes 21 consecutive 4x4 identity mats (0x3f800000 diagonals) + 2 u16s
+0x10489090	anim_sample_time_dispatch_channels	anim	flags @p1+0x6c1/2/4 guard; vtbl+0x30 float time -> sampler 104467d0 into 5 stack channel blocks; push_back non-empty ones (100eaf40); slot dispatch vtbl+0x1c stride 0x18; refcount release 102df760
+0x102f1f90	march_step_into_rotated_rect	unknown	steps pos += dir*2.0 up to 500x from *this+0x68 rect (+0x80..0x8c), angle-table cos/sin by u16 @this+0xb, 4-corner rotated-rect containment, then +5 overshoot
+0x10245c20	ctor_serializable_entity_4lists	unknown	base ctors 101cb130/320; vtable PTR_Serialize_1175ec08; copies param_4 vec4+u16+str; 3 empty-functor slots (PTR_FUN_1173dbc8); builds+frees 4 intrusive lists via 100eb460
+0x104369f0	dtor_18_slot_mgr_release_all	unknown	inits 18 slots (stride 6dw) to PTR_LAB_11779bxx thunks; virtual-deletes vector elems stride 8 (+0x128); per-elem frees (100f1c80 x2 loops); resets 18 sub-objs via 1014d710
+0x10303960	xform_vec_by_quat_chain	anim	Hamilton-product accumulates quats over list this+0x4ec (elem floats +0x5c..0x68), builds 3x3 from quat (102ea9a0), rotates param_2 vec by chain then param_3
+0x10272df0	query_best_pick_draw_dir_arrows	battle	FUN_105c87c0(this+0x58,4,0,1)=max-score pick; extends seg (this+0x7c vecs)*-100, tests endpoints vs <=20 OBBs (**(this+100)+0x30 axes +0x1ec..); draws markers 10688d50/10689330 w/ ROUND(ang*10430.38)=65536/2pi binang
+0x1015b610	battle_hud_group_rows_build	ui	loops FUN_1015de60 x17 then script-thunk rows labeled "UNITS"/"SHIPS"/"REINFORCEMENTS" via 10c99b00; battle HUD list builder
+0x102f7d70	debug_print_height_width	unknown	formats "Height : %f"+"Width : %f" via string ops (100f1c80 free / 100f1800 append); debug dump of 2D extents
+0x101d0cb0	event_manager_clear_all_callbacks	core	clears ~30 sub-objects (1014d710 x30), frees arrays; literal tag "ClearEventCallbacks" marks the teardown path
+0x10317d70	camera_debug_log_height_pitch	render	composes "TW Cam: height(...)...pitch(" log w/ GetNameEntry lookups; camera pose debug printer
+0x10145880	env_wind_level_apply	unknown	GetNameEntry lookup of preset "wind_level_2" + param stores; environment wind setting applier
+0x10278c00	naval_flag_default_assets_load	render	defaults "UI/3DUI/models/default/naval_faction_flag.rigid_model_v2" + matching diffuse.png; naval flag model/texture loader
+0x102f3ef0	ai_task_history_dump	battle	prints "Task History : ----" banner + per-task lines via 10190580; AI agent task log dump
+0x101839e0	battle_victory_points_debug_print	battle	"Alliance 0/1 -> points", "#Contested", "#Timer seconds" printf block; battle score state dump
+0x10224850	spawn_named_artwork_element	ui	allocs 0x34 obj (vtbl 1175614c, scale 2.35f), sets name "la_gioconda", loads via vtbl+0x314(list,10,0,0); named artwork placer
+0x101ce050	replay_raw_capture	battle	tag "REPLAY_RAW" + GetActor; captures raw actor data for replay stream (10c9c2a0/10c98940 family)
+0x10213560	cinematic_editor_register	script	creates objs (fcc80/fcc80 allocs) tagged "cinematic_editor"; GetActor+name entry wiring; editor component registration
+0x10139640	battle_hud_panel_names_setup	ui	registers HUD panel ids "ARMY_LIST"/"VICTORY_CONDITIONS" via 1013a080; battle UI panel table init
+0x103d0fe0	camera_mode_toggle_handlers_register	render	handlers "toggle_first_person_mode"+"context_camera" dispatched to 103d0430; camera mode command binding
+0x1017e810	vegetation_shrub_prefix_lookup	render	GetNameEntry compare against prefix "shrub_" over entries; vegetation type classifier/placer
+0x10278fc0	naval_flag_group_assets_load	render	formats "naval_flag_group_%c_0%c_mask.dds" + "naval_flag_group_%c.rigid_model_v2" defaults; per-letter flag group model/mask loader
+0x10137180	battle_hud_armies_panel_build	ui	builds "ARMIES" panel rows (FUN_1015ac70 x19); battle HUD army list construction
+0x1023c7a0	siege_threat_vector_nodes_dump	battle	names nodes "Entry Node"/"Wall"/"Gate", prints "threat_vector_%d"; siege approach threat vector logger
+0x1023d500	garrison_coord_pairs_print	battle	prints "[%d, %d]" pairs via 10190580; garrison/waypoint coordinate list dump
+0x1023cc30	siege_entry_cluster_stats_print	battle	prints "threat_cluster_%d" + "T_n=%.2f,%.2f,B=%s" over "Entry Node" items; siege entry-cluster stat dump
+0x103127e0	battle_advisor_component_create	battle	creates obj tagged "battle_advisor" (100f1bb0/1cc0 string pair ctor); advisor subsystem instantiation
+0x1020a5d0	editor_camera_settings_register	ui	options "Perspective mode","View Extends Selected","Toggle Transform mode","Camera move/turn speed","Selection box size"; level-editor camera settings
+0x101e8c70	ai_outflank_tactic_status_print	battle	"Alliance %u::AI_TACTIC_OUTFLANK::ACTIVE", states Approaching/Outflanking w/ Units( count; flanking-manoeuvre status logger
+0x10306100	effect_script_param_parser	script	parses tokens ("expecting max amplitude"), atof via FID_conflict__atof; error "%s"+TerminateProcess on fatal; effect param script interpreter
+0x1016e960	battle_victory_condition_lookup	battle	resolves enum->string "BATTLE_SETUP_VICTORY_CONDITION_KILL_OR_ROUT_ENEMY" via 100f28a0; victory condition name mapper
+0x10123e40	mem_virtualalloc_reserve_pages	core(memory/string)	VirtualAlloc x4 w/ MessageBoxA "VirtualAlloc (at place 1/2) returned NULL!"+"Oops!"; large page allocator reserve
+0x102ebc70	fauna_deer_spawner	battle	spawns fauna type "fauna_deer" (or "empty") via 112d98d0 factory; ambient animal placement
+0x102ee8b0	fauna_wolf_spawner	battle	same factory as 102ebc70 with "fauna_wolf"; ambient wolf placement
+0x102eb3c0	fauna_boar_spawner	battle	factory call w/ "rome_animal_boar"; ambient boar placement
+0x102eb700	mount_camel_spawner	battle	factory call w/ "rome_mount_camel"; camel mount placement
+0x102a3790	attrib_edit_value_parser	script	token parser ("expecting","value",atof) same family as 10306100; attribute-edit console/command value reader
+0x10139ac0	battle_setup_def_parser	battle	parses keys reinforcement_army/starting_tickets/victory_condition/rout_position/approach_angle/army via 100f1bb0/1cc0 pairs; battle definition reader
+0x102b80d0	siege_ramp_model_state_name	battle	GetNameEntry builds "<x>_ramp_open"/"<x>_ramp_closed" variants; siege ramp open/closed model name resolver
+0x101e95a0	ai_stop_and_shoot_status_print	battle	"Alliance %u::AI_TACTIC_STOP_AND_SHOOT::ACTIVE::FSM=%s::Units(" + EFFICIENCY Current/Previous/Gradient; tactic FSM status logger
+0x10216d40	cinematic_camera_params_register	render	keys focal_length/exposure/"low tones bias"/global/cinematic into param objs (112efb00 family); cinematic camera DOF/exposure setup
+0x102f5430	dist_vel_debug_line_print	unknown	formats "[%d]m(%.1f)v(%.1f/%.1f)" via 100d1870; distance+velocity debug text builder
+0x102d2a10	effect_script_parse_shake_limits	script	parser "expecting { max_horizontal/max_vertical/max_roll/max_pitch" w/ GetNameEntry; calls 10306100; camera-shake effect script section
+0x10305b40	effect_script_parse_amplitude_freq	script	parser "expecting amplitude/frequency" atof x2; effect oscillator parameter parser
+0x102a3c80	effect_script_parse_distance_fade	script	parser "distance_fade ... min/max distance" atof x2; LOD/distance-fade effect param parser
+0x101d7cc0	std_unordered_map_rehash_throw	crt	throws "invalid hash bucket count" (116835d7 throw helper); MSVC std hash container rehash guard
+0x101207a0	std_hash_bucket_count_guard	core(memory/string)	same "invalid hash bucket count" guard w/ 10120720 helper; std hash map sizing validation
+0x101559a0	ai_build_test_output_writer	battle	writes "output_test_ai_build.txt" (guard_check_icall thunks); AI army-build test results dump
+0x102a23e0	effect_script_parse_boolean	script	parser token "boolean"/"false" comparisons; effect script bool value reader
+0x10203df0	cinematic_editor_event_send	ui	sends msg ("cinematic_editor",0xc1ed) via 10f43090 when *(this+0x68)->+0x1c==0; editor visibility event
+0x102a4fc0	effect_script_parse_xyz_ordinate	script	parser "expecting x/y/z ordinate" atof x3; vector-valued effect param reader
+0x10253180	ship_mast_attachment_locate	anim	computes triangle centroids (*0.33333334) then finds wide name L"mast" via 100ffa60 find; locates mast attach point on ship model
+0x103d4ad0	user_spec_xml_path_loader	ui	builds "<entry>/user_spec.xml" and loads via 103d2660 twice (base+override); per-entry user spec xml reader
+0x102a30e0	effect_script_parse_mouse_buttons	script	parser tokens button/middle/alt_middle; input-binding effect section reader
+0x102a2a30	effect_script_parse_behaviour	script	parser tokens behaviour/movement/rotation/rotation2; movement-behaviour effect section reader
+0x1023bb80	influence_map_nodes_edges_dump	battle	prints "im_node_%d"/"im_edge_%d" ids (ROUND coords); influence-map graph debug dump
+0x1016b5e0	named_spawn_or_empty_helper	battle	112d98d0/112d9960 factory w/ literal "empty" fallback; shared named-entity spawn helper
+0x1049d060	size_quality_enum_names_lookup	unknown	resolves enum strings "large"/"light" after allocs; quality/size preset name lookup
+0x102a55d0	camera_effect_parse_fov_shake	script	parser expecting fov/transition time/shake scale/control scale (atof x4); camera fx parameter reader
+0x1016d3c0	twelve_slot_empty_spawn_table	battle	12x factory 112d98d0 calls each defaulting name "empty"; slot table of spawnable entries
+0x102151a0	cinematic_editor_msgs_send	ui	sends cinematic_editor msgs via 10f43090 x4 w/ ROUND params; editor event emitter
+0x102ec810	mount_elephant_spawner	battle	factory 10344e00 w/ "rome_mount_elephant"; elephant mount placement
+0x102a4900	effect_script_parse_noise_octaves	script	parser frequency/amplitude/octaves/"octave amplitude multiplier" (atof+atoi); fractal-noise effect params
+0x102a4240	effect_script_parse_adsr_envelope	script	parser envelope attack/decay/sustain/release_ periods (atof x5); ADSR envelope effect reader
+0x1039b830	waterfall_prop_setup	unknown	name lookup "waterfall" + string-pair ctor 100f1cc0; waterfall prop/effect registration
+0x1042e6b0	anim_speed_config_parser	anim	parses infantry_walking/running/charging/melee + cavalry_walking speeds (atof) into 104bcbb0 table x15; unit locomotion speed config
+0x102717f0	shrub_scatter_placement	render	"shrub" name + ROUND x4 scatter coords; vegetation instance placement
+0x10250790	variant_mesh_def_path_build	render	builds "VariantMeshes/VariantMeshDefinitions/<x>.VariantMeshDefinition", fmt "%S_dm%d"; variant-mesh definition loader
+0x102482a0	camera_spec_parser_sensitivity	script	parser { rotation_sensitivity/rotation_mouse_button/movement_mouse_button/use_transition_target_facing; delegates to 102a3790
+0x1032b5d0	nine_slot_empty_entry_table	unknown	9x 1033ff60 ctor w/ "empty" defaults + 10cffc30 fills; second spawn/entry slot table family
+0x1041cf80	cinematic_variant_name_builder	render	appends "_cinematic" suffix, 9x 1033ff60 ctors (1041cc80 base); cinematic duplicate entry builder
+0x1028af50	battle_special_ability_def_parser	battle	parses special_ability keys active_time/recharge_time/initial_recharge_time/wind_up_time/num_uses; ability definition reader
+0x101cd350	battle_script_interface_register	script	registers "Battle Script Interface" (112a94a0); exposes engine to battle scripting
+0x102d5b30	battle_debug_height_grid_views	battle	serializable views "height_grid"/"water_height_grid" under Views/Battle Debug/Water Heights+Grid Heights; terrain/water debug grid view
+0x10246c40	camera_state_spec_parser	script	parser { transition_time/offset/state_fade_time/max_height via 102a3790 x12; camera state section reader
+0x101f9770	editor_camera_ui_options_build	ui	builds options Perspective mode/Free camera movement/"Display UI elements"/move+turn speed (112efb00 x21); level-editor camera+UI settings
+0x102796a0	naval_unit_def_parser	battle	keys marines/leftside_disembark_template/boarding_templates/engine_placement_template; ship crew+boarding definition reader
+0x10423490	unit_info_image_path_resolver	render	resolves "<name>_image.tga" w/ "default_image.tga"+"default" fallbacks; unit-card image path lookup
+0x10138150	battle_hud_armies_full_panel	ui	21x row builder 1015ac70 w/ headings UNITS/SHIPS/REINFORCEMENTS; full battle armies HUD panel build
+0x102deef0	debug_cylinder_ring_place	render	spawns rigidmodels/debuggeometry/cylinder.rigid_model_v2 arranged w/ fcos/fsin ring transform; debug marker ring
+0x10426460	flag_component_setup	render	name "flag" + string-pair ctor + 104548c0 hub; flag entity/component wiring
+0x102adb20	ship_flags_variant_mesh_path	render	builds "VariantMeshes/_VariantModels/ships/<f>/flags.rigid_model_v2"; naval flag model path builder
+0x10248ab0	arena_camera_spec_parser	script	parser states middle/high + "unrecognised arena camera state" errors; spectator arena camera config
+0x10140780	deployment_area_points_register	battle	script list "DEPLOYMENT_AREA_POINTS" via 10cb60c0; deployment zone point registration
+0x1043fe90	hardcoded_roster_names_table	unknown	push_back x46 table of names: Zenobia/Cenobia chariots, 3c_Rom_/3c_Gal legionaries; timeGetTime stamps; hardcoded special-unit roster
+0x102fc520	frontend_battle_menu_actions	ui	menu action ids "battle|%S|view_replay"/"frontend"/"next_battle" + localized (Korean) strings; frontend battle screen actions
+0x10220db0	ai_stance_objects_debug_dump	battle	prints Building/[DEFENDABLE]/"Offensive Line"/"Defensive Point"/[DEFENSIVE LINE]/[!!UNSUPPORTED TYPE!!]; AI stance object dump
+0x1015cea0	battle_setup_lists_export_alliances	battle	exports script lists ALLIANCES/PLACED_DEPLOYABLE_LIST/SIEGE_SPECIFIC_INFO (10cb6120 thunks); alliance/siege setup writer
+0x10135aa0	group_formations_bin_loader	battle	loads GroupFormations.bin w/ spinlock init + PeekMessageW pump (100d12b0 x29); formation group database reader
+0x10101ad0	mp_wait_remote_decision_dialog	net	dialog "CALibs - Waiting for remote decision..." (CreateDialogIndirectParamW+semaphore+WaitForSingleObject); multiplayer sync wait UI
+0x10252c80	ship_bowsprit_attachment_locate	anim	same centroid+find pattern as 10253180 w/ L"bowsprit"; locates bowsprit attach point on ship model
+0x10433340	variant_mesh_def_table_officers	render	variant mesh def paths incl e3_elephant_test/e3_horse_test + entries officer/standard_bearer; mounted/officer mesh table
+0x1015bf40	battle_setup_lists_export_units	battle	exports UNIT_LIST/SHIP_LIST/BUILDING_MOUNTABLE_ARTILLERY_LIST/AVAILABLE_ASSAULT_EQUIPMENT_LIST/REINFORCEMENT_LIST; main setup exporter
+0x10247520	unit_anim_state_spec_parser	anim	parses states idle/walking/running/fighting/on_board_ship (delegates 102a4900); locomotion state spec reader
+0x1040e490	hull_material_variant_a	render	resolves Hull_copper/Hull_iron/Hull_wood material set A; ship hull variant lookup
+0x1040ec60	hull_material_variant_b	render	twin of 1040e490 (Hull_copper/iron/wood); second hull material lookup
+0x1049dee0	size_quality_enum_lookup2	unknown	"large"/"light" enum name resolution twin of 1049d060; quality preset names
+0x10369860	ship_sea_bed_grounding_check	battle	warns "%S(%S) is too close to the sea bed and will ground at the start of t.."; fcos/fsin ship placement validation
+0x1027b330	pipe_climb_action_lookup	anim	GetNameEntry lookups around literal "pipe_climb"; climbing animation/action resolver
+0x102d3050	projectile_effect_spec_parser	script	parses effect kinds test/land_cannon/naval_cannon/rocket_launch/projectile_explosion; projectile FX spec reader
+0x101feef0	cinematic_editor_events_multi	ui	cinematic_editor msg emitter (10f43090/10f43700 x5 each); editor event batch sender
+0x1041e890	cinematic_entry_xform_builder	render	builds "<name>_cinematic" entries w/ fpatan/ROUND orientation math; cinematic clone transform setup
+0x10296c50	battle_action_camera_txt_parser	render	parses cameras/battle_action_camera.txt (version checks, atof); action camera config loader
+0x10142200	battle_setup_lists_export_b	battle	second writer (1015b180 x24) for ALLIANCES/PLACED_DEPLOYABLE_LIST/SIEGE_SPECIFIC_INFO; setup list exporter B
+0x102ffc50	battle_cameras_txt_parser	render	parses cameras/battle_cameras.txt incl camera_shake_control section; battle camera config loader
+0x10297be0	battle_arena_camera_txt_parser	render	parses cameras/battle_arena_camera.txt (version checks); arena camera config loader
+0x102d6160	battle_debug_views_register	battle	registers Battle Debug serialize views: Soft Collision Object Display (+Very Large), Projectile Display, Area Affect Display, Field Wall Display
+0x102778b0	battle_unit_def_parser	battle	parses unit keys unit_type/custom_name/main_type/num_soldiers/width/general (100f1bb0/1cc0 x56/43); per-unit battle definition reader
+0x1042d990	vegetation_tree_display_place_all	render	"Tree Display - place all; (variations: %u)(total: %u)" + 1016f190 scatter helpers; bulk vegetation placement command
+0x10496860	rom_macedon_army_setup	unknown	name "rom_macedon" w/ 10387420 x22 + 101aee30 x15 lookups; hardcoded rom/Macedon force setup
+0x104957f0	campaign_region_key_table	campaign	keys inv_rome/emp_palmyra_dura/pro_latium_latium/emp_latium_roma via 10491040 x12; region/province key table builder
+0x101478b0	input_unused_key_scan	ui	spinlock-protected scan marking "unused_key" (10d1a3a0 lookups); input binding audit/init
+0x100feef0	socket_error_report_wrap	net	wraps socket calls w/ "Socket gethostbyname/connect/bind/listen/send/recv failure:" + WSAGetLastError; BSD socket client/server helper
+0x104152a0	historical_invasion_veg_views	render	keys etruscan/pun_samnites/pro_samnites/"main_invasion" + Serialize view Vegetation Display/Enabled; historical-battle env setup
+0x10257360	siege_equipment_ramp_states	battle	GetNameEntry variants lever/wheel/_ramp_open/_ramp_closed; siege equipment interactive part states
+0x1024f660	battle_special_abilities_export	battle	exports abilities list ("Unknown special ability" fallback) via 10cb60c0 x30; battle ability data writer
+0x10254a30	battle_special_abilities_export_b	battle	twin of 1024f660 (+GetNameEntry) same 30-call export family; second ability exporter
+0x10141630	fauna_spawn_conditions_parser	battle	parses min_entities/max_entities/spawn_probability/spawn_conditions/climate; ambient fauna spawner config
+0x10143b10	battle_metadata_def_parser	battle	parses placement/name/centre_x/centre_y/battle_description/time_of_day (100f1cc0 x92); battle scene metadata reader
+0x1041b8b0	ship_marker_shapes_setup	render	serializes ship_mouse_over/selected marker ellipse+capsule shapes + "rome_man"; naval selection marker defs
+0x102d6f50	mp_sync_log_writer	net	writes SYNC LOG FOR TICK %d / sync_log%d.txt + output_test_ai_build.txt, spinlocks+QPC; desync logging for MP battle sim
+0x102da720	field_walls_component_build	battle	builds field_walls entries (103c0230); deployable wall section construction
+0x1017a960	empty_slot_array_factory28	unknown	28x 100fcc80 allocs w/ "empty" defaults + 103cf910 x11; large slot-table initializer
+0x10250f50	ship_mast_main_attach_build	anim	names mast/main attachments via 100ffa60 finds; ship rigging attach point setup
+0x10319a00	fort_wall_zones_dump	battle	prints zone(%s)/"Fort Wall %u" segments via 10190580; fortification wall debug dump
+0x102dc500	building_debug_views_register	battle	registers 24 serialize views: DisplayStatic/DynamicPlatforms, BuildingLogic/OBB2/LiteLogic, AI Breachable; building debug view set
+0x1013a620	battle_setup_lists_export_full	battle	full UNIT_LIST/SHIP_LIST/artillery/deployables/reinforcements writer (10cb60c0 x20, 1015aad0 x15)
+0x104192b0	mount_foot_anim_state_tables	anim	creates entries man_walking/man_running/man_wading/man_impact/mount_walking/mount_running (112d98d0 x35); soldier+mount locomotion anim tables
+0x10427a60	cinematic_shot_spec_parser	script	parses cinematic shot keys shot_type/battle_type/facing/vector_offset_origin/keyframe_sequence (GetNameEntry x88); cutscene shot definition reader
+0x1026b2d0	artillery_cheiroballistra_build	battle	constructs att_rom_cheiroballistra artillery piece (34 allocs, 10270000 parts); ballista siege engine assembly
+0x10207f90	cinematic_editor_camera_events	ui	sends cinematic_editor+Camera msgs (10f43090 x7) after parse; editor camera event dispatch
+0x1013d5a0	battle_deployment_def_parser	campaign	parses orientation/radians/position/faction/unit/camera_start_position (100f1cc0 x90); battle deployment+camera setup reader
+0x102583b0	battle_visibility_debug_views	render	registers Battle Visibility serialize views (Debug GPU buildings/Timing/Visualise/Invisible); visibility system debug options
+0x10430350	battle_ui_arrow_fire_arc_assets	ui	loads UI/3DUI defaults + spline_move_arrow_land_body/head(_fast), unit_fire_arc_min_id_, spline_fire_arc; movement/fire-arc indicator assets
+0x10423d00	naval_variant_rigging_assets	render	loads RigidModels/naval/Variant/*.rigid_model_v2, rigging knots, lantern verlet items, ship_firing_arc_indicator + _bounds; naval model asset table
+0x102ae540	siege_equipment_asset_resolver	render	resolves RigidModels/Buildings/* w/ variants _ramp_open/_closed/_weighted_anim/_left_wheel_looped + .meta (GetNameEntry x74); siege equipment model variant resolver
+0x10169940	rect_rotated_corners_build	core	builds 4 rotated rect corners from {cx,cy,hw,hh}+angle (normalized edge, fpatan), optional second rect if param_3; uses rot helpers 1016aef0/1016ac60
+0x1030b1d0	plane_dist_of_mtx_transformed_pts	core	transforms vec4s by global mats 11937a78..b4, dots against 16-float this-matrix columns -> scalar; plane/projector distance eval
+0x10138c30	versioned_script_entity_ctor	script	big ctor: 2 strings, FUN_10c98d70 script link, ~15 member ctors (1015ac70/b180 family), version-gated fields (v>8/9/10/12)
+0x102f45f0	fx_sprite_emitter_tick	render	per-entry: vtbl+0x30 now, age*rate clamped 12-bit -> frame sampler 102cf440 (0x20-stride), vtbl+0x8c submit w/ world mtx scaled by entry+0xc
+0x103c30f0	icon_slot_descriptor_table_init	ui	inits ~0x27 slots via 103c2b90(idx, ptrA/B, ptrC/D/E, flags, 0x88,0x88) + 103c2d30 tail; fixed icon/descriptor slot table
+0x102683b0	six_band_noise_offset_add	unknown	picks entry from this+0x10[idx], distance-band weight (+0x78/+0x7c), adds FUN_11365340 noise x{10,20,30,40,50,60} onto out[0..5]
+0x1030bcb0	effect_instance_type_factory	unknown	switch this+0x8d0 -> alloc 0x1e8/0x1d8/0x1dc/0x1f8 + ctor w/ shared sim args (this+0x144/0x2dc/0x394); typed effect instance dispatcher
+0x10228810	mat4_mul_vtbl_pair	core	multiplies 4x4 matrices fetched via vtbl+0xec and vtbl+0xf0 into caller buf; transform composition helper
+0x10309980	grid_rect_cells_clear_world_map	unknown	clears u16 cells in grid (mask this+2, scale this+9) over param_1 rect, maps rect corners to world via *(this+0xe)+0xb8 grid
+0x102013b0	camera_zoom_move_height_clamp	render	zoom step DAT_11b03e40/this+0x75*DAT_11b03cb0*delta clamped by vtbl+0x194/0x198 range getters, or dir-normalized approach move; camera dolly helper
+0x103f9920	anim_quat_keyframe_sample_s16	anim	12-bit t sample (&0xfff*1/4096) between 0x10-stride s16 keyframes at this+0x444, quat xyz normalize w/ time base *(this+4)+0x643a8
+0x103aa9b0	formation_face_centroid_binang	battle	sums vec2 positions (stride 16B), centroid dir -> fpatan -> ROUND*10430.38 binang, adds target+0x3a facing offset; formation orientation toward centroid
+0x10266330	type_scaled_param_table_build	unknown	switch(*(p3+0x14)+4) types 2/0xb->0.8, 3->2.0 etc; fills ~40-float stack table per type id; per-type scalar param expansion
+0x102700e0	ai_best_target_score_avg	battle	walks unit list this+100/0x60, picks max +0x50 scorer via FUN_10d9a060 pool, name+range filters (10174680/10172ea0), averages +0xa94
+0x102713e0	dist_fade_beyond_100_render	render	key 0x43/0x23 gates; per-entry screen proj (105523e0/1053e160), opacity=1/(1+0.015*d*(d-max)) beyond d>100; distance-fade overlay helper
+0x10490940	facefx_audio_asset_paths_collect	middleware-facefx	FxAnim::GetAudioAssetPath + string-pair objs (vtbl 1177baec) pushed per event child (+0x1c count); audio asset path list builder
+0x103baad0	ctx_vtable_floatpair_dispatch	unknown	guarded by ctx flags; fetches vtbl'd objs, FUN_103751a0 float pair, indirect call pcVar3(out,&vals,u16,u32,u32)
+0x1025e8d0	battle_setup_lists_export_c	battle	same exporter family as 1015bf40 (1015dd00 x10, 10cb6120 thunks); additional battle setup list writer
+0x102e3740	spline_segment_endpoint_mid_update	core	compares seg endpoints param_2/param_3/param_4, recomputes midpoint (*a+*b)*0.5 when endpoints coincide/split needed; path-curve segment updater
+0x10351130	plane_uv_intersect_bitclamp	core	line vs plane/triangle intersection returning (u,v); clamps governed by param_2/param_3 bit masks; zero-den guard
+0x1034a0d0	scan_points_plane_proj_dist	unknown	loops this+8 list, projects pts onto plane coeffs this+0x34..0x40, accumulates sq dist via 1135d7d0
+0x103591b0	entity_rotrect_corners_eval	unknown	builds 4 corners from pos(+0xbf4/+0xbf8)+scale*cos/sin (+0xc00..0xc14), FUN_11364860 min-dist query per corner
+0x10490c90	facefx_audio_asset_paths_collect_b	middleware-facefx	twin of 10490940: FxAnim::GetAudioAssetPath -> string-pair list build per event child
+0x1031d2f0	effect_instance_type_factory_b	unknown	same alloc-size switch (0x1e8/0x1d8/0x1dc/0x1f8) + shared-arg ctors as 1030bcb0; second typed instance dispatcher
+0x10473430	facefx_references_enumerate	middleware-facefx	FaceFX GetReferences + script thunks 10ca7a30, walks children (1016f430); anim reference enumeration
+0x10205ac0	target_within_arc_binang_check	battle	binang diff between dir to this+0x3b8 and FUN_106723e0 target vs threshold DAT_11b0369c/0x3555 (~75deg), scaled by 9.58738e-05 rad/binang
+0x10246860	projectile_subentity_orient_ctor	battle	after FUN_102d06b0(8,..) base ctor: vtbls 1175cd3c/11756400, owner p1+angle fpatan from p5/p6, arrays of 10; oriented projectile part
+0x1038dc40	pos_blocked_by_grid_obstacles	battle	bounds check vs rect p1+0x70..7c (+3 margin), walks spatial hash **(p1+0xb0), type-8 entries circle test vs +0x14/+16/+18; blocked-position query
+0x102eac80	guarded_bigbuf_pipeline	unknown	10KB stack buffer after FUN_1017ec90/101796c0/101e3020 guards; 7x 1062dba0 pipeline steps
+0x103034e0	quat_chain_accumulate_b	anim	twin of 10303960: Hamilton-accumulates quats over list this+0x4ec (elem +0x50..+0x68) w/ base quat DAT_11bcf2ec + DAT_11937a68 mat
+0x1034f460	vector_reflect_mode_select	core	TLS-guarded statics then reflects vec across param_4 normal w/ modes param_5 0(half)/1(swap-axis); deflection math helper
+0x102689e0	variant_mesh_entry_node_create	render	dedupes vs p2+0x59c via 100f28a0, builds vmd path (10250790), moves 7-dword payload into new 0x30 node (vtbl 11754018)
+0x10396cf0	facefx_named_event_effect_spawn	middleware-facefx	FxName lookup (GetNameEntry) drives FUN_102d06b0(1,..) spawn via global slot +0x642b8; named anim-event -> effect
+0x10437ea0	manager_dtor_19_slots_criticalsec	unknown	dtor: 19x sub-object reset (1014d710), frees, DeleteCriticalSection, hash-seed consts 4527c498/486f0d29/591d55f3...
+0x101c9f40	seven_submanagers_ctor	unknown	allocs {0x5f4,0xa0,0x94,0xd0,0x80} x7 w/ 1068b180+100d9d90 ctor pairs; composite manager construction
+0x10277430	influence_map_paired_nodes_build	battle	builds paired 0x13c-byte nodes (1023b970/102773a0 x4 each, const 0x250c) next to im_node/im_edge dump cluster
+0x103cf990	script_float_params_set	script	exposes floats ~0.849/~3.208 (3fb2b8c2/404d473e) via script thunks 10ca9b90 x3; parameter registration
+0x10279f30	naval_placement_mtx_calc	battle	naval-cluster calc w/ 113545d0 world mtx + 1037bea0; ship positioning helper
+0x1025e2e0	battle_setup_lists_export_d	battle	exporter family (1015df10 x21, 10cb6120/10cb9f50/10cba0a0 thunks); further battle setup list writer
+0x10283ca0	epsilon_param_config_apply	script	string-pair key ops + 0.01f epsilon const + global slot +0x6432c; tolerance-bearing config applier
+0x102e8330	math_helper_11359c60	unknown	small float math via 11359c60; purpose not further determined
+0x103c8c40	rand_msvc_audio_path_pick	middleware-facefx	MSVC rand consts (x214013+2531011) + GetAudioAssetPath + studio ctx (10115e00 x6); random audio asset pick
+0x10269620	nearest_point_scan_fltmax	core	scans pair-float list (p1+8, count p1+4) for nearest to (p2,p3), init FLT_MAX; closest-point query
+0x10474340	facefx_studio_state_walk	middleware-facefx	studio-cluster walk over slots +0x5a48/+0x5a5c w/ 1047d1b0/1047c2d0/1047bf20 helpers
+0x1024c0a0	field_wall_flags_clear	battle	field-wall build (103c0230 x2) w/ flag-mask ANDs 0xffff7eff/0xffffdfff and 0.5f; wall option flags reset
+0x101e4990	leaf_math_ai_cluster	unknown	callee-free float math in AI cluster; not further determinable
+0x102390f0	binang_scaled_param_build	unknown	FUN_10272450 gate, TLS statics init, angle term param_4*5215.189 (=10430.38/2); builds angled struct
+0x102f42a0	camera_rect_debug_print	render	camera-cluster rect calc (10169120 x2, 8.0f) + debug print 10190580; camera extent dump
+0x1030d750	rand_range_pick_minmax	unknown	rand() on *(this+0xc)->+0x4c, min/max clamp via 10404b30/103c0230, scale floor 3.0 or obj+0x120->+0x10; random sizing
+0x10175620	ctx_pair_query_105cf8d0	unknown	pair of 105cf8d0/105cd0d0 queries + 101591a0; context data fetch combo
+0x102f8930	rotrect_corners_from_obj_angle	unknown	vtbl+0x18 ints + angle-table cos/sin (u16 @this+8) build 4 corners +/-half extents; rotated rect corner gen (same table as 102f1f90)
+0x102d5520	projectile_variant_ctor_b	battle	wraps FUN_102d06b0 projectile-family ctor; second projectile sub-variant
+0x10171ee0	audio_flags_binang_mix	audio	GetAudioAssetPath + flag masks 0x2000/0x6000/0x8000 w/ 10d99350/102947b0; audio event flag mixing
+0x101b50b0	guarded_dual_102b8700_calls	unknown	two 102b8700 calls + 1012de40 x2 behind self-ref guards (101b5361/101b5371)
+0x1043d930	pushback_pair_flag_setup	render	100eaf40 push_backs + 104548c0 hub call; flag/list setup in facefx-adjacent cluster
+0x103ef3d0	rand_member_offset_picker	unknown	rand() step + fixed offsets 0x2018/0x2064/0x20b0 into obj; pseudo-random member selector w/ 10d1a700 lookups
+0x101f6750	arc_cone_10deg_tolerance_check	battle	const 1820.4443 binang = 10deg cone vs param_2^2 spread over *(p1+4)->+0x68 units; facing-tolerance test loop
+0x103c81b0	rand_studio_ctx_pick	middleware-facefx	MSVC rand step + studio ctx (10115e00 x6) + TLS statics; random selection helper
+0x10187bb0	guarded_pair_query_11365250	unknown	TLS-guarded math w/ 11365250 x2 + 103633d0/1035f110 pair queries
+0x1030e070	effect_handler_pick_and_spawn	battle	resets this+0x8b0, scans global +0x64298 handlers (vtbl+8/+0x3c gates), stores pick @+0x8c4, allocs 0x2ac instance (same family as 1030bcb0)
+0x104a7820	rand_jitter_reposition_timer	render	per-entry if vtbl+0x14 time-last>10s: rand on global+0xac -> angle -0.3927 +/- rand*1.198e-05, fcos/fsin offset
+0x103f94e0	anim_time_epsilon_query	anim	0.01f epsilon against anim global time slot +0x643a8 via 103a37e0/103fc590; frame-boundary guard
+0x104a5520	pose_sampler_cluster_caller	anim	calls pose-sampler cluster (10349090 x4, 10348f50 x2) + 1042bb80; multi-pose evaluation w/ 0x8000 clamp
+0x10284600	script_thunk_mixed_dispatch	script	mixed thunk dispatch 10c84070/10c7de60/104c2ca0 + 102128c0; scripted call routing
+0x10156840	hud_string_tables_cleanup	ui	frees 19 allocs + 13 strings, 101592f0 x5 sub-tables; battle HUD panel/string teardown (HUD builder cluster)
+0x103b9e70	facefx_actor_math_query	middleware-facefx	GetActor + consts 2.0/INT_MIN; actor-state numeric query
+0x103cfcf0	effect_spawn_angle_pi12	unknown	spawn-family calls (102d9810 x4) w/ const 3.5343 (0x40c90fdb) rad + anim time slot +0x643a8
+0x102de7e0	small_obj_ctor_guarded	unknown	allocs tiny obj via 100d12b0 + ctor 102de7d0 + 11683b10; wrapper init
+0x103af360	pick_best_then_draw_marker	battle	FUN_105c7700 best-pick query + GetActor + marker draw 10686b70; target highlight path
+0x102fdd30	dual_list_walk_101a2d20	unknown	walks two lists w/ 101a2d20 x8 + 101795b0 x3 + FLT_MAX guard
+0x1029c080	facefx_anim_bone_stats_collect	middleware-facefx	GetNumAnims/GetNumBones/GetAudioAssetPath + 103751a0 x5; anim asset stats aggregation
+0x10399e60	facefx_client_events_walk	middleware-facefx	GetNumClientEvents + fixed offsets 0x90d4..0x9224; client event table traversal
+0x1036af00	tri_intersect_dual_flagged	core	two plane_uv_intersect_bitclamp (10351130) calls w/ mask -3 + 1135cf50; double triangle picking test
+0x104137c0	small_alloc_pair_fltmax_guard	unknown	allocs {0xc,0x28} + string ops + FLT_MAX sentinel init
+0x1017ce00	stride5_record_id_resolve	unknown	walks stride-5 dword records at *(this+4)->+0x170 (count +0x16c), resolves ids via FUN_10d145f0 table (+0x10/+0x14)
+0x101ae2f0	hierarchy_obb_point_nearest	battle	3-level nested walk (+0xac/0xb0,+0x1c/0x20,+0x114/0x118), vtbl+8 gate, OBB test vs +0xbf4..0xc14, 3x FUN_11364920 seg-dists min
+0x102e5290	radial_falloff_angle_calc	unknown	normalized dist to center this+0x14 scaled this+0x15, angle-table by param_2&0xffff, vtbl+0x50 dispatch
+0x102bce70	unit_facing_diff_gate	battle	binang diff of vtbl-derived dir vs threshold _DAT_11bcdc68 (*9.58738e-05 rad); gates on mgr flags +0x48c/+0x488
+0x1021ffd0	ai_stance_print_variant	battle	1020cb50 x3 (stance-dump print family) + byte flag masks 0xff00/0xff0000
+0x10176200	naval_named_actor_query	battle	GetActor+GetNameEntry + 10273cd0/10273810 in naval cluster; named ship/unit lookup
+0x101cf470	field_walls_build_variant_b	battle	field-wall ctors 103c0230 x2 + 10.0f param via 101a9110; wall section builder B
+0x104766f0	ui_indicator_node_create	ui	allocs 0xc node + 102198e0 x2 (UI arrow/fire-arc asset helper); indicator element init
+0x1030c520	unit_instance_list_builder	battle	19x 101aee30 + 9x 102b8700, many 0x60/0x6c allocs (self-ref 1030c7fc); unit instance table construction
+0x1027ca40	plane_proj_pointsets_fit	unknown	allocs {0x60,0x90}, 4x scan_points_plane_proj_dist + 10338c50/10356ad0/1024dd40; point-set plane projection pass
+0x1044acb0	tiny_wrapper_unknown	unknown	small wrapper calling only 10421fa0; not further determinable
+0x10200b80	target_marker_draw_calc	battle	2x target lookup 106723e0 + const 5.0f + draw 10687640; marker placement vs target
+0x10270410	cs_guarded_obj_create	unknown	EnterCriticalSection-guarded creation of 0x28 obj + 3x 112e1830
+0x10319670	rotrect_pair_margin_test	render	two rotrect_corners_from_obj_angle evals + 0.1f margin; rect proximity/overlap test
+0x1048a460	rand_studio_variant	middleware-facefx	MSVC rand step + 104954e0/104dea10; studio-cluster random pick
+0x101e0580	audio_asset_path_helper	audio	GetAudioAssetPath + 103751a0 pair + 1136e5f0; audio path resolution helper
+0x101860a0	audio_asset_query_helper2	audio	same 103751a0 pattern + 10172210/10372e50/1037b7a0; second audio-path/query helper
+0x103d20e0	cam_mode_state_resolve	render	hub state machine: codes 0xe/0xf/0x2b/0x2c/0x32 via vtbl+0xdc/+0xf8/+0x100 gates, flags @this+0x75; camera-mode context resolver (feeds state->text map 103dbd70)
+0x103192d0	hash_slot_lookup_sim_struct	unknown	consts 0x10e8/0x1104 + hash 0x1effaa9b + 2x 102de260; hashed member lookup in sim object
+0x102005a0	obstacle_hittest_wrapper	battle	wraps obstacle_list_hittest_vs_obb (101fbf30) + 10228ed0/10228400; obstacle query facade
+0x102e8de0	field_wall_spline_segments	battle	4x field-wall ctors (103c0230) + spline segment midpoint updater; wall path segmentation
+0x102f3b20	camera_extent_dump_b	render	camera rect calc (10169120/1016ae90) + 2x debug print 10190580 w/ consts 8.0/20.0
+0x101d0720	std_container_growth_throw	crt	13 frees + 8 throw-helper calls (116835d7) + 100e76e0 x8; container expansion w/ length_error paths
+0x1018ce70	small_pair_alloc_swap	unknown	2 allocs + 1 free; tiny buffer swap/get helper
+0x1018cb20	small_pair_alloc_swap_b	unknown	twin of 1018ce70; 2 allocs + free
+0x10493f40	studio_rand_walk_17x	middleware-facefx	17x 10442ef0 + MSVC rand consts + 9x 10298b90; studio entity random traversal
+0x10494f90	hashed_name_list_build	campaign	hash 0x2dcd603b + 7x 10299640 + 104c9970 (same as region-key table); hashed key/name entries
+0x103e1070	field_wall_flags_mask_c	battle	field-wall ctor + flag ANDs 0xfcffffff/0xff3fffff/0xffffff03; wall option mask C
+0x10169580	rand_spawn_into_global_list	battle	MSVC rand + spawner 112d98d0, allocs {0x60,0x114}, stores via global slot +0x642ac; random unit spawn
+0x10335510	single_call_math_1135c980	unknown	pure float math delegating to 1135c980
+0x1016ce60	sim_pair_queries_x4	battle	4x paired 103eb590/103eb530 calls; battle-sim dual query helper
+0x101f18a0	editor_script_bridge_send	ui	script thunk 10c828a0 + cinematic-editor msg helper 101d1bb0; editor<->script message bridge
+0x10436de0	studio_manager_dtor	middleware-facefx	dtor: 16 frees + 8 throws + 10436d50 x5 sub-object teardown in facefx-studio cluster
+0x1030edb0	hashed_string_table_build	battle	9x string-pair ops + hash 0x4a545eed + const 0x5004; keyed string table construction
+0x10183dc0	ai_rand_member_pick	battle	MSVC rand step + 103a7cc0/103dd810 queries + const 0x40000; random member selection
+0x10287a50	string_free_mixed_helpers	unknown	frees 3 strings + mixed 102a80f0/1026fc20/11351eb0 calls; cleanup+query mix
+0x10244e10	sim_small_nodes_init	unknown	4x 0xc-byte allocs into fields +0x1270/+0x1274/+0x1278 via 10268300; small node lists init
+0x103b78c0	facefx_audio_path_query	middleware-facefx	GetAudioAssetPath + 4x 1135d6f0; anim audio asset path fetch
+0x10335ac0	math_trio_10298be0	unknown	4x 10298be0 + 11354b90/11354a70/113660a0 math; undetermined
+0x10268ef0	variant_cluster_quad_calls	unknown	2x 102bc5e0 + 2x 10260720 + 1023dd20/1023db30; variant-mesh adjacent pipeline
+0x10368870	flagged_edge_dist_query	unknown	flags 0x1000/0x1001/0x2000/0x8000 + FUN_11364920 seg-dist + clamps; edge proximity query
+0x103876e0	seeded_math_bundle	unknown	bundle of 1135xxx math fns + const 0x3727c5ac (seed-like); undetermined math chain
+0x10280850	debug_print_bulk_x12	battle	12 sequential debug prints (10190580); large state dump block
+0x10493750	campaign_rand_guard_helper	campaign	TLS-guarded statics (11683b10 x4) + rand consts + min/max 10404b30; region-cluster random helper
+0x103529c0	pose_list_push_build	anim	pose-sampler cluster calls (10348a40 x2) + 2x push_back (100eaf40); sampled pose accumulation
+0x102c2300	mtx_const_calc_render	render	world-mtx fetch (113545d0) + const 0x365c + 105737b0; transform-side calculation
+0x1013cd50	string_build_half_f	core(memory/string)	string pair ops (100f1aa0/1cc0/1700) + 0.5f param; text assembly helper
+0x103ea570	sim_rand_pick_b	battle	rand step + 1018eb40 x2 sim queries; random pick variant B
+0x10492430	region_key_rand_walk	campaign	rand consts + 101f4f90 x5 + region hash helpers 104c9970/104c9630; region data traversal
+0x10493090	studio15_walk_rand	middleware-facefx	15x 10492bc0 + rand consts + TLS guards; studio entity walk
+0x103be520	guarded_script_bridge_call	script	guard mask -5 + 10d99ff0 thunk + 105946e0/10385150/103853b0; scripted call bridge
+0x102e74c0	field_walls_build_x8	battle	8 sequential field-wall ctors (103c0230); wall set construction
+0x1025f8b0	intmin_extreme_scan	unknown	INT_MIN sentinel + 2x 1029fe40; extreme-value search
+0x10116af0	float16_convert_core	core	half-float masks 0x7c00/0xfc00; fp16<->fp32 conversion helper
+0x10223800	editor_msg_builder_a	ui	5x editor-msg thunks 10f440c0 + string appends + 112be4c0; cinematic/editor message assembly A
+0x10227f90	editor_msg_builder_b	ui	twin of 10223800 (+GetNameEntry); message assembly B
+0x10235e10	obb_edge_dist_aggregate_steer	battle	10x obb_point_outside_edge_distance (101ebd00) over obstacle set; avoidance steering accumulation
+0x103e7c70	script_rand_bridge_selfref	script	rand consts + self-ref guards + 3x 10e2dx thunks; scripted random call bridge
+0x10403bf0	facefx_audio_path_x5	middleware-facefx	GetAudioAssetPath + 5x 103e96c0; anim audio path variant
+0x103ac6e0	studio_audio_timing_500	middleware-facefx	studio ctx x7 + GetAudioAssetPath x3 + const 500.0f; studio audio event timing
+0x10222560	camera_rotrect_calc	render	rotate helpers x3 + camera rect 10169120, consts 8.0/masks; oriented rect around camera focus
+0x101fc9a0	float_neg_chain_math	unknown	5x float neg helper (1168cad5), masks; pure math leaf
+0x10375bc0	wrapper_10367830	unknown	small wrapper to 10367830 + alloc; undetermined
+0x103845f0	wrapper_10636760	unknown	small wrapper to 10636760/103319d0; undetermined
+0x103505f0	wrapper_1135d6f0	unknown	single math helper 1135d6f0 + mask; undetermined
+0x101abc90	sim_list_push_build	battle	push_back + sim query 103eb8b0 + 1136b240; sim-side list build
+0x1011dc80	tga_write_gray8	render	TGA row writer: per-px gray = (28R+150G+76B)/254, _fwrite 1B; grayscale screenshot dump
+0x101177f0	tga_write_rgb555	render	packs RGB->RGB555 (>>3) w/ 0x20 top flag, _fwrite 2B; 16bpp screenshot dump
+0x101164b0	tga_write_expand16	render	reads u16 px, expands bits (*2|mask pattern), _fwrite 2B; 16bpp convert-dump
+0x101171b0	tga_write_rgb555_24bit_src	render	TGA row writer: RGB (3B/px) -> RGB555 pack w/ 0x20 flag, 2B out; 24->16bpp dump
+0x10116e20	tga_write_row_variant	render	TGA-family row writer, 4B/px source walk; 32bpp variant of screenshot dump
+0x10223170	editor_msg_builder_c	ui	third twin of editor-msg assembly (10f440c0 x5, +GetActor/GetNameEntry)
+0x10176650	naval_actor_script_query	battle	calls naval_named_actor_query + script thunks 10ccd120/10c7fff0; naval unit lookup via script
+0x10476310	studio_panel_struct_init	middleware-facefx	allocs {0x4bc,0xc}, slots +0x64410/+0x64414, UI helper 102198e0 x2, 5.0f; studio panel/state struct
+0x101b3e10	facefx_audio_timing_5s	anim	GetAudioAssetPath + anim helpers (101a2630/1c50/0fe0) + 5.0f; audio event timing
+0x103a3280	facefx_audio_path_minmax	middleware-facefx	GetAudioAssetPath + 2x 10404940 min/max; audio path w/ range clamp
+0x10293140	allocfree_mask_helper	unknown	single alloc+free w/ masks 0xfffffff/-4; tiny buffer helper
+0x10331270	buf_table_512_build	unknown	allocs {0x200,0x20,0x20} + 4x 10243c90; 512B buffer table construction
+0x1043de30	facefx_math_leaf	middleware-facefx	callee-free float math in facefx-studio cluster
+0x101ab140	paired_ctor_tls_a	unknown	4 allocs + 105d0800 + TLS guards; paired object ctor family A
+0x101aad50	paired_ctor_tls_b	unknown	twin of 101ab140; family B
+0x1046b800	ui_indicator_color_weights	ui	alloc 0xc node + UI helper 102198e0 x3 + weights ~0.13/0.79/0.995; indicator color/alpha setup
+0x101834e0	text_compose_numbers_heavy	core(memory/string)	15 frees + concats + 100f60b0 x5 formatting + const 20.0f; large multi-part text assembly
+0x1013d120	hud_panel_rect_build	ui	string ops w/ consts 168.0f/576.0f; battle-HUD panel rect/layout setup
+0x10230d50	ac0f0_hub_list_walk_x16	battle	16x hub FUN_101ac0f0 + 1022fb70 x5; sim list traversal family
+0x10231930	fd80_walk_x5	unknown	5x 1022fd80 calls in sim-adjacent cluster
+0x102bdb90	math_alloc34_mix	unknown	math helpers (113660a0 x2 etc.) + 0x34 alloc; undetermined
+0x103d0430	camera_cluster_clamp_calc	render	clamps via 1136e120 + math 1135d6f0 in camera-control cluster; camera param adjust
+0x1011f7c0	string_ops_tls_guards	core(memory/string)	string build/compare ops + 11683b10 TLS static guards
+0x1010df10	crt_116bd8d0_leaf_a	crt	leaf calling CRT helper 116bd8d0 x4; locale/string internal
+0x10108550	crt_116bd8d0_mask32	crt	same CRT helper w/ mask 0xffe0 (32-step); internal scan
+0x1010d1f0	crt_116bd8d0_leaf_c	crt	third leaf over CRT helper 116bd8d0
+0x104342f0	studio_init_criticalsec	middleware-facefx	InitializeCriticalSection + slots +0x64114/+0x642b8 + small allocs; studio subsystem init
+0x1044a170	pick_query_wrapper_x2	battle	two pick-best queries (105526d0 x2, 10532f60); target selection facade
+0x1024a850	battle_setup_lists_export_e	battle	exporter family (1015aad0 x10 + 1015b180/ac70/ad40 + thunk 10ca4b50); further setup writer
+0x10480e40	studio_panel_variant_b	middleware-facefx	twin of 10476310 (allocs {0x4bc,0xc}, consts 0.45/5.0); second panel struct
+0x10434800	facegraph_decompiled_export	middleware-facefx	FaceFX GetDecompiledFaceGraph + five 0xc nodes into slot +0x642ac; face graph dump
+0x10283950	veg_editor_helper_mix	unknown	112e1830 x2 + 11366f20 x2 + 108e3090; vegetation/editor adjacent mix
+0x10230960	obb_edge_dist_steer_b	battle	16x obb_point_outside_edge_distance + 1022faa0 x5; avoidance aggregate B
+0x103b5e90	sim_queries_floatpair_mix	unknown	mixed sim queries (1036bd30 x3, 103a1cc0) + float pair 103751a0
+0x101b5400	script_member_block_init	script	offsets 0x19dc..0x23d0 initialized via 10d1a4c0 thunks; script-exposed member defaults
+0x102361a0	ac0f0_hub_walk_x10	battle	10x hub FUN_101ac0f0 walk; same sim traversal family as 10230d50
+0x1028bd50	alloc_pair_10557500	unknown	2 small allocs + 10557500 x3 + hub 102be720 x2; undetermined pipeline
+0x10357690	ctx_minmax_const1203	unknown	const 0x1203 + min/max 10404b30 + ctx getters (1016f420 x2)
+0x102251a0	editor_script_thunk_bridge	ui	thunks 10d6e440/10d846f0 + editor-msg helper 101d1bb0; bridge call
+0x1029e170	wall_ctor_minmax_mix	battle	field-wall ctor (103c0230) + 2x min/max + 11368f50 pair; wall-sim query blend
+0x10120e10	actor_named_text_build	unknown	GetActor+GetNameEntry + 10 string ops + 101216b0; builds text from resolved actor names
+0x10136d00	hud_panel_0x140_build	ui	alloc 0x140 + HUD family ctors (10178ff0 x4, 10155fe0/f20); battle panel construction
+0x10262a20	throw_guarded_bc5e0	crt	4x throw helper 11686175 + 102bc5e0 x2; validated call wrapper
+0x10174ca0	guarded_sim_query_mask	unknown	self-ref guards + mask 0x3fffffff + 10634d30/10602f80; guarded query
+0x1048c2f0	studio_walk_cd500_x14	middleware-facefx	14x 103cd500 + sim queries + slot +0x6432c; studio entity traversal
+0x101706f0	fxmountresult_list_build	middleware-facefx	FxMountResult-typed allocs x5; mount-result collection
+0x1038d780	camera_gate_mask_mix	unknown	masks 0x2000/0x8000 + hub 1018c1e0 x3 + camera getter 101682d0
+0x1041f9d0	audio_event_table_hashes	audio	13x audio thunk 10fef3b0 + hash consts (24071148/25c91224/...) + 12.0f into slot +0x6428a; audio event registration
+0x101934a0	script_param_block_20f	script	float-pair 103751a0 x3 + thunks 10d981a0 x2 + consts 20.0/offset 0x2520; scripted params
+0x10145fb0	battle_setup_lists_export_f	battle	thunk exporters (10cb60c0 x4, 10ca2c70/cafa30/a43c0) + 1015ac70 x3
+0x1031c570	tls_guard_wrapper_fd5c	unknown	TLS-guarded call to 102fd5c0; wrapper
+0x101f5cc0	alloc_pair_clamp_helper	unknown	2 allocs + clamp 1136e360; small helper
+0x10118580	mask_math_leaf	core	mask-only math leaf (0x8000)
+0x10109c40	crt_116bd8d0_leaf_d	crt	CRT-helper leaf (116bd8d0 x4)
+0x101f6180	target_pair_dist_calc	battle	2x target lookup (10680500) + consts 10.0; distance metric vs targets
+0x1040cde0	naval_marker_calc_slot	render	naval marker helper 10498ea0 x3 + global slot +0x6432c; ship marker computation
+0x10371e50	offset1284_const24_math	unknown	obj offset 0x1284 + consts 2.0/4.0 + paired math (1032d570/1033e3c0)
+0x10443de0	facefx_studio_session_init	middleware-facefx	allocs giant 0x6b90 session block + 16 sub-allocs, chains studio CS init + audio event table; FaceFX studio session bootstrap
+0x10418820	anim_pose_apply_to_skeleton	anim	applies sampled pose: 4x 104124c0 channel sets + 10438540/10411c40; target of slerp sampler
+0x1035e8f0	jumptable_state_machine_a	unknown	many self-addr switch targets (Ghidra jump table) + paired helpers; state machine A
+0x103e96c0	jumptable_state_machine_b	unknown	self-ref targets x8 + rand const; state machine B (audio-path adjacent)
+0x1010a7f0	crt_116bd8d0_leaf_e	crt	CRT-helper leaf (116bd8d0 x4)
+0x1010ce60	crt_116bd8d0_leaf_f	crt	CRT-helper leaf
+0x1010d530	crt_116bd8d0_leaf_g	crt	CRT-helper leaf
+0x1010cad0	crt_116bd8d0_leaf_h	crt	CRT-helper leaf
+0x10118960	mask_math_leaf_b	core	single-mask math leaf (0x8000)
+0x1011b2b0	math_leaf_nocallers	core	callee-free math leaf
+0x10290260	free_mixed_sim_helpers	unknown	5 frees + 10238d80/10261c10/102a6510 mixes; cleanup+query blend
+0x102c0140	audio_path_const20	audio	GetAudioAssetPath + const 20.0f; audio param fetch
+0x10360050	sim_pair_queries_326210	battle	4x 10326210 + 2x 10326130; battle-sim dual query set
+0x10350070	math_wrapper_masks	core	math via 1135d6f0 + masks 0xffffff; leaf calc
+0x10441710	anim_sample_pipeline_release	anim	6x 104df690 + pose sampler 104467d0 + refcount release 102df760; sample-and-release pipeline
+0x10117de0	pack555_mask_helper	render	masks 0x801f/0xffe0 next to TGA writers; RGB555 pack/unpack bit helper
+0x10187fd0	audio_path_guarded_x4	audio	GetAudioAssetPath + 4x float-pair + guarded queries; audio lookup variant
+0x10380f00	hash_lookup_305a9c4b	unknown	single call + hash const 0x305a9c4b; hashed slot lookup
+0x10404030	flag_mask_state_machine	unknown	rand const + flag-clear masks (-28/-17/-12) + sim queries; flag-driven state machine
+0x1010ba10	crt_116bd8d0_leaf_i	crt	CRT-helper leaf
+0x1027cf80	camera_focus_smooth_calc	render	const ~0.96846 (3f7746ea) + world mtx 113545d0; camera focus lerp calc
+0x103da690	rand_tls_alloc_01f	render	rand consts + TLS guards + alloc pair + 0.1f (3dcccccd)
+0x10164ab0	event_sublist_free_x4	core	4 frees + sublist ctors (101779a0/77860) + event helpers (112ae010); teardown+init mix
+0x101f7470	target_queries_pair	battle	GetActor + paired target/sim queries (106188d0/1061b410, 1039cc20/ca3f0); dual-target evaluation
+0x102c2da0	alloc4_free3_helper	core(memory/string)	4 allocs + 3 frees; buffer set helper
+0x10421750	jumptable_ui_node_build	ui	self-addr switch targets + string ops + allocs {0x48,0xc} + path helpers; UI node builder w/ jump table
+0x10288090	pair_call_10288bb0	unknown	delegates to 10288bb0 x2; small wrapper
+0x1011ac60	math_leaf_pure	core	callee-free math leaf
+0x104737b0	studio_panel_struct_c	middleware-facefx	twin of 10476310 family (allocs {0x4bc,0xc}, slots +0x6432c/+0x64414, 5.0f); third panel struct
+0x10327e60	small_alloc10_ctor	unknown	0x10-byte alloc + ctor; tiny object init
+0x10206780	pushback6_query_10552700	battle	6x push_back + pick query 10552700 + throw guard + 5.0f; list build w/ selection
+0x10273810	naval_actor_name_resolve	battle	GetActor+GetNameEntry + mtx 11370160 x3; naval name->transform resolve
+0x10375840	five_helper_bundle	unknown	2x each of 1033b4c0/1037b640/1037b7b0 bundle; undetermined
+0x1010c3c0	crt_116bd8d0_leaf_j	crt	CRT-helper leaf
+0x1010b1e0	crt_116bd8d0_leaf_k	crt	CRT-helper leaf
+0x1010ae30	crt_116bd8d0_leaf_l	crt	CRT-helper leaf
+0x101dbf70	range40_400_cleanup	unknown	consts 40.0/400.0 + 3 frees + paired 101dd430; ranged calc w/ teardown
+0x10118160	pack555_mask_helper_b	render	RGB555 masks 0x801f/0xffe0; second bit-pack helper
+0x1030e810	effect_instance_ctor_19c	battle	alloc 0x19c (-1.0f init) via factory-family helpers + audio path fetch; effect instance ctor
+0x103fa8b0	thunk_bridge_audio_mix	unknown	5x 10d1a280 + 3x 10d99350 thunks; script/audio bridging
+0x1011d470	math_leaf_pure2	core	callee-free math leaf
+0x103cce10	cam_state_config_masks	render	offsets 0x2c90/0x2cdc/0x2d28, masks 0x400000/0x30000/0x4000, calls state->text map 103dbd70; camera-state config
+0x1010c780	crt_116bd8d0_leaf_m	crt	CRT-helper leaf
+0x103c54b0	alloc_pair_wrapper	unknown	2 allocs + free wrapper; undetermined
+0x10109460	crt_116bd8d0_leaf_n	crt	CRT-helper leaf
+0x104883e0	ui_indicator_hash_slot	ui	UI helper 102198e0 x3 + hash 0xaba7777 into slot +0x6432c; indicator registration
+0x10109090	crt_116bd8d0_leaf_o	crt	CRT-helper leaf
+0x10119470	mask_concat_builder	unknown	mask 0xf0fff0ff + concat ops; packed-value text/bits builder
+0x1029dc70	marker_free_then_draw	battle	6 frees then draw-marker family (10688eb0) + 10.0f; refresh markers after cleanup
+0x102260a0	editor_msg_builder_d	ui	fourth twin of editor-msg assembly (10f440c0 x5)
+0x103572e0	alloc10_math_mix	unknown	0x10 alloc + 10298be0/103360f0; small init+math
+0x101ee330	editor_thunk_jumptable_dispatch	ui	jump-table switch + editor thunks 10f451b0 x5 + GetActor; scripted editor dispatch
+0x10273190	steering_obb_dist_calc	battle	sim queries + obb_point_outside_edge_distance + consts 0.5/20.0; obstacle avoidance metric
+0x1030aa90	global_registry_typed_init	battle	allocs {0x184,0x1d8,0x1d8} + string-pair keys across slots +0x64110..+0x642a4; typed instance registry init
+0x103ae630	sim_query_neghalf	battle	const -0.5f + sim queries (10326f20/10372690); sim metric w/ negative bias
+0x1048ccf0	studio_timing_1000	middleware-facefx	const 1000.0f + slot +0x6432c + studio helpers; studio ms-timing calc
+0x1040b6c0	recursive_walker_x5	unknown	self-recursive x5 + 116bde50; recursive structure walk
+0x102f8d80	handler_slot_64298_lookup	battle	resolves via global slot +0x64298 list (same as effect handler pick) + 104dd5f0
+0x101dab00	alloc2_sim_helpers	unknown	2 small allocs + sim helpers (10210e60/10676e10); undetermined
+0x104573d0	hash_registry_12344321	unknown	magic hash 0x12344321 + rand consts + 1030d470/10443650; keyed registry init
+0x1010db80	crt_116bd8d0_leaf_p	crt	CRT-helper leaf
+0x10295810	triple_math_wrapper	unknown	delegates to 10527690/1135dc80/10295540; math wrapper
+0x1040c6a0	naval_marker_calc_b	render	twin of 1040cde0 (3x naval marker helper 10498ea0); ship marker calc B
+0x102e03d0	facefx_mgr_shutdown_dispatch	middleware-facefx	FaceFX CollectGarbage/DestroyAllActors/DestroyAllAnimSets dispatch, msg ids 0x19039..0x190a8; resource-manager teardown
+0x10494320	studio_walk_cd500_x24	middleware-facefx	24x 10442ef0 + 12x 102a8380 + 9x 10298b90; large studio traversal
+0x102b47b0	mask_pair_wrapper	unknown	mask pair (-1/-256) + single callee; wrapper
+0x102ca180	mtx_calc_caller	render	calls mtx_const_calc_render + world mtx fetch; transform chain step
+0x1012c380	recursion_x5_string_region	core(memory/string)	self-recursive x5 in string/CRT region
+0x102e7070	field_walls_build_c	battle	8x field-wall ctors (103c0230) + 113814a0/11385580; wall set builder C
+0x1031ba40	effect_init_audio_path	audio	GetAudioAssetPath inside effect-factory cluster; per-instance audio hook
+0x1011d830	mask_math_fffff8	core	mask 0xfffff8 math leaf
+0x103e1860	flag_state_machine_b	unknown	flag masks (-257-family) + 0.01f + rand consts + 4x 1034e6a0; second flag state machine
+0x103d98e0	cam_block_12004_allocs	render	const 0x2ee4 (12004) + 4 allocs + 10395340; camera-config block init
+0x10222d20	editor_msg_builder_e	ui	fifth twin of editor-msg assembly (10f440c0 x5)
+0x1034c140	mask_ctor_trio	unknown	masks 0xffffff + three 100d9d90 ctors; undetermined init
+0x1023c2b0	wall_ctor_minmax_print	battle	2x field-wall ctors + min/max + 2x debug print; wall metric dump
+0x103c87a0	studio_ctx_gated_pair	middleware-facefx	studio ctx gate (10115e00) + float pair + flags; gated studio eval
+0x1016a560	alloc2_pick_queries	battle	2 allocs + paired 10356e30/1033fc00 + pick queries (105aee80/105320f0)
+0x10340da0	paired_41c30_floatpair	unknown	2x 10341c30 + float pair; undetermined
+0x102f6c60	hash_pair_lookup_draw	battle	adjacent hashes 0xaba1456/0xaba2355 + TLS guards + draw helper; keyed lookup then marker
+0x1011cff0	math_leaf_pure3	core	callee-free math leaf
+0x10329710	sim_query_alloc_node	battle	0xc alloc + sim pair queries (103eb530/eb590); node w/ dual query
+0x1010bda0	crt_116bd8d0_leaf_q	crt	CRT-helper leaf
+0x101dc880	guarded_dual_0ea20	unknown	TLS guards + 2x 1020ea20 + 1068b1a0; guarded pair call
+0x101ac0f0	nearest_entity_min_dist_query	battle	HUB: 4x FUN_11364860 corner-min-dist over entities; called by sim traversal family (10230d50/102361a0)
+0x1028ed30	math_leaf_nocall	battle	hub-adjacent callee-free math leaf
+0x1010a4c0	crt_116bd8d0_leaf_r	crt	CRT-helper leaf
+0x1018e330	nearest_entity_min_dist_b	battle	twin of 101ac0f0 (4x 11364860); second nearest-entity query
+0x1024d410	script_table_mega_init	battle	allocs {0x4b0,0x4b0,0x48} + 27 string-pairs + 15 debug-text builders + 12x script thunks; big scripted table build
+0x10444e90	hashed_multi_reg_sim	battle	11 sim queries + 8 distinct hash consts; multi-entry hashed registration
+0x10107030	crt_116bd8d0_leaf_s	crt	CRT-helper leaf
+0x103de350	guarded_dual_44610	unknown	TLS guards + 2x 10344610 + sim helpers; guarded pair call
+0x102c1b80	hashed_multi_lookup_b	battle	7 hash consts + 6x 102a7140; hashed entry lookup set B
+0x1028e640	cs_guarded_field_calc	unknown	CS-guarded calc, offsets 0x2518/0x251c + 5.0f
+0x103605e0	alloc2_tls_wrapper	unknown	2 allocs + TLS guards + 1038e5f0; small wrapper
+0x1029c990	audio_timing_pair_5s	audio	GetAudioAssetPath + 2 float-pairs + 5.0f; audio event timing variant
+0x1031cec0	tls_guard_wrapper_b	unknown	TLS-guarded leaf wrapper
+0x1031c090	tls_guard_wrapper_c	unknown	TLS-guarded call to 102fd5c0; wrapper twin
+0x1025ae60	container_teardown_15free	core(memory/string)	15 frees + 3 sub-object resets (1014d710); big container teardown
+0x10109830	crt_116bd8d0_leaf_t	crt	CRT-helper leaf
+0x10423050	pick_query_alloc_node	battle	alloc + pick queries (105a47f0/1059f780) + const 0x1010001 flags; selection node
+0x10119070	concat_builder_leaf	core(memory/string)	pure concat-op text builder
+0x102edd50	influence_map_config_init	battle	allocs {0x20,0x1c,0x20}, offsets 0x23f0/0x23f4/0x250c (matches IM nodes), consts 2/3/50/200; influence-map config
+0x102dff90	dtor_throws14_free12	crt	14 throw-helpers + 12 frees + 3 sub-dtors; checked container destructor
+0x10341220	camera_clamp_minmax	render	min/max + 0.1f via camera getter 103d4e90; camera value clamp
+0x1029d760	audio_cleanup_timing	audio	8 frees + GetAudioAssetPath x3 + 10.0f; audio teardown w/ timing
+0x101248e0	delete_hook_wrapper	crt	masks -8/-2 + FUN_101230a0; operator-delete plumbing
+0x10393980	waterfall_cluster_wrapper	unknown	single call to 10391610 in waterfall/effect cluster
+0x10408400	mixed_wrapper_pair	unknown	2 calls (102964f0/10419120); small mix
+0x103ba680	thunk_gated_mix	unknown	TLS guards + 10192f10 x2 + thunk 10d99350; gated mix
+0x10113d90	string_obj_pair_build	core(memory/string)	allocs {0x18,0x18} + string-cluster ctors (100f7510/fa730/fb690)
+0x10180f00	spawn_with_range_params	battle	GetActor text ops + spawner 112d98d0 + consts 50.0/1000.0; ranged unit spawn
+0x101b4330	audio_timing_variant_b	audio	GetAudioAssetPath + 3 float-pairs + alloc; audio path+timing
+0x10325d90	five_helper_bundle_b	unknown	bundle of 10241630 x3 + others; undetermined
+0x103c2d30	script_thunk_slots_init	ui	4x each of 10cffcf0/c30/970/b80 thunks; tail of icon-slot table init (slots 0x14..0x26)
+0x103bf870	camera_pi_angle_calc	render	consts 0.75/pi + offsets 0x81009/0x9074 + camera getter; oriented camera metric
+0x10108880	crt_116bd8d0_leaf_u	crt	CRT-helper leaf
+0x10340970	math_quad_bundle	unknown	11385da0 x2 + 113660a0/113847c0/1137c3a0; math bundle
+0x10106920	crt_116bd8d0_leaf_v	crt	CRT-helper leaf
+0x1043a530	wall_segment_node_alloc	battle	spline updater + field-wall ctor + min/max into 0xc node; wall segment node
+0x1011c450	concat_sub41_leaf	core(memory/string)	concat ops + SUB41 inline; text leaf
+0x1021e2b0	clamp_wrapper_1136e120	unknown	delegates to clamp helper 1136e120
+0x1025aa90	teardown_30free_pairs	core(memory/string)	30 frees + paired 10281e20/e80 x4; large teardown pass
+0x10254190	giant_alloc_2MB_buffers	render	allocates 0x200000 bytes (2MB) w/ 0x40000 stride consts; large streaming/particle buffer setup
+0x1018d1a0	obb_corners_expand_hub	battle	HUB: expands {pos,halfext} to 4 corners (+/- half*0.5 axes) via 101a2d20/101795b0 walks; called by 9 sim funcs
+0x1016de10	camera_bigbuf_0x838	render	allocs 0x838 buffer + 2x 10267d70 in camera-rect cluster; big per-frame struct
+0x10119b70	concat_mask_ff_leaf	core(memory/string)	concat ops + mask 0xff000000; packed text/bits leaf
+0x10235610	recursion5_35610	unknown	self-recursive x5 + 116bde50 + 2 helpers
+0x1011bd90	concat_sub41_leaf_b	core(memory/string)	concat ops text leaf B
+0x103abc50	fxmount_pair_query	middleware-facefx	FxMountResult-typed + float pair + sim query (10372690); mount-state eval
+0x1010b590	crt_116bd8d0_leaf_w	crt	CRT-helper leaf
+0x1023aad0	four_helper_pushlist	battle	4x 10241630 + push_back + sim queries (1028aa20/10291c10); list build w/ queries
+0x10223b50	target_quad_lookup	battle	4x target lookup 106723e0 + frees + 10184860 x2; multi-target evaluation
+0x101197b0	concat_mask_ff_leaf_b	core(memory/string)	twin concat/mask leaf
+0x102bb220	variant_alloc_4c70	render	allocs {0x4c,0x70} + 10243d00/10243b70 variant-mesh adjacent; mesh entry assembly
+0x101dc480	target_pair_30f_alloc	battle	2x target lookups + 2x 1036a5d0 + alloc 0xc, consts offset 0x1244/30.0f
+0x10445990	scripted_sim_query_slot	battle	sim queries x2 + script thunks (10ca7f20/7890/7880) via slot +0x6432c
+0x103fc590	wall_ctor_x9_minmax	battle	9x field-wall ctors (103c0230) + 0.1f min/max; wall set builder w/ margin
+0x10438910	anim_channel_apply_step	anim	calls channel-set 10438540 + alloc/free; single-channel pose apply step
+0x103dc5c0	flag_masks_cam_queries	render	flag masks (-257-family) + 6x 1036b8a0 + 4x 1038d3d0 camera queries; camera flag state
+0x10389990	intmin_pair_math	unknown	const pairs of INT_MIN (80000000 x2 dwords) + 4x 10339ac0 + math; extreme-init calc
+0x10393f30	eight_find_walk	unknown	8x find-helper 101206f0 + 5x 10392b40; repeated keyed search
+0x103292c0	alloc12_text_math_mix	unknown	alloc 0xc + string appends + math bundle call; small node + text
+0x10328d20	alloc60_sim_pair	unknown	alloc 0x60 + 2x 10298be0 + sim helpers; object init w/ queries
+0x10293c60	alloc4_clamp_mix	unknown	4 allocs + 10271220 + clamp 1136e500; undetermined
+0x102608c0	sim_dump_flags_075	battle	3x debug print + consts 0.75/masks via 10280240 family; flag-bearing sim dump
+0x102e4260	triple_sim_helper_calls	unknown	3x 102ef620/102ef520; sim helper chain
+0x102a12c0	pick_then_draw_markers	battle	3x pick query 105cf880 + 2x marker draw 10689330 + 0.1f; highlight selected targets
+0x102fcd10	plane_dist_query_wrapper	core	wraps plane_dist_of_mtx_transformed_pts; single projection query
+0x10107870	crt_116bd8d0_leaf_x	crt	CRT-helper leaf
+0x10174020	quad_query_pick_mix	unknown	2x each of 101733e0/10346ee0/10177d70 + pick 105db240
+0x1040b380	recursion_div3_magic	battle	self-recursive x5 + const 0x2aaaaaab (div-by-3 magic); third-splitting walk
+0x10494750	studio_walk_offset2394	middleware-facefx	rand consts + offset 0x2394 + TLS guard; studio traversal variant
+0x10404cd0	clamp_query_hub_battle	battle	HUB: 2x clamp 1136e120 + sim queries (1036b770/10372690); shared clamp+query path (7 callers)
+0x10217770	hash_entry_editor_data	ui	hash 0x4a545eed + allocs {0x10,0x18} + editor helpers; keyed entry carrying editor payload
+0x10179de0	named_spawn_entry_84	battle	4x name compare + spawner 112d98d0 into 0x84 obj; named unit spawn record
+0x104a6cf0	anim_state_dump_x4	anim	4x debug print in pose-sampler cluster; animation state dump
+0x101f3b20	editor_dispatch_jumptable_b	ui	jump-table targets + editor-msg helper + frees; second editor dispatch
+0x1034a580	math_leaf_pure4	unknown	callee-free math leaf
+0x104927a0	studio_walk_small	middleware-facefx	2x studio helper 10442ef0; small traversal
+0x103a4510	sim_member_block_c1f20	battle	6x 103c1f20 + 2x 103e9eb0; sim member-block op set
+0x103a50d0	offsets_34e0_352c_pairops	battle	float-pair x5 + offsets 0x34e0/0x352c + thunks 10d1a700; sim block pair ops
+0x103ebab0	sim_block_ops_ebab0	battle	3x 1034e6b0 + 2x pairops + guards; sim block op set C
+0x1028b6b0	facefx_eventtake_screen_marker	middleware-facefx	FaceFX GetEventTake + world->screen proj (105523e0/1053e160) into 0x14 node; event-driven screen marker
+0x103dd040	math_trio_b670_c660	unknown	math via 1136b670/1136c660/11365250; undetermined
+0x10212950	hash_11936d_small_entries	core(memory/string)	hash const 0x11936d + two 0xc allocs; tiny keyed entries
+0x102e4d30	wall_flag_jumptable	battle	jump-table switch + 2x field-wall ctor; wall flag state machine
+0x10488ac0	const3_negpair_math	unknown	const 3.0f + 2x neg helper + 1027ee00; small calc
+0x104ade20	studio_cleanup_variant	middleware-facefx	frees/allocs + 104d6740 x2 + 1025bc50 x2; studio resource cleanup
+0x10395340	effect_recursive_walk_x5	render	self-recursive x5 in waterfall/effect cluster
+0x101dda70	audio_bigentry_0x5a0	audio	GetAudioAssetPath + alloc 0x5a0 + ctors; large audio entry construction
+0x10413c40	anim_multiobj_text_init	anim	11 allocs {0x14,0x10,0x28,0x18} + string ops in anim cluster; typed object set w/ names
+0x101b2aa0	offset_block_threshold25	script	offsets 0x1cd4..0x23f8 + const 25.0f across 7 helpers; scripted threshold config
+0x1040a140	recursion_pair_09320	battle	5x self-recursion + 5x 10409320; paired recursive walk
+0x1044b540	anim_sample_release_wrapper	anim	sampler 104467d0 + refcount release; single sample wrapper
+0x10107ca0	crt_116bd8d0_leaf_y	crt	CRT-helper leaf
+0x103b5110	ui_list_builder_jumptable	ui	jump table + 9x string-pairs + 9x UI asset helper 102198e0 + variant mesh calls; big UI list assembly
+0x103c1f40	sim_pairops_cam_mix	battle	pairops x2 + camera queries (10618570/10385170/103dda60) + mask 0x2000
+0x10296710	animgroup_dispatch_jumptable	middleware-facefx	jump-table + 4x 1025f6c0 + GetAnimGroup-family getters; anim-group routing
+0x103e33e0	flag_mask_cam_state_gate	render	flag masks + offset 0x53cc + cam_mode_state_resolve call; gated camera-state check
+0x102c5ef0	facefx_curves_endtime_events	middleware-facefx	GetCurvesEndTime+GetEventTake, allocs {0x40,0x40}, offset 0x2518; curve/event timing eval
+0x102c5a50	script_text_entry_10f	script	7 frees + thunk 10cff560 + const 10.0f into 0x14 obj; scripted text record
+0x10355910	sim_quad_query_6e9b0	battle	2x each of 1036e9b0/10366060/10356170/101b1280; sim query set
+0x10385720	obb_hub_metric_wrapper	battle	wraps obb_corners_expand_hub + min/max 10404b30; distance metric
+0x101352b0	guarded_loop_x19	unknown	19 sequential calls to FUN_10102f50; repeated guarded op
+0x10399790	plane_proj_aggregate_78	battle	float-pair x5 + 2x scan_points_plane_proj_dist into 0x78 alloc
+0x101b22f0	anim_param_pair_a	anim	anim helpers 101a1cb0/101a29b0 + consts 0.1f/10.0f; parameter variant A
+0x101b26d0	anim_param_pair_b	anim	twin of 101b22f0 (101a1d30/101ab4c0); variant B
+0x102385b0	recursion5_385b0	unknown	self-recursive x5 + 1022e5a0/102351a0
+0x100f5860	large_buffer_release_sweep	core(memory/string)	11x FUN_10124e50 (VirtualQuery-backed big free) + const 0x8ba2928; bulk buffer release
+0x10483dc0	ui_list_builder_jumptable_b	ui	jump table + 12x UI asset helper 102198e0 + variant mesh calls; second mega list builder
+0x101b6ce0	facefx_mount_ops_offset	middleware-facefx	calls fxmountresult_list_build + offset 0x4732 helpers; mount data ops
+0x10491fb0	campaign_spawn_table_hashes	campaign	3x spawner 112d98d0 + region hashes 104c9b30/104c9630 + masks 0x1c000/0x4000
+0x102faa40	rand_allocs_helper	battle	MSVC rand consts + 4 allocs + 102b4f20; random build helper
+0x10283480	hash_aba1359_clamped_query	battle	hash 0xaba1359 + FLT_MAX init + clamps 0.2f/0.5f; keyed ranged query
+0x103259e0	five_bundle_259e0	unknown	same bundle family as 10325d90 (10241630 x3 etc.)
+0x102b67b0	eventtake_markers_distlim	middleware-facefx	GetEventTake + 3x world->screen proj + consts 50/120/FLT_MAX; event markers w/ distance gates
+0x1012b9e0	string_region_ops_7x	core(memory/string)	7x 1014ae40 + 5x 1012aa20 in CRT-string region
+0x10327060	alloc10_pair_helper	unknown	allocs {0x10} + frees; tiny pair helper
+0x10310c10	field_walls_build_d	battle	6x field-wall ctors; wall set builder D
+0x1041deb0	cinematic_entry_anim_update	anim	pi/pm pi consts + slots 0x4c4c/0x5a5c/0x64168, cinematic entry builder + channel apply 10438540; cinematic pose refresh
+0x10173550	script_percent_magic100	script	14x thunk 10d99350 + const 1.5f + div-by-100 magic 0x51eb851f; percentage computation
+0x1028c5b0	paired_helpers_4x	unknown	4x 102bc5e0 + 4x 102a6b00 pairs
+0x10355370	cs_four_grid_allocs	battle	CS-guarded, four 0x19008-byte (~102KB) grid allocations at offsets 0x19000..0x19008; large sim grid buffers
+0x10313600	slot_array_pick_mix	battle	3x slot-array ctors (103cf910) + 2x pick query 105c5510; slots with selection
+0x10439150	anim_channel_op_a	anim	channel-apply family (11354460); single-channel op
+0x1048f270	anim_channel_op_b	anim	twin of 10439150 calling channel-set 10438540
+0x101e6a40	ai_jumptable_camrect_mix	unknown	jump-table targets + camera-rect helper (1016ae90) + consts 0.5/8/50 in AI cluster
+0x103aad70	spawn_orient_marker_pi12	battle	spawn-family (102d9810 x2) + const 3.5343 rad + marker draws (1059eb40); oriented effect + marker
+0x10375f10	math_chain_wrapper	unknown	chains math_wrapper_masks + 1034fd70 + wrapper_1135d6f0
+0x102f74b0	rect_debug_overlay_slots	render	rect_rotated_corners_build + debug-text builder via global slots +0x6432c/+0x64330; overlay rect dump
+0x10129c20	crt_math_leaf_z	core	callee-free math leaf in CRT region
+0x1024c8c0	typed_small_nodes_thunk	unknown	allocs {0xc,0x30} across offsets 0x1174..0x1198 + thunk 10d2be40; scripted node set
+0x1048e460	facefx_animevent_client_b	middleware-facefx	FaceFX FxAllocate/FxName/FindAnim/FxClientEvent/GetActor + CS guard; anim-event client processing B
+0x102ad660	battle_setup_lists_export_g	battle	thunk exporters x6 each (10cb60c0/6940/2c70/fa30/43c0); further setup writer
+0x1048e870	facefx_animevent_client_a	middleware-facefx	FaceFX FxAllocate/FxName/FindAnim/FxClientEvent/GetActor/GetAsCstr + CS guard, offsets 0x60b4..0x60e0; anim-event client processing A
+0x10224030	editor_thunk_dispatch	ui	editor-cluster thunks (10d7d460/10d84a40/10d6e410) + cinematic-editor helper; event routing
+0x10272a00	quad_call_sim_mix	battle	3x 10270760 + sim helpers (1030c150/1028f3f0); query mix
+0x102a18f0	pushback_draw_guarded	battle	frees + 2x push_back + draw 106168a0 + TLS guards; list build then marker
+0x10283fe0	scripted_text_overlay_mtx	render	debug-text builder + world mtx fetch + script thunks 10c7de60; positioned text overlay
+0x102bb620	variant_alloc_38_a0	render	twin of 102bb220 with allocs {0x38,0xa0}; mesh entry assembly B
+0x10271e20	slot642ac_query_throw	battle	global slot +0x642ac + sim queries + throw guard
+0x10307750	named_globals_config_resolve	battle	GetNameEntry + many global slots (+0x64114,+0x642xx) + const 0.6f; name-keyed config resolution
+0x104493e0	audio_thunk_hash_mix	audio	2x audio thunk 10fef7c0 + hashes + script thunk 10e14020; audio-script bridge
+0x101a20a0	anim_resource_ops	anim	alloc/free pairs + script thunk + 101aaad0 in anim-helper cluster
+0x101d8ee0	entity_base_ctor_chain	core	base-ctor chain (101f3ef0 x3, 101ce950/101c9540); shared entity construction path (hub, 4 callers)
+0x102c7c30	facefx_curves_twin	middleware-facefx	twin of 102c5ef0: GetCurvesEndTime + allocs {0x40,0x40} + clamps
+0x10442fa0	hash_name_parse_substr	battle	hash 0xaba1258 + substr/find string split (101155a0 x4); parses dotted names into keyed parts
+0x1045a190	editor_state_init_640e4	ui	allocs + slot +0x640e4 + editor helpers (101fe830/101cd290/101d11f0)
+0x10373f50	sim_dump_ranges_600	battle	2x debug print + consts 0.5/3.0/600.0; ranged metric dump
+0x10200090	obstacle_aware_target_scan	battle	6x target lookup + 3x obstacle_hittest_wrapper + rand consts; LOS/target scan respecting obstacles
+0x10441ec0	ui_asset_slot_variant	ui	UI asset helper 101a5c60 x2 via slot +0x6432c + pick 105ad350
+0x102c30e0	eventtake_jumptable_targeting	battle	GetEventTake + jump-table targets + ai_best_target_score_avg; event-driven target eval
+0x10270800	pick_dispatch_jumptable	battle	2x pick-best 105c7700 + jump-table switch; selection routing
+0x10262e00	hash_aba1359_mtx_query	battle	hash 0xaba1359 + world mtx fetch + sim helpers; keyed transform query
+0x10372890	sim_pair_0125f	battle	3x 11381600 + 3x 101b1280, const 0.02f (3ca3d70a); small-threshold sim op
+0x1047bf20	studio_channel_alloc_ops	middleware-facefx	4 allocs + 2x 104b72b0 + anim_channel_op_a; studio channel resource ops
+0x10432d20	audio_hashes_gate_10f	audio	four hash consts + rand consts + const 10.0f gates; hashed audio/state dispatch
+0x10123730	heap_flags_leaf	crt	masks 0x10000/-8/-2; heap flag leaf
+0x101b1ae0	anim_veg_mix_offset2830	anim	offset 0x2830 + scatter helper 1016f190 + audio_timing_variant_b; mixed param setup
+0x103d9f00	cam_rand_cluster	render	7x 103da4d0 + 3x rand_tls_alloc_01f + camera query; randomized camera params
+0x10446c00	negpair_flag_calc	unknown	neg helper + mask -255 + 10434e50; small calc
+0x1037ba60	pushback_throw_pair	unknown	push_back + throw guard + paired 1033e160/1033e600
+0x10265b40	alloc6_fltmax_guard	battle	6 allocs + 2x 103dd820 + FLT_MAX sentinel
+0x10368cc0	small_alloc10_wrapper	unknown	0x10 alloc wrapper
+0x10233cc0	floatpair_x16_bundle	battle	16x float-pair 103751a0 + 1022e860; dense pair extraction
+0x104484a0	pick_queries_allocs	render	allocs {0x14,0x14} + 3x each pick 105f5cf0/105f5bc0 + draws 1042f350
+0x1049f7b0	allocfree_tiny	unknown	single alloc+free wrapper
+0x102e9560	alloc14_clamp_15f	unknown	alloc 0x14 + clamp + const 1.5f
+0x1048dfd0	facefx_animset_loader	middleware-facefx	FaceFX BeginAnimations/EndAnimations/FindAnimSet/LoadAnimSetFromMemory/FxAllocate/FxFree; anim-set load+bind from memory
+0x1035c7b0	clamp_pushback_intmin	battle	2x clamp + 2x push_back + INT_MIN init; result list build
+0x1035f9e0	sim_quad_pushback	battle	4x 10326380 + push_back + sim queries; query results collection
+0x1049db00	audio_block_pair_0x324	audio	calls audio_hashes_gate_10f twice; allocs {0x324,0x324}, offset 0x2524
+0x10239a90	container_allocfree_throw	core	6 allocs+6 frees + guarded helper x3 + throw guard
+0x10108c30	crt_116bd8d0_concat_leaf	crt	CRT-helper leaf w/ concat ops
+0x10338db0	alloc2_paired_math	unknown	allocs + 2x 1037a0c0 + math pair (11354a70/b90)
+0x103a2610	sim_block_walls_rand	battle	6x 1034e6b0 + 2x field-wall ctor + rand consts; sim/wall blend
+0x10146dc0	triple_0x100_pushlist	ui	three 0x100-byte allocs + 3x 105161d0 + 3x push_back in HUD cluster
+0x10376ac0	ctx_getter_bundle	render	bundle of context getters (1016f420/f440/f9c0/f980) + paired 10344970
+0x1026f6f0	cs_guarded_create_0x80000	unknown	twin of cs_guarded_obj_create with const 0x80000; bigger guarded creation
+0x104033b0	hash_49742400_op	unknown	hash const 0x49742400 + guards + math; hashed operation
+0x101c7720	single_callee_wrapper	unknown	wraps FUN_101c62f0 only
+0x101f7da0	audio_query_fltmax	audio	GetAudioAssetPath + pick 10557500 + FLT_MAX init into 0x28 obj
+0x103895b0	anim_resource_throw_ops	anim	anim-helper calls (101a0b50 x3) + throw guard; resource validation
+0x10464600	hash_slot_rand_op	ui	hash 0x1356548d via slot +0x6432c + rand consts; keyed random update
+0x100f69d0	multi_string_ctor_five	core(memory/string)	five consecutive string ctors (100eexxx family) w/ masks 0x1010101; string-set init
+0x103a5620	typed_pair_0x78_build	battle	two 0x78 allocs + strings + 0.5f + masks -3/-2
+0x103cf4a0	rand_gated_queries	battle	rand consts + TLS guards + 3 queries; randomized selection
+0x10107400	crt_116bd8d0_leaf_aa	crt	CRT-helper leaf
+0x10123a90	bigmem_virtualfree_release	core(memory/string)	VirtualQuery/VirtualFree (MEM_DECOMMIT/RELEASE consts); large-region memory release companion of 10124e50
+0x103a4960	sim_pairops_jumptable	battle	jump-table targets + 1137e110 x3 + pairops family; sim block op D
+0x102740c0	alloc_pair_fltmax_node	unknown	allocs {0xc,0xc} w/ FLT_MAX init via 10241ca0
+0x104582b0	studio_timing_1000_b	middleware-facefx	const 1000.0f + offset 0x81803 + 3x studio helper 1048fa60; second ms-timing calc
+0x103dbd70	cam_state_to_text_map	render	HUB: resolves mode via cam_mode_state_resolve then switch maps state codes (8/e/f/10/11/2b...) to text ids (0x5d9/0x58d/0x59b...); feeds UI text
+0x103c4f40	alloc2_free1_tiny	unknown	two allocs + one free wrapper
+0x103e2d10	flag_gated_cam_state_b	render	flag masks + offset 0x53cc + cam_mode_state_resolve; gated check twin of 103e33e0
+0x103431a0	math_quad_bundle_b	unknown	twin of 10340970 (11385da0 x2 etc.); math bundle
+0x103ab520	clientevents_camstate_mix	unknown	GetNumClientEvents + cam_mode_state_resolve helpers; cross-subsystem dispatch (mixed evidence)
+0x10233690	floatpair_x16_bundle_b	battle	twin of 10233cc0 (16x pair fetch + 1022e760)
+0x1011fef0	data_dir_path_resolver	fs	builds dotted-key paths: 11x core_string_split_dotted_triplet, GetNameEntry, actor_named_text_build x6 into 0x30 string objs (referenced as path resolver)
+0x102e9a30	wall_marker_pi12	battle	3x field-wall ctor + const 3.5343 rad + marker draws; oriented wall markers
+0x102fd5c0	clamp_trio_allocs	unknown	3x clamp 1136e440 + allocs
+0x10170fd0	facefx_numanims_ops	middleware-facefx	FaceFX GetNumAnims + alloc/free pairs; anim count resource op
+0x101596f0	hud_teardown_38free	ui	38 frees + throw guards x9 + panel ctors (10159ed0); HUD rebuild teardown path
+0x10442600	naval_marker_hash1366	render	3x naval marker helper + hash 0xaba1366 + const 10.0f; keyed ship marker update
+0x1026d130	mesh_entry_build_c	render	allocs + variant helpers (102b5000/101a9110) + clamp; third mesh-entry builder
+0x100f6220	debugcheck_hash_dispatch	core	IsDebuggerPresent gate + 22x helper 10106230 + hash consts 0x1d009d/0x290xxx; debug-aware hashed dispatch
+0x103dcac0	leaf_no_calls	unknown	callee-free leaf; not further determinable
+0x103b0f80	math_bundle_0x400000	unknown	math helpers (1136exxx) + const 0x400000; undetermined
+0x103a1e10	audio_path_wrapper	audio	single GetAudioAssetPath + float pair; thin audio fetch
+0x102c9970	container_ops_9free	core(memory/string)	9 frees + 4 allocs + guards; buffer set maintenance
+0x103319d0	clamp_gated_queries	battle	clamp 1136e120 + guards + sim queries; gated metric
+0x1013c7d0	hud_panel_obj_build	ui	HUD-cluster ctors (101330b0/10146700) + string ops; panel object init
+0x101b2f10	audio_timing_agg_x4	audio	aggregates 4x facefx_audio_timing_5s via offset 0x23a4; combined event timing
+0x102cef40	sim_query_hub_a6b00	battle	HUB: 5x 102a6b00 + throw guard + 1029fe40; shared sim-query path (16 callers)
+0x10275820	multipoint_selection_build	battle	15x 101a9110 + 4x pick-best 10557500 + 3x nearest_point_scan_fltmax; selection set construction
+0x10288680	pair_call_twin_b	unknown	twin of pair_call_10288bb0 with extra 1137fcb0 + mask 0xff00ff00
+0x10241ca0	nearest_entity_query_6x	battle	6x 1026feb0 + nearest_entity_min_dist_query + guards; proximity query variant
+0x1026d740	alloc_simquery_mix	battle	alloc/free pairs + sim queries (101eb210) + guards
+0x103f9fa0	marker_angle_slots_380b	anim	jump const 0x380b + pi*1.2 + slots +0x640d8/+0x64408 + 3x 0x1c allocs + marker draws
+0x1024ded0	hud_node_builder_4c	ui	frees/allocs {0x4c,0xc} + HUD ctors (1024ddd0/102441f0/10132c50); panel node assembly
+0x10169e20	camera_buffers_0x4a0	render	allocs {0x4a0,0x498} in camera cluster + 3x 101b0430; per-camera frame buffers
+0x102255c0	ai_alloc2_helpers_mix	battle	2x alloc2_sim_helpers + ai-cluster helpers (101ed940/101e9e90)
+0x103028b0	effect_spawn_scale_ranges	battle	spawn family (102d9060/102d98f0) + consts 0.1/10/40000.0 into slot +0x643f4
+0x102f9d30	march_flags_rect_combo	unknown	flag masks 0x4000/0x8000/0xc000 + march_step_into_rotated_rect + pair (102f9a20); marching variant w/ flags
+0x101b8b90	audio_path_offset250c	audio	GetAudioAssetPath + guards + offset 0x250c consts; audio entry w/ IM-adjacent offset
+0x104178e0	named_rand_spawn_10_40000	render	GetNameEntry + 2x spawner 112d98d0 + rand consts + consts 0.1/10/40000.0; ranged named spawn
+0x10330790	string_free_quad	core(memory/string)	4x string free helper (100f1700)
+0x102372c0	recursion5_372c0	unknown	self-recursive x5 + 2 helpers
+0x103c3540	warning_alloc_b034	ui	WARNING API + allocs {0xb0,0x34} + thunk 10cff650; warned allocation block
+0x101242e0	heap_mask_leaf	crt	masks 0x10000/-8; heap leaf
+0x10182690	obb_hub_audio_mix	battle	3x obb_corners_expand_hub + GetAudioAssetPath x5 + consts 8/22/150.0 + jump-table; mixed targeting/audio eval
+0x10242770	quad_call_0598490	unknown	4x 10598490 + paired 102bc570
+0x10143490	hud_string_tables_build	ui	13 string ops + allocs {0xe8,0x18,0x10}; HUD text table construction
+0x101040a0	crt_math_leaf_aa	core	callee-free CRT-region math leaf
+0x1016e150	ctx_gated_six_calls	unknown	2x each of 1062db10/de30/fccf0 + ctx getter (10115e00); gated set
+0x103db300	cam_queries_masks_6700	render	6x camera query 1038d3d0 + offsets 0x6700/0x6800/0x6900 + masks; camera state fields
+0x102416f0	simquery_audio_mix_b	battle	6x 1026fd10 + GetAudioAssetPath + guards; second sim/audio mix
+0x1037af80	const20000_leaf	unknown	four self-calls + const 0x20000; fixed-point-ish op
+0x10216850	entity_ctor_named_dispatch	ui	entity_base_ctor_chain x2 + editor thunks 10d6e410 + GetNameEntry; named entity creation dispatch
+0x1013a080	hud_panel_row_ctor	ui	HUD panel row ctor bundle (string ops + 101413f0); called by battle_hud builders (10139640)
+0x101332a0	hud_bigbuf_0xaf8	ui	allocs {0x2a8,0xaf8,0x2a8,0xc} + HUD ctors (101338d0) + 102e3da0 x2; large panel buffer build
+0x10344fb0	script_block_offsets_1207	script	offsets 0x1207/0x2998 + consts 3.0/15.0 + thunks 10d1a700; scripted parameter block
+0x1024ae00	single_math_13529b0	unknown	delegates to 113529b0; math wrapper
+0x102041b0	cinematic_editor_tick_dispatch	ui	cinematic-editor helper x3 (101d2320) + editor thunks (10d7c570/10d65970) into 0x40 obj
+0x10274450	pickctx_pose_eval_mix	battle	5x pick ctx 1035ae90 + pose sampler 10349090; selection-driven pose evaluation
+0x1012adc0	sixteen_named_spawns	battle	16x repeated {thunk 10d00bc0 + spawner 112d98d0 + strings}; batched named entity creation
+0x10349aa0	cs_four_managers_init	unknown	CS guards + four 0x28 allocs + masks 0x81000/0x83103 + consts 2/20; typed manager set init
+0x1016bf90	giant_pushlist_57x	battle	57x push_back (100eaf40) + 21 frees + consts 3000.0/-0.5 + thunks 10da80f0 x8; massive list assembly (roster/points)
+0x1042a060	named_spawn_trio_anim	anim	GetNameEntry + 3x spawner 112d98d0 + string-pair ops in anim cluster
+0x10299900	scripted_effect_instances_x4	battle	4x each script thunks (10c82370/10c900b0) + factory 1030d460 + world mtx
+0x104715d0	facefx_refs_panel_struct	middleware-facefx	FaceFX GetReferences + panel allocs {0x4bc,0xc} + hash 0xaba7777; reference list into studio struct
+0x103c25e0	wall_params_camera_getter	battle	4x field-wall ctor + camera getter + consts 1.6/2.5/8.0; wall parameterization
+0x10469fb0	wall_debug_jumptable_build	battle	jump-table + 3x each minmax/wall-ctor/debug-text + const 5.0; wall debug structures
+0x1023ed10	throw_guard_mask_leaf	crt	throw-guard leaf w/ mask 0xffff
+0x1023e4f0	throw_guard_mask_leaf_b	crt	twin throw-guard leaf
+0x10327730	spawn_entry_offset11ca	battle	spawner + offsets 0x11ca/const 0x1203 + query pair; spawn record variant
+0x103100a0	field_walls_build_e	battle	6x field-wall ctors; wall set builder E
+0x10377aa0	ctx_pair_bundle_b	render	2x each ctx getters (1016f440/f420) + pairs (1033b690); context bundle B
+0x1029ea20	facefx_audio_published_filter	middleware-facefx	FaceFX GetAudioAssetPath+IsPublished + FLT_MAX/clamps; published audio asset filtering
+0x103771e0	ctx_pair_bundle_c	unknown	pairs (1034fb20/1033b690/1033c4b0/1033e340) + ctx getters; bundle C
+0x10373510	wall_math_neg9920	battle	2x field-wall ctor + math 1136b670 x3 + consts 0.05f; wall metric w/ large negative bias
+0x1036c780	flag_state_hub_battle	battle	HUB: flag masks (-4/-17/-256-family) + rand consts + 8x gate 10404a90 + sim queries (1032bdc0/103b24f0); shared state resolver
+0x101b7140	audio_thunk_offset238c	audio	thunks 102947b0/10d99350 + offset 0x238c + guards; audio-adjacent mix
+0x1049f3c0	math_quartet_1188fa0	unknown	4x 11188fa0 + pairs 1134f7b0/f800; math set
+0x10356230	sim_pairops_bundle	battle	3x each 1034e430/1037c710/101a2d50 + guards; sim pair-op set
+0x10301510	effect_spawn_allocs	battle	spawn family (102d9000/102d97d0) + 3 allocs; instance creation variant
+0x10125870	crt_jumptable_26ca0	crt	jump-table + 5x FUN_10126ca0 in CRT-string region
+0x10239ec0	hud_data_build_alloc28	ui	HUD-cluster helpers (10245750 x7, 10281d40 x6) + allocs {0x28,0x28,0xc}
+0x1030cbf0	global_slots_config_gates	battle	offsets 0x2524/+0x642b8/+0x642d8/+0x642e0 with gates + 3x 1018b5c0; slot-driven config
+0x1011e650	tga_writer_dispatch	render	dispatches tga_write_gray8 x3 + row variants x2 + mask math; screenshot format router
+0x1017c030	spinlock_named_register	core	LOCK/UNLOCK spinlock + GetNameEntry + slot +0x642ac + strings; thread-safe named object registration
+0x10343770	seven_ctor_jumptable	unknown	seven 100d9d90 ctors + jump-table targets; multi-object init
+0x10242210	variant_helper_throw_pair	render	2x 102bc4d0 + throw guard; mesh-entry helper
+0x10302400	effect_fields_slots_alloc	battle	spawn-family (102d9220) + allocs into offsets 0x2538/0x253c/slot +0x6440a
+0x101c71d0	multitarget_scan_x16	battle	16x target lookup 10680500 + 5x 101c6cc0; broad target evaluation
+0x10426cf0	audio_event_table_21x	audio	21x audio thunk 10fef3b0 + hash consts + alloc {0xbc} + factory 1030d460; large audio event registration
+0x10385ec0	mtx_math_masks_16	render	4x 11352260 + picks 105a0960/a1fc0 + mask 0xffffff; transform math w/ picks
+0x10363770	clamp_ctx_offset1203	battle	2x ctx getter + clamps + const 0x1203 + min/max; gated metric
+0x103cee00	editor_dispatch_jumptable_c	ui	jump-table + editor helpers (101fe830/101cd290/101d11f0) + HUD ctor 10159100
+0x1039e370	script_thunk_quad_x4	script	4x each of 10cffcf0/c30/970/b80 thunks + 4x 103a04a0; scripted slot set (twin of script_thunk_slots_init)
+0x103236e0	sim_21ff0_x5	unknown	5x 10321ff0; sim helper chain
+0x104093f0	recursion5_093f0	battle	5x self-recursion + 5x 104090b0; recursive walk pair
+0x102bd300	mtx_fetch_pair	unknown	world-mtx fetch + 10274ff0; transform step
+0x101b79d0	audio_path_bundle_x3	middleware-facefx	3x GetAudioAssetPath + 4x thunk 102947b0/94830; audio asset bundle
+0x10189330	jumptable_const100_4730	unknown	jump-table + const 100.0f + offset 0x4730
+0x103ff6d0	pose_sampler_eval_b	anim	2x pose sampler 10349090 + anim helper 101a2470 + script thunk; pose evaluation B
+0x1036dec0	sim_offsets_scan_block	battle	scans offsets 0x11ca/0x1203/0x120c/0x1220/0x1244 via query set; member-block sweep
+0x1028d790	facefx_curves_jumptable	middleware-facefx	GetCurvesEndTime + jump-table targets; curve timing dispatch
+0x101eb480	facefx_event_callback_handler	middleware-facefx	FxEventCallbackParam-typed + GetActor + sim queries (106188d0); anim-event callback into sim
+0x10392bf0	single_call_8000	unknown	calls 10391410 w/ mask 0x8000
+0x102a71d0	effect_spawn_audio_slots	battle	GetAudioAssetPath via slots +0x642b8/+0x6432c/+0x64338 + factory 1030c010; effect spawn w/ audio hook
+0x102dbc50	wall_segments_widths_alloc	battle	2x field-wall ctor + 2x {0xc,0x78} allocs + consts +/-1.4875/4.0; wall segment widths
+0x102f0920	gates_alloc_audio_mix	audio	consts 5.0/offset 0xafc9/masks + GetAudioAssetPath + guards; mixed gate calc
+0x10393350	recursion5_92ae0	render	5x self-recursion + 5x 10392ae0 in waterfall cluster
+0x103149b0	effect_dispatch_jumptable	battle	jump-table + effect_instance_type_factory call; master effect routing
+0x10458a70	negpair_cam_queries	render	7x neg helper + 3x camera query 103d08b0; camera metric w/ sign flips
+0x102c8290	jumptable_alloc5_gates	unknown	jump-table targets + 5 allocs + gates (1169c2e4 x3)
+0x1028aa20	influence_grid_2x16k	battle	two 0x4008-byte (~16KB) grids + 4x push_back + sim queries; influence-map grid pair
+0x1037a440	packed_doubles_print_mix	render	packed double consts + 3x debug print + 113584b0 x4; packed-math dump
+0x102cb880	facefx_curves_alloc_gates	middleware-facefx	calls facefx_curves_jumptable + 4 allocs/frees + picks 1054d690; curve-gated flow
+0x1035f360	six_helper_bundle	unknown	6x 10328430 + pairs (1033b4c0/1037b640/1033b040/1033aec0)
+0x1039a930	projectile_allocs_ranges	battle	projectile ctor 102d06b0 + allocs {0xc x4,0x14} + consts 0.1/10/40000.0 via slot +0x642b8
+0x10449980	scripted_sim_scan_9000	battle	4x scripted_sim_query_slot + consts 9000.0/-0.5f; script-driven proximity scan
+0x101b5d90	anim_script_init_mix	anim	calls effect_init_audio_path + script_member_block_init + const 16.0f across gates
+0x10353760	alloc12_gate_hub	unknown	HUB: 12 allocs + frees + single gate 10404a90; shared allocation path (8 callers)
+0x10463c20	studio_serialize_view_save	middleware-facefx	FaceFX Serialize + slots +0x64318/+0x64410 + studio helpers; serialize studio view state
+0x10137840	hud_blocks_c0_c140	ui	HUD ctors (101791f0 x8, 10155fe0 x4) + allocs {0xc0,0xc0,0x140}; panel data blocks
+0x1028fc70	jumptable_mixed_dispatch	battle	jump-table + eventtake markers + container ops + INT_MIN scan; broad router
+0x103254d0	five_bundle_254d0	unknown	same bundle family as 10325d90/103259e0
+0x104806d0	hash1359_mtx_step	render	hash 0xaba1359 + world mtx fetch + helpers; keyed transform step
+0x10481220	studio_walk_dea10_x12	middleware-facefx	12x studio helper 104dea10 + rand consts; large studio traversal
+0x102859e0	mtx_fetch_quad_calls	unknown	world mtx + 11355c10 + 1026ca20/10284a00; transform chain
+0x10395ef0	audio_path_x8_gates	audio	8x GetAudioAssetPath-family (1018aa10) + guards; repeated audio path resolution
+0x103acfa0	tri_intersect_alloc3c	battle	triple-flagged tri intersect + 10404670 x3 + 0x3c alloc + const 0x80000; picking w/ allocation
+0x1027e470	eventtake_obb_screen_mix	battle	GetEventTake + obb_point_outside_edge_distance x3 + world->screen proj x2; event-driven proximity markers
+0x1012df30	sim_query_73a10_x6	battle	6x 10173a10 + sim queries (103eb8b0); query set
+0x101b35f0	anim_serialize_param_mix	anim	FaceFX Serialize + camera rect helper (102f81e0 x5) + anim_script_init_mix x3 + consts 0.2f
+0x103dab00	cam_binang_3555_6aab	render	camera queries x4 + binang consts 0x3555/0x6aab (~75/150 deg); angular gate pair
+0x1028a530	alloc_trio_wrapper	unknown	three 0xc allocs + frees; tiny node trio
+0x10269b60	hash3727_math_bundle	unknown	hash 0x3727c5ac + FLT_MAX + math helpers incl. FUN_1135d7d0 projection; undetermined
+0x1041d6b0	debugtext_thunk_sim_mix	anim	5x debug-text builder + thunks 10d3a110/d39d30 + studio 104d12b0; text+thunk mix
+0x1023f560	throw_guard_leaf_c	crt	throw-guard leaf twin
+0x10240460	throw_guard_leaf_d	crt	throw-guard leaf twin
+0x103f8a20	mtx_pair_slot642b8	anim	2x world-mtx fetch via slot +0x642b8 + math; pose-space transform
+0x1023fd00	throw_guard_leaf_e	crt	throw-guard leaf twin
+0x10439d20	rand_hash_veg_mix	render	rand consts + hash 0x49710ae3 + veg helpers (112e1830); scatter calc
+0x10324e80	five_bundle_hash_lookup	battle	bundle family + hash_lookup_305a9c4b call; keyed bundle op
+0x10376310	ctx_bundles_const10	render	calls ctx bundles + const 10.0f across 8 helpers; context metric
+0x10125ba0	crt_jumptable_leaf	crt	jump-table leaf in CRT region
+0x102b6010	gates_audio_path_mix	audio	guards + GetAudioAssetPath + picks 1025f1b0; gated audio lookup
+0x103fda20	sim_query_mix_6a2d0	battle	5x 1036a2d0 + sim queries (1036b8a0/b770); query mix
+0x10381d80	constructobject_pair_gates	battle	FaceFX ConstructObject + paired gates (103dd700/dd810) x2; object construction path
+0x102f90c0	alloc18_offset25c0	unknown	alloc 0x18 into offsets 0x25c0/0x25c4 via 102929c0
+0x10286f10	actor_pair_call_mix	battle	GetActor + pair_call_10288bb0 x2 + script thunks; actor-driven mix
+0x1043ad60	sim_x5_camtext	anim	5x sim query + camera getter + debug-text builder via slot +0x6432c; mixed eval dump
+0x1018c1e0	alloc2_cam_clamp	render	2 allocs + camera getter 101682d0 + clamp; camera-side helper
+0x1034ead0	math_1135dbc0_x4	unknown	4x FUN_1135dbc0 + pairs; math set
+0x1017eed0	debugtrace_actor_names	core	OutputDebugStringA + GetActor + name compares into {0x18,0x18} bufs; debug tracing of named actors
+0x1027be00	alloc_c0_text_mix	ui	allocs {0xc,0xb0} + alloc12_text_math_mix call; node with text payload
+0x102f1780	obb_hub_slot2524	battle	calls obb_corners_expand_hub + clamps 1136e5c0 x4 + slot offset 0x2524
+0x102cd760	pair_alloc14_helpers	unknown	two 0x14 allocs + helpers (10179670/101b9570)
+0x101dd520	jumptable_ai_state_mask	battle	jump-table targets in AI cluster + helpers (102221e0/102220d0) + mask 0x3fffffff
+0x1017c510	slot642ac_const30	battle	10 frees/allocs + slot +0x642ac + const 30.0f
+0x10180830	tls_guards_const1203	unknown	TLS guards x3 + const 0x1203 helper call
+0x10435e80	facefx_teardown_52free	middleware-facefx	52 frees + 27 throw-helpers + sub-dtors in facefx cluster; massive checked teardown
+0x103150e0	camera_config_wrapper	render	wraps battle_cameras_txt_parser + allocs {0x9c,0x70}; camera cfg load+apply
+0x10345b80	anim_jumptable_alloc5c	anim	4x anim helper 101a0b50 + jump-table + twin 0x5c allocs
+0x102d0bf0	effect_variant_wrapper	battle	delegates to effect ctor 102d5920 + math pair; variant wrapper
+0x101841a0	alloc16_free9_mix	unknown	16 allocs + 9 frees; buffer set ops
+0x103c43d0	wall_minmax_clamp_hub	battle	4x 10339700/10379910 + 3x field-wall ctor + min/max + clamps; wall metric hub
+0x1023a450	hud_alloc2c_throw	ui	frees/allocs {0x2c,0xc} + HUD helpers (10244120 x3) + throw guard
+0x10497ff0	leaf_studio_cluster	middleware-facefx	callee-free leaf in studio cluster
+0x10354af0	jumptable_six_allocs	unknown	jump-table targets + six 100d9d90 ctors + five 0x2c allocs
+0x1035c010	walls_pushback_1e9	battle	4x 10298ee0 + push_backs + field-wall ctor + const 100000.0f (47c35000)
+0x1034acd0	math_reflect_bundle_x9	unknown	9x math_1135dbc0_x4 + vector_reflect_mode_select; heavy math bundle
+0x10220300	pushback_math_gates	battle	allocs {0xc,0xc} + math gates (11373a70 x2) + push_back
+0x101dfe40	sim_helpers_fltmax	battle	3x each of 101f95e0/101f7af0 + FLT_MAX init; sim metric
+0x101f5170	clamp_pushback_offset2508	battle	2x clamp + 2x push_back + offset 0x2508 + draws (106770b0)
+0x1017a2a0	bigbuf_0x798_guards	battle	allocs {0x8c,0x798} (~2KB) + guards + thunks; large per-object buffer
+0x10398520	flag_masks_alloc_ac	battle	consts 0x110011/0x2650-family masks + allocs {0xac,0x40,0x3c} + 4x 10337600; flag-driven build
+0x1049d630	spawner_pair_slot64168	campaign	calls size_quality_enum_lookup2 x2 + 2x spawner 112d98d0 via slots 0x2524/0x5a5c/0x64168
+0x10306a90	threadid_named_key_table	script	GetCurrentThreadId + 18 string-pairs + jump-table; thread-tagged key table
+0x1024b510	alloc30_wrapper	unknown	single 0x30 alloc wrapper
+0x103360f0	math_quad_alloc12	unknown	4x 10298be0 + math quartet + 0xc alloc
+0x101230a0	bigmem_release_core	core(memory/string)	VirtualQuery/VirtualFree release path; core large-block free
+0x103c0420	camstate_gate_negintmin	render	cam_mode_state_resolve + INT_MIN const + offset 0x53cc; gated camera-state op
+0x102fed60	dual_walk_obb_flags	battle	4x dual_list_walk + obb_corners_expand_hub + masks 0x10101; list walk w/ proximity
+0x102be720	clamp_variant_allocs	render	allocs + 2x clamp + variant helpers (101a9110/102b7f60)
+0x102fafe0	walls_audio_dist_consts	battle	field-wall ctor + GetAudioAssetPath + consts 30/40/50/60/128/180.0 via slot +0x642ac; distance-banded config
+0x10473ba0	ui_assets_jumptable_15x	ui	15x UI asset helper 102198e0 + jump-table targets + panel helpers; big UI assembly
+0x10233250	sim_30090_x5	unknown	5x 10230090; helper chain
+0x10479de0	studio_dea10_x5	middleware-facefx	5x studio helper 104dea10 + 2x 10495410; studio op
+0x101adac0	min_dist_query_quad	battle	4x FUN_11364860 corner-min-dist (same as nearest-entity hub) + allocs
+0x10476b80	anim_sample_multi_consts	anim	3x anim sample wrappers + consts 0.05/2/3/5/9/10.0f across offsets 0x1220; multi-rate sampling setup
+0x1025d8a0	setup_lists_export_huge	battle	exporter mega: 28x 10cb9040 + 16x each 6120/9f50 + 14x a87a0 thunks; largest setup writer
+0x103d1790	flag_masks_sim_queries	render	mask -9 + sim/pick queries (103f7c50 x3); gated query set in camera cluster
+0x103cc2c0	facefx_audio_refs_gates	middleware-facefx	calls facefx_audio_asset_paths_collect_b x2 + gates (103c5f10/b24f0/c5b70); audio reference flow
+0x1040bf40	facefx_cluster_alloc8	render	8 allocs + picks (105df600 x3, 10643240) + facefx getters (100e80b0); cluster init
+0x10176a40	scripted_panel_strings	ui	string ops + script thunks (10cceb20 x2) + HUD ctor 10132920; scripted panel text
+0x1025ce80	setup_lists_export_huge_b	battle	twin of 1025d8a0 exporter (same thunk counts); second mega writer
+0x103a39b0	gated_minmax_100	battle	guards + min/max + const 100.0f + clamps; threshold metric
+0x103ffe00	jumptable_pairops_bigconsts	render	jump-table + huge consts (180.02/920.59) + offset 0x53cc + pairops; scaled metric table
+0x102cbec0	bigbufs_668_628_5c0	battle	allocs {0x668,0x628,0x5c0} (~1.7KB total) via 1028a4a0/c4f0; large per-object buffers
+0x100fe770	findfile_dir_walk_fs	fs	FindFirstFileW/FindNextFileW/FindClose walk w/ string building; directory traversal (pack-scan family)
+0x10124e50	bigfree_virtualquery_hub	core(memory/string)	HUB: LOCK-guarded VirtualQuery/VirtualFree release of large blocks; shared big-memory free (11 callers)
+0x10318250	sim_gates_smallconsts	battle	gates (1030f600 x4) + sim queries + consts 0.01/0.1; small-threshold metric
+0x10204d10	obb_hub_offset2408_20f	battle	calls obb_corners_expand_hub + float-pair x3 + offset 0x2408 + const 20.0f
+0x101e1bb0	ai_alloc10_pair_queries	battle	allocs {0x10,0x10} + sim queries (10382480/1036b9b0); AI-side node init
+0x103781c0	pair_gates_bundle	render	bundles 10344bf0 x4 + pairs (103751a0/10328c40); gate bundle
+0x1033ec30	math_masks_80000	unknown	math via 10362f50/11365250 + const 0x80000
+0x103a04a0	extract39_pushlist	battle	39x member extract 10298be0 + push_backs; dense data collection
+0x103d5060	offset4040_masked_metric	render	offset 0x4040 + masks + gated_minmax_100 call; masked metric in camera cluster
+0x1035cd90	walls_pushback_1e9_b	battle	twin of 1035c010: wall ctor + push_backs + const 100000.0f
+0x103e4840	camstate_offsets_block	render	offsets 0x1db8/0x1e04/0x42e0 + cam_state_to_text_map callers; camera-state fields
+0x1017b7d0	cs_bigbufs_0558_pair	battle	CS guard + twin 0x558 allocs + consts 0.8/0.9 + jump-table; buffered metric tables
+0x10177e80	clientevents_markers_x10	battle	GetNumClientEvents + 10x marker draw 10524f80; event-driven marker row
+0x10213b10	math_pair4x	unknown	4x each of 1135d6f0/1135dc80; math set
+0x102864e0	triple_helper_mix	unknown	3x each of 10271720/11376370 + clamp; mix
+0x1017d340	camrect_const9000_slot	render	camera-rect helper (1016aef0) + consts 8/9000 via slot +0x642ac; scaled rect calc
+0x102a07d0	plane_proj_buffers	battle	scan_points_plane_proj_dist x2 into {0x60,0x90,0x90} allocs; projected point-set build
+0x103886c0	const001_math_leaf	unknown	const 0.01f math leaf (11385e00/1135db30)
+0x100fa730	string_builder_bigfree	core(memory/string)	concat-heavy build + bigfree_virtualquery_hub call; large text assembly w/ cleanup
+0x10322120	sim_21f30_x5	unknown	5x 10321f30; helper chain
+0x103229c0	sim_21f90_x5	unknown	5x 10321f90; helper chain twin
+0x102d3dd0	effect_ctor_math_mix	battle	delegates to effect ctors (102d2700/102f26e0) + math; spawn-side calc
+0x102ec0d0	audio_path_jumptable	audio	jump-table + GetAudioAssetPath x2 + allocs; audio routing
+0x10232ad0	text_compare_14x	battle	14x string compare (100f2530) + appends; keyed text matching pass
+0x103970d0	formation_centroid_caller	battle	calls formation_face_centroid_binang x2 + sim queries; formation orientation flow
+0x102d99b0	wall_spline_consts_alloc	battle	calls field_wall_spline_segments + allocs {0xc x4,0x78} + consts 0.27/0.96/4.0; wall geometry params
+0x101a9e40	anim_ctor12_rand_mix	anim	12x ctor 100d9d90 + rand consts + 64-bit masks; anim object bank w/ seeds
+0x102ef6a0	free12_sim_queries	battle	12 frees + sim queries (10304750 x3); teardown+query mix
+0x1038a6a0	mask_leaf_101a2d50	unknown	masks 0x20000-family + FUN_101a2d50; leaf
+0x1038c3d0	math_b670_x5_pairops	unknown	5x 1136b670 + pairops (1037c710/101a2d50); math set
+0x103de810	pairops_cam_mix_b	render	pairs (103485e0/a7ee0) + camera helpers; mix B
+0x10261e60	pick9_alloc6_hub	battle	9x pick-best 10557500 + 6x clamp_variant_allocs + 6 small allocs; selection hub
+0x101e28d0	ai_alloc10_triple	battle	three 0x10 allocs + AI-cluster gates (1018db30/101ae920); AI node set
+0x10402370	offset380b_pi12_camstate	anim	const 0x380b + pi*1.2 + slots +0x640d8/+0x64408 + math x6; angled state calc
+0x103bb740	warning_camstate_offsets	ui	WARNING API + cam_mode_state_resolve x2 + offsets 0x53cc/0x8f9c/0x923c; warned state op
+0x103fe0f0	pose_sampler_pairops_mix	anim	pose samplers (10348f50 x5, 10349090 x3) + pairops; sampling blend
+0x1043c680	rand_hash_uiassets	ui	5x UI asset helper + rand/hash consts (0x49710ae3) + math; scatter-weighted UI placement
+0x103f5c40	warning_camstate_map_b	render	WARNING + cam state resolve/map chain; warned camera-state op B
+0x103feab0	pickctx_clamp_hub_pairops	battle	3x pick ctx 1035ae90 + 2x clamp_query_hub + pairops; selection metric combo
+0x104758c0	debugtext_thunk_x7	anim	7x debug-text builder + script thunks (104c2ca0/c00f0) + studio helpers
+0x1048d700	facefx_animbinding_strings	middleware-facefx	FaceFX BeginAnimations/EndAnimations/FxActorInstance/FxAllocate/FxFree/GetAsString w/ offsets 0x60b4..0x60e4; anim binding via strings
+0x100fb690	string_builder_bigfree_b	core(memory/string)	twin of 100fa730: concat build + big-free hub call
+0x10290e70	jumptable_simhub_mix	battle	jump-table + 6x 1024dbe0 + sim_query_hub_a6b00 x3; router over sim hub
+0x103f50e0	warning_camstate_map_c	render	WARNING twin of 103f5c40; third camera-state op
+0x102c8a30	negpair_math_leaf	unknown	INT_MIN mask + single math 1135fac0; leaf
+0x10301e70	alloc10_free5_wrapper	battle	10 allocs + 5 frees in effect cluster; buffer set
+0x102cdfb0	segdist_quad_allocs	battle	4x FUN_11364920 seg-dist + picks (10289d70 x5) into {0x3c,0x48}; proximity node build
+0x1047f980	ui_assets_allocs_64414	ui	4x each alloc/UI-asset helper via slot +0x64414 + masks 0x4000/0x8000
+0x10349130	cs_wall_metric_flags	battle	CS guards + wall ctors (10339700/10379910) + flag consts 0x20000/0x40000/0x60a00; protected wall metrics
+0x103f6d70	warning_camstate_masked	render	WARNING + cam state resolve + mask -9; fourth variant
+0x103bc2b0	rand_camstate_gates	render	rand consts + cam_mode_state_resolve x2 + gates; randomized gated op
+0x1047ac10	studio_dea10_x6	middleware-facefx	6x studio helper 104dea10 + clamps; traversal variant
+0x1046a7b0	textpairs_slot6432c_build	anim	5x string-pair ctor + 5x debug-text builder via slot +0x6432c; keyed text block
+0x103e57b0	warning_camstate_flagged	render	WARNING twin w/ flag masks (-257-family); fifth variant
+0x1038b4c0	negpair_math_2call	unknown	INT_MIN mask + math 1135fac0 + 10601760; leaf
+0x104127b0	facefx_animgroup_table	middleware-facefx	FaceFX GetAnimGroupName + allocs {0x20,0x90,0x1c} via slots 0x23bc..0x2554; anim-group name table
+0x10470490	debugtext_slots_anim	anim	2x debug-text builder + slots +0x642b8/+0x64348 + 10417ef0; text block in anim cluster
+0x10157c90	hud_megadtor_164free	ui	164 sequential frees! + sub-helpers; enormous HUD/string teardown
+0x1047c350	cs_studio_ops	middleware-facefx	CS guards + studio helpers (10490480/104b72b0); protected studio op
+0x103e62f0	warning_camstate_map_d	render	WARNING + cam state map chain; sixth variant
+0x1041ff00	nineteen_ui_nodes_spawn	ui	19x spawner + 19x jumptable_ui_node_build + strings; bulk named node creation
+0x103ef750	warning_camstate_map_e	render	WARNING twin; seventh variant
+0x10362350	quad_alloc10_pair_f7f0	unknown	four 0x10 allocs + pairs (1034f7f0/10375040)
+0x103609d0	quad_alloc10_pair_f970	unknown	twin of 10362350 with 1034f970; second set
+0x1027d6b0	pick4_alloc50_mix	battle	4x pick 105575e0 + allocs {0x50,0xc} + masks -3/-2; selection build
+0x10329f30	call242_pipeline	battle	242 sequential calls to FUN_10340480 across offsets 0x12ec..0x1b3c; massive fixed init pipeline
+0x101714a0	scripted_anim_allocs	anim	allocs {0xf0,0x5c,0x5c} + script thunk 10c89160 + anim helpers; scripted anim setup
+0x103cb2a0	ctx_gates_neg1_x8	middleware-facefx	8x ctx getter (10115e00) + guards + -1.0f const; gated studio scan
+0x101dde30	target6_clamp4_ai	battle	6x target lookup + 4x clamp + min-dist queries; AI target metric
+0x103ad980	rand_alloc10_pickctx	script	rand consts + 0x10 alloc + pick ctx x2 + thunks 10e2e290; scripted random pick
+0x10255e60	variant_bufs_e0_1f0	render	allocs {0x1f0,0xe0,0x28,0x30} + string ops; mesh/text buffers
+0x1028cad0	audio_path_offset2554	audio	GetAudioAssetPath x2 + offset 0x2554 + consts 10.0/220.0; audio range config
+0x102d4880	effect_ctor_math_twin	battle	twin of 102d3dd0: effect ctors + math helper
+0x10353cc0	jumptable_ids_1011_1017	unknown	jump-table over ids 0x1011..0x1017 + paired 1034e8e0/e790; id-dispatched init
+0x1042f660	audio_thunk37_named_slots	audio	37x audio thunk 10fef3b0 + GetNameEntry + 19 allocs via slots 0x1190..0x1198; massive named audio table
+0x10367830	gated_alloc44_consts	battle	TLS guards + 0x44 alloc + consts 10/32.0f; gated build
+0x1027a330	pair_alloc_mtx_mix	render	allocs {0xc,0xc} + 2x 10274ff0; small transform mix
+0x102667b0	obb6_segdist4_metric	battle	6x obb_corners_expand_hub + 4x edge-dist (101ebd00) into 0x60 buf, consts 10/100.0f
+0x104746b0	cs_camstate_mtx_op	render	CS guards + cam state resolve family + world-mtx fetch; protected camera op
+0x102bbaf0	jumptable_simhub_gates	battle	jump-table + sim_query_hub_a6b00 x3 + gates; router w/ hub queries
+0x104595f0	hash_table_leaf	middleware-facefx	callee-free leaf full of hash-like consts; table lookup inner loop
+0x104561b0	audio_path_multislot_gate	audio	GetAudioAssetPath x4 across slots +0x64298..+0x64414 + UI asset helper; multi-slot audio gate
+0x1048a850	uiassets_spline15	ui	15x UI asset helper + 3x spline updater + jump-table; spline-based UI assembly
+0x104894c0	debugtext8_studio_flags	anim	8x debug-text builder + studio getters (10498d90) + flag masks 0x12000/0x40004
+0x103ec120	flag_masks_offset1db8	battle	offsets 0x1db8/0x266c/0x2dc0 + flag_mask_state_machine call + thunks; masked state block
+0x103a8430	cs_four_managers_b	unknown	CS guards + four 0x28 allocs + const 0x80000; twin of cs_four_managers_init
+0x103e3930	warning_camstate_map_f	render	WARNING + double cam-state map calls; eighth variant
+0x103b25c0	hash1359_mtx_range	render	hash 0xaba1359 + world-mtx fetches + consts 0.2/0.5/100.0f; keyed ranged metric
+0x10284a00	debugtext8_thunks_script	anim	8x debug-text builder + script thunks x3 each (10c7de60/104c2ca0/10c84070); scripted text dispatch
+0x101cc080	tempfile_writer	fs	GetTempFileNameW/GetTempPathW + string ops + list ctors; temp-file based export/save path
+0x104a84c0	scripted_instances_x6	battle	6x each script thunks (10c82370/10c900b0) + 6x factory 1030d460; batched scripted instances
+0x1042a890	rand_named_slots_6432c	anim	9x helper 10387420 + rand consts via slot +0x6432c; randomized named fields
+0x10361460	alloc10_math_c740	unknown	four 0x10 allocs + 12x FUN_1135c740; math-heavy init
+0x104ad270	studio_offsets_alloc6c	middleware-facefx	offsets 0x1868/0x2578/0x257c + slot +0x642b8 + 0x6c alloc; studio struct w/ consts 0.1/10/40000
+0x1043b830	cs_debugtext3_mix	ui	CS guards + twin 0x28 allocs + 3x debug print (10190580); protected dump op
+0x10186be0	throw3_math_alloc34	battle	3 throws + math pair + twin 0x34 allocs + const 0.5f
+0x103bd2a0	warning_cammap_mega	render	WARNING + cam_state_to_text_map x5 + resolve x3; heaviest camera-state variant
+0x10351740	const1000_sixfold_mix	battle	const 1000.0f + 6x each of extract/push/math helpers; scaled six-fold pass
+0x103f3eb0	warning_camstate_rand_gates	render	WARNING + rand consts + cam state gates; randomized gate variant
+0x1014b380	anim_allocs_38_78	anim	allocs {0x38,0x78 x2} + audio thunks 102947b0 x3 + masks -17; anim resource set
+0x103fb370	sim_neghalf_offset40c0	battle	calls sim_query_neghalf x2 + consts 0.1f/offset 0x40c0/-0.08; mixed metric
+0x1042c720	fxmount_cs_slots_anim	middleware-facefx	FxMountResult-typed + InitializeCriticalSection + 12x 101a2cc0 + slots 0x105c..0x1064; protected mount table
+0x102f5910	jumptable_sim_11x	battle	jump-table + 11x 102ef620; sim dispatch
+0x10347160	recursion4_mtx_leaf	anim	self-recursion x4 + world-mtx fetch; pose-space leaf
+0x10450890	wall_ctor_minmax_leaf	battle	field-wall ctor + min/max + neg helper; wall metric leaf
+0x103f2e40	warning_camstate_resolve3	render	WARNING + cam_mode_state_resolve x3; ninth variant
+0x10341c30	flag_masks_wall_metric	battle	flag masks -5..-2 + wall ctors + min/max + paired extractors; masked wall metric
+0x103e1d20	rand_offsets_2018_block	script	rand consts + offsets 0x2018/0x2064/0x20b0 + 6x gate; scripted member block
+0x103b88a0	clamp12_alloc_mix	unknown	2x clamp 1136e500 + allocs/frees + neg helper
+0x102d1570	named_anim_alloc4ec	anim	GetNameEntry + 9x typed ctor (101a2cc0) into 0x4ec block + consts ~1.33/12000.0
+0x103f0390	rand_gates_offset4040	render	rand consts + offsets 0x1e50/0x1e9c/0x4040 + gates; masked random op in cam cluster
+0x1020ec40	typed39_alloc22	battle	39x typed ctor (101a2cc0) + 22 allocs via slot +0x64344; big typed table
+0x102765b0	guarded_alloc28_pair	unknown	guards + 0x28 alloc + pairs (1028e140/102bc5e0)
+0x10156bc0	hud_dtor69_throw16	ui	69 frees + 16 throw-helpers + sub-dtors across offsets 0x23b0..0x2520; HUD mega teardown
+0x101aeea0	anim_guards_intmax	battle	10 frees + guards + INT_MAX + offsets 0x4728; anim-cluster metric
+0x102ca620	facefx_curves_bigbuf	middleware-facefx	GetCurvesEndTime+GetAudioAssetPath + allocs {0xc,0x40,0xc4} + offsets 0x2518/0x251c
+0x104548c0	flag_component_hub	render	HUB: 24 helper calls x4-each (10603a20/1063a830/105c46c0/...) across offsets 0x10a8..0x1207; flag entity wiring core (called by flag_component_setup)
+0x10413fa0	anim_alloc18_slots23f0	anim	18 allocs + sim queries + slots 0x21b0b/0x23f0/0x2554 + const 16.0f; anim table build
+0x103e8050	pickctx_thunks_offset215c	battle	5x sim query + 4x pick ctx + thunks via offset 0x215c; selection block
+0x10484260	sampler_channels_offset17e8	anim	sampler calls (104467d0/10446870 x3) + world mtx + release; channel apply across offsets 0x17e8..0x1800
+0x102c3760	studio_allocs_slot6432c	middleware-facefx	allocs + studio helpers (1048c700 x2) via slot +0x6432c; small studio op
+0x102e61d0	cs_gridbufs_teardown	battle	DeleteCriticalSection + twin {0x48,0xc} buffer sets + throws; grid teardown w/ offsets 0x19000/0x19008
+0x1035d4c0	alloc12_pairops_masks	unknown	12 allocs + 6x pairops (101a2d50) + masks; mixed init
+0x10366060	cam_pick_metric	render	picks (105cd0d0/105cf880 x3) + camera getter + consts 0.25/1.5/-0.5; selection metric
+0x101338d0	hud_bigbuf_af8_pair	ui	twin 0xaf8 buffers + 0x3bc + 24 allocs via slot +0x642ac + offset 0x250c; large panel build
+0x10400710	warning_camstate_resolve3b	render	WARNING + resolve x3; tenth variant
+0x103b3490	studio_panel_offsets_mix	middleware-facefx	calls studio_panel_struct_c x2 + studio helpers across slots +0x6432c..+0x643a8
+0x100fd1d0	qpc_bigfree_sweep	core(memory/string)	QueryPerformanceCounter timing + 16x big-free hub calls; timed bulk memory sweep
+0x103c0d80	hash1359_alloc1c	battle	hash 0xaba1359 + twin 0x1c allocs + world mtx + consts 0.2/0.5f
+0x10148a50	typed42_alloc20_anim	anim	42x typed ctor (101a2cc0) + 20 allocs + HUD-adjacent helpers; big typed set
+0x1047d9c0	sampler5_hash1359_mix	anim	sampler calls (104467d0 x4) + hash 0xaba1359 + consts 3/7.0f + naval marker helper
+0x103df130	warning_camstate_x4	render	WARNING + cam_mode_state_resolve x4; eleventh variant w/ flag masks
+0x104856b0	hash1359_debugtext2	anim	hash 0xaba1359 + debug-text builders + world mtx; keyed text op in anim cluster
+0x102c6310	eventtake_screen_nodes	battle	GetEventTake + 5x screen proj into {0x24,0x24} nodes; event marker nodes
+0x10482030	hash1359_sampler_mix	anim	hash + sampler 104467d0 + world mtx + debug text; sampled keyed op
+0x10226480	thunk_veg_rand_scatter	render	editor thunks (10de4c00/de5210) + scatter helpers + rand consts 0.001/0.2/0.3
+0x103ed670	warning_cammap_mega_b	render	WARNING + cam map x3 + resolve x3; twelfth variant
+0x103829e0	alloc90_pairops10	battle	three 0x90 allocs + 10x pair helper 1033b690 + gates; paired data blocks
+0x102cc530	jumptable_audio_paths_hud	audio	jump-table + facefx audio path fetches x3 + HUD helpers (10245750); routed audio/text build
+0x1029a140	pick6_alloc_mix	battle	6x pick 105575e0 + 8x 10267d10 + frees; selection+alloc mix
+0x103cd6e0	walls_gates_jumptable	battle	4x field-wall ctor + gates (10372690/a1600) + jump-table; wall router
+0x104a9060	jumptable_hashregistry_mix	anim	jump-table + hash_registry_12344321 call + clamps; keyed dispatch in studio cluster
+0x104ab350	studio_offsets_1868_mix	middleware-facefx	offsets 0x1868/0x2578 + slot +0x6432c + consts 0.1/9000.0 across helpers; studio metric block
+0x1046ce70	studio_flags_offset12000	anim	flag const 0x12000 + slot +0x6432c + studio helpers (104f6760 etc.); flagged studio op
+0x1037dd50	debugdump8_pairops12	battle	8x debug print + 12x pair helper 101b1280 + consts 480.0f; large dump pipeline
+0x1036f010	debugdump10_pairs	battle	10x debug print + 12x pairs + 0x40 allocs + const 60.0f; second dump pipeline
+0x104051e0	warning_camstate_masks	render	WARNING + resolve x5 + flag masks (-196605-family) + offset 0x1d6c
+0x103321e0	giant_bufs_384k_init	unknown	allocs {0x5dc00 (~384KB), 0x16000, 0x5000} + 22 allocs + typed extractors; huge buffer initialization
+0x10465900	ai_analysis_driver	battle	drives battle_ai_analysis_bulk x3 + studio getters + rand consts + consts 10/100.0f
+0x100f7510	fp16_pack_unpack_hub	core	half-float masks (0x7c00/0x7fe0/0x801f/0xfc00); fp16<->fp32 conversion dispatcher
+0x103d2660	user_spec_xml_parser	fs	LOCK-guarded parse of spec entries: 49 frees, 65 string-pair ops, GetNameEntry; parses user_spec.xml contents (target of 103d4ad0)
+0x1044bc90	scene_setup_wrapper	render	wraps battle_render_scene_setup x3 + rand consts + offset 0x746c + projection helper
+0x102b89b0	proximity_draw_pipeline	battle	jump-table + seg-dist/min-dist math + 2x marker draw 10689330; proximity highlight pass
+0x104990d0	facefx_studio_anim_audio_mega	middleware-facefx	FaceFX GetNumCompressedAnimCurves + 58x audio thunk + many hash consts; studio anim/audio mega-table build
+0x1010f000	crt_string_mega_dispatch	crt	32x FUN_10106480 + CRT string family; large text/CRT dispatch routine
+0x101cac90	ray_rect_intersect_ctor	battle	ctor (vtbl 11755a34): dir from 2 pts extended 500u, containment test vs rect *(this+1)->+0x68/+0x80..0x8c
+0x10145c70	param_heavy_record_ctor	unknown	13+-param ctor storing flags/ids/vec fields; entity record initializer
+0x10224410	rect_corners_u16_angle	core	builds rotated-rect corners from u16-packed {angle idx, pts} using DAT_120351f0 table + pi/2 fcos/fsin; same family as rotrect helpers
+0x1032d780	pair_relative_binang	battle	flag gates (+0x130/+0x138) then fpatan between positions +0x50/+0x58 scaled to binang; facing between object pair
+0x102234c0	entity_ctor_alloc_a0	campaign	allocs 0xa0 obj + entity_base_ctor_chain x2 + sub-ctors (101c8b40/c8c90); versioned entity build
+0x102e7ed0	math_leaf_11359c60_b	unknown	single math helper 11359c60; leaf twin of math_helper_11359c60
+0x104a7be0	rand_pose_eval_mix	anim	rand consts + pose-cluster queries (1024bb90 x3, 10268130 x2); randomized pose evaluation
+0x1011e000	crt_math_leaf_final	core	callee-free CRT-region math leaf
+0x10108120	crt_concat_leaf_final	crt	CRT concat/mask leaf (116bd8d0)
+0x10391610	waterfall_cluster_leaf	render	callee-free leaf in waterfall/effect cluster
+0x1049600d	campaign_key_dispatch	campaign	jump-table over region-key helpers (10491040 x5, 104c9970 x4); keyed dispatch
+0x10232130	single_call_wrapper_fd130	unknown	delegates to FUN_1022e130 only
+0x1033a070	alloc_id_slot_ctor	unknown	ctor (vtbl 11768598/5bc28): takes id from *(p1)->+0x68->+0xc0 (+0x2650/+0x2654 or ++counter at +0x210), limits 0x1f/0x800/0x10000

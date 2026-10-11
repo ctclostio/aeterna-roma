@@ -1,0 +1,23 @@
+Mission executed solo, complete. Summary:
+
+## Shard `work/shard_solo_00.txt` — 40/40 functions identified
+
+**Output:** appended 40 well-formed TSV lines to `X:/decompilation/work/funcid_solo.tsv` (incremental appends throughout; all verified 4-field).
+
+### Findings by cluster
+
+**Driver/module verification block (`0x10002xxx–0x10004xxx`) — 9 functions**
+- **NVAPI pair**: `0x100021e0` attach via `nvapi_QueryInterface` (+magic-ID iface resolution), `0x10002430` refcounted unload/`FreeLibrary`
+- **SetupAPI/advapi32 lazy-bind chain** (all share path-builder `FUN_10002d70`): device-interface enum, kernel-driver service config query, registry property/value checks, INF driver-store resolution (`SetupGetInfDriverStoreLocationW`), WOW64-gated module verification + normalized image path
+- System-path whitelist check vs `CSIDL_WINDOWS`/`PROGRAM_FILES`(+x86)/`%ProgramW6432%` behind a Win7 `VerifyVersionInfoW` gate
+
+**FaceFX harness/session block (`0x100d1xxx–0x100dfxxx`) — 23 functions**
+- CRT helpers: `_u64toa` backward decimal writer, `std::string::append`
+- The recurring growable-array push family (0x14/0x2c/0x30/0x40-byte records, ×2 realloc) — track states, keys, outputs, name maps
+- Session lifecycle: JMC-marked `open_handler` (controllers→views→UIs with progress callbacks), per-frame handler dispatch ticks, track retirement, gaze-constraint eval (uses the vec-angle math helper), splash slideshow with aspect-ratio letterboxing
+- Telemetry: session-close JSON upload + curl handle factory pointing at `https://garry.sgaas.net/event` with CA-bundle pinning
+- Studio app: single-instance-mutex ctor ("Another instance of %s is running"), printf-style command formatter, teardown/dtor pair
+
+### Notes for the coordinator
+- Pre-existing entries in `funcid_solo.tsv` from an earlier run contain embedded newlines breaking TSV rows (~4 rows around lines 67–159); left untouched as they're not mine — worth a cleanup pass before merging into `funcid_main.tsv`.
+- Duplicate-name candidates for dedup: `0x100db730`/`0x100db960` are byte-twins (separate map instances).

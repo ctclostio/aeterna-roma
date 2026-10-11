@@ -1,0 +1,34 @@
+Mission complete. Final state:
+
+## Funcid Analyst Session Summary
+
+**Queue processed:** All 966 addresses from the solo queue are now covered project-wide. I personally classified and wrote **293 TSV entries** this session:
+- 115 appended to `work/funcid_solo.tsv` (before discovering concurrent writers)
+- 178 in `work/funcid_solo_alpha.tsv` (clean, verified: 0 bad lines, 0 dupes; matches the `funcid_*.tsv` merge glob)
+
+**Project-wide coverage:** union of all worker TSVs = **6,181 unique functions classified** out of the exported decomp set.
+
+### Notable identifications (high-confidence, string/API-backed)
+| Addr | Name | Evidence |
+|---|---|---|
+| 0x100fd1d0 | `profiler_report_dump_tree` | QPC deltas + "Profiling by Inclusive/Exclusive/Function time" tables |
+| 0x100fe770 | `fs_dir_walk_callback_recursive` | FindFirstFileW walk, attr&0x10 recursion, FILETIME÷1e7 |
+| 0x100f6220 | `assert_dialog_template_build` | In-memory DLGTEMPLATE "Tahoma", Abort/Retry/Ignore/"Copy Text"/"Ignore All" buttons |
+| 0x101d0cb0 | `script_eventmgr_clear_callbacks_dtor` | "ClearEventCallbacks" registration, ~33 interface vtables |
+| 0x101839e0 | `battle_control_points_score_debugdraw` | "Alliance 0/1 ---->>> %u points", "#Contested", "#Timer %u seconds" |
+| 0x10278c00 | `naval_flag_model_load_assign` | naval_faction_flag.rigid_model_v2 + naval_flag_diffuse.png |
+| 0x102e03d0 | `facefx_mgr_shutdown` | CollectGarbage/DestroyAllActors/DestroyAllAnimSets thunks |
+| 0x1048e460/870 | facefx client-event play/stop | FindAnim/PlayClientEvent/StopAllClientEvents thunks |
+| 10106920–107ca0 | DDS texture decode family ×5 | Shared bit-reader (FUN_116bd8d0), per-format channel expands incl. luma `(R*28+G*150+B*76)/254` |
+
+### Recurring engine patterns documented
+- **Fixed-point angles**: `atan2(...) * 10430.378` (= 32768/π) across unit heading/turn code
+- **OBB layout** `{center bf4/bf8, halfext c00..c04, axes c08..c14}` used by formation tests
+- **MSVC LCG** `seed*0x343fd+0x269ec3` for AI jitter; TLS-guarded statics everywhere
+- **Serializer families**: FUN_1015dexx / FUN_10cbxxx typed field writers
+- **Grid/spatial hash**: cell `(x<<shift)+y`, type tags 0x1000/0x80000 notify handlers
+
+### Housekeeping
+- `work/solo_remaining.txt` / `solo_alpha_todo.txt` preserve resumable queues
+- `work/batch_ctx.py` = reusable evidence extractor (sig/strings/API/callees per function)
+- Did NOT merge alpha rows into hot `funcid_solo.tsv` (concurrent writers active as of 20:59); the glob-based merge picks up `_alpha` automatically

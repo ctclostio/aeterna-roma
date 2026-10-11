@@ -1,0 +1,20 @@
+**SHARD COMPLETE — mission finished.**
+
+## Summary
+
+**Queue status:** `work/funcid_solo_queue.txt` — **970/970 addresses classified**, 0 remaining.
+
+**Output:** `work/funcid_solo.tsv` (shared file; 1,765 unique addrs total incl. a concurrent worker's entries, all lines well-formed), plus run report at `work/FUNCID_SOLO_REPORT.md`, committed as `b2eb247`.
+
+**Method:** digest triage (strings/API/caller graphs) → targeted full reads of the decompiled C. Every line carries concrete evidence: constants (MSVC LCG `0x343fd`, binary-angle `10430.378`, sincos table `@0x120351f0`, dual-buffer 12.4 fixed-point anim sampling, Wwise-style event IDs), RTTI/vtable anchors, string literals (`"Battle_Rain.bnk"`, `"REINFORCEMENTS|UNITS|SHIPS"`, `"threat_vector_%d"`).
+
+**Highlights this session:**
+- `0x10169940` render2d_draw_thick_line_quad + `0x102f3b20` render2d_debug_prims_flush (2D debug-draw module decoded)
+- Anim sampler family: `0x104a5ad0` pose slerp, `0x10446c00`/`0x10479de0` dual-buffer channel samplers
+- `0x1015b610` campaign_army_serialize (tag-based save serialization)
+- Siege AI debug trio: `0x1023c7a0` threat vectors ("Entry Node/Wall/Gate"), `0x1023cc30` clusters, `0x1023d500` nav-graph draw
+- `0x1030edb0` script_blob_dump_records (`id^0x4a545eed` hash lookup)
+- Audio context pinned via caller `0x104f6220` → `0x10432d20` sound-emitter ctor, `0x1049600d` event state machine
+- Gameplay math: `0x10222560` flank-attack point calc, `0x10183dc0` scatter-from-point, `0x102683b0` 6-band fBm noise
+
+**Subsystem mix:** core 708 · battle 334 · render 141 · anim 98 · campaign 96 · audio 82 · facefx 70 · ai 60 · ui 49 · rest smaller. Zero unresolved `unknown` classifications remain in the queue.

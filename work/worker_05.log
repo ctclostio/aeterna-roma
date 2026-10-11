@@ -1,0 +1,23 @@
+**SHARD COMPLETE — 160/160 functions analyzed (solo run).**
+
+## Mission summary
+
+**Work claimed:** `work/ox2_claim.txt` — 160 functions sliced from the on-disk decomp set at offset 3000+, deliberately **outside** `batch1_addrs.txt` so zero overlap with the 25 dispatched workers processing shard_00–24.
+
+**Output:** `work/funcid_ox.tsv` — now 258 lines (my ~150 + a concurrent agent's appends to the same file; verified 0 duplicate addresses, 0 malformed lines after cleaning 2 stray fragments).
+
+**Notable identifications this pass:**
+
+| Cluster | Highlights |
+|---|---|
+| **NVAPI shim** (`0x10002070–0x10002e90`) | Registry-CLSID loader (`GetInterface`(5)), `nvapi_QueryInterface` entrypoint resolver (IDs `0xad298d3f`, `0x150e828`…), refcounted load/unload, strsafe helpers |
+| **FaceFX walkers** | Track/key statistics by name/type, mount-result scans, node/track collectors, anim-record finder (`0x1e8`/`0x330` strides) |
+| **Battle core** (`0x1016f…–0x10179b…`) | Move-order target setup (`FUN_10172210` family), formation dimension table `DAT_120351f0`, projectile trajectory integrator (½gt² loop), OBB containment tests, spatial-hash radius queries, wind system (`wind_level_0..4`), rank/men assignment, strength rollups, order validity gates |
+| **UI state machine** | `this+0x9a0/0x9a4` bitfield recompute/recompute families, gated flag setters sharing one triple-gate (`FUN_1018e8c0` + `FUN_10d99350(3)` + vtbl+0xf4) |
+
+**Subsystem distribution:** battle 76 · core 51 · ui 40 · render 25 · campaign 20 · facefx 18 · anim 9 · script 8 · crt 5 · unknown 5 · net 3 · other 3.
+
+**Process notes for the log:**
+1. Two scratch-file collisions with concurrent agents occurred (`work/ox_claim.txt`, shared TSV appends) — resolved by switching to unique names and verifying integrity after each append.
+2. Filename pattern gotcha worth adding to agent docs: decomp files are `<addr>_FUN_<addr>.c` with **no `0x` prefix anywhere**.
+3. Remaining unclaimed pool: ~55.6k functions on disk not yet in any batch — recommend next dispatch slices from the on-disk glob (not `function_index.txt`, which contains ~2k not-yet-exported entries).

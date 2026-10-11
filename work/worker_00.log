@@ -1,0 +1,20 @@
+**SHARD COMPLETE 120** ✅
+
+## Mission report — funcid analyst, solo run
+
+**Scope claimed & executed:** `work/ox_claim.txt` — 120 uncovered function addresses (disjoint slice vs. the other live workers), all processed and written incrementally to **`work/funcid_ox.tsv`** (my rows: 120/120, no dups, no malformed lines; file also carries rows from parallel workers).
+
+### Coverage highlights by subsystem
+| Subsystem | Notable IDs |
+|---|---|
+| **battle** | projectile physics w/ bounce (`0x106011b0`), tiered AI target pick (`0x107baf10`), steering arc avoidance (`0x10355910`), rope-anchor bone bind (`0x10e2c4d0`), entity freelist spawn (`0x10356940`) |
+| **render** | SSAO blur X/Y passes (`0x11407190`), D3D9 reset-on-resize (`0x1045c9a0`), renderstate dirty-commit w/ real D3DRS ids (`0x11477350`), VFX reference instantiation + detach (`0x114e0aa0`, `0x11528c80`), GL texture unbind (`0x114cbea0`) |
+| **ui** | BattleHudTimer/DiplomacyFactionList hash-index ctors, ancillary cards layout (`0x11236e90`), MP lobby row populate (`0x112092f0`), tooltip spawn (`0x11064980`), pre-battle popup (`0x11196bf0`) |
+| **campaign/CAI** | lazy DB loaders ×6 (unit_special_abilities, building_instances, negotiation_attitudes, CAI tables…), diplomacy attitude scorer (`0x10c5abe0`), CAI route edge scoring (`0x10c47030`) |
+| **middleware** | FaceFX: name intern/djb2 (`0x10ef9750`), pose-limits parser w/ TerminateProcess fatals (`0x102d2a10`), anim sort (`0x10bb6e30`); libpng sBIT (`0x11316590`); jsoncpp steam-auth parse (`0x10fb4dc0`) |
+| **net** | desync checksum prompt (`0x10c87f30`), state-map snapshot verify (`0x10be6880`), purchase-event JSON (`0x10f7f9f0`) |
+| **core/crt** | MSVC `unordered_map::rehash` ("invalid hash bucket count"), stable_sort, dutch-flag partition, frame linear allocator, cpuid dispatch, env-var registry (w/ source path `EnvironmentVariable.cpp:149`) |
+
+**Unknown (honest no-guess):** 4 functions marked `unknown` with structural evidence only (e.g. `0x10f9c200` 90-slot grid dispatcher, `0x1012d400` pair-set matcher) per the "never guess without evidence" rule.
+
+**Bonus intel:** corroborated engine facts — entity type `9` = projectile (two independent hits), global const block `DAT_11e11914..1c` = physics defaults shared across modules, `*(cam+0x58)+0x1be8` chain = screen-height provider, stride-0x54 VFX defs, refcounted handle ABI (vt+0x5c clone / vt+0x60 release).

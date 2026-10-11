@@ -1,0 +1,23 @@
+**SHARD COMPLETE 250** ✅
+
+## Mission summary
+
+**Queue:** all 250 addresses in `work/solo_claim_addrs.txt` (battle/naval cluster `0x103b5e90`–`0x1049f7b0`) — analyzed, classified, and written incrementally per contract.
+
+**Outputs**
+- `work/funcid_solo.tsv` — raw incremental results (this pass + prior parallel runs)
+- `work/funcid_solo_merged.tsv` — **1,066 unique functions**, deduped last-wins, 5 junk rows cleaned
+- `work/funcid_solo_report.md` — full report with reusable anchors
+- `README.md` — progress tracker updated
+
+**Subsystem mix (merged):** core 421 · battle 207 · render 103 · anim 73 · facefx 54 · ui 50 · cine 38 · audio 31 · unknown 31 · rest ~50
+
+**High-value anchors recovered this pass:**
+- Angle encoding `rad × 10430.378` → 16-bit heading; direction LUT at `DAT_120351f0[heading]`
+- MSVC LCG rand (`0x343fd/0x269ec3`) driving random anim-quadrant picks
+- Anim-id remap switch family (`FUN_103d20e0`, default **0x7f3**) used by ~10 trigger functions
+- Unit state model: class letter `+0x1dd`, state byte `+0x1dc`, idle marker `0x11 @+0x1e2`
+- Central order-entry `FUN_103e73e0(id,…)` — resets state then dispatches (hub of the block)
+- Session→manager→slot-array layout (`+0x68 → +0xc0/+0xac/+0xb0`) reused across many functions
+
+**Caveat flagged in report:** ~30 names are op-descriptive (`battle_rec7f_sweep_apply`-style); worth revisiting once caller-side naming lands.

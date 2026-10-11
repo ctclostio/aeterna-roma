@@ -1,0 +1,30 @@
+You are implementing one bounded, production-quality C transcript candidate for an x86-to-x64 decompilation project. Focus only on completing the project; do not grade models or discuss model quality.
+
+Repository root: X:\decompilation
+Your only writable output directory: X:\decompilation\work\pi_100df270_suffix_core_candidate
+Do not edit any file outside that directory. Do not modify CMakeLists.txt, headless_main.c, historical gates, canonical sources, original binaries, or existing port files.
+
+Task: independently inspect the repository's established fail-closed transcript conventions and implement a proposed standalone header/source pair for the still-unported suffix of original x86 function 0x100df270, exact interval [0x100df46d,0x100df4f0). Write:
+  X:\decompilation\work\pi_100df270_suffix_core_candidate\ported_100df270_suffix_transcript.h
+  X:\decompilation\work\pi_100df270_suffix_core_candidate\ported_100df270_suffix_transcript.c
+  X:\decompilation\work\pi_100df270_suffix_core_candidate\README.md
+
+Read these first:
+  src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100df270.c
+  scripts/test_x64_startup_100df270_headless_provenance.py
+  port/x64_ported/ported_100e92c0_handler_transcript.h
+  port/x64_ported/ported_100e92c0_handler_transcript.c
+  port/x64_ported/ported_100e87a0_handler_transcript.h
+  port/x64_ported/ported_100e87a0_handler_transcript.c
+  port/x64_ported/guest32_state_view.h
+
+Required bounded semantics, but verify them against repository evidence before coding:
+1. Validate all required state/effect/output spans, guest 32-bit ranges, host arithmetic, pairwise physical disjointness, and effect capacity before any externally visible write or callback.
+2. Transcript exact order: publish global identity 0x119f3140 = receiver; injected result of 0x100e8240(argument); invoke 0x100f2750 with checked result+0x68 while retaining the original argument as transcript data if evidence requires it; invoke 0x100ea4d0(receiver); virtual selector-2 query; when the first marker is not 0x4e3b, emit calls 0x101046d0 with 0x2d,0x12,0x16,0x21 in that order; second selector-2 query; final marker store 0x4e3b; publish receiver as return only after the final effect.
+3. Expected success transcript length is 7 effects when the first marker is already 0x4e3b and 11 otherwise. If raw evidence demands a different representation, document it explicitly and stay faithful to the machine order.
+4. No native platform calls, allocator calls, recovered-code execution, global access, virtual/native function pointer calls, guest/native pointer casts, heap allocation, or hidden mutation. Every external action is an injected deterministic effect/callback abstraction.
+5. Fail closed with no mutations/effects/output on validation or callback failure. Snapshot callback tables/state metadata before first callback to resist callback mutation. Preserve physical-alias safety conventions used by 100e87a0.
+6. Use fixed-width integer types and checked 32-bit arithmetic. Do not infer native pointers or native ABI from guest identities.
+7. Keep API explicit enough for an independent runtime oracle to verify exact effect kind, guest receiver/argument/result identities, selector, method constants, marker values, and return receiver.
+
+Compile the source with the repository's MSVC strict conventions if practical, but do not edit build integration. The README must list the exact files read, API contract, transcript layout, exclusions, and commands/results you actually ran. Finish only after re-reading your files for internal consistency. Return a concise summary.

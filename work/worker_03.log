@@ -1,0 +1,24 @@
+Mission executed. Summary:
+
+## What happened
+
+**Setup:** Built a solo queue from `all_shard_addrs.txt` (1000 addrs), ordered by function size, output to `work/funcid_solo2.tsv`.
+
+**Analysis work:** Read and classified ~65 decompiled functions one by one, appending TSV results incrementally per the analyst contract. Highlights:
+- `10351130` — classic Ericson **segment-segment closest-point** solver (core math)
+- `104467d0`/`104a5520`/`102f45f0` — the engine's anim sampler family: time→**4096-frame quantization**, double-buffered pose keyframes
+- Confirmed engine-wide idioms: `10430.378` = 65536/2π fixed-point angle scale, MSVC LCG (`0x343fd`) battle RNG at `[mgr+0x4c]`, 64K-entry sin/cos table at `DAT_120351f0`
+- Battle AI controller ctor family (`102d06b0` base, types 7/8/10), naval wind system ("Naval Wind strength"), siege assault-link builder ("pipe_climb")
+
+**Course correction:** Discovered the shard was *already fully covered* — prior batch runs (`funcid_batch1.tsv`, `funcid_solo.tsv`, `funcid_master.tsv`, ~20 more) total **6182 unique classified addresses**. My initial "966 pending" was based on an incomplete file listing. My session's entries became independent verification of prior labels (all agreed).
+
+## Deliverables
+
+| File | Content |
+|---|---|
+| `work/funcid_solo2.tsv` | +62 verified entries this session |
+| **`work/funcid_consolidated.tsv`** | Deduped master: **6182 addrs**, priority merge, normalized subsystems |
+| `work/shard_unknown_addrs.txt` | Only 35 shard addrs still unknown |
+| `work/funcid_solo2_session_report.md` | Full session report + histogram |
+
+**Coverage state:** unknown is down to 36% overall (2254 addrs); battle/campaign/render/core subsystems now well populated for the RTTI-header and 64-bit port phases.

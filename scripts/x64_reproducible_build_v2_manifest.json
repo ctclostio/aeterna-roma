@@ -1,0 +1,177 @@
+{
+  "schema_version": 2,
+  "milestone": "x64-bootstrap-reproducible-v2",
+  "scope": "shipped-release-pe",
+  "legacy_v1": {
+    "gate_path": "scripts/x64_entry_policy_probe_pe_gate.py",
+    "gate_sha256": "affeec3fe87e189324c08ece98a66b6e4ae4687c6e5914988ad711bd373e13c1",
+    "dll_sha256": "fa4c0584790894e85a60427e0cb6adbf1266d14ddc321c122206365bdca8e3a0",
+    "host_sha256": "007b75d58e6cb6890d98b102f07fd2be353423c4f31af41f11c366679a567708",
+    "dll_timestamp": "0x6a8c75d6 / 2026-08-24T16:48:22Z",
+    "host_timestamp": "0x6a8cecf1 / 2026-08-25T01:16:33Z",
+    "reason": "The v1 pair is code-identical to the pre-Brepro pair except for three replicated wall-clock PE timestamps per artifact; no exact v1 copy remains."
+  },
+  "reproducible_v2": {
+    "gate_path": "scripts/x64_entry_policy_probe_pe_gate_v2.py",
+    "gate_sha256": "d8b2181479c2cf1f401a0569a07a4eb3524d53450526b7bb25aed7d5996112d7",
+    "artifacts": [
+      {
+        "role": "dll",
+        "path": "out/x64-bootstrap/empire.retail64.dll",
+        "sha256": "ea6eabe0e510ac9593bb4aeac8ae6123dfe050ac08c9f2067115dbef9fd63930",
+        "byte_count": 107520
+      },
+      {
+        "role": "host",
+        "path": "out/x64-bootstrap/rome2_host64.exe",
+        "sha256": "fdcdb90111cbc0cc5301bccd6f96f15566cefd9be93f9a2714c73d9c02afa320",
+        "byte_count": 144384
+      }
+    ]
+  },
+  "build_contract": {
+    "generator": "Ninja 1.13.2",
+    "build_type": "Release",
+    "architecture": "AMD64 PE32+",
+    "testing_matrix": [
+      {
+        "path": "out/x64-bootstrap",
+        "build_testing": true,
+        "external_flag_overrides": false,
+        "verified_hash_pair": true
+      },
+      {
+        "path": "out/repro-100edd70-entry-decision-verified-on",
+        "build_testing": true,
+        "external_flag_overrides": false,
+        "verified_hash_pair": true
+      },
+      {
+        "path": "out/repro-100edd70-entry-decision-verified-off",
+        "build_testing": false,
+        "external_flag_overrides": false,
+        "verified_hash_pair": true
+      }
+    ],
+    "compile_options": [
+      "/Brepro",
+      "/W4",
+      "/WX",
+      "/sdl",
+      "/GS",
+      "/guard:cf"
+    ],
+    "link_options": [
+      "/Brepro",
+      "/INCREMENTAL:NO",
+      "/DYNAMICBASE",
+      "/HIGHENTROPYVA",
+      "/NXCOMPAT",
+      "/CETCOMPAT",
+      "/guard:cf",
+      "/WX"
+    ],
+    "configure_recipe": "cmake -S . -B <fresh-dir> -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=<ON|OFF>",
+    "build_recipe": "cmake --build <fresh-dir> --config Release"
+  },
+  "toolchain": [
+    {
+      "name": "cl",
+      "path": "C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe",
+      "version": "19.51.36260.0",
+      "sha256": "b0a1818ebae6da7f18230a84e76ce839212584ac4c2ab55b97a0d5268085da57",
+      "byte_count": 893288
+    },
+    {
+      "name": "link",
+      "path": "C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/link.exe",
+      "version": "14.51.36260.0",
+      "sha256": "a8c42e25c91ca2453e1110540ac08f0fc12d7539454a11b9af8baeecb469837d",
+      "byte_count": 3701088
+    },
+    {
+      "name": "cmake",
+      "path": "C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
+      "version": "4.3.1-msvc1",
+      "sha256": "8e30b660920a328bcc62c4b6de1b86f0de7a178aca8ec5dbb6924fd05b4eb683",
+      "byte_count": 12384816
+    },
+    {
+      "name": "ninja",
+      "path": "C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe",
+      "version": "1.13.2",
+      "sha256": "4a641b1a404e390cf869b79782fecea9bc6cd9e5d2e0f97163cf4582c93bc843",
+      "byte_count": 2872880
+    },
+    {
+      "name": "rc",
+      "path": "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/rc.exe",
+      "version": "10.0.26100.8249",
+      "sha256": "65db0d7b4f10ba0f55973fd9356543a556da9ec1c777a0c05f05a0329c8a100a",
+      "byte_count": 55736
+    },
+    {
+      "name": "mt",
+      "path": "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/mt.exe",
+      "version": "10.0.26100.8249",
+      "sha256": "fb1ab75294b78619bd6ac8cadf30cb95befbc7324703cbe2654ef800ddd2bf4d",
+      "byte_count": 1972672
+    }
+  ],
+  "inputs": [
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "3e7dda18a4e170f7d68a73f121ff5f4a40e58c854047e730a9608984b9589674",
+      "byte_count": 182959
+    },
+    {
+      "path": "port/x64_bootstrap/bootstrap_contract.h",
+      "sha256": "e6e6a4a069c2d36c7e6153c4fbe69856393abb9659545551a21666346995fb3c",
+      "byte_count": 419
+    },
+    {
+      "path": "port/x64_bootstrap/empire_bootstrap.c",
+      "sha256": "5bbd9878c1b0bba2f3e7382287ddf482d507bf977cf18a646ca3ee5d8a71063f",
+      "byte_count": 1238
+    },
+    {
+      "path": "port/x64_bootstrap/empire_bootstrap.def",
+      "sha256": "7b254fc6a6909ee7b3ca20b672c6dedf40a00e93c1708b4c81bf049a0c8f3a23",
+      "byte_count": 175
+    },
+    {
+      "path": "port/x64_bootstrap/smoke_loader.c",
+      "sha256": "6cda7a4d6d915be674bbc76bcd7f716b84bf180dd6fc0ede225259968d840d7a",
+      "byte_count": 6147
+    },
+    {
+      "path": "port/x64_bootstrap/canonical_identity.h.in",
+      "sha256": "5270a640c71f8706acb5d7c36b84bdf7146764d6a4b58300e5d14e433d376063",
+      "byte_count": 439
+    },
+    {
+      "path": "src_canonical_out/empire.retail.dll/canonical_snapshot.tsv",
+      "sha256": "07962ba802e0ea39771a2ad2488b17f2be93da07d44488f3703cc6f15b49aca4",
+      "byte_count": 232
+    },
+    {
+      "path": "generated/canonical/0a7281990e144bc4ed54d432c4fd59aaa98b32c7bb9711e565bae2a304c2ff70/validation_summary.json",
+      "sha256": "0cda4d0b681ae34b2147581b2c400bcd7dc844d1b7b30e932ff1fe86935375ee",
+      "byte_count": 1242
+    },
+    {
+      "path": "generated/canonical/0a7281990e144bc4ed54d432c4fd59aaa98b32c7bb9711e565bae2a304c2ff70/metadata/canonical_snapshot.tsv",
+      "sha256": "07962ba802e0ea39771a2ad2488b17f2be93da07d44488f3703cc6f15b49aca4",
+      "byte_count": 232
+    }
+  ],
+  "verification": {
+    "clean_tree_count": 2,
+    "hash_pair_equal": true,
+    "absolute_smoke": true,
+    "relative_smoke": true,
+    "v2_gate_self_test": true,
+    "v2_gate_binary": true,
+    "pe_contract": "AMD64 PE32+, ASLR/high-entropy, NX, CFG table, CET compatible, /GS; unsigned as expected"
+  }
+}

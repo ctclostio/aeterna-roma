@@ -1,0 +1,230 @@
+{
+  "$schema": "scripts/pi_wave3_config.schema.json",
+  "schema_version": 1,
+  "model": "openrouter/stealth/ox-alpha",
+  "milestone": "startup-100ed3c0-abi-audit-v1",
+  "launch_stagger_milliseconds": 4000,
+  "allowed_requirement_ids": [
+    "ABI-PROV-001",
+    "ABI-CALL-001",
+    "ABI-STACK-001",
+    "ABI-REG-001",
+    "ABI-RET-001",
+    "ABI-ORACLE-001",
+    "ABI-CONT-001",
+    "ABI-NOGO-001"
+  ],
+  "semantic_gates": [
+    {
+      "stage": "E",
+      "script": "scripts/pi_startup_abi_evidence_gate.py",
+      "script_sha256": "f7be586b24a2a89113e772afafa9c2f4262a344426316f675f00eea0cb3d5b59",
+      "workspace_root": "evidence"
+    }
+  ],
+  "prompt_preamble": "Audit and implement only a read-only verifier for the original x86 call boundary from entry_point 0x100edd70 to 0x100ed3c0. Never execute, translate, or link 0x100ed3c0. Repository sources, the original PE, and the canonical corpus are immutable. Implementation-stage work belongs only in isolated worker directories and may parse bytes but may not invoke recovered code. Structured artifacts must match their schemas exactly; external telemetry, not worker self-report, is authoritative. The startup ABI evidence gate is admitted only to pin validation syntax and source-path rules; it is not machine-fact evidence and must never be cited as a claim source. In I/G manifests, files lists only the other deliverable files and must never list or hash the manifest itself. In R findings, candidate_sha256 is the exact dependency artifact hash of that candidate's submission.json from the admitted dependency manifest.",
+  "stage_order": ["E", "O", "I", "R", "G"],
+  "stages": [
+    {"id": "E", "depends_on": [], "worker_count": 4, "description": "Independently audit caller packets, callee stack/register behavior, and small direct-callee seams."},
+    {"id": "O", "depends_on": [], "worker_count": 4, "description": "Design independent raw-byte, stack-flow, mutation, and containment oracles."},
+    {"id": "I", "depends_on": ["E", "O"], "worker_count": 6, "description": "Build isolated standard-library read-only ABI auditors and negative-control candidate packets; never execute recovered startup."},
+    {"id": "R", "depends_on": ["I"], "worker_count": 4, "description": "Cross-review every auditor with independent malformed and semantic reproducers."},
+    {"id": "G", "depends_on": ["E", "O", "I", "R"], "worker_count": 2, "description": "Produce two isolated integration candidates for a fail-closed ABI audit and frozen conclusion."}
+  ],
+  "workers": [
+    {
+      "id": "E01", "stage": "E", "role": "caller_packet_provenance",
+      "task": "Audit the two authenticated calls from 0x100edd70 to 0x100ed3c0 from the supervisor-authenticated raw fixture, whose independent verifier binds it to the pinned original PE. Report each call VA, exact packet bytes and hash, physical operand push order, reverse callee stack-position order, rel32 target arithmetic, bare callee ret, and delayed grouped caller cleanup. The direct packet proves ESI reaches callee position 1 and EDI reaches position 3; only mapping the values in those registers back to the earlier caller EBP slots remains conditional without a complete no-clobber def/use proof. Include fact E01.packet-slot-order with exact value P1_ESI;P2_EBP_PLUS_0C;P3_EDI;P4_EBP_PLUS_24 and E01.prior-load-restraint with exact value ESI_EDI_PRIOR_LOADS_NOT_FULL_DEF_USE, both sourced to the raw fixture. Calling-convention labels are inference: never describe caller cleanup as stdcall-style and do not freeze cdecl/stdcall or parameter types. Include fact E01.cleanup-mechanics whose value is exactly CALLER_CLEANUP_GROUPED_24;CALLEE_CLEANUP_0 sourced to the raw fixture and fact E01.convention-restraint whose value is exactly CONVENTION_NAME_NOT_FROZEN sourced to the ABI contract. If locating the epilogue in critical_instructions, use indices 10 through 12. Every claim.value must be one plain JSON string, never a nested object or array. Use 8-12 atomic claims. Do not call the target. Write evidence.json by tool call 6, re-read once, finish.",
+      "tools": ["read", "grep", "find", "ls", "write"], "thinking": "medium",
+      "budget": {"max_tokens": 160000, "timeout_seconds": 600, "max_tool_calls": 18, "artifact_checkpoint_tool_calls": 10, "max_output_bytes": 65536},
+      "writable_dir": "evidence/E01",
+      "context_files": ["scripts/x64_startup_100ed3c0_abi_fixture.json", "scripts/test_x64_startup_100ed3c0_abi_provenance.py", "docs/x64_startup_100ed3c0_abi_contract.md", "scripts/pi_startup_abi_evidence_gate.py", "docs/x64_entry_policy_selector_spec.md", "docs/x64_startup_100f1c10_spec.md", "scripts/test_x64_entry_policy_provenance.py", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100ed3c0.c"],
+      "review_targets": [],
+      "required_outputs": [{"name": "evidence", "source": "workspace", "path": "evidence.json", "format": "json", "schema": "scripts/pi_wave3_abi_evidence.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "E02", "stage": "E", "role": "callee_stack_reads",
+      "task": "Audit every entry-stack-derived read in the complete pinned original 0x100ed3c0 body, using the supervisor-authenticated raw fixture as authority and canonical source only as a cross-check. Define E0 as ESP on callee entry: the return address is at E0+0, caller position 1 is E0+4, position 2 is E0+8, position 3 is E0+12, and position 4 is E0+16. Never call E0+4 a return-address slot. Normalize the authenticated high-displacement candidate operands with entry_offset = esp_delta_before + displacement at each instruction; never replace the dynamic esp_delta_before with a single frame-size constant after pushes. Distinguish caller positions, saved registers, and locals, and state whether positions two or four are observed. Explain why the conservative displacement scan covers entry-stack candidates, but do not claim an exhaustive decode of every small-offset local operand. Include fact E02.entry-layout with exact value RETURN_E0;P1_E0_PLUS_4;P2_E0_PLUS_8;P3_E0_PLUS_12;P4_E0_PLUS_16 and fact E02.consumed-positions with exact value READ_P1_ONCE;READ_P3_ONCE;P2_UNREAD;P4_UNREAD. For both exact facts, source_path must be exactly scripts/x64_startup_100ed3c0_abi_fixture.json, never the contract or admission gate. Do not count decompiler variable occurrences as machine reads. Any claim naming canonical variables must cite decomp_fn_100ed3c0.c, not the fixture. If mentioning the canonical header, distinguish generated C return type void from the original-signature comment undefined; never claim it declares undefined4 FUN_100ed3c0. Every claim.value must be one plain JSON string, never a nested object or array. Use 6-10 atomic claims and identify decoder/decompiler limits. Write evidence.json by call 6, re-read once, finish.",
+      "tools": ["read", "grep", "find", "ls", "write"], "thinking": "medium",
+      "budget": {"max_tokens": 160000, "timeout_seconds": 600, "max_tool_calls": 18, "artifact_checkpoint_tool_calls": 10, "max_output_bytes": 65536},
+      "writable_dir": "evidence/E02",
+      "context_files": ["scripts/x64_startup_100ed3c0_abi_fixture.json", "scripts/test_x64_startup_100ed3c0_abi_provenance.py", "docs/x64_startup_100ed3c0_abi_contract.md", "scripts/pi_startup_abi_evidence_gate.py", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100ed3c0.c", "src_canonical_out/empire.retail.dll/canonical_function_index.tsv", "generated/canonical/0a7281990e144bc4ed54d432c4fd59aaa98b32c7bb9711e565bae2a304c2ff70/references.tsv", "docs/x64_startup_100f1c10_spec.md"],
+      "review_targets": [],
+      "required_outputs": [{"name": "evidence", "source": "workspace", "path": "evidence.json", "format": "json", "schema": "scripts/pi_wave3_abi_evidence.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "E03", "stage": "E", "role": "callee_frame_and_return",
+      "task": "Audit the complete pinned original 0x100ed3c0 body and both caller continuations from the supervisor-authenticated raw fixture. Give an exact VA/opcode table for prologue, delayed register saves, every stack delta relevant to entry-ESP normalization, epilogue, return instruction, and post-call cleanup. Include E03.local-frame-rows with exact value 0x100ED4D4_8B9424D8080000_E0_MINUS_56_READ;0x100ED4DB_8B8424D4080000_E0_MINUS_60_READ;0x100ED500_8B9424D8080000_E0_MINUS_56_READ;0x100ED50B_C78424D408000000000000_E0_MINUS_60_WRITE sourced to the raw fixture. Include E03.transient-stack with exact value 0x100ED434_FFB42418090000_STACK_EFFECT_NEG_4;0x100ED471_ESP_DELTA_BEFORE_NEG_2316;RECOVERY_MECHANISM_NOT_AUTHENTICATED sourced to the raw fixture; explicitly distinguish the authenticated transient -4 effect and later recorded -2316 state from the unauthenticated intervening recovery mechanism. Include E03.caller-continuation-rows with exact value 0x100EDF2D_6A01;0x100EDF2F_E89C570200;0x100EDF34_6860650D10;0x100EDF39_E8B2710200;0x100EDF3E_83C418;0x100EDF80_6A01;0x100EDF82_E849570200;0x100EDF87_6860650D10;0x100EDF8C_E85F710200;0x100EDF91_83C418 sourced to the raw fixture, and give every listed later push, call, and cleanup as an individual VA/opcode row rather than only aggregate continuation bytes. Enumerate the two indirect-call seams and include fact E03.indirect-seams with exact value 0x100ED49E_FF5254;0x100ED4FE_FF10 sourced to the raw fixture. Keep the return boundary atomic: include E03.return-value-contract with exact value RETURN_VALUE_UNSPECIFIED sourced to decomp_fn_100ed3c0.c; E03.caller-return-use with exact value RETURN_VALUE_IGNORED_BY_CALLERS sourced to decomp_fn_100edd70.c; E03.termination-contract with exact value TERMINATION_NOT_GUARANTEED sourced to decomp_fn_100ed3c0.c; and E03.canonical-return-count with exact value ONE_BARE_RETURN sourced to decomp_fn_100ed3c0.c. The canonical function has exactly one bare return statement; do not claim a second exit statement. Separate raw facts and canonical cross-checks. Do not use cdecl/stdcall labels even as style shorthand, and do not claim absence of unrecognized frame or stack operations outside the verifier's documented decoder coverage. The generated canonical function has three formal parameter names but does not use param_2; never claim all three are consumed. Every claim.value must be one plain JSON string, never a nested object or array. Use 14-16 atomic claims. Write evidence.json by call 8, re-read once, finish.",
+      "tools": ["read", "grep", "find", "ls", "write"], "thinking": "medium",
+      "budget": {"max_tokens": 160000, "timeout_seconds": 600, "max_tool_calls": 18, "artifact_checkpoint_tool_calls": 10, "max_output_bytes": 65536},
+      "writable_dir": "evidence/E03",
+      "context_files": ["scripts/x64_startup_100ed3c0_abi_fixture.json", "scripts/test_x64_startup_100ed3c0_abi_provenance.py", "docs/x64_startup_100ed3c0_abi_contract.md", "scripts/pi_startup_abi_evidence_gate.py", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100ed3c0.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "src_canonical_out/empire.retail.dll/canonical_function_index.tsv", "scripts/test_x64_entry_policy_provenance.py"],
+      "review_targets": [],
+      "required_outputs": [{"name": "evidence", "source": "workspace", "path": "evidence.json", "format": "json", "schema": "scripts/pi_wave3_abi_evidence.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "E04", "stage": "E", "role": "low_callee_triage",
+      "task": "Compare direct startup callees 0x100f1aa0, 0x100f1bb0, 0x100df270, and 0x100f1cc0 for the smallest independently portable path, including each immediate callee admitted in context. Read all nine declared context files before concluding, including the ABI contract, admission gate, and decomp_fn_10124e50.c. Full 0x100f1aa0 is NO-GO because nonempty 0x100ef330 allocates through 0x100fcc80; audit the exact zero-length 0x100ef330 branch separately. 0x100f1bb0 is NO-GO because its NUL scan is unbounded absent an external bound. Full 0x100f1cc0 is NO-GO because its owning branch releases memory and may invoke a mutable global callback; classify only the pointer-equals-sentinel and pointer-is-null short-circuits as no-op, not the later zero-bookkeeping test. Include a separate E04.release-callee-audit claim sourced exactly to decomp_fn_10124e50.c. 0x100df270 is platform-bound NO-GO. Include these exact decision facts and sources: E04.empty-copy-decision=GO_EMPTY_ONLY from decomp_fn_100ef330.c; E04.full-copy-decision=NO_GO_FULL_FUNCTION_ALLOCATOR_PATH from decomp_fn_100ef330.c, with the 0x100f1aa0-to-0x100ef330 link as a separate claim sourced to decomp_fn_100f1aa0.c; E04.string-scan-decision=NO_GO_UNBOUNDED_SCAN from decomp_fn_100f1bb0.c; E04.release-decision=NO_GO_OWNING_RELEASE_CALLBACK_PATH from decomp_fn_100f1cc0.c; E04.platform-decision=NO_GO_PLATFORM_BOUND from decomp_fn_100df270.c. For those five decision claims, claim.value must contain only the uppercase token after the equals sign, byte-for-byte, with no colon, prose, or explanatory suffix; put every rationale in separate claim IDs. Treat *(puVar1 - 2) only as allocation/base bookkeeping, not a count field. Attribute GetProcessHeap only to 0x100fcc80, never 0x100df270; name only directly visible Win32 calls in the platform claim. Keep cross-source inferences split, mark interpretive statements inference=true, and avoid invented debug/page-table semantics. The conclusion itself must state that 0x11af4090 is a 32-bit guest identity and is never a native pointer. Recommend exactly one smallest slice, never a group of full functions. Every claim.value must be one plain JSON string, never a nested object or array. Do not propose running a parent. Use 10-14 atomic claims and a GO/NO-GO conclusion. Write a schema-valid evidence.json by completed tool result 14, re-read it once, and finish by result 17.",
+      "tools": ["read", "grep", "find", "ls", "write"], "thinking": "medium",
+      "budget": {"max_tokens": 160000, "timeout_seconds": 600, "max_tool_calls": 18, "artifact_checkpoint_tool_calls": 16, "max_output_bytes": 65536},
+      "writable_dir": "evidence/E04",
+      "context_files": ["docs/x64_startup_100ed3c0_abi_contract.md", "scripts/pi_startup_abi_evidence_gate.py", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100f1aa0.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100f1bb0.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100df270.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100f1cc0.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100ef330.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100fcc80.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_10124e50.c"],
+      "review_targets": [],
+      "required_outputs": [{"name": "evidence", "source": "workspace", "path": "evidence.json", "format": "json", "schema": "scripts/pi_wave3_abi_evidence.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "I05", "stage": "I", "role": "noop_leaf_negative_control",
+      "task": "Implement a complete standard-library read-only 0x100ed3c0 ABI auditor satisfying all eight frozen requirements, with direct callee 0x100d6560 as its special negative control. Authenticate the caller/callee boundary plus the control's exact one-byte body and parent call site, prove only no-op behavior for the control, and explicitly reject inferred arity/name/export/native linkage. Test that push count is never mistaken for consumed parameters. Produce exactly audit_100ed3c0_abi.py, test_audit_100ed3c0_abi.py, README.md, submission.json; submission.files lists only the other three payload files and excludes submission.json; never execute x86 and remove caches.",
+      "tools": ["read", "grep", "find", "ls", "write", "edit", "powershell"], "thinking": "medium",
+      "budget": {"max_tokens": 220000, "timeout_seconds": 600, "max_tool_calls": 24, "artifact_checkpoint_tool_calls": 22, "max_output_bytes": 131072},
+      "writable_dir": "candidates/I05",
+      "context_files": ["Total War Rome II/empire.retail.dll", "scripts/x64_startup_100ed3c0_abi_fixture.json", "scripts/test_x64_startup_100ed3c0_abi_provenance.py", "docs/x64_startup_100ed3c0_abi_contract.md", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100ed3c0.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100d6560.c", "src_canonical_out/empire.retail.dll/canonical_function_index.tsv", "docs/x64_startup_100f1c10_spec.md"],
+      "review_targets": [], "expected_workspace_files": ["audit_100ed3c0_abi.py", "test_audit_100ed3c0_abi.py", "README.md", "submission.json"],
+      "required_outputs": [{"name": "submission", "source": "workspace", "path": "submission.json", "format": "json", "schema": "scripts/pi_wave3_submission.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "I06", "stage": "I", "role": "empty_path_boundary_auditor",
+      "task": "Implement a complete standard-library read-only 0x100ed3c0 ABI auditor satisfying all eight frozen requirements, with the exact empty-only 0x100f1aa0 to 0x100ef330 path as its special bounded-slice control. Authenticate the caller/callee boundary and empty-path bytes, reject the allocating/nonempty path, and never freeze the parent ABI. Produce exactly audit_100ed3c0_abi.py, test_audit_100ed3c0_abi.py, README.md, submission.json; submission.files lists only the other three payload files and excludes submission.json; never execute x86 and remove caches.",
+      "tools": ["read", "grep", "find", "ls", "write", "edit", "powershell"], "thinking": "medium",
+      "budget": {"max_tokens": 220000, "timeout_seconds": 600, "max_tool_calls": 24, "artifact_checkpoint_tool_calls": 22, "max_output_bytes": 131072},
+      "writable_dir": "candidates/I06",
+      "context_files": ["Total War Rome II/empire.retail.dll", "scripts/x64_startup_100ed3c0_abi_fixture.json", "scripts/test_x64_startup_100ed3c0_abi_provenance.py", "docs/x64_startup_100ed3c0_abi_contract.md", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100ed3c0.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100f1aa0.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100ef330.c", "src_canonical_out/empire.retail.dll/canonical_function_index.tsv", "docs/x64_startup_100f1c10_spec.md"],
+      "review_targets": [], "expected_workspace_files": ["audit_100ed3c0_abi.py", "test_audit_100ed3c0_abi.py", "README.md", "submission.json"],
+      "required_outputs": [{"name": "submission", "source": "workspace", "path": "submission.json", "format": "json", "schema": "scripts/pi_wave3_submission.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "O01", "stage": "O", "role": "raw_call_packet_oracle",
+      "task": "Design exactly eight independent raw-PE tests and eight one-to-one mutants for the two 0x100edd70 call packets: exact bytes/hash, push count/order, operand provenance, rel32 targets, caller cleanup, truncation, duplicate-window confusion, and malformed PE mapping. Across the eight tests explicitly cover ABI-PROV-001, ABI-CALL-001, and ABI-RET-001. Do not implement or execute startup.",
+      "tools": ["read", "grep", "find", "ls", "write"], "thinking": "medium",
+      "budget": {"max_tokens": 150000, "timeout_seconds": 720, "max_tool_calls": 18, "artifact_checkpoint_tool_calls": 14, "max_output_bytes": 65536},
+      "writable_dir": "oracle/O01",
+      "context_files": ["scripts/x64_startup_100ed3c0_abi_fixture.json", "scripts/test_x64_startup_100ed3c0_abi_provenance.py", "docs/x64_startup_100ed3c0_abi_contract.md", "scripts/test_x64_entry_policy_provenance.py", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100ed3c0.c", "docs/x64_startup_100f1c10_spec.md"],
+      "review_targets": [],
+      "required_outputs": [{"name": "oracle", "source": "workspace", "path": "oracle.json", "format": "json", "schema": "scripts/pi_wave3_oracle.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "O02", "stage": "O", "role": "stack_flow_oracle",
+      "task": "Design exactly eight tests and eight paired mutants for a fail-closed x86 stack/register flow auditor over the complete 400-byte 0x100ed3c0 body. Cover entry ESP normalization, pushes/pops, delayed saves, branches/loops, stack-derived memory reads, unsupported opcodes, hidden fourth-position use, and return cleanup. Across the eight tests explicitly cover ABI-STACK-001, ABI-REG-001, ABI-RET-001, and ABI-ORACLE-001.",
+      "tools": ["read", "grep", "find", "ls", "write"], "thinking": "medium",
+      "budget": {"max_tokens": 150000, "timeout_seconds": 720, "max_tool_calls": 18, "artifact_checkpoint_tool_calls": 14, "max_output_bytes": 65536},
+      "writable_dir": "oracle/O02",
+      "context_files": ["scripts/x64_startup_100ed3c0_abi_fixture.json", "scripts/test_x64_startup_100ed3c0_abi_provenance.py", "docs/x64_startup_100ed3c0_abi_contract.md", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100ed3c0.c", "src_canonical_out/empire.retail.dll/canonical_function_index.tsv", "docs/x64_startup_100f1c10_spec.md"],
+      "review_targets": [],
+      "required_outputs": [{"name": "oracle", "source": "workspace", "path": "oracle.json", "format": "json", "schema": "scripts/pi_wave3_oracle.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "O03", "stage": "O", "role": "next_leaf_oracle",
+      "task": "Design exactly eight tests and eight paired mutants for selecting the exact empty-only 0x100f1aa0 to 0x100ef330 slice after 0x100f1c10 while rejecting every listed NO-GO path. Require exact index identity, raw bytes, call-site proof, no imports/calls/globals unless explicitly bounded, guest/native width discipline, and a hard stop before parent execution. Across the eight tests explicitly cover ABI-PROV-001, ABI-ORACLE-001, ABI-CONT-001, and ABI-NOGO-001.",
+      "tools": ["read", "grep", "find", "ls", "write"], "thinking": "medium",
+      "budget": {"max_tokens": 150000, "timeout_seconds": 720, "max_tool_calls": 18, "artifact_checkpoint_tool_calls": 14, "max_output_bytes": 65536},
+      "writable_dir": "oracle/O03",
+      "context_files": ["scripts/x64_startup_100ed3c0_abi_fixture.json", "scripts/test_x64_startup_100ed3c0_abi_provenance.py", "docs/x64_startup_100ed3c0_abi_contract.md", "docs/x64_startup_100f1c10_spec.md", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100ed3c0.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100f1aa0.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100ef330.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100d6560.c", "src_canonical_out/empire.retail.dll/canonical_function_index.tsv", "generated/canonical/0a7281990e144bc4ed54d432c4fd59aaa98b32c7bb9711e565bae2a304c2ff70/references.tsv"],
+      "review_targets": [],
+      "required_outputs": [{"name": "oracle", "source": "workspace", "path": "oracle.json", "format": "json", "schema": "scripts/pi_wave3_oracle.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "O04", "stage": "O", "role": "abi_containment_oracle",
+      "task": "Design exactly eight tests and eight paired mutants for containment: standard-library-only read-only parsing, pinned PE/canonical inputs, no original-code execution, no DLL/bootstrap link, no repository writes, no invented native ABI, deterministic output, and fail-closed malformed input handling. Across the eight tests explicitly cover ABI-PROV-001, ABI-ORACLE-001, ABI-CONT-001, and ABI-NOGO-001.",
+      "tools": ["read", "grep", "find", "ls", "write"], "thinking": "medium",
+      "budget": {"max_tokens": 150000, "timeout_seconds": 720, "max_tool_calls": 18, "artifact_checkpoint_tool_calls": 14, "max_output_bytes": 65536},
+      "writable_dir": "oracle/O04",
+      "context_files": ["docs/x64_startup_100ed3c0_abi_contract.md", "docs/x64_startup_100f1c10_spec.md", "scripts/test_x64_startup_100f1c10_provenance.py", "CMakeLists.txt", "port/x64_bootstrap/empire_bootstrap.c"],
+      "review_targets": [],
+      "required_outputs": [{"name": "oracle", "source": "workspace", "path": "oracle.json", "format": "json", "schema": "scripts/pi_wave3_oracle.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "I01", "stage": "I", "role": "minimal_raw_abi_auditor",
+      "task": "Implement a minimal standard-library Python auditor for the pinned original PE. It must authenticate inputs, parse PE32 mappings, verify both caller packets and the full 0x100ed3c0 body, and report only provable stack-position/cleanup facts. Never execute x86. Produce exactly audit_100ed3c0_abi.py, test_audit_100ed3c0_abi.py, README.md, submission.json; remove caches. Finish implementation/tests by call 16 and manifest by call 19.",
+      "tools": ["read", "grep", "find", "ls", "write", "edit", "powershell"], "thinking": "medium",
+      "budget": {"max_tokens": 220000, "timeout_seconds": 600, "max_tool_calls": 24, "artifact_checkpoint_tool_calls": 22, "max_output_bytes": 131072},
+      "writable_dir": "candidates/I01",
+      "context_files": ["Total War Rome II/empire.retail.dll", "scripts/x64_startup_100ed3c0_abi_fixture.json", "scripts/test_x64_startup_100ed3c0_abi_provenance.py", "docs/x64_startup_100ed3c0_abi_contract.md", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100ed3c0.c", "src_canonical_out/empire.retail.dll/canonical_function_index.tsv", "scripts/test_x64_entry_policy_provenance.py", "docs/x64_startup_100f1c10_spec.md"],
+      "review_targets": [], "expected_workspace_files": ["audit_100ed3c0_abi.py", "test_audit_100ed3c0_abi.py", "README.md", "submission.json"],
+      "required_outputs": [{"name": "submission", "source": "workspace", "path": "submission.json", "format": "json", "schema": "scripts/pi_wave3_submission.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "I02", "stage": "I", "role": "control_flow_stack_auditor",
+      "task": "Implement an independent fail-closed standard-library Python stack/register-flow auditor for the complete pinned 0x100ed3c0 body and its two callers. Reject unsupported or ambiguous instructions rather than guessing. Prove or reject the unused-position hypothesis and cleanup convention. Produce exactly audit_100ed3c0_abi.py, test_audit_100ed3c0_abi.py, README.md, submission.json; never execute x86 and remove caches.",
+      "tools": ["read", "grep", "find", "ls", "write", "edit", "powershell"], "thinking": "medium",
+      "budget": {"max_tokens": 220000, "timeout_seconds": 600, "max_tool_calls": 24, "artifact_checkpoint_tool_calls": 22, "max_output_bytes": 131072},
+      "writable_dir": "candidates/I02",
+      "context_files": ["Total War Rome II/empire.retail.dll", "scripts/x64_startup_100ed3c0_abi_fixture.json", "scripts/test_x64_startup_100ed3c0_abi_provenance.py", "docs/x64_startup_100ed3c0_abi_contract.md", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100ed3c0.c", "src_canonical_out/empire.retail.dll/canonical_function_index.tsv", "generated/canonical/0a7281990e144bc4ed54d432c4fd59aaa98b32c7bb9711e565bae2a304c2ff70/references.tsv", "docs/x64_startup_100f1c10_spec.md"],
+      "review_targets": [], "expected_workspace_files": ["audit_100ed3c0_abi.py", "test_audit_100ed3c0_abi.py", "README.md", "submission.json"],
+      "required_outputs": [{"name": "submission", "source": "workspace", "path": "submission.json", "format": "json", "schema": "scripts/pi_wave3_submission.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "I03", "stage": "I", "role": "dual_source_abi_auditor",
+      "task": "Implement a small independent auditor that cross-checks raw PE caller/callee bytes, exact canonical index rows, canonical source hashes, and stack-position conclusions without using decompiler syntax as an ABI oracle. It must emit deterministic JSON and negative-test malformed/changed inputs. Produce exactly the four required files and no caches; never execute recovered code.",
+      "tools": ["read", "grep", "find", "ls", "write", "edit", "powershell"], "thinking": "medium",
+      "budget": {"max_tokens": 220000, "timeout_seconds": 600, "max_tool_calls": 24, "artifact_checkpoint_tool_calls": 22, "max_output_bytes": 131072},
+      "writable_dir": "candidates/I03",
+      "context_files": ["Total War Rome II/empire.retail.dll", "scripts/x64_startup_100ed3c0_abi_fixture.json", "scripts/test_x64_startup_100ed3c0_abi_provenance.py", "docs/x64_startup_100ed3c0_abi_contract.md", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100ed3c0.c", "src_canonical_out/empire.retail.dll/canonical_function_index.tsv", "scripts/test_x64_entry_policy_provenance.py", "docs/x64_startup_100f1c10_spec.md"],
+      "review_targets": [], "expected_workspace_files": ["audit_100ed3c0_abi.py", "test_audit_100ed3c0_abi.py", "README.md", "submission.json"],
+      "required_outputs": [{"name": "submission", "source": "workspace", "path": "submission.json", "format": "json", "schema": "scripts/pi_wave3_submission.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "I04", "stage": "I", "role": "mutant_driven_abi_auditor",
+      "task": "Implement the simplest read-only ABI auditor whose tests explicitly kill swapped pushes, omitted fourth push, changed rel32 target, callee-cleanup ret, hidden fourth-position read, incorrect saved-register provenance, malformed PE mapping, and stale canonical source. Produce exactly the four required files, standard library only, no recovered execution, no repository edits, and no caches.",
+      "tools": ["read", "grep", "find", "ls", "write", "edit", "powershell"], "thinking": "medium",
+      "budget": {"max_tokens": 220000, "timeout_seconds": 600, "max_tool_calls": 24, "artifact_checkpoint_tool_calls": 22, "max_output_bytes": 131072},
+      "writable_dir": "candidates/I04",
+      "context_files": ["Total War Rome II/empire.retail.dll", "scripts/x64_startup_100ed3c0_abi_fixture.json", "scripts/test_x64_startup_100ed3c0_abi_provenance.py", "docs/x64_startup_100ed3c0_abi_contract.md", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100ed3c0.c", "src_canonical_out/empire.retail.dll/canonical_function_index.tsv", "scripts/test_x64_entry_policy_provenance.py", "docs/x64_startup_100f1c10_spec.md"],
+      "review_targets": [], "expected_workspace_files": ["audit_100ed3c0_abi.py", "test_audit_100ed3c0_abi.py", "README.md", "submission.json"],
+      "required_outputs": [{"name": "submission", "source": "workspace", "path": "submission.json", "format": "json", "schema": "scripts/pi_wave3_submission.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "R01", "stage": "R", "role": "raw_pe_review",
+      "task": "Review I01, I02, and I05 against exact PE mapping, caller-window bytes, rel32 arithmetic, hashes, the no-op negative control, and malformed/truncated PE reproducers. Run independent commands, write findings.json by call 18, and remove all other workspace artifacts.",
+      "tools": ["read", "grep", "find", "ls", "write", "powershell"], "thinking": "medium",
+      "budget": {"max_tokens": 120000, "timeout_seconds": 600, "max_tool_calls": 24, "artifact_checkpoint_tool_calls": 24, "max_output_bytes": 65536},
+      "writable_dir": "reviews/R01", "context_files": ["Total War Rome II/empire.retail.dll", "scripts/x64_startup_100ed3c0_abi_fixture.json", "scripts/test_x64_startup_100ed3c0_abi_provenance.py", "docs/x64_startup_100ed3c0_abi_contract.md", "scripts/test_x64_entry_policy_provenance.py", "docs/x64_startup_100f1c10_spec.md"],
+      "review_targets": ["I01", "I02", "I05"],
+      "required_outputs": [{"name": "findings", "source": "workspace", "path": "findings.json", "format": "json", "schema": "scripts/pi_wave3_findings.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "R02", "stage": "R", "role": "stack_semantics_review",
+      "task": "Review I02, I03, and I06 for complete stack/register flow, branch coverage, caller cleanup, hidden argument reads, empty-path containment, unsupported-opcode handling, and any invented ABI claim. candidate_sha256 must be the admitted submission.json artifact hash for each candidate. Write findings.json by call 18 and leave no other files.",
+      "tools": ["read", "grep", "find", "ls", "write", "powershell"], "thinking": "medium",
+      "budget": {"max_tokens": 120000, "timeout_seconds": 600, "max_tool_calls": 24, "artifact_checkpoint_tool_calls": 24, "max_output_bytes": 65536},
+      "writable_dir": "reviews/R02", "context_files": ["scripts/x64_startup_100ed3c0_abi_fixture.json", "scripts/test_x64_startup_100ed3c0_abi_provenance.py", "docs/x64_startup_100ed3c0_abi_contract.md", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100ed3c0.c", "src_canonical_out/empire.retail.dll/canonical_decomp/decomp_fn_100edd70.c", "docs/x64_startup_100f1c10_spec.md"],
+      "review_targets": ["I02", "I03", "I06"],
+      "required_outputs": [{"name": "findings", "source": "workspace", "path": "findings.json", "format": "json", "schema": "scripts/pi_wave3_findings.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "R03", "stage": "R", "role": "mutation_and_failure_review",
+      "task": "Review I01, I04, and I06 adversarially. Add independent mutants for packet swap, fourth-position use, ret immediate, mapping ambiguity, duplicate index rows, stale hashes, partial reads, allocation-path leakage, and false success on unsupported instructions. candidate_sha256 must be the admitted submission.json artifact hash for each candidate. Write findings.json by call 18 and leave no other files.",
+      "tools": ["read", "grep", "find", "ls", "write", "powershell"], "thinking": "medium",
+      "budget": {"max_tokens": 120000, "timeout_seconds": 600, "max_tool_calls": 24, "artifact_checkpoint_tool_calls": 24, "max_output_bytes": 65536},
+      "writable_dir": "reviews/R03", "context_files": ["Total War Rome II/empire.retail.dll", "scripts/x64_startup_100ed3c0_abi_fixture.json", "docs/x64_startup_100ed3c0_abi_contract.md", "src_canonical_out/empire.retail.dll/canonical_function_index.tsv", "scripts/test_x64_entry_policy_provenance.py"],
+      "review_targets": ["I01", "I04", "I06"],
+      "required_outputs": [{"name": "findings", "source": "workspace", "path": "findings.json", "format": "json", "schema": "scripts/pi_wave3_findings.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "R04", "stage": "R", "role": "containment_and_efficiency_review",
+      "task": "Review I03, I04, and I05 for repository containment, read-only behavior, standard-library-only operation, deterministic artifacts, no-op semantic restraint, test truth, cleanup, complexity, and supervision cost. Reject any execution, native ABI freeze, or unbounded decoder claim. candidate_sha256 must be the admitted submission.json artifact hash for each candidate. Write findings.json by call 18 and leave no other files.",
+      "tools": ["read", "grep", "find", "ls", "write", "powershell"], "thinking": "medium",
+      "budget": {"max_tokens": 120000, "timeout_seconds": 600, "max_tool_calls": 24, "artifact_checkpoint_tool_calls": 24, "max_output_bytes": 65536},
+      "writable_dir": "reviews/R04", "context_files": ["docs/x64_startup_100ed3c0_abi_contract.md", "docs/x64_startup_100f1c10_spec.md", "CMakeLists.txt", "port/x64_bootstrap/empire_bootstrap.c"],
+      "review_targets": ["I03", "I04", "I05"],
+      "required_outputs": [{"name": "findings", "source": "workspace", "path": "findings.json", "format": "json", "schema": "scripts/pi_wave3_findings.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "G01", "stage": "G", "role": "minimal_abi_audit_integrator",
+      "task": "Integrate only hash-validated accepted components into the simplest complete read-only ABI audit. Produce exactly audit_100ed3c0_abi.py, test_audit_100ed3c0_abi.py, abi_contract.md, integration_manifest.json. Run independent tests and mutants, remove caches, never edit the repository or execute x86. A supported four-position adapter may be documented only if every accepted oracle agrees; otherwise freeze an explicit NO-GO conclusion. Finish files/tests by call 20 and manifest by call 23.",
+      "tools": ["read", "grep", "find", "ls", "write", "edit", "powershell"], "thinking": "medium",
+      "budget": {"max_tokens": 220000, "timeout_seconds": 600, "max_tool_calls": 30, "artifact_checkpoint_tool_calls": 28, "max_output_bytes": 131072},
+      "writable_dir": "integrations/G01", "context_files": ["Total War Rome II/empire.retail.dll", "scripts/x64_startup_100ed3c0_abi_fixture.json", "scripts/test_x64_startup_100ed3c0_abi_provenance.py", "docs/x64_startup_100ed3c0_abi_contract.md", "docs/x64_startup_100f1c10_spec.md", "scripts/test_x64_entry_policy_provenance.py", "CMakeLists.txt"],
+      "review_targets": [], "expected_workspace_files": ["audit_100ed3c0_abi.py", "test_audit_100ed3c0_abi.py", "abi_contract.md", "integration_manifest.json"],
+      "required_outputs": [{"name": "integration", "source": "workspace", "path": "integration_manifest.json", "format": "json", "schema": "scripts/pi_wave3_integration.schema.json", "max_bytes": 65536}]
+    },
+    {
+      "id": "G02", "stage": "G", "role": "adversarial_abi_audit_integrator",
+      "task": "Independently integrate the strongest admitted components into a fail-closed read-only ABI audit, emphasizing malformed-input and unsupported-instruction rejection. Produce exactly audit_100ed3c0_abi.py, test_audit_100ed3c0_abi.py, abi_contract.md, integration_manifest.json; do not copy G01. Never execute x86 or edit repository files. Resolve disagreements as explicit GO/NO-GO evidence, run tests, remove caches, and finish the manifest by call 23.",
+      "tools": ["read", "grep", "find", "ls", "write", "edit", "powershell"], "thinking": "medium",
+      "budget": {"max_tokens": 220000, "timeout_seconds": 600, "max_tool_calls": 30, "artifact_checkpoint_tool_calls": 28, "max_output_bytes": 131072},
+      "writable_dir": "integrations/G02", "context_files": ["Total War Rome II/empire.retail.dll", "scripts/x64_startup_100ed3c0_abi_fixture.json", "scripts/test_x64_startup_100ed3c0_abi_provenance.py", "docs/x64_startup_100ed3c0_abi_contract.md", "docs/x64_startup_100f1c10_spec.md", "scripts/test_x64_entry_policy_provenance.py", "CMakeLists.txt"],
+      "review_targets": [], "expected_workspace_files": ["audit_100ed3c0_abi.py", "test_audit_100ed3c0_abi.py", "abi_contract.md", "integration_manifest.json"],
+      "required_outputs": [{"name": "integration", "source": "workspace", "path": "integration_manifest.json", "format": "json", "schema": "scripts/pi_wave3_integration.schema.json", "max_bytes": 65536}]
+    }
+  ]
+}

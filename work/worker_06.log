@@ -1,0 +1,24 @@
+**Mission complete.** Final state:
+
+## Deliverables
+| File | Contents |
+|---|---|
+| `work/funcid_solo_out.tsv` | **My solo pass — 966 rows**, written incrementally per contract |
+| `work/funcid_solo_final.tsv` | Authoritative merged output: **3,165 unique functions, 976/976 queue coverage (100%)** |
+| `work/solo_report.md` | Completion report: method, subsystem stats, notable finds, caveats |
+
+## What was done
+- **129 string-bearing functions** classified first from digest evidence, then **820 no-string functions** via callee-graph hub analysis + structural shape triage (APIs, alloc sizes, vtable offsets, constants), with full code reads for anything ambiguous.
+- Identified reusable engine idioms that accelerated classification: binary-angle convention (`ROUND(a×10430.38)`), 12-bit keyframe lerp (`&0xfff × 1/4096`), MSVC `rand()` constants, field-wall ctor cluster, battle-setup exporter thunks, spawner factory `112d98d0`, FaceFX API family.
+
+## Sample identifications
+- `10101ad0` — multiplayer "Waiting for remote decision" lockstep dialog (**net**)
+- `100feef0` — BSD socket wrapper w/ per-call failure strings (**net**)
+- `103d20e0 → 103dbd70` — camera-mode state machine feeding a state→localized-text-id map
+- `104a5ad0 / 10303960` — pose slerp sampler & bone-chain quaternion accumulation (**anim**)
+- `1011e650 + siblings` — TGA screenshot writers (gray8/RGB555 variants)
+- `10443de0` — FaceFX studio session bootstrap (27.5 KB block); `102e03d0` — FaceFX manager shutdown dispatch
+
+## Notes
+1. **Concurrent writer detected**: `work/funcid_solo.tsv` grew from 19 → 3,182 lines mid-mission (another agent instance finished the same queue). The final file uses that complete pass as primary and preserves my 966-row pass separately as an independent second opinion for cross-review.
+2. ~200 functions carry honest `unknown` subsystems with structural names rather than guesses; every row's evidence column cites concrete code facts (constants, offsets, APIs) so the later rename pass can verify quickly.
