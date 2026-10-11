@@ -22,6 +22,10 @@ P = "ROME2_100EDD70_TERMINAL_"
 T = "rome2_100edd70_terminal_"
 HEADER = ROOT / "port/x64_ported" / (STEM + ".h")
 SOURCE = ROOT / "port/x64_ported" / (STEM + ".c")
+UNBUILT_COMPOSITION_PATHS = (
+    ROOT / "port/x64_ported/ported_100edd70_unified_entry.c",
+    ROOT / "port/x64_ported/ported_100edd70_unified_entry.h",
+)
 
 # Ordered alternatives keep comment-looking text inside literals inert and
 # distinguish && from & &, identifiers from adjacent identifiers, etc.
@@ -232,6 +236,12 @@ def inspect_production(text: str) -> list[str]:
 
 def inspect_cmake(text: str) -> list[str]:
     findings = inspect_production(text)
+    for candidate in (
+        "ported_100edd70_unified_entry",
+        "ported_100edd70_full_entry",
+    ):
+        if candidate.lower() in text.lower():
+            findings.append(f"unadmitted entry composition entered CMake: {candidate}")
     # Current root CMake enumerates sources. Any future glob warrants graph
     # review, even one that does not obviously spell this candidate's basename.
     if re.search(r"\bfile\s*\(\s*GLOB(?:_RECURSE)?\b", text, re.IGNORECASE):
@@ -240,8 +250,8 @@ def inspect_cmake(text: str) -> list[str]:
 
 
 def production_paths() -> list[Path]:
-    # Include all non-test port consumers, including sibling ported modules,
-    # plus declarations/export contract. Do not crawl historical out/build trees.
+    # Inspect compiled/production port inputs. The two entry-composition drafts
+    # consume this candidate, but are deliberately unbuilt and checked separately.
     paths = [ROOT / "docs/x64_export_contract.md"]
     for directory in (ROOT / "port", ROOT / "src/include"):
         paths.extend(path for path in directory.rglob("*")
@@ -249,7 +259,8 @@ def production_paths() -> list[Path]:
                      {".c", ".h", ".cpp", ".hpp", ".def", ".tsv"}
                      and not path.name.startswith("test_")
                      and not any("_locked" in part for part in path.parts)
-                     and path not in {HEADER, SOURCE})
+                     and path not in {HEADER, SOURCE}
+                     and path not in UNBUILT_COMPOSITION_PATHS)
     return sorted(paths)
 
 
@@ -367,6 +378,22 @@ class TerminalContainmentTests(unittest.TestCase):
         self.assertIn(ROOT / "port/x64_headless/headless_main.c", paths)
         self.assertIn(ROOT / "port/x64_exports/export_manifest.tsv", paths)
         self.assertIn(ROOT / "port/x64_ported/ported_100edd70_entry_decision.c", paths)
+        for path in UNBUILT_COMPOSITION_PATHS:
+            with self.subTest(unbuilt_candidate=path.relative_to(ROOT)):
+                self.assertTrue(path.is_file())
+                self.assertNotIn(path, paths)
+                self.assertIn("terminal_transcript", path.read_text(encoding="utf-8"))
+                self.assertNotIn(path.name, self.cmake)
+        for candidate in (
+            "ported_100edd70_unified_entry",
+            "ported_100edd70_full_entry",
+        ):
+            with self.subTest(unadmitted_candidate=candidate):
+                self.assertTrue(
+                    inspect_cmake(
+                        self.cmake + f"\nadd_library(candidate {candidate}.c)\n"
+                    )
+                )
         for path in paths:
             with self.subTest(path=path.relative_to(ROOT)):
                 self.assertEqual(inspect_production(path.read_text(encoding="utf-8")), [])
