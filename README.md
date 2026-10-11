@@ -165,8 +165,8 @@ These are separate completion axes and must not be blended into one percentage:
 
 | Axis | Current state | What it means |
 | --- | ---: | --- |
-| Canonical decompiler export | 63,326 / 63,326 (100%) | Every indexed function has canonical decompiler output; this is not semantic recovery. |
-| Function identification | 5,452 / 63,326 (8.6%) | Evidence-backed names/subsystems in the current FuncID snapshot. |
+| Canonical decompiler export | 63,326 / 63,326 (100%) | Every *indexed* function has canonical output; this is not semantic recovery. See the caveat below — the export is 100% of what Ghidra defined, and it omits 20 startup registrar handlers. |
+| Function identification | 9,036 / 63,326 (14.3%) | Unique addresses named across all `work/funcid_*.tsv`. |
 | Current exact x64 milestone | 150 / 150 decision-and-caller bytes (100%) | The frozen selector, conditional registration-data interval, and two caller/continuation windows compose the admitted 400-byte nonempty ordinary-domain parent in a standalone test-only route. |
 | Playable/game-equivalent reconstruction | <1% (planning estimate) | No recovered launcher-facing startup, main loop, renderer, campaign, battle, UI, audio, networking, or save system is integrated. |
 
@@ -180,7 +180,17 @@ These are separate completion axes and must not be blended into one percentage:
   classifications in `work/funcid_solo.tsv` (+ main/todo2). Method + anchor
   table: `work/SOLO_SESSION_SUMMARY.md`; the contemporaneous remaining queue is
   `work/remaining_after_solo1.txt`.
-- [~] FuncID pass: 5,452 functions identified (batch1 complete; see `docs/funcid_report.md`, output `work/funcid_batch1_final.tsv`)
+- [~] FuncID pass: **9,036 unique addresses named (14.3%)**. Corpus integrity
+  note: `funcid_batch1.tsv`, `v2/v3/v4` and `funcid_solo_batch1.tsv` are
+  successive versions of the same 5,398 rows, so naive row sums over-report;
+  `funcid_batch1_final.tsv` also mixes `0x`-prefixed and bare-hex addresses
+  (13 rows), so count the union of both forms.
+  Track 3 registrar wave: 23 vtables → 49 handlers, 643 functions reached to
+  depth 3, 538 still unnamed; **20 handlers have no decompilation at all**
+  → `docs/funcid_track3_report.md`, `work/registrar_roots.tsv`,
+  `work/registrar_reach.tsv`, `work/registrar_proposed.tsv`
+  Output `work/funcid_batch1_final.tsv` (5,452; restored byte-identically from
+  `2891a19` after a 549-row duplicate overwrote it)
 - [ ] RTTI class recovery → headers
 - [ ] Named-symbol propagation (exports, imports thunks)
 - [ ] Module identification (engine subsystems: render, AI, battle, campaign, UI…)
