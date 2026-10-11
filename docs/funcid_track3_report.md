@@ -124,6 +124,81 @@ strict `0x`-only match under-reports to 8,993 because
 `funcid_batch1_final.tsv` mixes in 13 bare-hex addresses. The union must accept
 both forms.
 
+## Deeper traversal, and why propagation cannot rescue it
+
+BFS to **depth 6** reaches **4,105 functions**, of which **3,572 are unnamed**:
+
+| Depth | 0 | 1 | 2 | 3 | 4 | 5 | 6 |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| Functions | 49 | 61 | 166 | 367 | 679 | 1,113 | 1,670 |
+
+`work/registrar_propagate.py` implements the callee-cluster propagation the
+RTTI survey recommends: seed a subsystem table from the 9,036-name corpus and
+inherit it backwards along call edges. It converges in 5 rounds and adds only
+**+74** subsystems (57 + 11 + 4 + 2 + 0).
+
+The reason is measurable, and it is structural:
+
+| Depth | call edges out | edges landing on a named address | hit rate |
+|---:|---:|---:|---:|
+| 0 | 105 | 33 | 31.4% |
+| 1 | 284 | 54 | 19.0% |
+| 2 | 874 | 119 | 13.6% |
+| 3 | 1,872 | 219 | 11.7% |
+| 4 | 3,732 | 420 | 11.3% |
+| 5 | 6,298 | 708 | 11.2% |
+| 6 | 8,327 | 918 | 11.0% |
+| **total** | **21,492** | **2,471** | **11.5%** |
+
+**Only 11.5% of edges leaving the startup subgraph land on anything the corpus
+has ever named.** The existing names cluster in FaceFX SDK, setupapi/render and
+telemetry bands, which the startup path barely touches. There is nothing to
+propagate, so propagation is not a viable lever here — the registrar wave needs
+direct evidence or a much broader seed corpus, not inference.
+
+## The export gap is far wider than the registrars
+
+Checking every named address against `function_index.txt` surfaced something
+larger than the 20 missing handlers.
+
+**1,973 named addresses lie in `.text` but appear in neither
+`function_index.txt` nor the canonical export.** All of them come from
+`work/funcid_environment_variables.tsv`. They are real code: every address
+sampled begins
+
+```
+51 6a 00 68 <imm32> ...     push ecx ; push 0 ; push <handler>
+```
+
+the classic **MSVC SEH prologue** that Ghidra's analyzer splits off without
+ever defining a function. Combined with the 20 registrar handlers, **~1,993
+real code addresses carry names or vtable references but have no decompilation
+at all.**
+
+So "63,326 / 63,326 (100%)" should be read as *100% of the functions Ghidra
+chose to define* — not 100% of the code reachable from startup, and not 100%
+of code that the classification corpus references. Fixing this needs a targeted
+re-export that forces function creation at known `.text` addresses that begin
+an SEH prologue.
+
+The Ghidra project was idle at the time of writing (no lock files, no running
+`java`), but `workspace/TW2` is shared with the other tracks — any re-export
+must be coordinated so it does not collide with an agent holding the lock.
+
+## Guard rails added
+
+`scripts/test_funcid_corpus_integrity.py` (6 tests) locks the defects found
+here so they cannot recur silently:
+
+1. `funcid_batch1_final.tsv` must keep ≥5,000 rows and every row must carry a
+   name — this catches the 549-row clobber.
+2. Address-format mix is asserted visible; bare-hex rows must stay a small
+   minority of `0x`-prefixed ones.
+3. `v2`/`v3`/`v4` must refine, not replace, the base `funcid_batch1.tsv`.
+4. Undefined-code addresses are pinned to a baseline of 1,973 — it may shrink,
+   never grow, so an export regression cannot hide behind the known gap.
+5. `registrar_reach.tsv` must keep its header and stay duplicate-free.
+
 ## Recommended next
 
 1. Re-export the 20 missing handlers with forced disassembly and decode, then
