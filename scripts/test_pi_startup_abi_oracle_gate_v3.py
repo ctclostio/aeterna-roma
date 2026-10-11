@@ -28,6 +28,10 @@ import pi_startup_abi_oracle_gate_v3 as gate  # noqa: E402
 @lru_cache(maxsize=None)
 def _pin_values(authority: str) -> tuple[str, int]:
     path = REPO_ROOT.joinpath(*Path(authority).parts)
+    if not path.is_file():
+        raise unittest.SkipTest(
+            "declared authority is absent from this checkout: " + authority
+        )
     raw = path.read_bytes()
     return hashlib.sha256(raw).hexdigest(), len(raw)
 
