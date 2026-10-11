@@ -52,6 +52,15 @@ class Startup100edd70CallerClosureStaticGateTests(unittest.TestCase):
         self.assertEqual(gate.inspect_doc_text(self.doc), [])
         self.assertEqual(gate.inspect_cmake_text(self.cmake), [])
 
+    def test_live_artifacts_are_line_ending_independent(self) -> None:
+        for text, inspector in (
+            (self.provenance, gate.inspect_provenance_text),
+            (self.doc, gate.inspect_doc_text),
+            (self.cmake, gate.inspect_cmake_text),
+        ):
+            with self.subTest(inspector=inspector.__name__):
+                self.assertEqual(inspector(text.replace("\n", "\r\n")), [])
+
     def test_live_production_surfaces_exclude_caller_closure(self) -> None:
         for path in PRODUCTION_PATHS:
             with self.subTest(path=path):
