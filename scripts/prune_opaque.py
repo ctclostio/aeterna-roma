@@ -10,11 +10,23 @@ VCVARS = r"C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Auxil
 INC = Path("src/include").resolve()
 OUTDIR = Path("build_test"); OUTDIR.mkdir(exist_ok=True)
 
-def try_compile(path):
+def msvc_env():
+    import os
+    import subprocess as sp
+    cmd = f'"{VCVARS}" >nul 2>&1 && set'
+    out = sp.check_output(cmd, shell=True, text=True, errors='replace')
+    env = dict(os.environ)
+    for line in out.splitlines():
+        if '=' in line:
+            k, v = line.split('=', 1)
+            if k.upper() in ('PATH', 'INCLUDE', 'LIB', 'LIBPATH', 'VCINSTALLDIR') or k.startswith('VSCMD') or k.isupper():
+                env[k] = v
+    return env
+
+def try_compile(path, env):
     obj = OUTDIR / (Path(path).stem + '.obj')
     inner = f'cl /nologo /c /W0 /EHsc /FI"{INC}/umbrella.h" "{path}" /Fo"{obj}"'
-    r = subprocess.run(f'"{VCVARS}" >nul 2>&1 && {inner}', shell=True,
-                       capture_output=True, text=True, errors='replace')
+    r = subprocess.run(inner, shell=True, capture_output=True, text=True, errors='replace', env=env)
     return r.returncode, ((r.stdout or '') + '\n' + (r.stderr or ''))
 
 def err_names(errs, code):
@@ -35,11 +47,13 @@ def main():
     opq_path = INC / 'opaque_types.h'
     fnh_path = INC / 'functions.h'
 
+    env = msvc_env()
+
     for it in range(n_iter):
         opq = opq_path.read_text().splitlines()
         fnh = fnh_path.read_text().splitlines()
 
-        results = list(ThreadPoolExecutor(max_workers=8).map(try_compile, sample))
+        results = list(ThreadPoolExecutor(max_workers=8).map(lambda p: try_compile(p, env), sample))
         errs = [e for rc, e in results if rc != 0]
         ok = sum(1 for rc, _ in results if rc == 0)
         print(f"[iter {it}] compiled={ok}/{len(sample)}")
@@ -127,7 +141,7 @@ def main():
             break
 
     # final taxonomy
-    results = list(ThreadPoolExecutor(max_workers=8).map(try_compile, sample))
+    results = list(ThreadPoolExecutor(max_workers=8).map(lambda p: try_compile(p, env), sample))
     cats = {}
     for rc, e in results:
         if rc == 0: continue
