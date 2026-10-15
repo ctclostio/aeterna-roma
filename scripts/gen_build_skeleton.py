@@ -78,7 +78,9 @@ OP_RE = re.compile(r'\boperator(=|==|!=|<|>|\+|-|\*|/|\[\]|\(\)|->|!|%|&|<<|>>|\
 def strip_templates(txt):
     """Iteratively remove <...> groups, innermost first (handles nesting)."""
     while True:
-        new = re.sub(r'<[^<>]*>', lambda m, o=txt: '', txt)
+        # Optimization: use a static replacement string instead of a lambda
+        # to avoid the overhead of a function call per replacement.
+        new = re.sub(r'<[^<>]*>', '', txt)
         if new == txt:
             return txt
         txt = new
