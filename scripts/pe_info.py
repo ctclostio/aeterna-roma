@@ -23,29 +23,29 @@ def main():
     out_dir.mkdir(parents=True, exist_ok=True)
     data = path.read_bytes()
 
-    e_lfanew = struct.unpack('<I', data[0x3c:0x40])[0]
+    e_lfanew = struct.unpack_from('<I', data, 0x3c)[0]
     assert data[e_lfanew:e_lfanew+4] == b'PE\0\0', "not PE"
     coff = e_lfanew + 4
-    machine, nsec, _, _, _, optsz, _ = struct.unpack('<HHIIIHH', data[coff:coff+20])
+    machine, nsec, _, _, _, optsz, _ = struct.unpack_from('<HHIIIHH', data, coff)
     opt = coff + 20
-    magic = struct.unpack('<H', data[opt:opt+2])[0]
+    magic = struct.unpack_from('<H', data, opt)[0]
     is_pe32p = magic == 0x20b
-    entry_rva = struct.unpack('<I', data[opt+16:opt+20])[0]
+    entry_rva = struct.unpack_from('<I', data, opt+16)[0]
     if is_pe32p:
-        image_base = struct.unpack('<Q', data[opt+24:opt+32])[0]
+        image_base = struct.unpack_from('<Q', data, opt+24)[0]
         dd_off = opt + 112
     else:
-        image_base = struct.unpack('<I', data[opt+28:opt+32])[0]
+        image_base = struct.unpack_from('<I', data, opt+28)[0]
         dd_off = opt + 96
-    n_dirs = struct.unpack('<I', data[dd_off-4:dd_off])[0]
+    n_dirs = struct.unpack_from('<I', data, dd_off-4)[0]
 
     sec_off = opt + optsz
     sections = []
     for i in range(nsec):
         s = sec_off + i*40
         nm = data[s:s+8].rstrip(b'\0').decode('ascii','replace')
-        vsize, vaddr, rawsize, rawoff = struct.unpack('<IIII', data[s+8:s+24])
-        chars = struct.unpack('<I', data[s+36:s+40])[0]
+        vsize, vaddr, rawsize, rawoff = struct.unpack_from('<IIII', data, s+8)
+        chars = struct.unpack_from('<I', data, s+36)[0]
         sections.append((nm, vsize, vaddr, rawsize, rawoff))
         print(f"  section {nm:<8} va=0x{vaddr:08x} vs=0x{vsize:06x} raw=0x{rawoff:08x}")
 
@@ -54,19 +54,19 @@ def main():
 
     # Exports (dir 0)
     exports = []
-    exp_rva = struct.unpack('<I', data[dd_off:dd_off+4])[0]
+    exp_rva = struct.unpack_from('<I', data, dd_off)[0]
     if exp_rva:
         o = rva_to_off(data, exp_rva, sections)
         if o is not None:
-            _, _, _, _, name_rva, base, nfun, nnames, afun_rva, aname_rva, aord_rva = struct.unpack('<IIHHIIIIIII', data[o:o+40])
+            _, _, _, _, name_rva, base, nfun, nnames, afun_rva, aname_rva, aord_rva = struct.unpack_from('<IIHHIIIIIII', data, o)
             dll_name = cstr(data, rva_to_off(data, name_rva, sections)) if name_rva else ''
             print(f"Export DLL name: {dll_name}, functions={nfun}, names={nnames}")
             fo = rva_to_off(data, afun_rva, sections)
             no = rva_to_off(data, aname_rva, sections)
             oo = rva_to_off(data, aord_rva, sections)
-            funcs = struct.unpack(f'<{nfun}I', data[fo:fo+4*nfun]) if fo else []
-            names_offs = struct.unpack(f'<{nnames}I', data[no:no+4*nnames]) if no else []
-            ords = struct.unpack(f'<{nnames}H', data[oo:oo+2*nnames]) if oo else []
+            funcs = struct.unpack_from(f'<{nfun}I', data, fo) if fo else []
+            names_offs = struct.unpack_from(f'<{nnames}I', data, no) if no else []
+            ords = struct.unpack_from(f'<{nnames}H', data, oo) if oo else []
             addr2name = {}
             names = []
             for i, noff in enumerate(names_offs):
@@ -82,19 +82,19 @@ def main():
             print(f"  -> wrote {len(exports)} named exports")
 
     # Imports (dir 1)
-    imp_rva = struct.unpack('<I', data[dd_off+8:dd_off+12])[0]
+    imp_rva = struct.unpack_from('<I', data, dd_off+8)[0]
     imports = {}
     if imp_rva:
         o = rva_to_off(data, imp_rva, sections)
         while o is not None and o+20 <= len(data):
-            oft, tds, fc, name_rva, ft = struct.unpack('<IIIII', data[o:o+20])
+            oft, tds, fc, name_rva, ft = struct.unpack_from('<IIIII', data, o)
             if name_rva == 0: break
             dll = cstr(data, rva_to_off(data, name_rva, sections))
             thunk_rva = oft or ft
             syms = []
             to = rva_to_off(data, thunk_rva, sections)
             while to:
-                val = struct.unpack('<I', data[to:to+4])[0]
+                val = struct.unpack_from('<I', data, to)[0]
                 if val == 0: break
                 if val & 0x80000000:
                     syms.append(f"ord_{val & 0xffff}")
