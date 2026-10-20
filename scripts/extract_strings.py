@@ -17,6 +17,9 @@ SUBSYSTEMS = {
     'script':   r'script|lua|trigger|event_queue',
 }
 
+# ⚡ Bolt: Pre-compile regexes for significant performance boost during string extraction loop
+COMPILED_SUBSYSTEMS = {name: re.compile(rx, re.I) for name, rx in SUBSYSTEMS.items()}
+
 def main():
     path = Path(sys.argv[1]); out = Path(sys.argv[2])
     data = path.read_bytes()
@@ -39,8 +42,9 @@ def main():
     counts = {}
     samples = {}
     for off, s in lines:
-        for name, rx in SUBSYSTEMS.items():
-            if re.search(rx, s, re.I):
+        # ⚡ Bolt: Use pre-compiled regex for O(n) loop optimization
+        for name, rx in COMPILED_SUBSYSTEMS.items():
+            if rx.search(s):
                 counts[name] = counts.get(name, 0) + 1
                 samples.setdefault(name, [])
                 if len(samples[name]) < 8: samples[name].append(hex(off) + " " + s[:80])
