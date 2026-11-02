@@ -26,8 +26,7 @@ def msvc_env():
 def try_compile(path, env):
     obj = OUTDIR / (Path(path).stem + '.obj')
     inner = f'cl /nologo /c /W0 /EHsc /FI"{INC}/umbrella.h" "{path}" /Fo"{obj}"'
-    full = f'"{VCVARS}" >nul 2>&1 && {inner}'
-    r = subprocess.run(full, shell=True, capture_output=True, text=True, errors='replace')
+    r = subprocess.run(inner, shell=True, capture_output=True, text=True, errors='replace', env=env)
     outtxt = (r.stdout or '') + '\n' + (r.stderr or '')
     return path, r.returncode, outtxt[:3000]
 

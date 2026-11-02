@@ -26,7 +26,21 @@ EXCLUDED = {'__int8','__int16','__int32','__int64','_int8','_int16','_int32','_i
             '__int128','_Float16','__cdecl','__stdcall','__thiscall','__fastcall',
             '__declspec','__pragma','__w64','__ptr32','__ptr64','__restrict'}
 
-def probe(t):
+def msvc_env():
+    import os
+    import subprocess as sp
+    cmd = f'"{VCVARS}" >nul 2>&1 && set'
+    out = sp.check_output(cmd, shell=True, text=True, errors='replace')
+    env = dict(os.environ)
+    for line in out.splitlines():
+        if '=' in line:
+            k, v = line.split('=', 1)
+            if k.upper() in ('PATH', 'INCLUDE', 'LIB', 'LIBPATH', 'VCINSTALLDIR') or k.startswith('VSCMD') or k.isupper():
+                env[k] = v
+    return env
+
+def probe(args):
+    t, env = args
     if t in EXCLUDED:
         return t, True  # drop keywords
     if not t.replace('_', 'a').isalnum():
@@ -34,8 +48,8 @@ def probe(t):
     probe_f = Path('build_test') / f'probe_{t}.c'
     obj_f = probe_f.with_suffix('.obj')
     probe_f.write_text(PROBE_PRELUDE + t + " *p;\n")
-    cmd = f'"{VCVARS}" >nul 2>&1 && cl /nologo /c /W0 "{probe_f}" /Fo"{obj_f}"'
-    r = subprocess.run(cmd, shell=True, capture_output=True, text=True, errors='replace')
+    cmd = f'cl /nologo /c /W0 "{probe_f}" /Fo"{obj_f}"'
+    r = subprocess.run(cmd, shell=True, capture_output=True, text=True, errors='replace', env=env)
     ok = r.returncode == 0
     probe_f.unlink(missing_ok=True)
     obj_f.unlink(missing_ok=True)
@@ -49,9 +63,13 @@ def main():
             continue
         cands.append(l.split()[-1] if ' ' in l else l)
     Path('build_test').mkdir(exist_ok=True)
+
+    env = msvc_env()
+    args_list = [(t, env) for t in cands]
+
     exists, missing = [], []
     with ThreadPoolExecutor(max_workers=12) as ex:
-        for t, ok in ex.map(probe, cands):
+        for t, ok in ex.map(probe, args_list):
             (exists if ok else missing).append(t)
     out = ["#pragma once", "/* Auto-generated opaque fwd decls (system-collision filtered).\n   Sized dummy bodies so BY-VALUE struct use compiles; real layouts come from RTTI recovery later. */"]
     out += [f"typedef struct {{ unsigned char _pad_[64]; }} {t};" for t in sorted(missing)]
