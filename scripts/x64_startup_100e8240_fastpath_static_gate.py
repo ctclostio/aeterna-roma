@@ -27,7 +27,7 @@ PARENT_LIBRARY = "rome2_startup_100ed3c0_empty_preloop_runtime"
 LIFECYCLE_FUNCTION = "rome2_port_100ed471_run_ordinary_lifecycle"
 LIFECYCLE_LIBRARY = "rome2_startup_100ed471_ordinary_lifecycle_runtime"
 EXPECTED_HEADLESS_SIZE = 163368
-EXPECTED_CMAKE_ADD_TEST_COUNT = 192
+EXPECTED_CMAKE_ADD_TEST_COUNT = 194
 
 EXPECTED_SHA256 = {
     "header": "4c76de0ab7388e73128d245f960f4678dfdbab3dd227807bcb9d9a8e549d535f",
@@ -347,7 +347,7 @@ def _build_testing_bounds(lines: list[str]) -> tuple[int, int] | None:
 def inspect_cmake_text(text: str) -> list[str]:
     findings: list[str] = []
     if len(re.findall(r"\badd_test\s*\(", text)) != EXPECTED_CMAKE_ADD_TEST_COUNT:
-        findings.append("CMake add_test declaration count must remain 192")
+        findings.append("CMake add_test declaration count must remain 194")
     lines = text.splitlines()
     bounds = _build_testing_bounds(lines)
     if bounds is None:

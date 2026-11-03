@@ -109,7 +109,9 @@ The test executable first re-runs the unchanged 54-case caller-closure oracle,
 then runs the 44-case outer registry. Strict `/W4 /WX` is enforced by the
 ordinary build. Separate `/analyze /WX` and AddressSanitizer runs,
 primary/fresh `BUILD_TESTING=ON`, and token-free `BUILD_TESTING=OFF` are required.
-Six CTests extend the active inventory from 186 to 192.  The new library is
+Six CTests extend the active inventory from 186 to 192; with the
+Phase 4.2 battle entity pair the active inventory is from 186 to 194.
+The new library is
 `STATIC EXCLUDE_FROM_ALL`, has one test executable consumer, and is absent from
 headless, export, probe, and production surfaces.  Production DLL and host
 hashes must remain unchanged.
@@ -127,7 +129,7 @@ The separate `work/entry_decision_asan` graph records
 `work/entry_decision_asan/Testing/Temporary/LastTest.log` records the unchanged
 54-case child and all 44 outer cases passing under that instrumented binary.
 These retained runs are admission evidence; they are not presented as flags
-that every ordinary 192-test invocation silently enables.
+that every ordinary 194-test invocation silently enables.
 
 Excluded beyond the hard stops: installed tail, exception gap, common epilogue,
 `CoUninitialize`, SEH restoration, the `0x119f3144` read, native `wchar_t`, CRT

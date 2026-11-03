@@ -159,8 +159,8 @@ EXPECTED_TOOLS = {
 }
 EXPECTED_INPUTS = {
     "CMakeLists.txt": (
-        "3e7dda18a4e170f7d68a73f121ff5f4a40e58c854047e730a9608984b9589674",
-        182959,
+        "869669615b762f48b4eeaacabc157e58447e079d0ad379c490da9e95d298d56b",
+        185731,
     ),
     "port/x64_bootstrap/bootstrap_contract.h": (
         "e6e6a4a069c2d36c7e6153c4fbe69856393abb9659545551a21666346995fb3c",

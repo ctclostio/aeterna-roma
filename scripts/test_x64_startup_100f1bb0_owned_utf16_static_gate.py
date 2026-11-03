@@ -116,7 +116,7 @@ class Startup100f1bb0OwnedUtf16StaticGateTests(unittest.TestCase):
         )
 
         wrong_total = self.mutate(self.cmake, "add_test(", "removed_test(")
-        self.assert_finding(gate.inspect_cmake_text(wrong_total), "192 CTests")
+        self.assert_finding(gate.inspect_cmake_text(wrong_total), "194 CTests")
 
         whitespace = self.mutate(
             self.cmake,

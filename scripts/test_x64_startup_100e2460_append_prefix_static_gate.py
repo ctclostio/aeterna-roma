@@ -296,7 +296,7 @@ class Startup100e2460AppendPrefixStaticGateTests(unittest.TestCase):
         missing_ctest = self.cmake.replace("  add_test(\n", "  add_test_removed(\n", 1)
         self.assertNotEqual(missing_ctest, self.cmake)
         self.assertTrue(any(
-            "192 CTests" in finding
+            "194 CTests" in finding
             for finding in gate.inspect_cmake_text(missing_ctest)
         ))
 

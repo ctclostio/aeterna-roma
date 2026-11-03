@@ -69,7 +69,7 @@ class Startup100f1aa0EmptyStaticGateTests(unittest.TestCase):
     def test_final_cmake_count_mutant_is_rejected(self) -> None:
         mutant = self.cmake + "\nadd_test(NAME empty_extra COMMAND false)\n"
         self.assertIn(
-            "CMake add_test declaration count must remain 192",
+            "CMake add_test declaration count must remain 194",
             gate.inspect_cmake_text(mutant),
         )
 

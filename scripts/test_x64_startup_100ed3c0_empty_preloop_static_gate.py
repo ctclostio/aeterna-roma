@@ -19,7 +19,8 @@ import x64_startup_100ed3c0_empty_preloop_static_gate as gate
 
 
 def read(relative: str) -> str:
-    return (ROOT / relative).read_text(encoding="utf-8")
+    # Exact pins are over file bytes; text-mode reads would translate CRLF.
+    return (ROOT / relative).read_bytes().decode("utf-8")
 
 
 class Startup100ed3c0EmptyPreloopStaticGateTests(unittest.TestCase):
@@ -473,7 +474,7 @@ class Startup100ed3c0EmptyPreloopStaticGateTests(unittest.TestCase):
         )
         self.assert_finding(gate.inspect_cmake_text(missing_child), "child/private")
         wrong_total = self.cmake.replace("add_test(", "removed_test(", 1)
-        self.assert_finding(gate.inspect_cmake_text(wrong_total), "192 CTests")
+        self.assert_finding(gate.inspect_cmake_text(wrong_total), "194 CTests")
         missing_lifecycle_link = self.cmake.replace(
             f"      {gate.LIBRARY}\n      {gate.LIFECYCLE_LIBRARY}\n",
             f"      {gate.LIBRARY}\n",

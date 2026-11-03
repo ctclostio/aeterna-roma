@@ -22,7 +22,7 @@ import test_x64_startup_100edd70_entry_tail_provenance as corpus
 ROOT = Path(__file__).resolve().parent.parent
 ORACLE = ROOT / "scripts/test_x64_startup_100edd70_entry_tail_provenance.py"
 DESIGN = ROOT / "out/pi-swarm/20260901-entry-tail-design/transcript/report.md"
-ORACLE_PIN = (14558, "17f3e48b136b31d01b3ca0c0a243b3beecb942dc08bb643b8f7d849fb68ffed5")
+ORACLE_PIN = (14903, "b272dc06372698d9dc73ef85da8c6351927a1f29c0d4c375def5d6a6331d1e86")
 DESIGN_PIN = (10114, "28661c05406ca60145047fb96a1d40f29ce2e284f8f67d36a1c70e405e429c4f")
 
 

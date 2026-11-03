@@ -666,7 +666,7 @@ class Startup100e2460PreallocatedBranchStaticGateTests(unittest.TestCase):
         )
         missing_ctest = self.cmake.replace("  add_test(\n", "  add_test_removed(\n", 1)
         self.assertNotEqual(missing_ctest, self.cmake)
-        self.assert_finding(gate.inspect_cmake_text(missing_ctest), "192 CTests")
+        self.assert_finding(gate.inspect_cmake_text(missing_ctest), "194 CTests")
 
     def test_suffix_successor_freeze_mutants_fail(self):
         direct_call = self.headless + (

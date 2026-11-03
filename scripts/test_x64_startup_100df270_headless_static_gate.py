@@ -58,7 +58,7 @@ class Startup100df270HeadlessStaticGateTests(unittest.TestCase):
     def test_final_cmake_count_mutant_fails(self):
         mutant = self.cmake + "\nadd_test(NAME headless_projection_extra COMMAND false)\n"
         self.assertIn(
-            "CMake add_test declaration count must remain 192",
+            "CMake add_test declaration count must remain 194",
             gate.inspect_cmake_text(mutant),
         )
 

@@ -67,8 +67,8 @@ ADMITTED_ENTRY_DECISION = {
         "edb849e2fa7d1a4e2acc5d89b2a65a57d6200fa4bcb193403fddb523486e7a60",
     ),
     "scripts/test_x64_startup_100edd70_entry_decision_provenance.py": (
-        17_721,
-        "937c10a3f84c2120f5289f9ac4094fec532edc32b1e849d7db9810ee8cf7a52d",
+        18_153,
+        "a66591732ebc3a354c8295df06ea4d95ce64861ad664f89e76c68d1031f00744",
     ),
     "docs/x64_startup_100edd70_entry_decision.md": (
         6_849,

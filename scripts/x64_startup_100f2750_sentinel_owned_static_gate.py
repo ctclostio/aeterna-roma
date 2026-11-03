@@ -24,10 +24,10 @@ PARENT_LIBRARY = "rome2_startup_100ed3c0_nonempty_preloop_runtime"
 
 # Frozen after the standalone BUILD_TESTING-only target and fixture chain were
 # admitted.  Any later CMake change must be consciously re-audited and re-pinned.
-EXPECTED_CTEST_COUNT = 192
-EXPECTED_CMAKE_BYTES = 182_959
+EXPECTED_CTEST_COUNT = 194
+EXPECTED_CMAKE_BYTES = 185_731
 EXPECTED_CMAKE_SHA256 = (
-    "3e7dda18a4e170f7d68a73f121ff5f4a40e58c854047e730a9608984b9589674"
+    "869669615b762f48b4eeaacabc157e58447e079d0ad379c490da9e95d298d56b"
 )
 EXPECTED_HEADER_BYTES = 4_603
 EXPECTED_HEADER_SHA256 = (

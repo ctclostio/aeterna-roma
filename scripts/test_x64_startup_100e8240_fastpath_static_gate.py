@@ -39,7 +39,7 @@ class Startup100e8240FastpathStaticGateTests(unittest.TestCase):
         )
         extra_test = self.cmake + "\nadd_test(NAME fastpath_extra COMMAND false)\n"
         self.assertIn(
-            "CMake add_test declaration count must remain 192",
+            "CMake add_test declaration count must remain 194",
             gate.inspect_cmake_text(extra_test),
         )
 

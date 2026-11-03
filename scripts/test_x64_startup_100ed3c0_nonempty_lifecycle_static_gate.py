@@ -350,7 +350,7 @@ class Startup100ed3c0NonemptyLifecycleStaticGateTests(unittest.TestCase):
             "  add_test(\n    NAME startup_100ed3c0_nonempty_lifecycle_provenance",
             "  # removed test(\n    # startup_100ed3c0_nonempty_lifecycle_provenance",
         )
-        self.assert_finding(gate.inspect_cmake_text(removed), "exactly 192 CTests")
+        self.assert_finding(gate.inspect_cmake_text(removed), "exactly 194 CTests")
         escaped = f"# {gate.LIBRARY}\n" + self.cmake
         self.assert_finding(gate.inspect_cmake_text(escaped), "escapes BUILD_TESTING")
 

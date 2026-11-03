@@ -397,7 +397,7 @@ class Startup100df270PlatformPrefixTranscriptStaticGateTests(unittest.TestCase):
 
     def test_final_cmake_count_mutant_fails(self):
         mutant = self.cmake + "\nadd_test(NAME prefix_extra COMMAND false)\n"
-        self.assert_finding(gate.inspect_cmake_text(mutant), "must remain 192")
+        self.assert_finding(gate.inspect_cmake_text(mutant), "must remain 194")
 
     def test_every_export_surface_rejects_slice_tokens(self):
         for label, payload in (

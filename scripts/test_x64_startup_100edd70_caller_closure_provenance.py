@@ -90,7 +90,7 @@ FROZEN_AUTHORITIES = {
     "port/x64_runtime/test_startup_100ed3c0_nonempty_lifecycle.c":
         (60_045, "921681d86eec2285095c97603652c5f0486776290c580ed19c1251c4ae5efcaa"),
     "scripts/test_x64_startup_100ed3c0_nonempty_lifecycle_provenance.py":
-        (8_308, "1bf836c6e66dd095a04058c18f661e82f8f32ed85db6502dc3bc09b6200016e5"),
+        (8_308, "e8353d50bce692498e22cab73e25320b66565cc9775dc1fcab5eb83b65dd9eba"),
     "docs/x64_startup_100ed3c0_nonempty_lifecycle.md":
         (6_922, "1dd19766d03b4dad226007e75d42d9ea1b4f0a3a6ab52c92b37981f078c73eb6"),
     "port/x64_ported/ported_100edd70_policy.h":

@@ -20,7 +20,7 @@ LIBRARY = "rome2_startup_100edd70_entry_decision_runtime"
 TEST_TARGET = "rome2_startup_100edd70_entry_decision_tests"
 CHILD_LIBRARY = "rome2_startup_100edd70_caller_closure_runtime"
 CHILD_TEST_TARGET = "rome2_startup_100edd70_caller_closure_tests"
-EXPECTED_CTEST_COUNT = 192
+EXPECTED_CTEST_COUNT = 194
 
 EXPECTED_HEADER = (
     5_103, "64b9204fbe3bc11d81c5a15c8faec5b3e3e737e5c926cd40bf9b309bd472995d"
@@ -32,13 +32,13 @@ EXPECTED_TEST = (
     35_819, "edb849e2fa7d1a4e2acc5d89b2a65a57d6200fa4bcb193403fddb523486e7a60"
 )
 EXPECTED_PROVENANCE = (
-    17_721, "937c10a3f84c2120f5289f9ac4094fec532edc32b1e849d7db9810ee8cf7a52d"
+    17_721, "0b153a839a67b7ce7bc23ba0e93abedc3c8c5426b41b97c11141573453a4b023"
 )
 EXPECTED_DOC = (
-    6_849, "361f6c369f6540a46b0d0ef5be4d30f5c9b44b9a13533c8bfd7fbd04210f0045"
+    7_065, "11ca0a4d837207be077d17e259e5780c57aa363303cf9ed224d138f6cbbe4c91"
 )
 EXPECTED_CMAKE = (
-    182_959, "3e7dda18a4e170f7d68a73f121ff5f4a40e58c854047e730a9608984b9589674"
+    185_731, "869669615b762f48b4eeaacabc157e58447e079d0ad379c490da9e95d298d56b"
 )
 
 CMAKE_FILES = (
@@ -279,7 +279,7 @@ def inspect_doc_text(text: str) -> list[str]:
         "[0x100edf20,0x100edf41)", "[0x100edf73,0x100edf94)",
         "fourteencontrols", "sevenpairwisehost-and-guest-disjointbackingintervals",
         "eightcallbackcontextspans", "45+P", "49+P", "50|52|113",
-        "12/13/24/25/24", "exactly44cases", "from186to192",
+        "12/13/24/25/24", "exactly44cases", "from186to194",
         "STATICEXCLUDE_FROM_ALL", "assignedexactlyonceandlast",
         "DONE-20260901-selector-to-caller-route",
     ):
@@ -317,7 +317,7 @@ def inspect_cmake_text(text: str) -> list[str]:
     findings: list[str] = []
     _check_exact(text, EXPECTED_CMAKE, "CMake", findings)
     if len(re.findall(r"^\s*add_test\s*\(", text, re.I | re.M)) != EXPECTED_CTEST_COUNT:
-        findings.append("CMake must contain exactly 192 CTests")
+        findings.append("CMake must contain exactly 194 CTests")
     lines = text.splitlines()
     bounds = _build_testing_bounds(lines)
     if bounds is None:

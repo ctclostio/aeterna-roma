@@ -454,7 +454,7 @@ class Startup100e87a0HandlerTranscriptStaticGateTests(unittest.TestCase):
                 self.cmake,
                 self.cmake.replace("add_test(", "removed_test(", 1),
                 gate.inspect_cmake_text,
-                "192",
+                "194",
             ),
         )
         for original, mutant, inspector, fragment in cases:

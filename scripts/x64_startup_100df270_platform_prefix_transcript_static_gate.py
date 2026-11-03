@@ -30,10 +30,10 @@ TERMINAL_FIXTURE = (
 )
 PREDECESSOR_FIXTURE = "startup_100df270_suffix_transcript_reload_verified"
 COMPOSED_TERMINAL_FIXTURE = "startup_100ed471_ordinary_lifecycle_reload_verified"
-EXPECTED_CTEST_COUNT = 192
-EXPECTED_CMAKE_SIZE = 182959
+EXPECTED_CTEST_COUNT = 194
+EXPECTED_CMAKE_SIZE = 185_731
 EXPECTED_CMAKE_SHA256 = (
-    "3e7dda18a4e170f7d68a73f121ff5f4a40e58c854047e730a9608984b9589674"
+    "869669615b762f48b4eeaacabc157e58447e079d0ad379c490da9e95d298d56b"
 )
 
 EXPECTED_HEADER_SHA256 = (
@@ -743,7 +743,7 @@ def inspect_cmake_text(text: str) -> list[str]:
     if hashlib.sha256(encoded).hexdigest() != EXPECTED_CMAKE_SHA256:
         findings.append("CMake exact digest changed")
     if len(re.findall(r"\badd_test\s*\(", text)) != EXPECTED_CTEST_COUNT:
-        findings.append("CMake add_test declaration count must remain 192")
+        findings.append("CMake add_test declaration count must remain 194")
     lines = text.splitlines()
     bounds = _build_testing_bounds(lines)
     if bounds is None:

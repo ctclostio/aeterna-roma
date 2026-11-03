@@ -39,7 +39,7 @@ CHILD_AUTHORITIES = {
     "port/x64_runtime/test_startup_100ed3c0_nonempty_preloop.c":
         (60_502, "3f79ef5062a2e89fe195588a7a067ace263a978d574da4664cc4687163b2a49a"),
     "scripts/test_x64_startup_100ed3c0_nonempty_preloop_provenance.py":
-        (9_741, "a018490762facd6ce071918289f9e0e08491d6d9fe4611053dd773cd4083e9ea"),
+        (9_741, "905c2a110b37ad237bdbf6075defb0be012354b216a3cbda96dd1c52808bbdf2"),
     "docs/x64_startup_100ed3c0_nonempty_preloop.md":
         (6_884, "4c9ba359c3c71e8f390bd3d3bfaf99d6c7c96fe9090b5046fd570515348ff3e8"),
     "port/x64_ported/ported_100ed471_ordinary_lifecycle.h":

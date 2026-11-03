@@ -63,7 +63,7 @@ AUTHORITIES = {
     "scripts/test_x64_startup_100f1bb0_owned_utf16_provenance.py":
         (49_683, "797164ae31c0b3a6496810d70ba642b3e20025901f7bd813aa97c0c8b403d628"),
     "scripts/x64_startup_100f1bb0_owned_utf16_static_gate.py":
-        (53_808, "27b67c184b494d8fe0de026343cf90b040766e6b2f6ab418206c708da2b7751d"),
+        (53_808, "6d912dd301aef367e53cc8ea5c39371acd0bef39f87ea055e1c25e22905c1632"),
     "port/x64_ported/ported_100f2750_first_use_owned.h":
         (4_603, "4e766b3bec926adadde9e60dfb04e4459cfa33d22be6ec9295b5b77fdabbf86d"),
     "port/x64_ported/ported_100f2750_first_use_owned.c":
@@ -71,7 +71,7 @@ AUTHORITIES = {
     "scripts/test_x64_startup_100f2750_sentinel_owned_provenance.py":
         (43_941, "595667f61b49688d49d8eb0bc2e47adf687959b5d74428630987ca0cc2b6497b"),
     "scripts/x64_startup_100f2750_sentinel_owned_static_gate.py":
-        (66_662, "b8fea27012499024e5403f982875a0f0f7ce23136861cf6e26cbcd54993e3070"),
+        (66_662, "1e5b7096cbb686c58874e952e142f03677e9a1c11d93aa15c9e979c62e8d19c7"),
 }
 
 NEW_ARTIFACTS = {

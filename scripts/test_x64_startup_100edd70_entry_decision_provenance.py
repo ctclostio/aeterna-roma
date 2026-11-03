@@ -136,7 +136,7 @@ ADMITTED_CHILDREN = {
     ),
     "scripts/test_x64_startup_100edd70_caller_closure_provenance.py": (
         12_320,
-        "6fe39f092aadcb49e50df0ed2eef8b587428b411b507de9f734ebd9610cf29a4",
+        "cd31bfd55e5fc138f2ef1f78983b354fcff971d8a1cc814ef260509be8bd9ae1",
     ),
     "docs/x64_startup_100edd70_caller_closure.md": (
         7_220,

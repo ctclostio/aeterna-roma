@@ -373,4 +373,11 @@ These are separate completion axes and must not be blended into one percentage:
   testing-disabled token containment, and unchanged reproducible production
   hashes are admitted
   → `docs/x64_startup_100edd70_entry_decision.md`
+- [x] Corrected test-only battle entity field projection (`0x10cbe350`):
+  independent origin/vector inputs, authenticated nineteen-word argument map,
+  widened vector storage, atomic construction failure, and paired host cleanup
+  → `docs/x64_battle_entity_10cbe350.md`. Strings remain borrowed; this does not
+  integrate gameplay or reproduce native string ownership.
+- [ ] Finish the provisional unit-card external helper and ownership boundary
+  → `docs/x64_battle_unitcard_10145c70.md`.
 - [ ] Pointer-width port of additional hot code paths

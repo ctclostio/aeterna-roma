@@ -571,7 +571,7 @@ class Startup100e2460RouterStaticGateTests(unittest.TestCase):
         )
         missing_ctest = self.cmake.replace("  add_test(\n", "  add_test_removed(\n", 1)
         self.assertNotEqual(missing_ctest, self.cmake)
-        self.assert_finding(gate.inspect_cmake_text(missing_ctest), "192 CTests")
+        self.assert_finding(gate.inspect_cmake_text(missing_ctest), "194 CTests")
         missing_outer_dependency = self.cmake.replace(
             "    PRIVATE " + gate.LIBRARY + "\n"
             "  )\n"

@@ -30,7 +30,7 @@ class Startup100edd70EntryDecisionStaticGateTests(unittest.TestCase):
         cls.source = SOURCE.read_text(encoding="utf-8")
         cls.runtime = RUNTIME.read_text(encoding="utf-8")
         cls.provenance = PROVENANCE.read_text(encoding="utf-8")
-        cls.doc = DOC.read_text(encoding="utf-8")
+        cls.doc = DOC.read_bytes().decode("utf-8")
         cls.cmake = CMAKE.read_text(encoding="utf-8")
 
     def mutate(self, payload: str, old: str, new: str) -> str:
@@ -166,7 +166,7 @@ class Startup100edd70EntryDecisionStaticGateTests(unittest.TestCase):
             ("49 + P", "48 + P"),
             ("50 | 52 | 113", "49 | 51 | 112"),
             ("exactly 44 cases", "exactly 43 cases"),
-            ("from 186 to 192", "from 186 to 191"),
+            ("from 186 to 194", "from 186 to 191"),
             ("STATIC EXCLUDE_FROM_ALL", "SHARED"),
         )
         for old, new in doc_mutants:

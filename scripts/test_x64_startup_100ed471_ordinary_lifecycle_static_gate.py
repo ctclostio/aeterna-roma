@@ -40,7 +40,7 @@ class Startup100ed471OrdinaryLifecycleStaticGateTests(unittest.TestCase):
             BOOTSTRAP_DEF.read_text(encoding="utf-8"),
             PROBE_DEF.read_text(encoding="utf-8"),
         )
-        cls.repro_manifest = REPRO_MANIFEST.read_text(encoding="utf-8")
+        cls.repro_manifest = REPRO_MANIFEST.read_bytes().decode("utf-8")
         cls.repro_verifier = REPRO_VERIFIER.read_text(encoding="utf-8")
 
     def assert_finding(self, findings: list[str], fragment: str) -> None:
@@ -537,7 +537,7 @@ class Startup100ed471OrdinaryLifecycleStaticGateTests(unittest.TestCase):
         self.assert_finding(gate.inspect_cmake_text(wrong_fixture), "terminal reload")
 
         wrong_total = self.cmake.replace("add_test(", "removed_test(", 1)
-        self.assert_finding(gate.inspect_cmake_text(wrong_total), "192 CTests")
+        self.assert_finding(gate.inspect_cmake_text(wrong_total), "194 CTests")
 
     def test_headless_transcript_result_last_timestamp_and_token_mutants_fail(self):
         no_call = self.headless.replace(

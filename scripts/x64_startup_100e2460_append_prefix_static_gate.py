@@ -36,14 +36,14 @@ PARENT_LIBRARY = "rome2_startup_100ed3c0_empty_preloop_runtime"
 LIFECYCLE_FUNCTION = "rome2_port_100ed471_run_ordinary_lifecycle"
 LIFECYCLE_LIBRARY = "rome2_startup_100ed471_ordinary_lifecycle_runtime"
 
-EXPECTED_CTEST_COUNT = 192
+EXPECTED_CTEST_COUNT = 194
 EXPECTED_HEADLESS_SIZE = 163368
 EXPECTED_HEADLESS_SHA256 = (
     "083b4135c0d5bdd68a2485f917c051661da2f2230b0226c0935e657f9f0bf494"
 )
-EXPECTED_CMAKE_SIZE = 182959
+EXPECTED_CMAKE_SIZE = 185_731
 EXPECTED_CMAKE_SHA256 = (
-    "3e7dda18a4e170f7d68a73f121ff5f4a40e58c854047e730a9608984b9589674"
+    "869669615b762f48b4eeaacabc157e58447e079d0ad379c490da9e95d298d56b"
 )
 
 FINAL_HEADLESS_LIBRARIES = (
@@ -441,7 +441,7 @@ def inspect_cmake_text(text: str) -> list[str]:
     if len(re.findall(r"^\s*add_test\s*\(", text, flags=re.I | re.M)) != (
         EXPECTED_CTEST_COUNT
     ):
-        findings.append("CMake total must remain exactly 192 CTests")
+        findings.append("CMake total must remain exactly 194 CTests")
     lines = text.splitlines()
     bounds = _build_testing_bounds(lines)
     if bounds is None:

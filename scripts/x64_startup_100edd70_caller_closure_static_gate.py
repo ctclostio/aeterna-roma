@@ -21,7 +21,7 @@ TEST_TARGET = "rome2_startup_100edd70_caller_closure_tests"
 PARENT_LIBRARY = "rome2_startup_100ed3c0_nonempty_lifecycle_runtime"
 PARENT_TEST_TARGET = "rome2_startup_100ed3c0_nonempty_lifecycle_tests"
 ENTRY_LIBRARY = "rome2_startup_100edd70_entry_decision_runtime"
-EXPECTED_CTEST_COUNT = 192
+EXPECTED_CTEST_COUNT = 194
 
 EXPECTED_HEADER = (
     6_200, "5b5487efdeafeb2685c020853a12c90c438b776697baab752a5f06bcc5024490"
@@ -33,13 +33,13 @@ EXPECTED_TEST = (
     77_077, "846111a16d24999bf546dc289ef7a38e58fc1a6deda1b874eb5361c7a3c76191"
 )
 EXPECTED_PROVENANCE = (
-    12_320, "6fe39f092aadcb49e50df0ed2eef8b587428b411b507de9f734ebd9610cf29a4"
+    12_320, "cd31bfd55e5fc138f2ef1f78983b354fcff971d8a1cc814ef260509be8bd9ae1"
 )
 EXPECTED_DOC = (
     7_220, "b6d8ace9973b156a8cb0abe805a2b958fb0a9f1e64fb8659412144b60a698ab7"
 )
 EXPECTED_CMAKE = (
-    182_959, "3e7dda18a4e170f7d68a73f121ff5f4a40e58c854047e730a9608984b9589674"
+    185_731, "869669615b762f48b4eeaacabc157e58447e079d0ad379c490da9e95d298d56b"
 )
 
 CMAKE_FILES = (
@@ -301,7 +301,7 @@ def inspect_cmake_text(text: str) -> list[str]:
     findings: list[str] = []
     _check_exact(text, EXPECTED_CMAKE, "CMake", findings)
     if len(re.findall(r"^\s*add_test\s*\(", text, re.I | re.M)) != EXPECTED_CTEST_COUNT:
-        findings.append("CMake must contain exactly 192 CTests")
+        findings.append("CMake must contain exactly 194 CTests")
     lines = text.splitlines()
     bounds = _build_testing_bounds(lines)
     if bounds is None:

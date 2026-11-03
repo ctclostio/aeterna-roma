@@ -21,7 +21,7 @@ COMPOSITION_LIBRARY = "rome2_startup_100ed3c0_nonempty_lifecycle_runtime"
 HEADLESS_TOKEN = "startup-100ed471-ordinary-lifecycle=injected-bounded-complete"
 PREDECESSOR_FIXTURE = "startup_100ed3c0_empty_preloop_reload_verified"
 TERMINAL_FIXTURE = "startup_100ed471_ordinary_lifecycle_reload_verified"
-EXPECTED_CTEST_COUNT = 192
+EXPECTED_CTEST_COUNT = 194
 
 REPRO_ON = "out/repro-100edd70-entry-decision-verified-on"
 REPRO_OFF = "out/repro-100edd70-entry-decision-verified-off"
@@ -55,9 +55,9 @@ EXPECTED_TEST_SHA256 = (
 EXPECTED_TEST_TOKEN_SHA256 = (
     "b34400790f1091d3735fcf0d2a7ef4cc761a184405acba9d7e987eb961510b69"
 )
-EXPECTED_CMAKE_BYTES = 182_959
+EXPECTED_CMAKE_BYTES = 185_731
 EXPECTED_CMAKE_SHA256 = (
-    "3e7dda18a4e170f7d68a73f121ff5f4a40e58c854047e730a9608984b9589674"
+    "869669615b762f48b4eeaacabc157e58447e079d0ad379c490da9e95d298d56b"
 )
 EXPECTED_HEADLESS_BYTES = 163_368
 EXPECTED_HEADLESS_SHA256 = (
@@ -66,13 +66,13 @@ EXPECTED_HEADLESS_SHA256 = (
 EXPECTED_HEADLESS_TOKEN_SHA256 = (
     "07aa2c02db60b37064c0ad420d391ebefc19454f7608956dd0916aecbce43ed9"
 )
-EXPECTED_REPRO_MANIFEST_BYTES = 6_409
+EXPECTED_REPRO_MANIFEST_BYTES = 6_586
 EXPECTED_REPRO_MANIFEST_SHA256 = (
-    "d861510a03710e2f2bb49f6eacd5e088f71c637b28369092e11e6f32ac2b24cd"
+    "a2f5aa6ca882ad8a7e9b7fb06359b1cd0f4f2f79d8859637fc9e75c8006f4a4b"
 )
 EXPECTED_REPRO_VERIFIER_BYTES = 27_845
 EXPECTED_REPRO_VERIFIER_SHA256 = (
-    "0a1b9c7d6981cc9fd0dd9df0673a499a01833c60ee7b76572123a6af7ae69193"
+    "f0864d4ae529e5f623aa88257a425fd74c4a377e20aceab0f0c415385c012127"
 )
 
 CMAKE_FILES = (
@@ -882,7 +882,7 @@ def inspect_cmake_text(text: str) -> list[str]:
     if len(re.findall(r"^\s*add_test\s*\(", text, flags=re.I | re.M)) != (
         EXPECTED_CTEST_COUNT
     ):
-        findings.append("CMake total must be exactly 192 CTests")
+        findings.append("CMake total must be exactly 194 CTests")
 
     lines = text.splitlines()
     bounds = _build_testing_bounds(lines)

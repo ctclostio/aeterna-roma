@@ -321,6 +321,89 @@ if(BUILD_TESTING)
     PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
   )
 
+  # Phase 4.2: battle unit card descriptor (0x10145c70) and battle entity
+  # dispatcher (0x10cbe350), both reconstructed from the retail x86 body and
+  # called by the settlement battle benchmark harness at 0x100e39c0.  The two
+  # share the recovered twelve-byte std::string ABI, so they ship in one
+  # test-only archive; neither links against any DLL.
+  add_library(
+    rome2_battle_entity_runtime
+    STATIC
+    "${ROME2_GUEST32_PORTED_DIR}/ported_10145c70_unitcard.h"
+    "${ROME2_GUEST32_PORTED_DIR}/ported_10145c70_unitcard.c"
+    "${ROME2_GUEST32_PORTED_DIR}/ported_10cbe350_entity.h"
+    "${ROME2_GUEST32_PORTED_DIR}/ported_10cbe350_entity.c"
+  )
+  target_compile_features(rome2_battle_entity_runtime PUBLIC c_std_17)
+  target_compile_definitions(
+    rome2_battle_entity_runtime
+    PRIVATE
+      WIN32_LEAN_AND_MEAN
+      NOMINMAX
+      WINVER=0x0602
+      _WIN32_WINNT=0x0602
+  )
+  target_compile_options(
+    rome2_battle_entity_runtime
+    PRIVATE ${ROME2_HARDENED_COMPILE_OPTIONS}
+  )
+  target_include_directories(
+    rome2_battle_entity_runtime
+    PUBLIC
+      "${ROME2_GUEST32_RUNTIME_DIR}"
+      "${ROME2_GUEST32_PORTED_DIR}"
+  )
+  set_property(
+    TARGET rome2_battle_entity_runtime
+    PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
+  )
+
+  add_executable(
+    rome2_battle_unitcard_tests
+    "${ROME2_GUEST32_RUNTIME_DIR}/test_battle_unitcard_10145c70.c"
+  )
+  rome2_configure_x64_target(rome2_battle_unitcard_tests)
+  target_link_libraries(
+    rome2_battle_unitcard_tests
+    PRIVATE rome2_battle_entity_runtime
+  )
+  target_link_options(
+    rome2_battle_unitcard_tests
+    PRIVATE
+      /MACHINE:X64
+      /SUBSYSTEM:CONSOLE,6.00
+  )
+  set_target_properties(
+    rome2_battle_unitcard_tests
+    PROPERTIES
+      RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+      PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+      COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+  )
+
+  add_executable(
+    rome2_battle_entity_tests
+    "${ROME2_GUEST32_RUNTIME_DIR}/test_battle_entity_10cbe350.c"
+  )
+  rome2_configure_x64_target(rome2_battle_entity_tests)
+  target_link_libraries(
+    rome2_battle_entity_tests
+    PRIVATE rome2_battle_entity_runtime
+  )
+  target_link_options(
+    rome2_battle_entity_tests
+    PRIVATE
+      /MACHINE:X64
+      /SUBSYSTEM:CONSOLE,6.00
+  )
+  set_target_properties(
+    rome2_battle_entity_tests
+    PROPERTIES
+      RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+      PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+      COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+  )
+
   add_executable(
     rome2_startup_100f1c10_tests
     "${ROME2_GUEST32_RUNTIME_DIR}/test_startup_100f1c10.c"
@@ -2479,6 +2562,14 @@ if(BUILD_TESTING)
   add_test(
     NAME startup_100f1c10_runtime
     COMMAND "$<TARGET_FILE:rome2_startup_100f1c10_tests>"
+  )
+  add_test(
+    NAME battle_unitcard_10145c70_runtime
+    COMMAND "$<TARGET_FILE:rome2_battle_unitcard_tests>"
+  )
+  add_test(
+    NAME battle_entity_10cbe350_runtime
+    COMMAND "$<TARGET_FILE:rome2_battle_entity_tests>"
   )
   add_test(
     NAME startup_100f1c10_post_pe_gate

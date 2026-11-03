@@ -31,7 +31,8 @@ $expectedOriginalHashes = [ordered]@{
     'pi_wave3_common.psm1' = '4be923af906ad11573d761e8794598dd118b37c915f5a4958eace8dea1ca7213'
     'pi_swarm_worker.ps1' = '1d8b612ae33c826dbbf211748913f6ea012f28322078abc275185d5c66a8aaec'
     'pi_startup_abi_oracle_gate.py' = '18ad404b4fc54cce5c1130a1296b377a3828be50ee1f56ca28e2bdde32dfaf9d'
-    'test_pi_startup_abi_oracle_gate.py' = '69bf1052b6624a027de9c4782e468c34a158d9204ffee8b5a9a144593f22808d'
+    # Includes the artifact-absence skip guards admitted in 658d6a2/acfb6a1.
+    'test_pi_startup_abi_oracle_gate.py' = 'ec18c3ac32477e283dca86493947c6d71898f314e07fffcd439c284ba6863e13'
 }
 Import-Module -Name $modulePath -Force
 $script:Passed = 0
