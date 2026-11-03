@@ -63,7 +63,8 @@ import time
 deadline = time.time() + TIMEOUT
 alive = dict(procs)
 while alive and time.time() < deadline:
-    time.sleep(20)
+    # ⚡ Bolt: Reduced polling interval from 20s to 0.5s for faster completion detection
+    time.sleep(0.5)
     for i, p in list(alive.items()):
         if p.poll() is not None:
             done = sum(1 for _, pp in procs if pp.poll() is not None)

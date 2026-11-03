@@ -38,9 +38,11 @@ def main():
     # Subsystem categorization
     counts = {}
     samples = {}
+    # Bolt: pre-compile regexes for performance
+    compiled_subsystems = {name: re.compile(rx, re.I) for name, rx in SUBSYSTEMS.items()}
     for off, s in lines:
-        for name, rx in SUBSYSTEMS.items():
-            if re.search(rx, s, re.I):
+        for name, rx in compiled_subsystems.items():
+            if rx.search(s):
                 counts[name] = counts.get(name, 0) + 1
                 samples.setdefault(name, [])
                 if len(samples[name]) < 8: samples[name].append(hex(off) + " " + s[:80])
