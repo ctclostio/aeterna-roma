@@ -38,15 +38,15 @@ def main():
     # Subsystem categorization
     counts = {}
     samples = {}
-    # Bolt: pre-compile regexes for performance
-    compiled_subsystems = {name: re.compile(rx, re.I) for name, rx in SUBSYSTEMS.items()}
+    # Bolt: use single combined regex with named groups for O(1) matching performance
+    rx_all = re.compile('|'.join(f'(?P<{k}>{v})' for k, v in SUBSYSTEMS.items()), re.I)
     for off, s in lines:
-        for name, rx in compiled_subsystems.items():
-            if rx.search(s):
-                counts[name] = counts.get(name, 0) + 1
-                samples.setdefault(name, [])
-                if len(samples[name]) < 8: samples[name].append(hex(off) + " " + s[:80])
-                break
+        m = rx_all.search(s)
+        if m:
+            name = m.lastgroup
+            counts[name] = counts.get(name, 0) + 1
+            samples.setdefault(name, [])
+            if len(samples[name]) < 8: samples[name].append(hex(off) + " " + s[:80])
     print("\nSubsystem string hits:")
     for name, c in sorted(counts.items(), key=lambda x: -x[1]):
         print(f"  {name:10} {c}")
