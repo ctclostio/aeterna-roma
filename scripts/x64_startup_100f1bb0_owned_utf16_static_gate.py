@@ -149,7 +149,7 @@ def _sha256(data: bytes) -> str:
 
 
 def _compact(text: str) -> str:
-    return re.sub(r"\s+", "", text)
+    return "".join(text.split())
 
 
 def _token_digest(code: str) -> str:
@@ -401,7 +401,7 @@ def inspect_header_text(text: str) -> list[str]:
         if body is None or "*" in body:
             findings.append(f"{structure} must remain pointer-free private authority")
 
-    lowered = re.sub(r"[\s*]+", "", text.lower())
+    lowered = "".join(text.lower().replace("*", "").split())
     for phrase in (
         "one-shotownershiprecord", "canonicalall-zeroempty",
         "containingarena", "arbitrarybytes", "consumedbefore",
