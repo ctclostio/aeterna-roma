@@ -207,7 +207,8 @@ class CompileIslandTests(unittest.TestCase):
     def test_exact_sorted_per_tu_declarations_and_atomic_structural_output(self) -> None:
         source = b"""int decomp_fn_10000000(void)\n{\n  return decomp_fn_10000020() + decomp_fn_10000010();\n}\n"""
         with tempfile.TemporaryDirectory() as raw:
-            root = Path(raw)
+            # publish_plan resolves Windows 8.3 aliases used by hosted runners.
+            root = Path(raw).resolve()
             fixture = Fixture(root, source)
             fixture.add_function("10000020", "int decomp_fn_10000020(void)")
             fixture.add_function("10000010", "int decomp_fn_10000010(void)")
@@ -425,7 +426,7 @@ class WarningCleanProfileTests(unittest.TestCase):
     def setUp(self) -> None:
         self._tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self._tmp.cleanup)
-        self.root = Path(self._tmp.name)
+        self.root = Path(self._tmp.name).resolve()
 
     def strict_plan(
         self, source: bytes = SIMPLE_SOURCE, *, target: str = "x64", base: bytes = b"#pragma once\n"
