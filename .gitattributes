@@ -1,3 +1,8 @@
+# Keep source/provenance hashes stable on clean Windows and Linux checkouts.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
 # Byte-stable generated ABI locks and the generators whose hashes they record.
 /port/x64_exports/*.tsv text eol=lf
 /port/x64_exports/*.def text eol=lf

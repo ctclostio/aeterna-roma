@@ -732,6 +732,8 @@ class PublicationTransactionTests(unittest.TestCase):
             )
             self.assertEqual(gen._reserved_entries(output_dir), [])
 
+    @unittest.skipUnless(DLL_PATH.is_file() and INDEX_PATH.is_file(),
+                         "production corpus not present")
     def test_check_mode_never_calls_mutators_and_preserves_every_scenario(self):
         import contextlib
         from unittest import mock

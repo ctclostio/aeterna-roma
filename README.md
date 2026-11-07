@@ -1,7 +1,24 @@
 # Total War: ROME II — 32→64-bit Decompilation Project
 
+[![Tests](https://github.com/ctclostio/aeterna-roma/actions/workflows/ci.yml/badge.svg)](https://github.com/ctclostio/aeterna-roma/actions/workflows/ci.yml)
+[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](LICENSE)
+
 Long-horizon effort to decompile Total War: Rome II (2013) so the game can be
 recompiled as a native 64-bit executable.
+
+Public checkout testing and SonarQube Cloud setup are documented in
+[continuous integration](docs/continuous_integration.md). The public workflows
+build and test reconstructed native components and source tools without the
+original game or private analysis exports. This remains a work in progress.
+
+## License
+
+Project-authored software is released under the [Unlicense](LICENSE): anyone
+may use, modify, redistribute, or sell it for any purpose, without an
+attribution requirement. Contributions are accepted under the same terms.
+This dedication applies to rights held by the contributors; it grants no
+rights to Creative Assembly/SEGA's original game, assets, trademarks, or
+third-party components. Game-based analysis still requires your own copy.
 
 ## Target binaries (in `Total War Rome II/`)
 
@@ -91,16 +108,16 @@ where python
 If the first hit is `C:\Python314\`, restart `explorer.exe` (or sign out and
 back in) and start a new terminal rather than editing `PATH`.
 
-The full suite was run under both interpreters to confirm parity:
+The public source/fixture suite runs under both interpreters in CI:
 
 ```
-py -3.15 -m unittest discover -s scripts -p "test_*.py" -t scripts
-  → Ran 1087 tests, FAILED (failures=2)
+py -3.15 scripts/run_public_tests.py
 ```
 
-The same 2 failures reproduce identically on 3.14
-(`test_x64_startup_100edd70_terminal_transcript_containment`), so they are
-**pre-existing and not a 3.15 regression**.
+The full original-byte suite additionally requires the local game image,
+canonical exports, and frozen analysis reports. Its corpus identity pins must
+be reviewed after a new export; public CI does not claim those local proofs.
+See [continuous integration](docs/continuous_integration.md) for both commands.
 
 ### Node.js
 
