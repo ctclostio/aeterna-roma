@@ -40,4 +40,16 @@ rome2_fauna_config_status rome2_fauna_config_decode(
     rome2_owned_fauna_vector **out, const unsigned char *bytes, size_t size,
     const rome2_owned_string_allocator *allocator, rome2_xml_status *xml_error);
 
+/* Direct-node branch observed through 1015e280: decode every direct child of
+ * parent in document order, without a filename or fauna_config-name lookup.
+ * parent must be an immutable node owned by the live document supplied here.
+ * Foreign/NULL nodes are rejected before allocation and are not dereferenced.
+ * The document stays borrowed/alive throughout the call; successful output
+ * deep-owns records and climate strings independently of that document.
+ * No callback reentry or concurrent source mutation/destruction is allowed.
+ * Output, allocator, scalar and rollback rules are those of decode above. */
+rome2_fauna_config_status rome2_fauna_config_decode_node(
+    rome2_owned_fauna_vector **out, const rome2_xml_document *document,
+    const rome2_xml_node *parent, const rome2_owned_string_allocator *allocator);
+
 #endif

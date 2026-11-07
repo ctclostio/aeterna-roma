@@ -213,6 +213,43 @@ static rome2_fauna_config_status append_record(rome2_owned_fauna_vector *out,
         ROME2_FAUNA_CONFIG_INTERNAL_ERROR;
 }
 
+static rome2_fauna_config_status decode_children(rome2_owned_fauna_vector **out,
+    const rome2_xml_node *parent, const rome2_owned_string_allocator *a)
+{
+    rome2_owned_fauna_vector *result = NULL;
+    const rome2_xml_node *node;
+    rome2_fauna_config_status status = ROME2_FAUNA_CONFIG_OK;
+    rome2_fauna_status fauna;
+    _locale_t locale = _create_locale(LC_ALL, "C");
+    if (locale == NULL) { return ROME2_FAUNA_CONFIG_SYSTEM_ERROR; }
+    fauna = rome2_owned_fauna_vector_create(&result, a);
+    if (fauna != ROME2_FAUNA_OK) { status = ROME2_FAUNA_CONFIG_ALLOCATION_FAILED; goto cleanup; }
+    for (node = parent->first_child; node != NULL; node = node->next_sibling) {
+        status = append_record(result, node, a, locale);
+        if (status != ROME2_FAUNA_CONFIG_OK) { goto cleanup; }
+    }
+cleanup:
+    _free_locale(locale);
+    if (status == ROME2_FAUNA_CONFIG_OK) { *out = result; }
+    else if (result != NULL) { (void)rome2_owned_fauna_vector_destroy(&result); }
+    return status;
+}
+
+rome2_fauna_config_status rome2_fauna_config_decode_node(
+    rome2_owned_fauna_vector **out, const rome2_xml_document *document,
+    const rome2_xml_node *parent, const rome2_owned_string_allocator *allocator)
+{
+    rome2_owned_string_allocator a;
+    if (out == NULL || *out != NULL || !rome2_xml_document_contains_node(document, parent)) {
+        return ROME2_FAUNA_CONFIG_BAD_ARGUMENT;
+    }
+    if (allocator == NULL || allocator->allocate == NULL || allocator->release == NULL) {
+        return ROME2_FAUNA_CONFIG_INVALID_ALLOCATOR;
+    }
+    a = *allocator;
+    return decode_children(out, parent, &a);
+}
+
 rome2_fauna_config_status rome2_fauna_config_decode(rome2_owned_fauna_vector **out,
     const unsigned char *bytes, size_t size, const rome2_owned_string_allocator *allocator,
     rome2_xml_status *xml_error)
@@ -220,11 +257,9 @@ rome2_fauna_config_status rome2_fauna_config_decode(rome2_owned_fauna_vector **o
     rome2_owned_string_allocator a;
     rome2_xml_document *doc = NULL;
     rome2_owned_fauna_vector *result = NULL;
-    const rome2_xml_node *root, *node;
+    const rome2_xml_node *root;
     rome2_xml_status xml;
-    rome2_fauna_config_status status = ROME2_FAUNA_CONFIG_OK;
-    rome2_fauna_status fauna;
-    _locale_t locale = NULL;
+    rome2_fauna_config_status status;
     if (xml_error != NULL) { *xml_error = ROME2_XML_OK; }
     if (out == NULL || *out != NULL || (size != 0 && bytes == NULL)) { return ROME2_FAUNA_CONFIG_BAD_ARGUMENT; }
     if (allocator == NULL || allocator->allocate == NULL || allocator->release == NULL) {
@@ -238,19 +273,8 @@ rome2_fauna_config_status rome2_fauna_config_decode(rome2_owned_fauna_vector **o
             ROME2_FAUNA_CONFIG_XML_ERROR;
     }
     root = rome2_xml_document_root(doc);
-    if (root == NULL || !wide_equal(&root->name, "fauna_config", false)) {
-        status = ROME2_FAUNA_CONFIG_ROOT_NOT_FOUND; goto cleanup;
-    }
-    locale = _create_locale(LC_ALL, "C");
-    if (locale == NULL) { status = ROME2_FAUNA_CONFIG_SYSTEM_ERROR; goto cleanup; }
-    fauna = rome2_owned_fauna_vector_create(&result, &a);
-    if (fauna != ROME2_FAUNA_OK) { status = ROME2_FAUNA_CONFIG_ALLOCATION_FAILED; goto cleanup; }
-    for (node = root->first_child; node != NULL; node = node->next_sibling) {
-        status = append_record(result, node, &a, locale);
-        if (status != ROME2_FAUNA_CONFIG_OK) { goto cleanup; }
-    }
-cleanup:
-    if (locale != NULL) { _free_locale(locale); }
+    status = root != NULL && wide_equal(&root->name, "fauna_config", false) ?
+        decode_children(&result, root, &a) : ROME2_FAUNA_CONFIG_ROOT_NOT_FOUND;
     if (rome2_xml_document_destroy(&doc) != ROME2_XML_OK) { status = ROME2_FAUNA_CONFIG_INTERNAL_ERROR; }
     if (status == ROME2_FAUNA_CONFIG_OK) { *out = result; }
     else if (result != NULL) { (void)rome2_owned_fauna_vector_destroy(&result); }

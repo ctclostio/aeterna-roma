@@ -211,6 +211,7 @@ static void setup_release(void *context, void *raw, size_t bytes, uint32_t kind)
 static void setup_observer(void *context, uintptr_t raw, size_t bytes)
 {
     setup_trace *t = context;
+    if (t->watching && t->loads == 0) { CHECK(t->view->fauna.count == 0); }
     resource_observer(&t->heap, raw, bytes);
 }
 
@@ -277,7 +278,8 @@ static size_t setup_failures(const wchar_t *path)
 {
     const uint16_t *paths[] = {(const uint16_t *)path};
     rome2_unit_card_args args = {0};
-    const rome2_fauna_record original = {.words_000 = {0, 5}};
+    const rome2_host_string8 old_climate = {3, 3, "old"};
+    const rome2_fauna_record original = {.words_000 = {0, 5}, .strings = {1, 1, &old_climate}};
     const rome2_fauna_vector_view config = {1, 1, &original};
     size_t baseline = 0, fail;
     unsigned residue;
@@ -314,13 +316,86 @@ static size_t setup_failures(const wchar_t *path)
     return baseline;
 }
 
+static void setup_archive_errors(const wchar_t *first, const wchar_t *second)
+{
+    const struct {
+        const char *xml;
+        rome2_fauna_config_status config;
+        rome2_xml_status xml_status;
+    } invalid[] = {
+        {"<fauna_config>", ROME2_FAUNA_CONFIG_XML_ERROR, ROME2_XML_MALFORMED},
+        {"<another_root/>", ROME2_FAUNA_CONFIG_ROOT_NOT_FOUND, ROME2_XML_OK},
+        {"<Fauna_config/>", ROME2_FAUNA_CONFIG_ROOT_NOT_FOUND, ROME2_XML_OK}
+    };
+    const rome2_pack_status pack_errors[] = {ROME2_PACK_CORRUPT, ROME2_PACK_UNSUPPORTED, ROME2_PACK_IO_ERROR};
+    resource_heap owner = {0}, loading = {0};
+    rome2_owned_string_allocator a = resource_policy(&owner), b = resource_policy(&loading);
+    rome2_owned_unit_card *h = NULL;
+    const rome2_unit_card_args args = {0};
+    const uint16_t *paths[] = {(const uint16_t *)first, (const uint16_t *)second};
+    const rome2_native_unit_card *v;
+    rome2_card_resource_diagnostic d;
+    rome2_fauna_vector_view before;
+    size_t i, allocations;
+    FILE *f = NULL;
+    fixture(first, "unrelated.xml", "<x/>");
+    fixture(second, "script/fauna_config.xml", deer_xml);
+    CHECK(rome2_owned_unit_card_create_from_packs(&h, &args, NULL, paths + 1, 1, &a, NULL) == ROME2_CARD_RESOURCE_OK);
+    v = rome2_owned_unit_card_get(h);
+    CHECK(rome2_owned_unit_card_setup_from_packs(h, paths, 2, &b, &d) == ROME2_CARD_RESOURCE_OK);
+    CHECK(d.selected_archive == 1 && d.pack == ROME2_PACK_OK && d.xml == ROME2_XML_OK);
+    CHECK(d.config == ROME2_FAUNA_CONFIG_OK && d.card == ROME2_UNIT_CARD_OK && loading.live == 0);
+    CHECK(v->fauna.count == 1 && strcmp(v->fauna.items[0].strings.items[0].data, "old_climate") == 0);
+    for (i = 0; i < sizeof invalid / sizeof invalid[0]; ++i) {
+        CHECK(rome2_owned_unit_card_reload_from_packs(h, paths + 1, 1, &b, NULL) == ROME2_CARD_RESOURCE_OK);
+        before = v->fauna; allocations = owner.allocations;
+        fixture(first, "script/fauna_config.xml", invalid[i].xml);
+        CHECK(rome2_owned_unit_card_setup_from_packs(h, paths, 2, &b, &d) == ROME2_CARD_RESOURCE_CONFIG_ERROR);
+        CHECK(d.selected_archive == 0 && d.pack == ROME2_PACK_OK && d.xml == invalid[i].xml_status);
+        CHECK(d.config == invalid[i].config && d.card == ROME2_UNIT_CARD_OK && loading.live == 0);
+        CHECK(v->fauna.count == 0 && v->fauna.items == before.items && v->fauna.capacity == before.capacity);
+        CHECK(owner.allocations == allocations);
+    }
+    for (i = 0; i < sizeof pack_errors / sizeof pack_errors[0]; ++i) {
+        CHECK(rome2_owned_unit_card_reload_from_packs(h, paths + 1, 1, &b, NULL) == ROME2_CARD_RESOURCE_OK);
+        before = v->fauna; allocations = owner.allocations;
+        if (i == 0) {
+            CHECK(_wfopen_s(&f, first, L"wb") == 0 && f != NULL);
+            CHECK(fwrite("PFH4", 1, 4, f) == 4 && fclose(f) == 0);
+        } else if (i == 1) {
+            fixture(first, "script/fauna_config.xml", deer_xml);
+            CHECK(_wfopen_s(&f, first, L"r+b") == 0 && f != NULL);
+            CHECK(fwrite("PFH3", 1, 4, f) == 4 && fclose(f) == 0);
+        } else { CHECK(_wremove(first) == 0); }
+        CHECK(rome2_owned_unit_card_setup_from_packs(h, paths, 2, &b, &d) == ROME2_CARD_RESOURCE_PACK_ERROR);
+        CHECK(d.pack == pack_errors[i] && d.selected_archive == SIZE_MAX && d.xml == ROME2_XML_OK);
+        CHECK(d.config == ROME2_FAUNA_CONFIG_OK && d.card == ROME2_UNIT_CARD_OK && loading.live == 0);
+        CHECK(v->fauna.count == 0 && v->fauna.items == before.items && v->fauna.capacity == before.capacity);
+        CHECK(owner.allocations == allocations);
+    }
+    CHECK(rome2_owned_unit_card_reload_from_packs(h, paths + 1, 1, &b, NULL) == ROME2_CARD_RESOURCE_OK);
+    before = v->fauna; allocations = owner.allocations;
+    fixture(first, "script/fauna_config.xml", "<fauna_config/>");
+    CHECK(rome2_owned_unit_card_setup_from_packs(h, paths, 2, &b, &d) == ROME2_CARD_RESOURCE_OK);
+    CHECK(d.selected_archive == 0 && d.pack == ROME2_PACK_OK && d.xml == ROME2_XML_OK);
+    CHECK(d.config == ROME2_FAUNA_CONFIG_OK && d.card == ROME2_UNIT_CARD_OK && loading.live == 0);
+    CHECK(owner.allocations == allocations && v->fauna.count == 0);
+    CHECK(v->fauna.items == before.items && v->fauna.capacity == before.capacity);
+    fixture(first, "unrelated.xml", "<x/>"); fixture(second, "also_unrelated.xml", "<y/>");
+    CHECK(rome2_owned_unit_card_setup_from_packs(h, paths, 2, &b, &d) == ROME2_CARD_RESOURCE_PACK_ERROR);
+    CHECK(d.pack == ROME2_PACK_NOT_FOUND && d.selected_archive == SIZE_MAX && d.xml == ROME2_XML_OK);
+    CHECK(d.config == ROME2_FAUNA_CONFIG_OK && d.card == ROME2_UNIT_CARD_OK && loading.live == 0);
+    CHECK(owner.allocations == allocations && v->fauna.count == 0 && v->fauna.items == before.items);
+    CHECK(rome2_owned_unit_card_destroy(&h) == ROME2_UNIT_CARD_OK && owner.live == 0);
+}
+
 int wmain(int argc, wchar_t **argv)
 {
     wchar_t second[1024];
     size_t factory, reload, setup;
     CHECK(argc == 2 && swprintf_s(second, sizeof second / sizeof second[0], L"%ls.second", argv[1]) > 0);
     lookup_and_reload(argv[1], second); errors(argv[1]);
-    setup_order_and_errors(argv[1]);
+    setup_order_and_errors(argv[1]); setup_archive_errors(argv[1], second);
     factory = factory_failures(argv[1]); reload = reload_failures(argv[1]); setup = setup_failures(argv[1]);
     CHECK(_wremove(argv[1]) == 0 && _wremove(second) == 0);
     printf("unit-card resource: %zu checks, factory%zu/reload%zu/setup%zu failures x8 raw alignments\n", checks, factory, reload, setup);

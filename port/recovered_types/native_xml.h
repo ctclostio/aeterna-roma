@@ -42,6 +42,11 @@ rome2_xml_status rome2_xml_document_parse(rome2_xml_document **out,
     const unsigned char *bytes, size_t size,
     const rome2_owned_string_allocator *allocator);
 const rome2_xml_node *rome2_xml_document_root(const rome2_xml_document *document);
+/* Identity membership in this live document. The candidate is not dereferenced
+ * unless it is one of the document's owned nodes; NULL/foreign nodes fail.
+ * The document and its immutable views must remain alive for a consuming call. */
+bool rome2_xml_document_contains_node(const rome2_xml_document *document,
+    const rome2_xml_node *node);
 rome2_xml_status rome2_xml_document_destroy(rome2_xml_document **document);
 
 #endif

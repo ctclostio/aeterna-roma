@@ -259,6 +259,17 @@ const rome2_xml_node *rome2_xml_document_root(const rome2_xml_document *document
     return live(document) && document->root != NULL ? &document->root->view : NULL;
 }
 
+bool rome2_xml_document_contains_node(const rome2_xml_document *document,
+    const rome2_xml_node *node)
+{
+    const xml_owned_node *owned;
+    if (!live(document) || node == NULL) { return false; }
+    for (owned = document->nodes; owned != NULL; owned = owned->next_owned) {
+        if (&owned->view == node) { return true; }
+    }
+    return false;
+}
+
 rome2_xml_status rome2_xml_document_destroy(rome2_xml_document **document)
 {
     rome2_xml_document *h;

@@ -53,7 +53,7 @@ target_link_libraries(rome2_recovered_types PUBLIC xmllite shlwapi uuid)
 configure_type_target(rome2_recovered_types)
 
 if(BUILD_TESTING)
-  foreach(test IN ITEMS layout_bridge owned_string owned_entity free_list_pool owned_tag owned_attachment scalar_vectors owned_fauna unit_card_observer owned_unit_card pack_resource native_xml fauna_config unit_card_resource)
+  foreach(test IN ITEMS layout_bridge owned_string owned_entity free_list_pool owned_tag owned_attachment scalar_vectors owned_fauna unit_card_observer owned_unit_card pack_resource native_xml fauna_config unit_card_resource unit_card_xml_node)
     add_executable(rome2_${test}_tests test_${test}.c)
     target_link_libraries(rome2_${test}_tests PRIVATE rome2_recovered_types)
     configure_type_target(rome2_${test}_tests)

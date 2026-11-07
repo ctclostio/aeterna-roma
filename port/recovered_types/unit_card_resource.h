@@ -65,4 +65,19 @@ rome2_card_resource_status rome2_owned_unit_card_setup_from_packs(
     size_t archive_count, const rome2_owned_string_allocator *allocator,
     rome2_card_resource_diagnostic *diagnostic);
 
+/* Nonzero XML-node branch of 101a97f0 through 1015e280: validate membership
+ * in the supplied live native document, clear fauna, then decode the parent's
+ * direct children. No filename, archive, or fauna_config-root-name lookup.
+ * The document and immutable nodes remain borrowed/alive throughout the call.
+ * Invalid arguments/foreign nodes leave the card unchanged and allocate
+ * nothing; later allocation failures leave fauna empty with retained capacity.
+ * Decoded records are deep-owned and outlive the source document.
+ * Diagnostics use pack=OK, xml=OK and selected_archive=SIZE_MAX because no
+ * archive or byte parsing occurs here. This accepts native XmlLite nodes,
+ * not guest32 XML object addresses or the original game's allocator ABI. */
+rome2_card_resource_status rome2_owned_unit_card_setup_from_xml_node(
+    rome2_owned_unit_card *card, const rome2_xml_document *document,
+    const rome2_xml_node *parent, const rome2_owned_string_allocator *allocator,
+    rome2_card_resource_diagnostic *diagnostic);
+
 #endif

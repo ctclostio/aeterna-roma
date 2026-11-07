@@ -161,6 +161,18 @@ class TypeContractProvenanceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "pinned target"):
             contracts.validate_contracts(bytes(changed), self.registry)
 
+    def test_explicit_setup_node_bypasses_resource_lookup(self):
+        witness = next(w for w in self.registry["instruction_witnesses"]
+                       if w["address"] == "101a986a")
+        branch = bytes.fromhex(witness["hex"])
+        # TEST EAX,EAX / JZ default path; nonzero node is pushed for the
+        # child decoder, whose receiver is the local card-pointer holder.
+        self.assertEqual(branch[:9], bytes.fromhex("85c07415508d4c240c"))
+        self.assertEqual(branch[9], 0xE8)
+        self.assertEqual(0x101A9873 + 5 + struct.unpack_from("<i", branch, 10)[0], 0x1015E280)
+        self.assertEqual(0x101A986C + 2 + branch[3], 0x101A9883)
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
     def test_wrong_stack_abi_rejected(self):
         registry = copy.deepcopy(self.registry)
         registry["functions"][0]["stack_argument_bytes"] += 4

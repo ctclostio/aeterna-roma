@@ -1,6 +1,6 @@
 {
   "schema": "rome2-type-recovery-verification-v1",
-  "scope": "Layer 4 records the current resource-backed native domain. Earlier top-level and layer 2/3 results are historical milestone snapshots; none declares whole-engine equivalence.",
+  "scope": "Layer 5 records the current native resource/XML-node setup domain. Earlier top-level and layer 2/3/4 results and source hashes are historical milestone snapshots; none declares whole-engine equivalence.",
   "python_focused": {
     "tests": 82,
     "failures": 0,
@@ -344,7 +344,7 @@
       "sha256": "5f38a41f1ad01d590c2ca13c5bfd7b1ce3eeabdf00d0369630d799da6dd07ae4"
     }
   ],
-  "updated_utc": "2026-11-07T17:14:40+00:00",
+  "updated_utc": "2026-11-07T17:55:31+00:00",
   "layer2": {
     "status": "complete for admitted tag copy domain and typed helper boundary",
     "tag_allocation_failure_positions": 11,
@@ -576,5 +576,353 @@
       "whole-engine class/vtable/allocator/threading recovery"
     ]
   },
-  "current_layer": "layer4"
+  "current_layer": "layer5",
+  "layer5": {
+    "status": "direct XML-node native setup verified; original XML ABI, resource-manager precedence and loader failure behavior remain open",
+    "node_setup": {
+      "original_count_clear": "101a9860",
+      "original_node_branch": "101a986a",
+      "original_child_decoder": "1015e280",
+      "native_operation": "rome2_owned_unit_card_setup_from_xml_node",
+      "scope": "direct children of a validated immutable live native XML node; no filename or parent-name lookup",
+      "ownership": "deep-owned output; source document borrowed throughout call; transient and card-owner allocators independently captured",
+      "empty_success": "same backing/capacity with no new card-owner allocation",
+      "later_failure": "empty fauna with same retained backing/capacity",
+      "native_adaptations": [
+        "input membership validation before mutation",
+        "empty public view before clear release/observer callbacks",
+        "nonempty commit may allocate new backing even when prior capacity suffices",
+        "explicit diagnostics rather than claimed original quiet-failure equivalence"
+      ]
+    },
+    "original_image_contracts": {
+      "schema": "rome2-recovered-types-v1",
+      "verified": true,
+      "functions": 46,
+      "globals": 57,
+      "vtables": 9,
+      "instruction_witnesses": 34,
+      "scope": "static original-image evidence; native behavior requires separate tests"
+    },
+    "python_original_contract_tests": 23,
+    "native_tests": {
+      "analyze": {
+        "suites": 61,
+        "failed": 0,
+        "local_ctest_log": "out/loader-layer5-20261107/analyze/Testing/Temporary/LastTest.log",
+        "log_sha256": "227902c4f88685ae5b76eeff01aee0c3db9a0383dbdc3ae4e14887631ff6585e",
+        "junit_sha256": "e6e320f73fc28adad6b129675b537ce832e9dd89c8911a93fee389ce7d5d1f2d"
+      },
+      "asan": {
+        "suites": 61,
+        "failed": 0,
+        "local_ctest_log": "out/loader-layer5-20261107/asan/Testing/Temporary/LastTest.log",
+        "log_sha256": "eb7304401ac34b8cf2803835a5775fabc78d2e0e142acd787d1d43b3954fd2b8",
+        "junit_sha256": "3e5c28c512fcf6d21b11fa05c4b05df03d6dbc00aeb2412cdcf87206ad75648f"
+      },
+      "installed_asset_oracle_included": true,
+      "assertions_enabled": true,
+      "public_asset_free_suites": 60
+    },
+    "resource_tests": {
+      "active_checks": 3153797,
+      "factory_failure_positions": 52,
+      "reload_failure_positions": 46,
+      "setup_failure_positions": 46,
+      "raw_alignment_residues": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "final_live_grants": 0,
+      "added_cases": [
+        "old nested-string cleanup in setup OOM sweeps",
+        "separate card-owner/loading allocators",
+        "missing entry falls through to second archive",
+        "corrupt/unsupported/unreadable first archive stops resolution",
+        "present malformed/wrong-root/empty resource shadows lower valid entry"
+      ]
+    },
+    "xml_node_tests": {
+      "active_checks": 311049,
+      "decoder_failure_positions": 9,
+      "loading_failure_positions": 9,
+      "card_owner_failure_positions": 8,
+      "raw_alignment_residues": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "final_live_grants": 0,
+      "cases": [
+        "foreign/fabricated/NULL node rejection before mutation/allocation",
+        "arbitrary parent names and subtree selection",
+        "deep ownership after source-document destruction",
+        "allocator capture before caller-policy mutation in clear callback",
+        "zero count visible to clear release/observer callbacks",
+        "exact backing identity retained on empty success or later failure",
+        "unrelated card field unchanged"
+      ]
+    },
+    "public_python_clean": {
+      "checkout": "tracked public files plus reviewed current patch; no original image or canonical exports",
+      "runs": [
+        {
+          "version": "3.14",
+          "tests": 851,
+          "skipped": 252,
+          "failures": 0,
+          "errors": 0,
+          "local_log": "out/loader-layer5-20261107/public-clean-python314.log",
+          "log_sha256": "16952383212c8799a9bab4cdbea753030ea28e538daca37cec84cfc5290cea30"
+        },
+        {
+          "version": "3.15",
+          "tests": 851,
+          "skipped": 252,
+          "failures": 0,
+          "errors": 0,
+          "local_log": "out/loader-layer5-20261107/public-clean-python315.log",
+          "log_sha256": "d1f72ec40275f5f598c48eef39ce60480d29fb401a4832599edcb97877b57140"
+        }
+      ]
+    },
+    "corpus_tree_python": {
+      "tests": 851,
+      "failures": 9,
+      "errors": 502,
+      "status": "failed; not admitted by this milestone",
+      "local_log": "out/loader-layer5-20261107/public-python.log",
+      "log_sha256": "1f42c674cdb275f4dc6c0aabf48be6ff2c7138ef0996103c3978932becfa93d0",
+      "observations": [
+        "canonical index pin and acceptance facts mismatch",
+        "static-gate exceptions in broad run; focused preallocated-branch module passes 19 tests on both interpreters",
+        "clean public runs pass independently; no frozen provenance pins relaxed"
+      ]
+    },
+    "installed_assets": {
+      "record": "port/recovered_types/fauna_assets.json",
+      "archives": 2,
+      "entrypoints": [
+        "rome2_owned_unit_card_create_from_packs",
+        "rome2_owned_unit_card_setup_from_packs"
+      ],
+      "explicit_precedence_orders": 2,
+      "original_game_execution": false,
+      "record_sha256": "590b4383acd1ba59047ffb9744313edd629036ad7156b3e0140b37ff7563dbe3"
+    },
+    "rea_retained_records": {
+      "verified_layer3_records": 8,
+      "verified_layer4_records": 25,
+      "evidence_ids": [
+        "ev_7b6863671fc50ad38a60a2a553fce559bb5e6ba704d5024df453fabab39b0995",
+        "ev_ad7a45b5717687f2c28b079901eacb47930e8b9978ad5f204f1a7a259cc44a9e"
+      ],
+      "scope": "complete retained records rechecked against registry SHA-256; static evidence only; original game not executed"
+    },
+    "loader_query": {
+      "address": "112b5110",
+      "status": "no procedure at requested address",
+      "local_result": "out/loader-layer5-20261107/callback-112b5110.json",
+      "result_sha256": "358d9d9248df4615e448b545b8a301d22c0e7ee666535fbc4b1c21e145a87e82",
+      "conclusion": "no new loader success/failure semantics established"
+    },
+    "review": {
+      "requested": "Google Argon at Max thinking",
+      "availability": "installed CLI rejected Max for Argon; highest available Argon High/High was used",
+      "findings": "initial test gaps addressed and independently verified; focused patch review found no confirmed defect",
+      "runs": [
+        {
+          "name": "argon-review",
+          "model": "gemini-4-argon-high",
+          "requested_effort": "high",
+          "status": "SUCCESS",
+          "tools_used": [
+            "read_file"
+          ],
+          "conversation_id": "4e4d6525-b70f-49e1-bd9c-50ec69960197",
+          "events_local_path": "out/loader-layer5-20261107/argon-review.events.jsonl",
+          "events_sha256": "ec6bb7be78736b462bf99d63822faaa643bb267a6daaec42d39c35d13eb941ad",
+          "review_local_path": "out/loader-layer5-20261107/argon-review.md",
+          "review_sha256": "d5f0a4b01821e9a98deb11dcbb8f670aba140f6ded90a7f95cd4efe0f083e2c0"
+        },
+        {
+          "name": "argon-patch",
+          "model": "gemini-4-argon-high",
+          "requested_effort": "high",
+          "status": "SUCCESS",
+          "tools_used": [
+            "read_file"
+          ],
+          "conversation_id": "6709a910-b655-4351-ad62-81400df67210",
+          "events_local_path": "out/loader-layer5-20261107/argon-patch.events.jsonl",
+          "events_sha256": "60942f89e35fec516b956a959b120e08e3f108cb900c3a9ea36a819d9fb56291",
+          "review_local_path": "out/loader-layer5-20261107/argon-patch.md",
+          "review_sha256": "4391c2694b4f2ee4e21777d49d923868f20356796a6914e57fa30c759321d70d"
+        }
+      ]
+    },
+    "local_logs": "out/loader-layer5-20261107/",
+    "source_hash_scope": "UTF-8 with CRLF/CR normalized to LF; current resource/XML-node recovery and its tests/docs",
+    "sources": [
+      {
+        "path": "README.md",
+        "bytes": 24902,
+        "sha256": "f6370c3150331325c63823da2bc751a529d1eaa8589294c98779f12cb4e4a9d3"
+      },
+      {
+        "path": "docs/unitcard_resource_recovery.md",
+        "bytes": 9863,
+        "sha256": "1fe5661a983f6f39bda4a00b3f2ff5fca8e5d1cda0929a687d3c0fc687124a5f"
+      },
+      {
+        "path": "port/recovered_types/CMakeLists.txt",
+        "bytes": 4314,
+        "sha256": "6937fcefe7bba157022577d540abfb10c87a7bddaa88fd011c9d95f1be47e9a0"
+      },
+      {
+        "path": "port/recovered_types/contracts.json",
+        "bytes": 62073,
+        "sha256": "49a4736a4fd921fffbafc5c868936d00930e34a2925d791e6370859d3b7d295b"
+      },
+      {
+        "path": "port/recovered_types/fauna_asset_probe.c",
+        "bytes": 3051,
+        "sha256": "486d4306fbbee7bd0b3b286a6db5b1df508b0cfceff196ff569bf7a149179644"
+      },
+      {
+        "path": "port/recovered_types/fauna_config.c",
+        "bytes": 12023,
+        "sha256": "f7c154d03514f6e99ce90054cf13a1da8005aec2dda187972ebbb9d5e9abf29d"
+      },
+      {
+        "path": "port/recovered_types/fauna_config.h",
+        "bytes": 3054,
+        "sha256": "9313687f26b6d65a3da40b141f9a4535ea5040ad3740c402df9eb9c3f8509c5f"
+      },
+      {
+        "path": "port/recovered_types/native_xml.c",
+        "bytes": 11832,
+        "sha256": "0e16d0bc50e48d4a3290e000be974e65a1593208d9df7f18a1f9191761061cbc"
+      },
+      {
+        "path": "port/recovered_types/native_xml.h",
+        "bytes": 2555,
+        "sha256": "70bd1f4fe5aae18aaceb479f487e9ace232bcf62fb0d44204ae6633ff0fa915e"
+      },
+      {
+        "path": "port/recovered_types/owned_fauna.c",
+        "bytes": 9394,
+        "sha256": "f879f67256c4676eb5e251045135a3478c940f8ba08a3209a5d20d8ecb478e82"
+      },
+      {
+        "path": "port/recovered_types/owned_fauna.h",
+        "bytes": 3821,
+        "sha256": "9813242e118f4ff2e2a221850768d2f481a8d8544b50bbeffd3855658ae04304"
+      },
+      {
+        "path": "port/recovered_types/owned_unit_card.c",
+        "bytes": 16055,
+        "sha256": "7299a2d87abbf8f2f178c16fe18b31960c531bae7f4d89f0f9f50f6e6f1c28fa"
+      },
+      {
+        "path": "port/recovered_types/owned_unit_card.h",
+        "bytes": 6921,
+        "sha256": "8d3d0766d4a6826d8937819f65563b409d587c4ef5f76e16d6c6ddd1ed273cc6"
+      },
+      {
+        "path": "port/recovered_types/pack_resource.c",
+        "bytes": 12117,
+        "sha256": "13e9b43193dc1309a3d64e109dd6d30185ef38538f6a0a44d072492c2c197053"
+      },
+      {
+        "path": "port/recovered_types/pack_resource.h",
+        "bytes": 1944,
+        "sha256": "c85b2002cd2d6ad0d4eb966b4595c2f15b32b83b4359c7cc55792ad30c6e8407"
+      },
+      {
+        "path": "port/recovered_types/test_fauna_config.c",
+        "bytes": 9339,
+        "sha256": "122f89ba8ba541cb2696b9a7c8fcc65155ec69d64ec2af7ce6840688c7043df4"
+      },
+      {
+        "path": "port/recovered_types/test_native_xml.c",
+        "bytes": 9363,
+        "sha256": "fd68911474707bad7e136ce863c3f95bb1d04f8747f941b2eaff9634b18f22ab"
+      },
+      {
+        "path": "port/recovered_types/test_pack_resource.c",
+        "bytes": 36226,
+        "sha256": "b3e2fda413ecdd78fa269566e65d11dcd7600dabaa21433379d3c27d1d4ecd56"
+      },
+      {
+        "path": "port/recovered_types/test_resource_support.h",
+        "bytes": 2422,
+        "sha256": "4f750e041cf8af2ffbfa7ffd29e429d390dd2b4d0bcdc71abda7b4dd69877269"
+      },
+      {
+        "path": "port/recovered_types/test_unit_card_resource.c",
+        "bytes": 22761,
+        "sha256": "cf9eb4fb19c3983b4a5200c3c465f012b6f36a87c0fa7e3bacb09f7394391e18"
+      },
+      {
+        "path": "port/recovered_types/test_unit_card_xml_node.c",
+        "bytes": 12462,
+        "sha256": "6161d19a143df36df9c2444d72818e916c02c787c25c4adbaa97b292b65add60"
+      },
+      {
+        "path": "port/recovered_types/unit_card_resource.c",
+        "bytes": 7384,
+        "sha256": "2ea6d1e9f301824556604bf21113ec5dffe3ab5b99e9b50180cbffa9df539feb"
+      },
+      {
+        "path": "port/recovered_types/unit_card_resource.h",
+        "bytes": 4644,
+        "sha256": "476989c945bb7e50dfecc176a10ce89239d493588019f2fe9363f67cce23ea8b"
+      },
+      {
+        "path": "progress.md",
+        "bytes": 15088,
+        "sha256": "0b7fbbce3e9e7c67c91919ee5aa3f0f949965bc563c16d3434e921171f873a1d"
+      },
+      {
+        "path": "scripts/test_type_recovery_contracts.py",
+        "bytes": 10601,
+        "sha256": "a25df3d377f290ba552abd9b5d5d92b802af15e23095c660dba1a8c077d8eb6b"
+      },
+      {
+        "path": "scripts/type_recovery_contracts.py",
+        "bytes": 7986,
+        "sha256": "9043b4408c80bc4a3e411d5232850e37081838314e1c31ac86c11e9143385e5e"
+      },
+      {
+        "path": "scripts/verify_fauna_resources.py",
+        "bytes": 6911,
+        "sha256": "2bcb22d882509671d6a5c2c590ca87cac2fb774099ed75884b16b415ed9e108c"
+      },
+      {
+        "path": "tests/native/CMakeLists.txt",
+        "bytes": 6960,
+        "sha256": "37a9225e989bd6925e2285d8929a8052acacea0af43f9ad13434f7ff5c691fc3"
+      }
+    ],
+    "remaining": [
+      "original archive mount/dependency/mod precedence",
+      "original quiet-failure and exception ordering",
+      "original XML object ABI",
+      "full historical CRT/locale/FP-environment equivalence",
+      "remaining unit-card opaque fields/methods",
+      "whole-engine class/vtable/allocator/threading recovery"
+    ]
+  }
 }

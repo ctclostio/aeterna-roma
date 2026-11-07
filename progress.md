@@ -180,11 +180,49 @@ Shared Ghidra state and canonical exports were unchanged. Details and limits:
 [verification record](port/recovered_types/verification.json), and
 [installed-asset identities](port/recovered_types/fauna_assets.json).
 
+### Layer 5 — explicit XML-node setup completed for the native domain, 2026-11-07
+
+- [x] Verify the nonzero XML-node branch of `0x101a97f0` against retained REA
+  evidence and an additional original-byte instruction window.
+- [x] Decode every direct child of a selected native XML node without a
+  filename or `fauna_config` parent-name lookup.
+- [x] Validate document membership before mutation, deep-own decoded records,
+  capture transient/card allocator policies independently, and retain the exact
+  old backing on empty setup or later allocation failure.
+- [x] Exercise every decoder/loading/card allocation-failure position at raw
+  alignments 0–7, source-document destruction, fabricated/foreign nodes and
+  callbacks that mutate the caller's allocator policy.
+- [x] Strengthen resource setup tests for missing-entry fallback, stop-on-error
+  archives, malformed/missing-root shadowing and allocation-free empty commit.
+
+Both optimized and ASan profiles pass **61 local native tests**. The new XML-node
+suite runs **311,049 checks**, with nine decoder/loading and eight card-owner
+allocation-failure positions at eight alignments. The resource suite runs
+**3,153,797 checks**, with the existing 52 factory / 46 reload / 46 setup failure
+positions and nested strings in the old setup seed. All **23 original-image
+contract tests** pass; the registry now verifies 34 instruction windows while
+retaining the same 46 function bodies, 57 globals and nine first vtable slots.
+Both installed-resource factory/setup comparisons continue to pass.
+The clean public worktree passes **851 Python tests** on both 3.14 and 3.15,
+with 252 expected private-evidence skips in each run.
+
+Google Argon provided a read-only second review and identified useful test
+gaps addressed here. The installed CLI rejected Max effort for Argon; its
+highest available variant, `gemini-4-argon-high` with High effort, was used.
+Review findings were checked against the source and retained binary evidence.
+The focused filename-loader callback query returned no procedure at
+`0x112b5110`; original loader failure behavior remains unresolved. Shared
+Ghidra state and canonical exports were unchanged. The XML-node API accepts
+native document views; it does not claim the original XML object ABI or exact
+nonempty backing-allocation behavior. Details:
+[setup recovery](docs/unitcard_resource_recovery.md) and
+[verification record](port/recovered_types/verification.json).
+
 ### Remaining work
 
 1. Extend the verified resource-backed domain toward the original resource
    manager: recover mount/dependency/mod precedence, quiet-failure/exception
-   ordering, and the direct original XML-node setup branch. Historic CRT/locale
+   ordering, and the original XML object ABI. Historic CRT/locale
    behavior and full resource-backed constructor equivalence remain open.
 2. Recover the remaining unit-card methods and meanings of opaque 32-bit
    words before widening any of them into native pointers or ownership links.
@@ -202,6 +240,11 @@ Shared Ghidra state and canonical exports were unchanged. Details and limits:
   errors; the 44-test oracle-context module subsequently passed on rerun.
   Downstream canonical-index locks and an older entry-tail oracle pin still
   need a coordinated admission update.
+- The layer-5 public runner invoked in the full local corpus tree recorded
+  nine failures and 502 errors, including canonical-index/acceptance mismatches
+  and static-gate exceptions. The focused failing static-gate module passed
+  separately on both interpreters. The clean public-worktree suite passed on
+  both; full local-suite health is not claimed and no frozen pins were relaxed.
 - Complete engine/FaceFX layouts, callable vtable method signatures, general
   allocator/threading behavior, and full unit-card constructor equivalence
   remain open.
