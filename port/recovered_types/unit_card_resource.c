@@ -97,3 +97,27 @@ done:
     if (diagnostic != NULL) { *diagnostic = local; }
     return status;
 }
+
+rome2_card_resource_status rome2_owned_unit_card_setup_from_packs(
+    rome2_owned_unit_card *card, const uint16_t *const *archive_paths,
+    size_t archive_count, const rome2_owned_string_allocator *allocator,
+    rome2_card_resource_diagnostic *diagnostic)
+{
+    rome2_card_resource_diagnostic local;
+    rome2_owned_string_allocator a;
+    rome2_card_resource_status status;
+    diagnostic_init(&local);
+    if (rome2_owned_unit_card_get(card) == NULL || !valid_inputs(archive_paths, archive_count, allocator)) {
+        status = ROME2_CARD_RESOURCE_BAD_ARGUMENT; goto done;
+    }
+    /* Capture before clear can invoke release/observer callbacks. */
+    a = *allocator;
+    local.card = rome2_owned_unit_card_clear_fauna(card);
+    if (local.card != ROME2_UNIT_CARD_OK) {
+        status = ROME2_CARD_RESOURCE_CARD_ERROR; goto done;
+    }
+    status = rome2_owned_unit_card_reload_from_packs(card, archive_paths, archive_count, &a, &local);
+done:
+    if (diagnostic != NULL) { *diagnostic = local; }
+    return status;
+}

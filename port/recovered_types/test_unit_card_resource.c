@@ -178,14 +178,151 @@ static size_t reload_failures(const wchar_t *path)
     return baseline;
 }
 
+typedef struct setup_trace {
+    resource_heap heap;
+    const rome2_native_unit_card *view;
+    rome2_owned_string_allocator *caller_policy;
+    size_t loads, early_releases;
+    bool watching;
+} setup_trace;
+
+static void *setup_allocate(void *context, size_t bytes, uint32_t kind)
+{
+    setup_trace *t = context;
+    if (t->watching) {
+        if (t->loads == 0) { CHECK(t->view->fauna.count == 0); }
+        ++t->loads;
+    }
+    return resource_allocate(&t->heap, bytes, kind);
+}
+
+static void setup_release(void *context, void *raw, size_t bytes, uint32_t kind)
+{
+    setup_trace *t = context;
+    if (t->watching && t->loads == 0) {
+        CHECK(t->view->fauna.count == 0);
+        ++t->early_releases;
+        /* Setup must have copied the caller's policy before this callback. */
+        memset(t->caller_policy, 0, sizeof *t->caller_policy);
+    }
+    resource_release(&t->heap, raw, bytes, kind);
+}
+
+static void setup_observer(void *context, uintptr_t raw, size_t bytes)
+{
+    setup_trace *t = context;
+    resource_observer(&t->heap, raw, bytes);
+}
+
+static void setup_order_and_errors(const wchar_t *path)
+{
+    setup_trace t = {0};
+    rome2_owned_string_allocator a = {setup_allocate, setup_release, &t, setup_observer, &t};
+    const rome2_owned_string_allocator saved_policy = a;
+    rome2_owned_string_allocator bad = {0};
+    rome2_owned_unit_card *h = NULL;
+    rome2_unit_card_args args = {0};
+    const uint16_t *paths[] = {(const uint16_t *)path};
+    const uint16_t *null_paths[] = {NULL};
+    rome2_card_resource_diagnostic d;
+    const rome2_native_unit_card *v;
+    rome2_fauna_vector_view before;
+    size_t allocations;
+    args.arg06 = 0x12345678u;
+    fixture(path, "script/fauna_config.xml", deer_xml);
+    CHECK(rome2_owned_unit_card_create_from_packs(&h, &args, NULL, paths, 1, &a, NULL) == ROME2_CARD_RESOURCE_OK);
+    v = rome2_owned_unit_card_get(h); before = v->fauna; allocations = t.heap.allocations;
+    CHECK(rome2_owned_unit_card_setup_from_packs(NULL, paths, 1, &a, &d) == ROME2_CARD_RESOURCE_BAD_ARGUMENT);
+    CHECK(rome2_owned_unit_card_setup_from_packs(h, NULL, 1, &a, &d) == ROME2_CARD_RESOURCE_BAD_ARGUMENT);
+    CHECK(rome2_owned_unit_card_setup_from_packs(h, null_paths, 1, &a, &d) == ROME2_CARD_RESOURCE_BAD_ARGUMENT);
+    CHECK(rome2_owned_unit_card_setup_from_packs(h, paths, 1, &bad, &d) == ROME2_CARD_RESOURCE_BAD_ARGUMENT);
+    CHECK(v->fauna.items == before.items && v->fauna.count == before.count && t.heap.allocations == allocations);
+
+    t.view = v; t.caller_policy = &a; t.watching = true;
+    fixture(path, "script/fauna_config.xml", wolf_xml);
+    CHECK(rome2_owned_unit_card_setup_from_packs(h, paths, 1, &a, &d) == ROME2_CARD_RESOURCE_OK);
+    t.watching = false;
+    CHECK(t.loads != 0 && t.early_releases != 0 && a.allocate == NULL);
+    CHECK(d.selected_archive == 0 && v->fauna.count == 2 && v->fauna.items[0].values.animal_type == 1);
+    CHECK(v->words.count == 1 && v->words.items[0] == args.arg06);
+    a = saved_policy;
+
+    before = v->fauna;
+    fixture(path, "unrelated.xml", "<x/>");
+    CHECK(rome2_owned_unit_card_setup_from_packs(h, paths, 1, &a, &d) == ROME2_CARD_RESOURCE_PACK_ERROR);
+    CHECK(d.pack == ROME2_PACK_NOT_FOUND && d.selected_archive == SIZE_MAX);
+    CHECK(v->fauna.count == 0 && v->fauna.capacity == before.capacity && v->fauna.items == before.items);
+    fixture(path, "script/fauna_config.xml", deer_xml);
+    CHECK(rome2_owned_unit_card_reload_from_packs(h, paths, 1, &a, NULL) == ROME2_CARD_RESOURCE_OK);
+    before = v->fauna;
+    fixture(path, "script/fauna_config.xml", "<fauna_config>");
+    CHECK(rome2_owned_unit_card_setup_from_packs(h, paths, 1, &a, &d) == ROME2_CARD_RESOURCE_CONFIG_ERROR);
+    CHECK(d.xml == ROME2_XML_MALFORMED && v->fauna.count == 0 && v->fauna.capacity == before.capacity);
+    fixture(path, "script/fauna_config.xml", deer_xml);
+    CHECK(rome2_owned_unit_card_reload_from_packs(h, paths, 1, &a, NULL) == ROME2_CARD_RESOURCE_OK);
+    fixture(path, "script/fauna_config.xml", "<other_root/>");
+    CHECK(rome2_owned_unit_card_setup_from_packs(h, paths, 1, &a, &d) == ROME2_CARD_RESOURCE_CONFIG_ERROR);
+    CHECK(d.config == ROME2_FAUNA_CONFIG_ROOT_NOT_FOUND && v->fauna.count == 0);
+    CHECK(rome2_owned_unit_card_setup_from_packs(h, NULL, 0, &a, &d) == ROME2_CARD_RESOURCE_PACK_ERROR);
+    CHECK(d.pack == ROME2_PACK_NOT_FOUND && t.heap.live != 0);
+    fixture(path, "script/fauna_config.xml", wolf_xml);
+    CHECK(rome2_owned_unit_card_setup_from_packs(h, paths, 1, &a, NULL) == ROME2_CARD_RESOURCE_OK);
+    fixture(path, "script/fauna_config.xml", "<fauna_config/>");
+    CHECK(rome2_owned_unit_card_setup_from_packs(h, paths, 1, &a, NULL) == ROME2_CARD_RESOURCE_OK);
+    CHECK(v->fauna.count == 0 && v->fauna.capacity >= before.capacity);
+    CHECK(rome2_owned_unit_card_destroy(&h) == ROME2_UNIT_CARD_OK && t.heap.live == 0 && t.heap.grants == NULL);
+}
+
+static size_t setup_failures(const wchar_t *path)
+{
+    const uint16_t *paths[] = {(const uint16_t *)path};
+    rome2_unit_card_args args = {0};
+    const rome2_fauna_record original = {.words_000 = {0, 5}};
+    const rome2_fauna_vector_view config = {1, 1, &original};
+    size_t baseline = 0, fail;
+    unsigned residue;
+    fixture(path, "script/fauna_config.xml", wolf_xml);
+    for (residue = 0; residue < 8; ++residue) {
+        for (fail = 0; fail <= baseline; ++fail) {
+            resource_heap heap = {0};
+            rome2_owned_string_allocator a = resource_policy(&heap);
+            rome2_owned_unit_card *h = NULL;
+            const rome2_native_unit_card *v;
+            rome2_fauna_vector_view before;
+            size_t allocations;
+            rome2_card_resource_status s;
+            rome2_card_resource_diagnostic d;
+            heap.residue = residue;
+            CHECK(rome2_owned_unit_card_create_from_config(&h, &args, NULL, &config, &a) == ROME2_UNIT_CARD_OK);
+            v = rome2_owned_unit_card_get(h); before = v->fauna;
+            allocations = heap.allocations;
+            if (fail != 0) { heap.fail_at = allocations + fail; }
+            s = rome2_owned_unit_card_setup_from_packs(h, paths, 1, &a, &d);
+            if (fail == 0) {
+                CHECK(s == ROME2_CARD_RESOURCE_OK && v->fauna.count == 2 && v->fauna.items[0].values.animal_type == 1);
+                if (residue == 0) { baseline = heap.allocations - allocations; }
+                CHECK(heap.allocations - allocations == baseline);
+            } else {
+                CHECK(s != ROME2_CARD_RESOURCE_OK && v->fauna.count == 0);
+                CHECK(v->fauna.items == before.items && v->fauna.capacity == before.capacity);
+                CHECK(d.pack == ROME2_PACK_ALLOCATION_FAILED || d.config == ROME2_FAUNA_CONFIG_ALLOCATION_FAILED || d.card == ROME2_UNIT_CARD_ALLOCATION_FAILED);
+            }
+            CHECK(rome2_owned_unit_card_destroy(&h) == ROME2_UNIT_CARD_OK);
+            CHECK(heap.live == 0 && heap.grants == NULL);
+        }
+    }
+    return baseline;
+}
+
 int wmain(int argc, wchar_t **argv)
 {
     wchar_t second[1024];
-    size_t factory, reload;
+    size_t factory, reload, setup;
     CHECK(argc == 2 && swprintf_s(second, sizeof second / sizeof second[0], L"%ls.second", argv[1]) > 0);
     lookup_and_reload(argv[1], second); errors(argv[1]);
-    factory = factory_failures(argv[1]); reload = reload_failures(argv[1]);
+    setup_order_and_errors(argv[1]);
+    factory = factory_failures(argv[1]); reload = reload_failures(argv[1]); setup = setup_failures(argv[1]);
     CHECK(_wremove(argv[1]) == 0 && _wremove(second) == 0);
-    printf("unit-card resource: %zu checks, factory%zu/reload%zu failures x8 raw alignments\n", checks, factory, reload);
+    printf("unit-card resource: %zu checks, factory%zu/reload%zu/setup%zu failures x8 raw alignments\n", checks, factory, reload, setup);
     return 0;
 }

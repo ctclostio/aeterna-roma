@@ -141,11 +141,51 @@ earlier quota reset, layer 3 used a test worker and a read-only reviewer, follow
 by a review of the fixes. Root supplied binary interpretations, integrated the
 work and independently ran the final builds. No alternate model was substituted.
 
+### Layer 4 — resource-backed setup completed for the admitted domain, 2026-11-07
+
+- [x] Verify the existing PFH4 resource reader, owned XML frontend and
+  `FUN_10141630` fauna decoder against retained original-image evidence.
+- [x] Connect the default `Script/fauna_config.xml` path to the native owning
+  unit-card factory using explicitly ordered archives.
+- [x] Add setup with the observed clear-before-load state order from
+  `FUN_101a97f0`; preserve the existing transactional reload API.
+- [x] Test missing resources/root, malformed XML, retained capacity, captured
+  allocators and every allocation-failure position at raw alignments 0–7.
+- [x] Compare both factory and setup output against both installed fauna
+  resources, including both explicit archive-priority orders.
+- [x] Pass original-byte checks, optimized native tests and ASan; record the
+  admitted scope and unresolved original-loader behavior.
+
+The previous XML/resource item was partly implemented but not recorded here.
+This pass verified that code and added the missing setup operation: the original
+clears fauna count at `0x101a9860` before its default resource call at
+`0x101a989b`. Native setup now clears before loading, leaves fauna empty on
+ordinary load/allocation failure, retains outer capacity, and preserves other
+card fields. The earlier reload continues to preserve old configuration on
+failure. Resource failures remain explicit; full original quiet-failure and
+exception behavior is not claimed.
+
+Verification: all **60 local native tests** pass in both optimized and ASan
+profiles; all **22 original-image contract tests** pass. The resource suite runs
+**3,065,966 checks**, covering 52 factory / 46 reload / 46 setup allocation
+failure positions at eight alignments. The independent asset oracle checks
+every semantic word and climate byte of both shipped 13-record configurations
+for factory and setup. The static registry verifies 46 function bodies, 57
+globals, nine first vtable slots and 33 instruction windows.
+
+The retained REA dossiers were hash-checked. This pass used local review;
+the attempted DeepSeek review did not execute because authentication failed.
+Shared Ghidra state and canonical exports were unchanged. Details and limits:
+[resource-backed setup](docs/unitcard_resource_recovery.md),
+[verification record](port/recovered_types/verification.json), and
+[installed-asset identities](port/recovered_types/fauna_assets.json).
+
 ### Remaining work
 
-1. Port the game's XML/resource loader and `FUN_10141630` decoder, then connect
-   the default `Script/fauna_config.xml` setup path. The decoded-record domain
-   is owned and tested; full resource-backed constructor equivalence is open.
+1. Extend the verified resource-backed domain toward the original resource
+   manager: recover mount/dependency/mod precedence, quiet-failure/exception
+   ordering, and the direct original XML-node setup branch. Historic CRT/locale
+   behavior and full resource-backed constructor equivalence remain open.
 2. Recover the remaining unit-card methods and meanings of opaque 32-bit
    words before widening any of them into native pointers or ownership links.
 3. Continue engine/FaceFX class recovery, complete vtable bounds and callable

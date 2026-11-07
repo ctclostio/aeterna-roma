@@ -146,6 +146,15 @@ class TypeContractProvenanceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "instruction witness"):
             contracts.validate_contracts(self.image, registry)
 
+    def test_default_setup_clears_fauna_before_resource_load(self):
+        witnesses = {w["address"]: bytes.fromhex(w["hex"])
+                     for w in self.registry["instruction_witnesses"]}
+        self.assertEqual(witnesses["101a9860"], bytes.fromhex("c7866001000000000000"))
+        call = witnesses["101a989b"]
+        self.assertEqual(call[0], 0xE8)
+        self.assertEqual(0x101A989B + 5 + struct.unpack_from("<i", call, 1)[0], 0x112AAB60)
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
     def test_changed_image_rejected(self):
         changed = bytearray(self.image)
         changed[-1] ^= 1

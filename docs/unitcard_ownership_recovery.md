@@ -172,3 +172,8 @@ The checks admit the native ownership domain documented above. They do not
 admit the XML/resource loader, all engine classes or game playability. See root
 [progress.md](../progress.md) and `port/recovered_types/verification.json` for
 the final evidence records and remaining work.
+
+The layer 4 continuation now implements the native resource-backed domain and
+clear-before-load setup described in
+[unitcard_resource_recovery.md](unitcard_resource_recovery.md). The boundary and
+test counts above describe the earlier layer 3 milestone.

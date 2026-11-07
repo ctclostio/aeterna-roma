@@ -2,7 +2,8 @@
 
 Reads only PFH4 indices plus the requested payload, parses XML with Python's
 ElementTree, and compares every semantic word and climate byte to the native
-factory probe. No copyrighted XML payload is written into source control.
+factory and clear-before-load setup probe. No copyrighted XML payload is
+written into source control.
 """
 from __future__ import annotations
 
@@ -107,9 +108,11 @@ def expected(data: bytes) -> list[dict]:
 
 
 def check(probe: Path, packs: list[Path], records: list[dict]) -> None:
-    proc = subprocess.run([str(probe), *map(str, packs)], capture_output=True, text=True, check=True)
-    actual = json.loads(proc.stdout)
-    require(actual == {'selected_archive': 0, 'records': records}, 'native decoded records differ from asset oracle')
+    for mode in ([], ['--setup']):
+        proc = subprocess.run([str(probe), *mode, *map(str, packs)], capture_output=True, text=True, check=True)
+        actual = json.loads(proc.stdout)
+        require(actual == {'selected_archive': 0, 'records': records},
+                f'native decoded records differ from asset oracle: {mode or ["factory"]}')
 
 
 def main() -> int:
@@ -119,7 +122,9 @@ def main() -> int:
     parser.add_argument('--report', type=Path)
     args = parser.parse_args()
     archives = [args.data_root / name for name in PINNED]
-    report = {'schema': 'rome2-fauna-assets-v1', 'verified': True, 'archives': []}
+    report = {'schema': 'rome2-fauna-assets-v2', 'verified': True, 'archives': [],
+              'entrypoints_checked': ['rome2_owned_unit_card_create_from_packs',
+                                      'rome2_owned_unit_card_setup_from_packs']}
     decoded = []
     for pack in archives:
         data, entry = payload(pack)
@@ -133,7 +138,7 @@ def main() -> int:
     check(args.probe.resolve(), [archives[0].resolve(), archives[1].resolve()], decoded[0])
     report['explicit_precedence_orders_checked'] = 2
     if args.report:
-        args.report.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+        args.report.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8', newline='\n')
     print(json.dumps(report, indent=2))
     return 0
 

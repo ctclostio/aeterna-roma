@@ -11,6 +11,10 @@ Public checkout testing and SonarQube Cloud setup are documented in
 build and test reconstructed native components and source tools without the
 original game or private analysis exports. This remains a work in progress.
 
+The current recovery checklist is [progress.md](progress.md). Its latest milestone
+adds [resource-backed unit-card setup](docs/unitcard_resource_recovery.md),
+including the original clear-before-load state order and installed-asset checks.
+
 ## License
 
 Project-authored software is released under the [Unlicense](LICENSE): anyone

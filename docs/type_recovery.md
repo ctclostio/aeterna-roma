@@ -159,9 +159,15 @@ checks in `test_x64_battle_entity_10cbe350_provenance.py`. The final layer 3
 focused run passes all 82 tests. Original-image provenance checks skip when
 the game image is absent; native ownership tests require no game assets.
 
+The resource-backed continuation and clear-before-load setup are now recorded in
+[unitcard_resource_recovery.md](unitcard_resource_recovery.md). It verifies the
+native PFH4/XML/fauna path for its explicit archive and XML domain. The layer 3
+counts and resource boundary above are historical; the layer 4 record contains
+the current resource verification and limits.
+
 Remaining recovery includes the incomplete engine/FaceFX class definitions,
 complete vtable bounds and method signatures, general allocator/threading
-behavior and the game's XML/resource loading and decoding path. The legacy
+behavior and the original resource manager's complete precedence/error paths. The legacy
 unit-card projection remains bounded; the new owner supplies typed UTF-16
 lifetime and the recovered subobjects for explicit decoded configuration. No broad header
 should be promoted into the engine solely because MSVC accepts it.

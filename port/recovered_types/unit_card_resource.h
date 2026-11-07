@@ -48,4 +48,21 @@ rome2_card_resource_status rome2_owned_unit_card_reload_from_packs(
     size_t archive_count, const rome2_owned_string_allocator *allocator,
     rome2_card_resource_diagnostic *diagnostic);
 
+/* Default-path setup state order recovered from FUN_101a97f0: clear existing
+ * fauna (retaining backing capacity) BEFORE resource loading and decoding.
+ * Arguments are validated and the loading allocator is captured before clear's
+ * release callbacks. Ordinary load/allocation failures leave the card's fauna
+ * empty; diagnostics still report the failed stage. Successful setup publishes
+ * the decoded records. Other unit-card fields are unchanged.
+ *
+ * This models the observed state order, not the original loader's complete
+ * quiet-failure/exception behavior or implicit archive precedence. It reports
+ * missing resources/root as errors. Invalid top-level arguments leave the card
+ * unchanged. For replacement internal-invariant errors, see owned_unit_card.h.
+ * Use reload_from_packs when old configuration must survive loading failure. */
+rome2_card_resource_status rome2_owned_unit_card_setup_from_packs(
+    rome2_owned_unit_card *card, const uint16_t *const *archive_paths,
+    size_t archive_count, const rome2_owned_string_allocator *allocator,
+    rome2_card_resource_diagnostic *diagnostic);
+
 #endif
