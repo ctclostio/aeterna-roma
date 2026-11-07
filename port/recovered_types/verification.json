@@ -1,0 +1,424 @@
+{
+  "schema": "rome2-type-recovery-verification-v1",
+  "scope": "curated guest layouts and known prefixes; owning native unit-card composition with explicit decoded configuration; not original XML/resource setup, whole engine types or gameplay",
+  "python_focused": {
+    "tests": 82,
+    "failures": 0,
+    "errors": 0,
+    "modules": [
+      "test_filter_opaque",
+      "test_gen_compile_island",
+      "test_legacy_type_storage",
+      "test_type_recovery_contracts",
+      "test_x64_battle_entity_10cbe350_provenance"
+    ]
+  },
+  "native": {
+    "analyze": {
+      "suites": 12,
+      "failed": 0,
+      "flags": [
+        "C17",
+        "/W4",
+        "/WX",
+        "/sdl",
+        "/analyze"
+      ],
+      "local_ctest_log": "out/recovered-types-analyze/Testing/Temporary/LastTest.log",
+      "log_sha256": "2f697b8b3256c7e31828845c213b31e7045979b9ac244ba883497cf736074993",
+      "suite_outputs": [
+        "owned attachment: 84719 checks, 15 failure positions x 8 alignments",
+        "scalar vectors: 134490 checks, 16 allocation failure positions x 8 alignments",
+        "owned fauna: 196808 checks, 22 failure positions x 8 alignments",
+        "unit-card callback publication: 1909 checks",
+        "owned unit card: 1228292 checks; factory failure positions full=36 empty-parts=10 minimal=7, replace=12 alias-replace=8, each x 8 raw alignments"
+      ]
+    },
+    "asan": {
+      "suites": 12,
+      "failed": 0,
+      "flags": [
+        "C17",
+        "/W4",
+        "/WX",
+        "/sdl",
+        "/fsanitize=address"
+      ],
+      "local_ctest_log": "out/recovered-types-asan/Testing/Temporary/LastTest.log",
+      "log_sha256": "66762b9df5c121ea86b780f5bd47c3937cd23398d4d33884f80d69717dc58792",
+      "suite_outputs": [
+        "owned attachment: 84719 checks, 15 failure positions x 8 alignments",
+        "scalar vectors: 134490 checks, 16 allocation failure positions x 8 alignments",
+        "owned fauna: 196808 checks, 22 failure positions x 8 alignments",
+        "unit-card callback publication: 1909 checks",
+        "owned unit card: 1228292 checks; factory failure positions full=36 empty-parts=10 minimal=7, replace=12 alias-replace=8, each x 8 raw alignments"
+      ]
+    }
+  },
+  "original_image_contracts": {
+    "functions": 26,
+    "global_initial_values": 12,
+    "vtable_first_slots": 9,
+    "instruction_windows": 20,
+    "verified": true
+  },
+  "historical_canonical_island": {
+    "roots": 16,
+    "syntax_passed": 16,
+    "warnings": 228,
+    "warning_clean_passed": 0,
+    "strict_warnings": 232,
+    "strict_rejection_expected": true
+  },
+  "whole_repository_run": {
+    "tests": 1133,
+    "failures": 71,
+    "errors": 6,
+    "integration_pending": true,
+    "note": "Ran during canonical export replacement; stale index locks plus a pre-existing entry-tail pin. Oracle-context module subsequently passed all 44 tests."
+  },
+  "subagents": {
+    "harness": "Claude Code",
+    "model": "claude-opus-5-5",
+    "effort": "xhigh",
+    "opaque_worker": "completed",
+    "string_worker": "completed",
+    "island_worker": "completed",
+    "entity_followup": "completed",
+    "pool_followup": "header only, account rate limit; root completed implementation and tests",
+    "layer3": {
+      "test_worker": {
+        "session_id": "01002602-b4a9-41df-9954-0424a629bb3f",
+        "model": "claude-opus-5-5",
+        "effort": "xhigh",
+        "completed": true,
+        "local_event_path": "out/type-layer3-20261103/unitcard-tests.events.jsonl",
+        "event_sha256": "35b0945dc812d2cef1b208047c6d19c548416181717ed9f8d2ddef0a65145c5d"
+      },
+      "read_only_review": {
+        "session_id": "7fa25add-34f8-4f2a-abd8-6ff78bc26806",
+        "model": "claude-opus-5-5",
+        "effort": "xhigh",
+        "completed": true,
+        "local_event_path": "out/type-layer3-20261103/review.events.jsonl",
+        "event_sha256": "ae9c14a7df6238cc4ed4eb7f30a042db2796371b306e29bd43498d97545dae42"
+      },
+      "review_followup": {
+        "session_id": "7fa25add-34f8-4f2a-abd8-6ff78bc26806",
+        "model": "claude-opus-5-5",
+        "effort": "xhigh",
+        "completed": true,
+        "local_event_path": "out/type-layer3-20261103/review-followup.events.jsonl",
+        "event_sha256": "e2bc217b8f2bb41b8de99db4fed52fb19610286b1f68be44722f473c2fdef605"
+      },
+      "coordination": "root supplied frozen binary facts; workers did ordinary C testing and read-only review; root integrated and independently verified final builds"
+    }
+  },
+  "sources": [
+    {
+      "path": "docs/type_recovery.md",
+      "sha256": "26c0a0992145e380db0aed8e5f43bbd4772925bc4c13887892b98fcc60b34029"
+    },
+    {
+      "path": "docs/compile_island.md",
+      "sha256": "2d20e9a17a78dac76c786cd5e0f35aa97979ea7e9d0ad5e118ffc8e914345f68"
+    },
+    {
+      "path": "docs/x64_battle_entity_10cbe350.md",
+      "sha256": "6fabac83e49cc0c65ea756dad7d5b0af8298a25e9b7db0c5cbd9a1a6a52971c1"
+    },
+    {
+      "path": "docs/x64_battle_unitcard_10145c70.md",
+      "sha256": "626eaafe38b7d0f431d8948bf64c150e8a360b8569dbba8bf3da134d5cc1917f"
+    },
+    {
+      "path": "src/include/opaque_types.h",
+      "sha256": "ecefc6a835d909f08bda5e64e8b61eda327449995cd686a41e65ad9f885950a4"
+    },
+    {
+      "path": "src/include/ghidra_compat.h",
+      "sha256": "c14489f5076b603289daca13c937eaae874c5202a34670a30d356d390165c23d"
+    },
+    {
+      "path": "scripts/filter_opaque.py",
+      "sha256": "4f335d296e5137df65b399127c9614ba0f8f5fbfef31eac17f3a02ab7b81dc0b"
+    },
+    {
+      "path": "scripts/test_filter_opaque.py",
+      "sha256": "d0063f02117a40d78589828a27360add5df1a35614670d13c79ad5213eff5eb1"
+    },
+    {
+      "path": "scripts/gen_build_skeleton.py",
+      "sha256": "db1a0db70aa833c3b9d303b222cfa61af99348a46b561615150854de05201770"
+    },
+    {
+      "path": "scripts/prune_opaque.py",
+      "sha256": "e6be6cc95bc70f865a4aaa6f71d03981b844ecfed69366eabd006e50e8102625"
+    },
+    {
+      "path": "scripts/test_legacy_type_storage.py",
+      "sha256": "971522fca344251bc5c8516e79227cb1448a683f9805d74917987247429d11d5"
+    },
+    {
+      "path": "scripts/gen_compile_island.py",
+      "sha256": "dacf8f8690e0ef86263775477dab494b2af86dcbeb126183328f0902ee40e757"
+    },
+    {
+      "path": "scripts/test_gen_compile_island.py",
+      "sha256": "b275f99bc8d480aeb7383bea4208592e6eb8ae4593dbc14faecac2f0df173bbc"
+    },
+    {
+      "path": "scripts/type_recovery_contracts.py",
+      "sha256": "33956cc83dd9139e14f80cf1929faae3e801cca65db406b774e1c992829671eb"
+    },
+    {
+      "path": "scripts/test_type_recovery_contracts.py",
+      "sha256": "a951579f6e23ef86e0758bdac8d7e98ea99bd00ba73c38690a3af5731ccc1a61"
+    },
+    {
+      "path": "scripts/build_recovered_types.bat",
+      "sha256": "20d139cf7959aa978868da5d6e9e5f63f7bac68a9cb499d0370613f4a4daec66"
+    },
+    {
+      "path": "port/x64_ported/ported_10145c70_unitcard.c",
+      "sha256": "bf46409a4431dcda08f983bfc07e85455ebb075ae6c97f8ca9287d34bbbaf8ca"
+    },
+    {
+      "path": "port/x64_ported/ported_10cbe350_entity.c",
+      "sha256": "083e7a2b494a8b4ee2757be6c0a07286c3508c0b016d737365ff47bf53780618"
+    },
+    {
+      "path": "port/recovered_types/CMakeLists.txt",
+      "sha256": "533014fc31fccfef79db0dc04c560d6f71214f5e225b41b211e62da7a52443c9"
+    },
+    {
+      "path": "port/recovered_types/contracts.json",
+      "sha256": "1e30d4bbdbc24b4dad4bcbf881ead8db851120adec6795ce74d981e26fbad5f0"
+    },
+    {
+      "path": "port/recovered_types/free_list_pool.c",
+      "sha256": "7ef63b9b9d45f164149431003196fd542e0f1b119de7f4499fb3583ac9ff11a0"
+    },
+    {
+      "path": "port/recovered_types/free_list_pool.h",
+      "sha256": "f616e2b0d9e103e287066064154058229b904704b0695bab95878a0f7bc65fe4"
+    },
+    {
+      "path": "port/recovered_types/guest32_layouts.h",
+      "sha256": "23218e067da1e5706db21936ccf5d1c419e96283567354dcaabbb4a539af770f"
+    },
+    {
+      "path": "port/recovered_types/image_defaults.h",
+      "sha256": "ef40866d22e95048ee9551f8c2d4f92aa183d40934caae49dde83b7532f54c07"
+    },
+    {
+      "path": "port/recovered_types/layout_bridge.c",
+      "sha256": "48d2f99cfec3a2086948ddbbb913bc03e601054e9eb6488249b4f38bb06c152d"
+    },
+    {
+      "path": "port/recovered_types/layout_bridge.h",
+      "sha256": "da1c4b200435cd454e491b6b813f49efcead25058b52402ab46b1d1a35c052df"
+    },
+    {
+      "path": "port/recovered_types/owned_entity.c",
+      "sha256": "492c0adc8113ff1b20a79511804f821a8d3c85fd124a72e430e13b4deee858c6"
+    },
+    {
+      "path": "port/recovered_types/owned_entity.h",
+      "sha256": "0b84573f4c0564302ef05ebef7a66e1c8771efea623d077cf42fbf2e3af421b2"
+    },
+    {
+      "path": "port/recovered_types/owned_string.c",
+      "sha256": "94744ab0438e4e06eb29bf335cd5715cfccc911121101c0e6ad26dbd2ef7c101"
+    },
+    {
+      "path": "port/recovered_types/owned_string.h",
+      "sha256": "acc2d49817a8104b71569a778eb6d367c19bb5f8e0bc9b03f7ffd8be05966ecb"
+    },
+    {
+      "path": "port/recovered_types/test_free_list_pool.c",
+      "sha256": "6bc1499cfc0cefc4f6572ac781edc88ec839ab5c71d0935afdec35adaa9c8f25"
+    },
+    {
+      "path": "port/recovered_types/test_layout_bridge.c",
+      "sha256": "e887182bfeff7b7eaab0edf1e00dcb8b1b3d9eb0610f397b2c748dd6816c5a94"
+    },
+    {
+      "path": "port/recovered_types/test_owned_entity.c",
+      "sha256": "d4fb13a9bbfcb35fd4cd0c62e6486cda7c18e269255728cc9f78280d3e327f3f"
+    },
+    {
+      "path": "port/recovered_types/test_owned_string.c",
+      "sha256": "c663bbc6ad2ccdfa6aceb34200d13f05142dd2ae68a8673ab7edc1b1e5b6fcb0"
+    },
+    {
+      "path": "progress.md",
+      "sha256": "857d90b7022ff47175159b04019a5d943206e54eaa209a41bf97dbb21f5ba9af"
+    },
+    {
+      "path": "docs/unitcard_tag_type_recovery.md",
+      "sha256": "a28a6cff3267b46f9b06554d56e8cf47787b82b6387dd97db5641d4fd339bc0c"
+    },
+    {
+      "path": "port/x64_ported/ported_10145c70_unitcard.h",
+      "sha256": "13fbaa1dc8822c40cd01848fb7eacb36fdce9065a7a00db6fe29b99fd8570ce6"
+    },
+    {
+      "path": "port/x64_runtime/test_battle_unitcard_10145c70.c",
+      "sha256": "2c53c2c2a714d21b364435465372bdd8cb135de614dfb7c9e0486d36ce2f6d1d"
+    },
+    {
+      "path": "port/recovered_types/tag_types.h",
+      "sha256": "86707eb396d99de251a613b738a1c8d77fe7335e425b394e514482dcb78b16ae"
+    },
+    {
+      "path": "port/recovered_types/owned_tag.h",
+      "sha256": "816facb6adb8fe7448c5c54ab06e3b948e53fbfdce97cdb46f608a7215021fda"
+    },
+    {
+      "path": "port/recovered_types/owned_tag.c",
+      "sha256": "7b9e7f3489eedaf82f287663bc4ce63c0321152130c0170818c7d4950bc34711"
+    },
+    {
+      "path": "port/recovered_types/test_owned_tag.c",
+      "sha256": "6ed6608543e0d80094f99c662785ecdf2d91b78d0d82f8938c4a0811f81372f2"
+    },
+    {
+      "path": "port/x64_ported/ported_10cbe350_entity.h",
+      "sha256": "cbda2ec8abd7bf0775c74961b2fc8b5dd28892549a1be103d5992740eb5c44a9"
+    },
+    {
+      "path": "port/x64_runtime/test_battle_entity_10cbe350.c",
+      "sha256": "1f2459bc235aaeb1d313f7121c1a7339dcce72cf41d23415177d8a697467b585"
+    },
+    {
+      "path": "docs/unitcard_ownership_recovery.md",
+      "sha256": "ab2ba0bb367329c62985ac138011e99d8b6a93f3a0932cb380ca99533c483717"
+    },
+    {
+      "path": "port/recovered_types/test_support.h",
+      "sha256": "3ab4d5de14497146093ff2483adacfaec93dfabacf0bb19d4e0cd72b2752012d"
+    },
+    {
+      "path": "port/recovered_types/scalar_vectors.h",
+      "sha256": "b226c90270eb4991c2b4fad8db7e5fdcc8ccfdab833653ef157f545b56be2dd5"
+    },
+    {
+      "path": "port/recovered_types/scalar_vectors.c",
+      "sha256": "99176efae60247e1aa4ed64cc3d7a40665d1427405a616d0883a7a9db6255949"
+    },
+    {
+      "path": "port/recovered_types/owned_fauna.h",
+      "sha256": "a79a3a82b6a287599082e6fa3d487432447d1de1f6b38694376a80719cb6b2df"
+    },
+    {
+      "path": "port/recovered_types/owned_fauna.c",
+      "sha256": "f879f67256c4676eb5e251045135a3478c940f8ba08a3209a5d20d8ecb478e82"
+    },
+    {
+      "path": "port/recovered_types/owned_unit_card.h",
+      "sha256": "8d3d0766d4a6826d8937819f65563b409d587c4ef5f76e16d6c6ddd1ed273cc6"
+    },
+    {
+      "path": "port/recovered_types/owned_unit_card.c",
+      "sha256": "7299a2d87abbf8f2f178c16fe18b31960c531bae7f4d89f0f9f50f6e6f1c28fa"
+    },
+    {
+      "path": "port/recovered_types/test_owned_attachment.c",
+      "sha256": "419e3e7c002cf6cddcda61f3675796a87746cbf4f385c262980f34c0a4668162"
+    },
+    {
+      "path": "port/recovered_types/test_scalar_vectors.c",
+      "sha256": "bd9a08d7e81284ec2d45b97d22f8f874e405c816c9c4160d405bb84b5ca7e199"
+    },
+    {
+      "path": "port/recovered_types/test_owned_fauna.c",
+      "sha256": "354ff89d40e4d8bcf037baadbb9ccd64563ecd936cbf0ac5c019a3833981126b"
+    },
+    {
+      "path": "port/recovered_types/test_owned_unit_card.c",
+      "sha256": "5b1a63a98f5596a687b89b760b3c56f05a22f13f87c96cb445935c5133f5932f"
+    },
+    {
+      "path": "port/recovered_types/test_unit_card_observer.c",
+      "sha256": "5f38a41f1ad01d590c2ca13c5bfd7b1ce3eeabdf00d0369630d799da6dd07ae4"
+    }
+  ],
+  "updated_utc": "2026-11-04T03:18:44+00:00",
+  "layer2": {
+    "status": "complete for admitted tag copy domain and typed helper boundary",
+    "tag_allocation_failure_positions": 11,
+    "raw_alignment_residues": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source_vector_capacity": "unread, matching observed helper",
+    "original_destructor_order": "not inferred; explicit native captured-allocation cleanup",
+    "rea_private_session": "saved and closed",
+    "claude_code": "account quota still unavailable; implemented and verified locally, no model substitution",
+    "remaining_at_close": [
+      "attachment copy including guest +0x50",
+      "1016db10 append behavior",
+      "1016ee30/101a9110 coordinate container",
+      "101a97f0 setup",
+      "owning unit-card UTF16 member and composition"
+    ]
+  },
+  "source_hash_scope": "raw current-worktree bytes, independently verified locally; separate from frozen canonical-export admission",
+  "layer3": {
+    "status": "native ownership domain complete; original resource-backed setup remains unadmitted",
+    "native_entity_bytes": 288,
+    "native_unit_card_prefix_bytes": 472,
+    "attachment_failure_positions": 15,
+    "scalar_growth_failure_positions": 16,
+    "fauna_failure_positions": 22,
+    "integrated_checks": 1228292,
+    "factory_failure_positions": {
+      "full": 36,
+      "empty_parts": 10,
+      "minimal": 7
+    },
+    "config_replace_failure_positions": 12,
+    "aliased_config_replace_failure_positions": 8,
+    "raw_alignment_residues": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "mutation_test": {
+      "faults_rejected": 23,
+      "unmutated_control_passed": true,
+      "local_log": "out/type-layer3-20261103/unitcard-tests/mutate.log"
+    },
+    "review_fixes": [
+      "publish text/config/clear views before release callbacks",
+      "entity liveness and release authority use only private allocation metadata",
+      "check sub-view getters and document internal-invariant errors after commit"
+    ],
+    "callback_view_tests": "direct cached-view reads during text/config replacement and fauna clear; destruction invalidates cached views",
+    "host_design_choices": [
+      "scalar owner aliases share implementation with runtime kind checking",
+      "empty strings use unowned native sentinels",
+      "allocation failures are transactional",
+      "floating normalization admits finite non-overflowing squared lengths"
+    ],
+    "rea_session": "saved and closed, eight new observations; shared database untouched",
+    "remaining": [
+      "original XML/resource loader and FUN_10141630 decoder",
+      "opaque word meanings and remaining unit-card methods",
+      "full engine/FaceFX layouts and callable vtables",
+      "general allocator/threading behavior"
+    ]
+  }
+}

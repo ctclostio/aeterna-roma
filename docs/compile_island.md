@@ -41,7 +41,7 @@ content/version hashes, per-TU logs, and results. Only a 16/16 result receives
 `COMPILE_VERIFIED`. A structurally clean dry run is not compiler-verified, and
 any compiler failure is atomically published below `_quarantine`.
 
-The current x64 baseline passes all 16 translation units under policy
+The historical x64 baseline passed all 16 translation units under policy
 `8afc796a13d6959beac0d1a34370f4a071b25f2bc4f7d1cef17307d39afeb592`.
 MSVC reports 228 non-fatal level-3 warnings: 126 C4312, 40 C4047, 32 C4311,
 25 C4024, two C4146, and one each of C4244, C4305, and C4554. These warnings
@@ -54,7 +54,7 @@ generated `sizeof(void *) == 8` gate. Repeated negative runs reproduce the same
 quarantine policy and artifacts; compiler paths rooted in the atomic temporary
 directory are normalized to `<ISLAND_ROOT>` before publication.
 
-The policy also pins the current `src\include\ghidra_compat.h` bytes (SHA-256
+That historical policy pinned `src\include\ghidra_compat.h` bytes (SHA-256
 `90078d227dfa4a585d9170b3d79ef7064e5338385b48d1f86f24fae87002378d`),
 the generator, the `cl.exe` binary, its MSVC inventory and target, and the x64
 pointer-width gate. `COMPILE_VERIFIED` requires one successful result for every
@@ -100,3 +100,37 @@ The verified default is:
 
 This is a syntax/prototype gate, not an ABI or behavioral correctness claim.
 The preserved pointer-width warnings are the next porting gate.
+
+## Warning-clean admission and recovered storage
+
+The type-recovery milestone adds an opt-in profile:
+
+```powershell
+cmd /d /c scripts\build_compile_island.bat --warning-clean
+```
+
+The default remains the historical `/Zs /W3 /we4013` syntax profile.
+`--warning-clean` instead uses `/c /W4 /WX /we4013`: it requires code generation
+and an object, clears `CL` and `_CL_`, rejects warning-control pragmas and all
+compiler output beyond the source-name echo, and publishes only
+`WARNING_CLEAN_VERIFIED`. Profile identity is included in the policy hash.
+Failure is quarantined; neither marker is an ABI or behavioral proof.
+
+The compatibility header now uses exact storage records for odd-width
+`undefined3/5/6/7` and x87 `float10`. These do not synthesize native arithmetic
+or a by-value ABI. The current header SHA-256 is
+`c14489f5076b603289daca13c937eaae874c5202a34670a30d356d390165c23d`.
+
+With that header and policy revision 4, the historical 16 roots still pass the
+syntax profile with the same 228 warnings, under policy
+`d37e0cbc2db3a0f43fe4ed7049d699767bf02a22eab0ef155ff6bb4f8ef0fba9`.
+All sixteen fail warning-clean admission under policy
+`2d36cafea3594885706be02350efef70bb13bc00d75ba268ae74a53f828160b9`.
+The strict run records 232 front-end warnings: the historical 228 plus two
+C4389, one C4057, and one additional C4244. More back-end diagnostics may
+become visible after those are repaired.
+
+Real native type and lifetime implementations are verified through the
+standalone targets described in [type_recovery.md](type_recovery.md), including
+typed adapters for the pool roots `0x10328370` and `0x1064d4e0`. The canonical
+sources themselves remain unchanged.

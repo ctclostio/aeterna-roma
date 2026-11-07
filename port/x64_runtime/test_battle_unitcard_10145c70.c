@@ -6,6 +6,7 @@
  */
 
 #include "ported_10145c70_unitcard.h"
+#include "ported_10cbe350_entity.h"
 
 #include <assert.h>
 #include <stdarg.h>
@@ -30,6 +31,7 @@ static int g_failures;
     } while (0)
 
 typedef struct test_host_state {
+    unsigned alloc_calls, fail_at;
     unsigned alloc_tag_calls;
     unsigned alloc_attachment_calls;
     unsigned init_tag_calls;
@@ -38,26 +40,54 @@ typedef struct test_host_state {
     size_t   last_tag_size;
     size_t   last_attachment_size;
     uint32_t seen_tag_vtable;
+    const rome2_unit_card_tag_vector *tag_source;
+    rome2_unit_card_tag_vector *tag_receiver;
+    const rome2_battle_entity *attachment_source;
+    rome2_battle_entity *attachment_receiver;
 } test_host_state;
 
 static test_host_state g_state;
 
 static void *test_alloc(size_t size)
 {
+    ++g_state.alloc_calls;
+    if (size == sizeof(rome2_unit_card_tag)) {
+        ++g_state.alloc_tag_calls;
+        g_state.last_tag_size = size;
+    } else if (size == sizeof(rome2_battle_entity)) {
+        ++g_state.alloc_attachment_calls;
+        g_state.last_attachment_size = size;
+    } else {
+        REQUIRE(0);
+    }
+    if (g_state.alloc_calls == g_state.fail_at) {
+        return NULL;
+    }
     return calloc(1, size != 0 ? size : 1u);
 }
 
-static void test_init_tag(void *tag_slot, const void *source)
+static void test_init_tag(rome2_unit_card_tag_vector *destination,
+    const rome2_unit_card_tag_vector *source)
 {
-    (void)tag_slot;
-    (void)source;
+    g_state.tag_source = source;
+    g_state.tag_receiver = destination;
+    /* This callback is a borrowed boundary probe. Deep copies are tested by
+     * recovered_types/test_owned_tag.c and are not asserted for this probe. */
+    destination->capacity = source->count;
+    destination->count = source->count;
+    destination->items = source->count == 0 ? NULL : source->items;
     ++g_state.init_tag_calls;
 }
 
-static void *test_init_attachment(const void *source)
+static void test_init_attachment(rome2_battle_entity *receiver,
+    const rome2_battle_entity *source)
 {
+    g_state.attachment_source = source;
+    g_state.attachment_receiver = receiver;
+    /* Exercise the last native byte too: guest-sized allocation is too small. */
+    memset(receiver, 0xdc, sizeof *receiver);
+    receiver->tag_lo = source->tag_lo;
     ++g_state.init_attachment_calls;
-    return (void *)(uintptr_t)(source != NULL ? 0xA77AC0DEu : 0u);
 }
 
 static void test_finish_setup(void *self)
@@ -422,19 +452,30 @@ static void test_tag_subobject(void)
     rome2_unit_card_args args;
     rome2_unit_card_globals globals;
     rome2_unit_card_host host = make_host();
-    int marker = 0;
+    rome2_unit_card_tag marker = {0};
+    rome2_unit_card_tag_element element = {0};
 
     args_zero(&args);
     rome2_unit_card_globals_from_image(&globals);
 
     /* 0x10145f3a: PUSH 0x10 -> FUN_100d12b0 allocates a 16-byte block. */
     args.arg01 = &marker;
+    marker.vtable_identity = 0xdeadbeef;
+    marker.elements.capacity = 19;
+    marker.elements.count = 1;
+    marker.elements.items = &element;
     rome2_unit_card_ctor(&card, &args, &globals, &host);
 
     REQUIRE(card.tag != NULL);
-    REQUIRE(card.tag->vtable == ROME2_UNITCARD_TAG_VTABLE);
+    REQUIRE(card.tag->vtable_identity == ROME2_UNITCARD_TAG_VTABLE);
     REQUIRE(ROME2_UNITCARD_TAG_VTABLE == 0x1173fae4u);
-    REQUIRE(ROME2_UNITCARD_TAG_BLOCK_SIZE == 0x10u);
+    REQUIRE(ROME2_UNITCARD_TAG_GUEST_ALLOCATION_SIZE == 0x10u);
+    REQUIRE(ROME2_UNITCARD_TAG_BLOCK_SIZE == 24u);
+    REQUIRE(g_state.last_tag_size == sizeof *card.tag);
+    REQUIRE(g_state.tag_source == &marker.elements);
+    REQUIRE(g_state.tag_receiver == &card.tag->elements);
+    REQUIRE(card.tag->elements.count == 1 && card.tag->elements.capacity == 1);
+    REQUIRE(card.tag->elements.items == &element);
     REQUIRE(g_state.init_tag_calls == 1u);
     REQUIRE(g_state.finish_setup_calls == 1u);
 
@@ -454,22 +495,61 @@ static void test_attachment_subobject(void)
     rome2_unit_card_args args;
     rome2_unit_card_globals globals;
     rome2_unit_card_host host = make_host();
-    int source = 0;
+    rome2_battle_entity source = {0};
 
     args_zero(&args);
     rome2_unit_card_globals_from_image(&globals);
     args.arg00 = &source;
+    source.tag_lo = 0xfedcba98;
 
     rome2_unit_card_ctor(&card, &args, &globals, &host);
 
     /* 0x10145f6f: PUSH 0xe8 -> the attachment block, then FUN_101350c0. */
-    REQUIRE(ROME2_UNITCARD_ATTACHMENT_BLOCK_SIZE == 0xe8u);
+    REQUIRE(ROME2_UNITCARD_ATTACHMENT_GUEST_ALLOCATION_SIZE == 0xe8u);
+    REQUIRE(g_state.last_attachment_size == sizeof(rome2_battle_entity));
     REQUIRE(g_state.init_attachment_calls == 1u);
-    REQUIRE(card.attachment == (void *)(uintptr_t)0xA77AC0DEu);
+    REQUIRE(card.attachment == g_state.attachment_receiver);
+    REQUIRE(g_state.attachment_source == &source);
+    REQUIRE(card.attachment->tag_lo == source.tag_lo);
     REQUIRE(g_state.finish_setup_calls == 1u);
 
     free(card.tag);
+    free(card.attachment);
     printf("PASS\n");
+}
+
+static void test_helper_guards_and_failures(void)
+{
+    unsigned fail;
+    for (fail = 1; fail <= 2; ++fail) {
+        rome2_unit_card card;
+        rome2_unit_card_args args = {0};
+        rome2_battle_entity source = {0};
+        rome2_unit_card_host host = make_host();
+        args.arg00 = &source;
+        g_state.fail_at = fail;
+        rome2_unit_card_ctor(&card, &args, NULL, &host);
+        REQUIRE((card.tag == NULL) == (fail == 1));
+        REQUIRE((card.attachment == NULL) == (fail == 2));
+        REQUIRE(g_state.init_tag_calls == (fail == 1 ? 0u : 1u));
+        REQUIRE(g_state.init_attachment_calls == (fail == 2 ? 0u : 1u));
+        REQUIRE(g_state.finish_setup_calls == 1);
+        free(card.tag);
+        free(card.attachment);
+    }
+    {
+        rome2_unit_card card;
+        rome2_unit_card_args args = {0};
+        rome2_battle_entity source = {0};
+        rome2_unit_card_host host = make_host();
+        args.arg00 = &source;
+        host.init_tag = NULL;
+        host.init_attachment = NULL;
+        rome2_unit_card_ctor(&card, &args, NULL, &host);
+        REQUIRE(g_state.alloc_calls == 0);
+        REQUIRE(card.tag == NULL && card.attachment == NULL);
+        REQUIRE(g_state.finish_setup_calls == 1);
+    }
 }
 
 static void test_record_layout(void)
@@ -545,6 +625,7 @@ int main(void)
     test_mutable_class_gate();
     test_tag_subobject();
     test_attachment_subobject();
+    test_helper_guards_and_failures();
     test_null_guards();
     if (g_failures != 0) {
         fprintf(stderr, "=== %d check(s) FAILED for 0x10145c70 ===\n",

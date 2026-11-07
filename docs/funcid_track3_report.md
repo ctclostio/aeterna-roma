@@ -4,6 +4,13 @@ Date: 2026-10-11
 Scope: call graph outward from the app_init registrar hub `0x100ea060`
 Tooling: `work/registrar_walk.py`, `work/registrar_evidence.py`
 
+> **2026-11-03 update — both gaps in this report are closed.**  All 1,973 named
+> addresses and all 20 startup handlers now have canonical functions and
+> decompilations.  The canonical corpus grew from 63,326 to 81,280 functions
+> (+17,954).  The full recovery method, validation and remaining indirect-call
+> limits are in `docs/code_recovery_wave.md`.  The historical findings below are
+> retained because they explain why the old 100% figure was misleading.
+
 ## Why this wave, and not the vtable route
 
 The plan originally proposed recovering C++ class hierarchies from
@@ -201,8 +208,16 @@ here so they cannot recur silently:
 
 ## Recommended next
 
-1. Re-export the 20 missing handlers with forced disassembly and decode, then
-   re-run `registrar_walk.py`. This unblocks Track 1's registrar coverage.
-2. Push BFS to depth 5–6 — signal density rises sharply past depth 3.
+**Closed 2026-11-03.**  The 1,973 named addresses and the 20 registrar handlers
+were recovered in four waves (+17,954 canonical functions); see
+`docs/code_recovery_wave.md`.  The remaining work is no longer function
+discovery:
+
+1. Resolve the 57,170 indirect call sites that need cross-function type
+   propagation; the resolved 1,411 and the 8,851-vtable inventory are in
+   `work/indirect_call_resolutions.tsv` and `work/indirect_call_vtables.tsv`.
+2. Manually repair the 21 true switch tables in 10 functions listed in
+   `docs/code_recovery_wave.md`; the other 692 `jumptable_failure` warnings are
+   virtual/IAT dispatch, not switch tables.
 3. Treat `work/registrar_proposed.tsv` as advisory; it is deliberately not
    merged into the corpus.

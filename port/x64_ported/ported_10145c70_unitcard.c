@@ -1,15 +1,20 @@
 /*
  * ported_10145c70_unitcard.c - Phase 4.2 reconstruction of FUN_10145c70.
  *
- * Statement-for-statement translation of the recovered x86 body.  Each block
- * below is annotated with the address of the instruction range it reproduces;
- * the single exception is documented inline where the retail code performs an
- * undefined read that this port normalises.
+ * Bounded native field projection with explicit helper boundaries. Addresses
+ * annotate original evidence; this is not a whole-constructor equivalence
+ * claim. In particular FUN_1016db10, FUN_1016ee30 and FUN_101a97f0 behavior
+ * is not implemented here. See the recovered type/ownership adapters.
  */
 
 #include "ported_10145c70_unitcard.h"
+#include "../recovered_types/image_defaults.h"
+#include "ported_10cbe350_entity.h"
 
 #include <string.h>
+
+_Static_assert(sizeof(rome2_battle_entity) == ROME2_UNITCARD_ATTACHMENT_BLOCK_SIZE,
+    "allocate the native attachment projection extent");
 
 void rome2_unit_card_str_reset(rome2_recovered_str *dst)
 {
@@ -42,16 +47,17 @@ bool rome2_unit_card_class_is_immutable(uint32_t unit_class)
 
 void rome2_unit_card_globals_from_image(rome2_unit_card_globals *globals)
 {
+    const rome2_initial_global_snapshot initial = rome2_recovered_image_defaults();
     if (globals == NULL) {
         return;
     }
     /* Zero-initialised image bytes at 0x11afbf14 / 0x11afbf18 read as floats. */
-    globals->colour_component_a = 0.0f;
-    globals->colour_component_b = 0.0f;
-    globals->global_retail_flag = false;
+    globals->colour_component_a = initial.unit_colour_a;
+    globals->colour_component_b = initial.unit_colour_b;
+    globals->global_retail_flag = initial.unit_retail_flag != 0;
     /* 0xbf800000 at 0x11971460 and 0x11971464. */
-    globals->grid_extent_unset = -1.0f;
-    globals->grid_extent_unset_hi = -1.0f;
+    globals->grid_extent_unset = initial.unit_grid_min;
+    globals->grid_extent_unset_hi = initial.unit_grid_max;
 }
 
 void rome2_unit_card_ctor(
@@ -214,19 +220,18 @@ void rome2_unit_card_ctor(
     /* 0x10145f3a .. 0x10145f64: 0x10-byte tag block.  The constructor stores
      * the block pointer at this+0x020 and, on the success branch only, writes
      * PTR_FUN_1173fae4 as the block's first dword after running FUN_10132ce0
-     * on block+4 with arg01 as the source. */
+     * on block+4 with arg01+4 as the source. Native vector members are +8,
+     * and native element/tag allocations use their actual host extents. */
     tag_block = NULL;
-    if (host != NULL && host->alloc_block != NULL) {
+    if (host != NULL && host->alloc_block != NULL && host->init_tag != NULL) {
         tag_block = (rome2_unit_card_tag *)host->alloc_block(
             ROME2_UNITCARD_TAG_BLOCK_SIZE);
     }
     if (tag_block != NULL) {
-        if (host->init_tag != NULL) {
-            host->init_tag(&tag_block->payload, args->arg01);
-        } else {
-            tag_block->payload = NULL;
-        }
-        tag_block->vtable = ROME2_UNITCARD_TAG_VTABLE;
+        const rome2_unit_card_tag_vector empty = {0, 0, NULL};
+        host->init_tag(&tag_block->elements,
+            args->arg01 == NULL ? &empty : &args->arg01->elements);
+        tag_block->vtable_identity = ROME2_UNITCARD_TAG_VTABLE;
     }
     self->tag = tag_block;
 
@@ -234,11 +239,13 @@ void rome2_unit_card_ctor(
      * when arg00 is non-zero; a failed allocation stores NULL and still runs
      * FUN_101a97f0.  The early return at 0x10145f98 is the success path. */
     attachment = NULL;
-    if (args->arg00 != NULL && host != NULL && host->alloc_block != NULL) {
+    if (args->arg00 != NULL && host != NULL && host->alloc_block != NULL &&
+        host->init_attachment != NULL) {
         attachment = host->alloc_block(ROME2_UNITCARD_ATTACHMENT_BLOCK_SIZE);
     }
-    if (attachment != NULL && host->init_attachment != NULL) {
-        self->attachment = host->init_attachment(args->arg00);
+    if (attachment != NULL) {
+        host->init_attachment((rome2_battle_entity *)attachment, args->arg00);
+        self->attachment = (rome2_battle_entity *)attachment;
     } else {
         self->attachment = NULL;
     }

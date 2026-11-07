@@ -24,6 +24,22 @@ Programmatic structural-only publication is kept separately below
 ``--compiler`` for a structurally clean publication; use ``--dry-run`` when a
 compiler is unavailable.
 
+Two compile profiles exist, and the profile is part of the policy hash:
+
+* ``msvc-x64-syntax-w3-v1`` (default, historical): ``/Zs /W3 /we4013``.  An
+  exit status of zero earns ``COMPILE_VERIFIED`` even when warnings are logged.
+  This is a front-end syntax and implicit-declaration gate only.
+* ``msvc-x64-warning-clean-w4-wx-v1`` (``--warning-clean``): ``/c /W4 /WX
+  /we4013`` with no warning-suppression option, ``CL``/``_CL_`` removed from
+  the compiler environment, and warning-control pragmas quarantined.  ``/Zs``
+  is excluded because back-end diagnostics such as C4701 and C4715 are only
+  issued during code generation.  A translation unit is admitted only when the
+  compiler exits zero, prints nothing beyond its source-name echo, and writes
+  an object.  Objects are scratch and removed before publication.  Success
+  earns ``WARNING_CLEAN_VERIFIED`` and never ``COMPILE_VERIFIED``.
+
+Neither marker is an ABI, layout, or behavior equivalence claim.
+
 No implicit declarations, old-style ``()`` compatibility prototypes, blanket
 byte arrays, or pointer-sized integer substitutions are synthesized.
 """
@@ -47,7 +63,8 @@ from typing import Iterable, Mapping, Sequence
 
 
 FORMAT = "canonical-compile-island-v1"
-POLICY_REVISION = 3
+# Revision 4 adds the compile profile to the compiler-gate policy.
+POLICY_REVISION = 4
 SUMMARY_FILE = "validation_summary.json"
 MANIFEST_FILE = "joined_manifest.tsv"
 REFERENCES_FILE = "references.tsv"
@@ -159,6 +176,20 @@ LABEL_RE = re.compile(r"\bLAB_[0-9A-Fa-f]+\b")
 IDENT_RE = re.compile(r"\b[A-Za-z_]\w*\b")
 
 COMPILE_FLAGS = ("/nologo", "/TC", "/Zs", "/W3", "/we4013")
+# /Zs is deliberately absent: MSVC emits back-end diagnostics (for example
+# C4701 and C4715) only while generating code.  /WX does not promote
+# command-line D9xxx warnings, so admission also inspects compiler output.
+WARNING_CLEAN_COMPILE_FLAGS = ("/nologo", "/TC", "/c", "/W4", "/WX", "/we4013")
+OBJECT_SCRATCH_DIR = "compile/objects"
+WARNING_SUPPRESSION_ARGUMENT_RE = re.compile(
+    r"[/-](?:w|W[0-3]|wd.*|wo.*|WX-|Wv(?::.*)?|external:.*|experimental:external|Zs)\Z"
+)
+WARNING_CONTROL_RE = re.compile(
+    r"(?m)^[ \t]*#[ \t]*pragma[ \t]+(?:warning|system_header)\b"
+    r"|\b__pragma[ \t]*\([ \t]*(?:warning|system_header)\b"
+    r"|\b_Pragma[ \t]*\("
+)
+MSVC_WARNING_CODE_RE = re.compile(r"\bwarning\s+(?P<code>[A-Z]{1,3}[0-9]{4})\b", re.IGNORECASE)
 FORCED_SYSTEM_HEADERS = (
     "windows.h",
     "stdbool.h",
@@ -343,10 +374,111 @@ class CompileResult:
     response_file: str
     exit_code: int
     output: str
+    # Every non-blank output line other than MSVC's source-name echo.
+    diagnostic_lines: tuple[str, ...] = ()
+    warning_codes: tuple[tuple[str, int], ...] = ()
+    # None when the profile does not generate an object.
+    object_produced: bool | None = None
 
     @property
     def passed(self) -> bool:
+        """The compiler exit status was zero (both profiles)."""
+
         return self.exit_code == 0
+
+
+@dataclass(frozen=True)
+class CompileProfile:
+    name: str
+    evidence: str
+    arguments: tuple[str, ...]
+    verified_status: str
+    verified_marker: str
+    admission: str
+    warnings_permitted: bool
+    object_output: bool
+    removed_environment: tuple[str, ...]
+    quarantine_warning_control: bool
+
+    def admits(self, result: CompileResult) -> bool:
+        if not result.passed:
+            return False
+        if self.warnings_permitted:
+            return True
+        if result.diagnostic_lines:
+            return False
+        return result.object_produced is True or not self.object_output
+
+    def policy_fields(self) -> dict[str, object]:
+        return {
+            "name": self.name,
+            "evidence": self.evidence,
+            "admission": self.admission,
+            "warnings_permitted": self.warnings_permitted,
+            "success_status": self.verified_status,
+            "success_marker": self.verified_marker,
+            "object_output": (
+                f"{OBJECT_SCRATCH_DIR}/<canonical_name>.obj; scratch removed before publication"
+                if self.object_output
+                else None
+            ),
+            "removed_environment": list(self.removed_environment),
+            "warning_control_directives": (
+                "quarantine" if self.quarantine_warning_control else "not_scanned"
+            ),
+            "success_claims": {
+                "x64_compiler_gate": True,
+                "warning_clean": not self.warnings_permitted,
+                "abi_equivalence": False,
+                "behavior_equivalence": False,
+            },
+        }
+
+
+SYNTAX_PROFILE = CompileProfile(
+    name="msvc-x64-syntax-w3-v1",
+    evidence="historical_syntax_compile",
+    arguments=COMPILE_FLAGS,
+    verified_status="compile_verified",
+    verified_marker="COMPILE_VERIFIED",
+    admission="compiler exit status 0; warnings are logged and permitted",
+    warnings_permitted=True,
+    object_output=False,
+    removed_environment=(),
+    quarantine_warning_control=False,
+)
+WARNING_CLEAN_PROFILE = CompileProfile(
+    name="msvc-x64-warning-clean-w4-wx-v1",
+    evidence="warning_clean_compile",
+    arguments=WARNING_CLEAN_COMPILE_FLAGS,
+    verified_status="warning_clean_verified",
+    verified_marker="WARNING_CLEAN_VERIFIED",
+    admission=(
+        "compiler exit status 0, no output beyond the source-name echo, "
+        "and a generated object"
+    ),
+    warnings_permitted=False,
+    object_output=True,
+    removed_environment=("CL", "_CL_"),
+    quarantine_warning_control=True,
+)
+COMPILE_PROFILES: Mapping[str, CompileProfile] = {
+    profile.name: profile for profile in (SYNTAX_PROFILE, WARNING_CLEAN_PROFILE)
+}
+
+
+def warning_clean_argument_violations(arguments: Sequence[str]) -> list[str]:
+    """Return reasons that compiler arguments cannot back a warning-clean claim."""
+
+    violations = [
+        f"{argument} suppresses or hides diagnostics"
+        for argument in arguments
+        if WARNING_SUPPRESSION_ARGUMENT_RE.fullmatch(argument)
+    ]
+    violations.extend(
+        f"{required} is required" for required in ("/c", "/W4", "/WX") if required not in arguments
+    )
+    return violations
 
 
 @dataclass
@@ -361,6 +493,7 @@ class IslandPlan:
     units: list[TranslationUnit]
     findings: list[Finding]
     compile_config: CompileConfig | None = None
+    profile: CompileProfile = SYNTAX_PROFILE
 
     @property
     def structurally_clean(self) -> bool:
@@ -807,6 +940,21 @@ def legacy_inventory(entry: str, source_file: str, masked: str) -> list[Inventor
     ]
 
 
+def warning_control_findings(entry: str, symbol: str, masked: str) -> list[Finding]:
+    """Find pragmas that could disable or demote diagnostics in masked C text."""
+
+    return [
+        Finding(
+            entry,
+            "warning_control_directive",
+            symbol,
+            f"line {line_number(masked, match.start())}: "
+            f"{' '.join(match.group(0).split())} is forbidden by the warning-clean profile",
+        )
+        for match in WARNING_CONTROL_RE.finditer(masked)
+    ]
+
+
 def build_deps_header(unit: TranslationUnit, fingerprint: str, policy_sha256: str) -> bytes:
     lines = [
         "#pragma once",
@@ -833,7 +981,18 @@ def load_plan(
     stage: Path,
     roots: Sequence[str],
     compile_config: CompileConfig | None = None,
+    *,
+    profile: CompileProfile = SYNTAX_PROFILE,
 ) -> IslandPlan:
+    if COMPILE_PROFILES.get(profile.name) != profile:
+        raise IslandError(f"unknown compile profile {profile.name!r}")
+    if not profile.warnings_permitted:
+        violations = warning_clean_argument_violations(profile.arguments)
+        if violations:
+            raise IslandError(
+                f"compile profile {profile.name} cannot claim warning cleanliness: "
+                + "; ".join(violations)
+            )
     stage = stage.resolve()
     summary_path = stage / SUMMARY_FILE
     try:
@@ -901,7 +1060,8 @@ def load_plan(
             "implicit_declarations": "forbidden",
             "pointer_sized_integer_fallbacks": "forbidden",
             "compiler_gate": {
-                "arguments": list(COMPILE_FLAGS),
+                "profile": profile.policy_fields(),
+                "arguments": list(profile.arguments),
                 "forced_system_headers": list(FORCED_SYSTEM_HEADERS),
                 "base_compat_sha256": (
                     compile_config.base_compat_sha256 if compile_config is not None else None
@@ -937,6 +1097,22 @@ def load_plan(
         },
     }
     policy_sha256 = sha256_bytes(canonical_json_bytes(policy))
+
+    # The base header is force-included into every translation unit, so a
+    # warning-control directive there taints every unit of a strict island.
+    base_warning_control: list[Finding] = []
+    if profile.quarantine_warning_control and compile_config is not None:
+        try:
+            base_bytes = compile_config.base_compat_path.read_bytes()
+        except OSError as exc:
+            raise IslandError(f"cannot read base compatibility header: {exc}") from exc
+        if sha256_bytes(base_bytes) != compile_config.base_compat_sha256:
+            raise IslandError("base compatibility header changed after compiler configuration")
+        try:
+            base_masked = mask_comments_and_literals(base_bytes.decode("utf-8"))
+        except (UnicodeDecodeError, IslandError) as exc:
+            raise IslandError(f"cannot scan base compatibility header: {exc}") from exc
+        base_warning_control = warning_control_findings("", "base_compat.h", base_masked)
 
     units: list[TranslationUnit] = []
     all_findings: list[Finding] = []
@@ -1098,6 +1274,20 @@ def load_plan(
 
         unit.function_declarations.sort(key=lambda item: item[0])
         unit.data_declarations.sort(key=lambda item: item[0])
+        unit.deps_bytes = build_deps_header(unit, fingerprint, policy_sha256)
+        if profile.quarantine_warning_control:
+            unit.findings.extend(warning_control_findings(entry, source_file, masked))
+            unit.findings.extend(
+                warning_control_findings(
+                    entry,
+                    f"{expected_name}.deps.h",
+                    mask_comments_and_literals(unit.deps_bytes.decode("utf-8")),
+                )
+            )
+            unit.findings.extend(
+                Finding(entry, item.category, item.symbol, item.detail)
+                for item in base_warning_control
+            )
         unit.findings.sort(key=lambda item: (item.category, item.symbol, item.detail))
         units.append(unit)
         all_findings.extend(unit.findings)
@@ -1114,9 +1304,8 @@ def load_plan(
         units=units,
         findings=all_findings,
         compile_config=compile_config,
+        profile=profile,
     )
-    for unit in units:
-        unit.deps_bytes = build_deps_header(unit, fingerprint, policy_sha256)
     return plan
 
 
@@ -1146,16 +1335,63 @@ def is_within(path: Path, parent: Path) -> bool:
         return False
 
 
-def response_file_bytes(unit: TranslationUnit, config: CompileConfig) -> bytes:
-    arguments = list(COMPILE_FLAGS)
+def object_relative_path(unit: TranslationUnit) -> str:
+    return f"{OBJECT_SCRATCH_DIR}/{unit.canonical_name}.obj"
+
+
+def response_file_bytes(
+    unit: TranslationUnit,
+    config: CompileConfig,
+    profile: CompileProfile = SYNTAX_PROFILE,
+) -> bytes:
+    arguments = list(profile.arguments)
     arguments.extend(f"/FI{header}" for header in FORCED_SYSTEM_HEADERS)
     arguments.append('/FI"..\\include\\pointer_width_gate.h"')
     arguments.append('/FI"..\\include\\base_compat.h"')
     # MSVC resolves a forced include relative to the primary source directory,
     # not the response file or process working directory.
     arguments.append(f'/FI"..\\include\\{unit.canonical_name}.deps.h"')
+    if profile.object_output:
+        # /Fo is resolved from the compiler working directory (the island root).
+        object_path = object_relative_path(unit).replace("/", "\\")
+        arguments.append(f'/Fo"{object_path}"')
     arguments.append(f'"sources\\{unit.source_file}"')
     return ("\n".join(arguments) + "\n").encode("utf-8")
+
+
+def compile_output_diagnostics(
+    output: str, source_file: str
+) -> tuple[tuple[str, ...], tuple[tuple[str, int], ...]]:
+    """Return non-echo output lines and recognized warning-code counts.
+
+    Clean MSVC output is only the echoed source name, so this is an allow-list:
+    any other line, including localized or unrecognized text, is a diagnostic.
+    """
+
+    lines = tuple(
+        stripped
+        for stripped in (line.strip() for line in output.split("\n"))
+        if stripped and stripped != source_file
+    )
+    codes = Counter(
+        match.group("code").upper()
+        for line in lines
+        for match in MSVC_WARNING_CODE_RE.finditer(line)
+    )
+    return lines, tuple(sorted(codes.items()))
+
+
+def format_warning_codes(codes: Iterable[tuple[str, int]]) -> str:
+    return ",".join(f"{code}:{count}" for code, count in codes)
+
+
+def compiler_environment(profile: CompileProfile) -> dict[str, str] | None:
+    """Return the compiler environment; ``None`` inherits it unchanged."""
+
+    if not profile.removed_environment:
+        return None
+    removed = {name.upper() for name in profile.removed_environment}
+    return {key: value for key, value in os.environ.items() if key.upper() not in removed}
 
 
 def normalize_compile_output(output: str, island_root: Path) -> str:
@@ -1175,51 +1411,60 @@ def run_compile_gate(root: Path, plan: IslandPlan) -> list[CompileResult]:
     config = plan.compile_config
     if config is None:
         raise IslandError("compiler gate requested without a pinned compiler configuration")
+    profile = plan.profile
+    # The historical profile keeps its original record schema; other profiles
+    # append explicit profile and diagnostic columns.
+    extended_records = profile != SYNTAX_PROFILE
     compile_dir = root / "compile"
     logs_dir = compile_dir / "logs"
     logs_dir.mkdir(parents=True)
+    objects_dir = root / OBJECT_SCRATCH_DIR if profile.object_output else None
+    if objects_dir is not None:
+        objects_dir.mkdir()
     (compile_dir / "compiler_version.txt").write_text(
         config.compiler_version_text, encoding="utf-8", newline="\n"
     )
 
+    command_header: tuple[str, ...] = (
+        "entry",
+        "canonical_name",
+        "compiler",
+        "response_file",
+        "response_sha256",
+        "command_from_island_root",
+    )
+    if extended_records:
+        command_header += ("compile_profile", "removed_environment")
     command_rows: list[tuple[object, ...]] = []
     results: list[CompileResult] = []
     for unit in plan.units:
         response_name = f"{unit.canonical_name}.rsp"
         response_relative = f"compile/{response_name}"
         response_path = compile_dir / response_name
-        response = response_file_bytes(unit, config)
+        response = response_file_bytes(unit, config, profile)
         response_path.write_bytes(response)
-        command_rows.append(
-            (
-                unit.entry,
-                unit.canonical_name,
-                "cl.exe",
-                response_relative,
-                sha256_bytes(response),
-                f'cl.exe @"{response_relative}"',
-            )
+        row: tuple[object, ...] = (
+            unit.entry,
+            unit.canonical_name,
+            "cl.exe",
+            response_relative,
+            sha256_bytes(response),
+            f'cl.exe @"{response_relative}"',
         )
+        if extended_records:
+            row += (profile.name, ",".join(profile.removed_environment))
+        command_rows.append(row)
 
-    write_tsv(
-        compile_dir / "compile_commands.tsv",
-        (
-            "entry",
-            "canonical_name",
-            "compiler",
-            "response_file",
-            "response_sha256",
-            "command_from_island_root",
-        ),
-        command_rows,
-    )
+    write_tsv(compile_dir / "compile_commands.tsv", command_header, command_rows)
 
+    environment = compiler_environment(profile)
     for unit in plan.units:
         response_relative = f"compile/{unit.canonical_name}.rsp"
         try:
             completed = subprocess.run(
                 [str(config.compiler_path), f"@{response_relative}"],
                 cwd=root,
+                env=environment,
                 stdin=subprocess.DEVNULL,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
@@ -1230,34 +1475,70 @@ def run_compile_gate(root: Path, plan: IslandPlan) -> list[CompileResult]:
             )
         except (OSError, subprocess.TimeoutExpired) as exc:
             raise IslandError(f"compiler invocation failed for {unit.entry}: {exc}") from exc
-        output = normalize_compile_output(completed.stdout, root)
+        output = normalize_compile_output(completed.stdout or "", root)
         (logs_dir / f"{unit.canonical_name}.log").write_text(
             output, encoding="utf-8", newline="\n"
         )
+        diagnostic_lines, warning_codes = compile_output_diagnostics(output, unit.source_file)
+        object_produced: bool | None = None
+        if objects_dir is not None:
+            object_path = root / object_relative_path(unit)
+            object_produced = object_path.is_file() and object_path.stat().st_size > 0
         results.append(
             CompileResult(
                 entry=unit.entry,
                 response_file=response_relative,
                 exit_code=completed.returncode,
                 output=output,
+                diagnostic_lines=diagnostic_lines,
+                warning_codes=warning_codes,
+                object_produced=object_produced,
             )
         )
 
-    write_tsv(
-        compile_dir / "compile_results.tsv",
-        ("entry", "response_file", "exit_code", "passed", "output_sha256", "log_file"),
-        (
-            (
-                result.entry,
-                result.response_file,
-                result.exit_code,
-                "yes" if result.passed else "no",
-                sha256_bytes(result.output.encode("utf-8")),
-                f"compile/logs/decomp_fn_{result.entry}.log",
-            )
-            for result in results
-        ),
+    if objects_dir is not None:
+        # Objects embed timestamps and paths; they are admission evidence only
+        # and would make the immutable publication nondeterministic.
+        for child in objects_dir.iterdir():
+            if child.is_dir() and not child.is_symlink():
+                shutil.rmtree(child)
+            else:
+                child.unlink()
+
+    results_header: tuple[str, ...] = (
+        "entry",
+        "response_file",
+        "exit_code",
+        "passed",
+        "output_sha256",
+        "log_file",
     )
+    if extended_records:
+        results_header += (
+            "diagnostic_lines",
+            "warning_codes",
+            "object_produced",
+            "warning_clean",
+        )
+    result_rows: list[tuple[object, ...]] = []
+    for result in results:
+        row = (
+            result.entry,
+            result.response_file,
+            result.exit_code,
+            "yes" if result.passed else "no",
+            sha256_bytes(result.output.encode("utf-8")),
+            f"compile/logs/decomp_fn_{result.entry}.log",
+        )
+        if extended_records:
+            row += (
+                len(result.diagnostic_lines),
+                format_warning_codes(result.warning_codes),
+                "yes" if result.object_produced else "no",
+                "yes" if profile.admits(result) and not profile.warnings_permitted else "no",
+            )
+        result_rows.append(row)
+    write_tsv(compile_dir / "compile_results.tsv", results_header, result_rows)
     return results
 
 
@@ -1336,6 +1617,7 @@ def publish_plan(plan: IslandPlan, output_root: Path) -> Path:
         )
         (temp_path / "policy.json").write_bytes(canonical_json_bytes(plan.policy))
 
+        profile = plan.profile
         compile_results: list[CompileResult] = []
         effective_findings = list(plan.findings)
         if plan.structurally_clean and plan.compile_config is not None:
@@ -1351,6 +1633,32 @@ def publish_plan(plan: IslandPlan, output_root: Path) -> Path:
                             f"compile/logs/decomp_fn_{result.entry}.log",
                         )
                     )
+                if profile.warnings_permitted:
+                    continue
+                if result.diagnostic_lines:
+                    codes = format_warning_codes(result.warning_codes) or "none recognized"
+                    effective_findings.append(
+                        Finding(
+                            result.entry,
+                            "compiler_diagnostics",
+                            f"decomp_fn_{result.entry}",
+                            f"{len(result.diagnostic_lines)} output line(s) beyond the "
+                            f"source-name echo with exit code {result.exit_code} "
+                            f"(warning codes: {codes}); warning-clean admission "
+                            f"forbids every diagnostic; see "
+                            f"compile/logs/decomp_fn_{result.entry}.log",
+                        )
+                    )
+                if profile.object_output and result.passed and result.object_produced is not True:
+                    effective_findings.append(
+                        Finding(
+                            result.entry,
+                            "compiler_object_missing",
+                            f"decomp_fn_{result.entry}",
+                            "exit code 0 without a generated object; warning-clean "
+                            "admission requires back-end code generation",
+                        )
+                    )
             if plan.compile_config.compiler_target != "x64":
                 effective_findings.append(
                     Finding(
@@ -1361,25 +1669,36 @@ def publish_plan(plan: IslandPlan, output_root: Path) -> Path:
                     )
                 )
 
-        effective_findings.sort(
-            key=lambda item: (item.entry, item.category, item.symbol, item.detail)
-        )
         compile_verified = (
             plan.structurally_clean
             and plan.compile_config is not None
             and plan.compile_config.compiler_target == "x64"
             and len(compile_results) == len(plan.units)
             and bool(plan.units)
-            and all(item.passed for item in compile_results)
+            and all(profile.admits(item) for item in compile_results)
+        )
+        if plan.compile_config is not None and not compile_verified and not effective_findings:
+            # Fail closed: a configured gate that did not admit every unit must
+            # never fall through to a structural or verified publication.
+            effective_findings.append(
+                Finding(
+                    plan.roots[0],
+                    "compiler_gate",
+                    profile.name,
+                    "compiler gate did not admit every translation unit",
+                )
+            )
+        effective_findings.sort(
+            key=lambda item: (item.entry, item.category, item.symbol, item.detail)
         )
         if effective_findings:
             status = "quarantined"
             final_parent = fingerprint_dir / "_quarantine"
             marker_name = "QUARANTINED"
         elif compile_verified:
-            status = "compile_verified"
+            status = profile.verified_status
             final_parent = fingerprint_dir
-            marker_name = "COMPILE_VERIFIED"
+            marker_name = profile.verified_marker
         else:
             status = "structurally_validated"
             final_parent = fingerprint_dir / "_structural"
@@ -1412,29 +1731,84 @@ def publish_plan(plan: IslandPlan, output_root: Path) -> Path:
                 "failed": sum(not result.passed for result in compile_results),
                 "verified": compile_verified,
             },
+            "compile_profile": profile.name,
+            "provenance": {
+                "evidence": profile.evidence,
+                "arguments": list(profile.arguments),
+                "warnings_permitted": profile.warnings_permitted,
+                "established": {
+                    "x64_compiler_gate": compile_verified,
+                    "warning_clean": compile_verified and not profile.warnings_permitted,
+                    "abi_equivalence": False,
+                    "behavior_equivalence": False,
+                },
+            },
             "quarantine_findings": len(effective_findings),
             "joined_manifest_sha256": plan.manifest_sha256,
             "references_sha256": plan.references_sha256,
         }
+        if not profile.warnings_permitted:
+            warning_codes: Counter[str] = Counter()
+            for result in compile_results:
+                warning_codes.update(dict(result.warning_codes))
+            summary["compiler_gate"].update(
+                {
+                    "warning_clean": sum(profile.admits(item) for item in compile_results),
+                    "diagnostic_translation_units": sum(
+                        bool(item.diagnostic_lines) for item in compile_results
+                    ),
+                    "objects_produced": sum(
+                        item.object_produced is True for item in compile_results
+                    ),
+                    "warning_codes": dict(sorted(warning_codes.items())),
+                }
+            )
         (temp_path / "island_summary.json").write_text(
             json.dumps(summary, indent=2, sort_keys=True) + "\n",
             encoding="utf-8",
             newline="\n",
         )
+
+        final_path = final_parent / plan.policy_sha256
+        # Identical policies must reproduce identical outcomes.  A conflicting
+        # publication means hidden toolchain state changed; never add a success
+        # marker beside failure evidence, and always retain new failure evidence.
+        contradictions = [
+            path
+            for path in (
+                fingerprint_dir / plan.policy_sha256,
+                fingerprint_dir / "_quarantine" / plan.policy_sha256,
+                fingerprint_dir / "_structural" / plan.policy_sha256,
+            )
+            if path != final_path and path.exists()
+        ]
+        if contradictions and status != "quarantined":
+            raise IslandError(
+                f"refusing {status} publication for policy {plan.policy_sha256}: "
+                "contradictory publication exists at "
+                + ", ".join(str(path) for path in contradictions)
+            )
+        # The status marker is the last file written into the staging tree.
         (temp_path / marker_name).write_text(
             status + "\n", encoding="ascii", newline="\n"
         )
 
         final_parent.mkdir(parents=True, exist_ok=True)
-        final_path = final_parent / plan.policy_sha256
         if final_path.exists():
             if not final_path.is_dir():
                 raise IslandError(f"immutable output collision at {final_path}")
             if tree_digest(final_path) != tree_digest(temp_path):
                 raise IslandError(f"immutable output differs at {final_path}")
             shutil.rmtree(temp_path)
-            return final_path
-        os.rename(temp_path, final_path)
+        else:
+            os.rename(temp_path, final_path)
+        if contradictions:
+            raise IslandError(
+                f"quarantine published at {final_path}, but policy {plan.policy_sha256} "
+                "also has a contradictory publication at "
+                + ", ".join(str(path) for path in contradictions)
+                + "; the toolchain or environment is not reproducible"
+            )
         return final_path
     except Exception:
         if temp_path.exists() and is_within(temp_path.resolve(), fingerprint_dir.resolve()):
@@ -1457,6 +1831,7 @@ def describe_plan(plan: IslandPlan) -> str:
         values.append(
             "categories=" + ",".join(f"{key}:{categories[key]}" for key in sorted(categories))
         )
+    values.append(f"profile={plan.profile.name}")
     return " ".join(values)
 
 
@@ -1497,6 +1872,16 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
         default=Path("src/include/ghidra_compat.h"),
         help="narrow forced-include compatibility header",
     )
+    parser.add_argument(
+        "--warning-clean",
+        action="store_true",
+        help=(
+            f"use the opt-in {WARNING_CLEAN_PROFILE.name} profile "
+            f"({' '.join(WARNING_CLEAN_COMPILE_FLAGS)}; no warning suppression); "
+            f"only zero-diagnostic x64 compiles earn {WARNING_CLEAN_PROFILE.verified_marker}, "
+            "which is not an ABI or behavior equivalence claim"
+        ),
+    )
     return parser.parse_args(argv)
 
 
@@ -1510,7 +1895,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         compile_config = (
             resolve_compile_config(args.compiler, args.base_compat) if args.compiler else None
         )
-        plan = load_plan(args.stage, roots, compile_config)
+        profile = WARNING_CLEAN_PROFILE if args.warning_clean else SYNTAX_PROFILE
+        plan = load_plan(args.stage, roots, compile_config, profile=profile)
         print(describe_plan(plan))
         if args.dry_run:
             for finding in plan.findings:
@@ -1528,7 +1914,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"output={output}")
         summary = json.loads((output / "island_summary.json").read_text(encoding="utf-8"))
         print(f"result={summary['status']}")
-        return 0 if summary["status"] == "compile_verified" else 2
+        return 0 if summary["status"] == plan.profile.verified_status else 2
     except IslandError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1

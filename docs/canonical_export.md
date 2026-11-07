@@ -11,14 +11,16 @@ As of 2026-08-24, Pi/DeepSeek was deliberately suspended before this export.
 That specific Pi process later disappeared without being resumed or terminated
 by this workflow; its session file remains preserved. A process audit after the
 final verification found no Pi, `prune_opaque.py`, or Ghidra headless writer.
-The complete 63,326-function canonical export and its final fresh-process
+The complete 81,280-function canonical export and its final fresh-process
 rollback check finished successfully. Treat a continued or replacement Pi
 session as a new writer: do not start it on any task that can write
 `workspace/TW2` while a later export or rollback verifier is active.
 
-The current snapshot reports 63,326 internal functions and 4,143 addressable data
+The current snapshot reports 81,280 internal functions and 2,750 addressable data
 symbols. Those counts and the current fingerprint are observations, not constants:
-all consumers must read them from `canonical_snapshot.tsv`.
+all consumers must read them from `canonical_snapshot.tsv`.  The function count
+rose from 63,326 in the 2026-11 code-recovery wave; see
+`docs/code_recovery_wave.md`.
 
 ## Why names are changed in Ghidra
 

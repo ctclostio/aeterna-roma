@@ -165,17 +165,19 @@ These are separate completion axes and must not be blended into one percentage:
 
 | Axis | Current state | What it means |
 | --- | ---: | --- |
-| Canonical decompiler export | 63,326 / 63,326 (100%) | Every *indexed* function has canonical output. Read this as 100% of what Ghidra chose to define: **~1,993 real `.text` addresses** (1,973 MSVC SEH-prologue functions named in `work/funcid_environment_variables.tsv`, plus 20 startup registrar handlers) are referenced but never defined, so they have no decompilation. See `docs/funcid_track3_report.md`. |
-| Function identification | 9,036 / 63,326 (14.3%) | Unique addresses named across all `work/funcid_*.tsv`. |
+| Canonical decompiler export | 81,280 / 81,280 (100%) | Every indexed function has canonical output, and the former non-indexed gaps are closed: all 1,973 named `.text` addresses and all 20 startup registrar handlers now have functions and decompilations. The corpus grew from 63,326 to 81,280 functions (+17,954). See `docs/code_recovery_wave.md`. |
+| Function identification | 9,036 / 81,280 (11.1%) | Unique addresses named across all `work/funcid_*.tsv`. |
+| Indirect-call resolution | 2,157 / 59,079 (3.65%) | Statically resolved sites across 1,337 functions; 9,051 vtables / 121,692 slots inventoried. The remaining 56,360 sites need cross-function type propagation. See `work/indirect_call_summary_after.md`. |
+| Decompiler-warning triage | 9,856 warnings / 6,765 functions | 1,110 jumptable warnings reduce to 29 true switch-table failures in 16 functions (21 addressed + 8 selector-normalization); the rest are virtual/IAT dispatch. Repair worklist: `work/switch_table_repairs_after.tsv`. |
 | Current exact x64 milestone | 150 / 150 decision-and-caller bytes (100%) | The frozen selector, conditional registration-data interval, and two caller/continuation windows compose the admitted 400-byte nonempty ordinary-domain parent in a standalone test-only route. |
 | Playable/game-equivalent reconstruction | <1% (planning estimate) | No recovered launcher-facing startup, main loop, renderer, campaign, battle, UI, audio, networking, or save system is integrated. |
 
 - [x] Ghidra headless pipeline validated on Rome2.exe
 - [x] PE metadata extracted (exports/imports)
 - [x] Lossless 522-export ABI lock → `docs/x64_export_contract.md`
-- [x] empire.retail.dll auto-analysis (35 functions remain missing only from the
-  older batch export — `work/missing_decomp.txt`)
-- [x] Full decompilation export — 63,326 canonical functions
+- [x] empire.retail.dll auto-analysis and code-gap recovery — all 81,280
+  canonical functions exported; see `docs/code_recovery_wave.md`
+- [x] Full decompilation export — 81,280 canonical functions
 - Historical FuncID snapshot (superseded by the next item): intermediate
   classifications in `work/funcid_solo.tsv` (+ main/todo2). Method + anchor
   table: `work/SOLO_SESSION_SUMMARY.md`; the contemporaneous remaining queue is

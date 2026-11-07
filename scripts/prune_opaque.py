@@ -1,14 +1,22 @@
 #!/usr/bin/env python3
-"""Converging header fixer: alternates compile feedback between
-opaque_types.h (add missing / drop conflicting) and functions.h (drop colliding protos).
+"""Legacy header feedback: repair incomplete type names, report ABI conflicts.
+Recovered prototypes are preserved: deleting one to enable an implicit call is
+not a type recovery. Use gen_compile_island.py for an admitted compilation.
 Usage: python prune_opaque.py [iterations]"""
 import subprocess, sys, random, re
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
+from filter_opaque import parse_opaque_header, render_opaque_header
 
 VCVARS = r"C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
 INC = Path("src/include").resolve()
-OUTDIR = Path("build_test"); OUTDIR.mkdir(exist_ok=True)
+OUTDIR = Path("build_test")
+
+
+def update_opaque_header(lines, *, remove=(), add=()):
+    """Preserve typedef names, not their private incomplete struct tags."""
+    names = set(parse_opaque_header('\n'.join(lines)))
+    return render_opaque_header((names - set(remove)) | set(add)).splitlines()
 
 def msvc_env():
     import os
@@ -25,7 +33,7 @@ def msvc_env():
 
 def try_compile(path, env):
     obj = OUTDIR / (Path(path).stem + '.obj')
-    inner = f'cl /nologo /c /W0 /EHsc /FI"{INC}/umbrella.h" "{path}" /Fo"{obj}"'
+    inner = f'cl /nologo /c /W4 /WX /we4013 /EHsc /FI"{INC}/umbrella.h" "{path}" /Fo"{obj}"'
     r = subprocess.run(inner, shell=True, capture_output=True, text=True, errors='replace', env=env)
     return r.returncode, ((r.stdout or '') + '\n' + (r.stderr or ''))
 
@@ -38,6 +46,7 @@ def err_names(errs, code):
     return out
 
 def main():
+    OUTDIR.mkdir(exist_ok=True)
     n_iter = int(sys.argv[1]) if len(sys.argv) > 1 else 8
     d = Path('buildable')
     files = sorted(str(p) for p in d.glob('*.c'))
@@ -60,15 +69,13 @@ def main():
 
         # 1) C2011/C2371 type-redefinitions -> drop our conflicting typedefs
         bad_types = err_names(errs, 'C2011') | err_names(errs, 'C2371')
-        new_opq = [l for l in opq
-                   if not (l.startswith('typedef') and any(
-                       l.endswith(f' {b};') or f' {b} {b};' in l for b in bad_types))]
+        new_opq = update_opaque_header(opq, remove=bad_types)
         # 2) C2365/C2733: identifier redeclared as different kind
         #    C2371 handled too when the name matches one of our prototype lines
         c2365 = (err_names(errs, 'C2365') | err_names(errs, 'C2733') | err_names(errs, 'C2373')
                  | err_names(errs, 'C2374') | err_names(errs, 'C2375') | err_names(errs, 'C2556'))
-        # calls that clash with our (possibly wrong-arity) prototypes -> drop those protos;
-        # C then falls back to implicit/unprototyped linkage for skeleton purposes
+        # Collect incompatible prototypes for diagnostics. Never remove one
+        # merely to make a wrong-arity or unprototyped call compile.
         errs_joined = chr(10).join(errs)
         for code in ('C2064', 'C2198', 'C2197'):
             pat = re.compile(code + "[^" + chr(10) + "]*?[A-Za-z0-9_ ]([A-Za-z_][A-Za-z0-9_]*)\\(")
@@ -95,8 +102,10 @@ def main():
             pat = re.compile(r'\b' + re.escape(b) + r'\s*\(')
             # these collide with real system declarations -> drop ALL our proto lines
             fn_set |= {l for l in fnh if pat.search(l)}
-        new_opq = [l for l in new_opq if not any(f' {b} {b};' in l for b in c2365)]
-        new_fnh = [l for l in fnh if l not in fn_set]
+        new_opq = update_opaque_header(new_opq, remove=c2365)
+        new_fnh = fnh
+        if fn_set:
+            print(f"  unresolved_prototype_conflicts={len(fn_set)} (preserved for recovery)")
 
         # 3) C2143/C2061/C2059 unknown-type near '*' -> ADD missing opaque typedefs
         miss = set()
@@ -118,7 +127,7 @@ def main():
                  'float10','HANDLE','DWORD','HMODULE','HKEY','LSTATUS','LPVOID','FARPROC','BOOL','UINT',
                  'WCHAR','LPCVOID','LPWSTR','HWND','HDC','HGLRC','SIZE_T','SOCKET','GUID','FILE',
                  'va_list','size_t','wchar_t','errno_t'}
-        have = set(re.findall(r'typedef struct (\w+) \w+;', '\n'.join(new_opq)))
+        have = set(parse_opaque_header('\n'.join(new_opq)))
         for idx in ref_lines:
             if 0 <= idx < len(new_fnh):
                 for tid in re.findall(r'(?:^|[^A-Za-z0-9_])([A-Za-z_][A-Za-z0-9_]{2,})\s*\*', new_fnh[idx]):
@@ -127,12 +136,11 @@ def main():
                 for tid in re.findall(r'(?:^|\(|,)\s*([A-Za-z_][A-Za-z0-9_]{2,})\s+\*?param_', new_fnh[idx]):
                     if tid not in known and tid not in have:
                         miss.add(tid)
-        for t in sorted(miss):
-            new_opq.append(f"typedef struct {t} {t};")
+        new_opq = update_opaque_header(new_opq, add=miss)
 
         changed = (new_opq != opq) or (new_fnh != fnh)
         opq_path.write_text('\n'.join(new_opq) + '\n')
-        fnh_path.write_text('\n'.join(new_fnh) + '\n')
+        # functions.h is evidence; its prototypes are not rewritten here.
         added = len(miss)
         print(f"  dropped_typedefs={len(opq)-len(new_opq)} dropped_protos={len(fnh)-len(new_fnh)} added_typedefs={added}")
         if not changed and ok > 0:
@@ -152,6 +160,7 @@ def main():
     print(f"\nFINAL: compiled={ok}/{len(sample)}")
     for k, v in sorted(cats.items(), key=lambda x: -len(x[1]))[:10]:
         print(f"  [{len(v)}] {k}  e.g. {v[0]}")
+    return 0 if ok == len(sample) else 1
 
 if __name__ == '__main__':
-    main()
+    raise SystemExit(main())

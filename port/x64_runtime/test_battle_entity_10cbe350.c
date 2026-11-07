@@ -184,7 +184,7 @@ static void test_descriptor_projection_and_item_vector(void)
 
     /* 0x10cbe489 / 0x10cbe492: the count is mirrored into +0xb4 and +0xb8. */
     REQUIRE(entity.item_count == 3u);
-    REQUIRE(entity.item_alloc_count == 3u);
+    REQUIRE(entity.item_capacity == 3u);
 
     /* 0x10cbe4a4 / 0x10cbe4a7: LEA + SHL give count * stride bytes.  The x86
      * stride is 12; the host block scales with sizeof(rome2_recovered_str). */
@@ -237,7 +237,7 @@ static void test_zero_count_skips_allocation(void)
     REQUIRE(g_alloc_calls == 0u);
     REQUIRE(entity.items == NULL);
     REQUIRE(entity.item_count == 0u);
-    REQUIRE(entity.item_alloc_count == 0u);
+    REQUIRE(entity.item_capacity == 0u);
 
     /* A NULL descriptor leaves the same three fields zeroed. */
     args.arg10 = NULL;
@@ -516,12 +516,12 @@ static void test_allocator_pair_and_borrowed_strings(void)
     REQUIRE(g_free_calls == 0u);
     REQUIRE(entity.items == g_custom_items);
     REQUIRE(entity.item_count == 2u);
-    REQUIRE(entity.item_alloc_count == 2u);
+    REQUIRE(entity.item_capacity == 2u);
     REQUIRE(rome2_battle_entity_release_items(&entity, &host));
     REQUIRE(g_free_calls == 1u);
     REQUIRE(entity.items == NULL);
     REQUIRE(entity.item_count == 0u);
-    REQUIRE(entity.item_alloc_count == 0u);
+    REQUIRE(entity.item_capacity == 0u);
     REQUIRE(rome2_battle_entity_release_items(&entity, NULL));
     REQUIRE(g_free_calls == 1u);
     REQUIRE(!rome2_battle_entity_release_items(NULL, &host));

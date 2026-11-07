@@ -27,7 +27,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 WORK = ROOT / "work"
 DECOMP = ROOT / "src_out" / "empire.retail.dll" / "decomp"
-INDEX = ROOT / "src_out" / "empire.retail.dll" / "function_index.txt"
+INDEX = ROOT / "src_canonical_out" / "empire.retail.dll" / "canonical_function_index.tsv"
 
 # Both accepted address spellings; see guard 2.
 ADDR_RE = re.compile(r"^(?:0x)?([0-9a-fA-F]{6,8})\t")
@@ -35,10 +35,11 @@ ADDR_RE = re.compile(r"^(?:0x)?([0-9a-fA-F]{6,8})\t")
 # Documented size of work/funcid_batch1_final.tsv (docs/funcid_report.md).
 BATCH1_FINAL_MIN_ROWS = 5000
 
-# Named .text addresses absent from the canonical export.  All are MSVC SEH
-# prologues that Ghidra never defined as functions; 20 of the registrar
-# handlers sit in the same class.  Fails if this grows, never if it shrinks.
-UNDEFINED_CODE_BASELINE = 1973
+# Named .text addresses that must resolve against the canonical export.  The
+# 2026-11 recovery wave created functions for all 1,973 named addresses that
+# were previously missing, plus the 20 registrar handlers, so the baseline is
+# now zero.  The guard fails if any named address loses its canonical function.
+UNDEFINED_CODE_BASELINE = 0
 
 # Successive revisions of one classification run; summing these double-counts.
 REVISION_SUFFIXES = ("_v2", "_v3", "_v4")
@@ -135,33 +136,66 @@ class CorpusIntegrityTests(unittest.TestCase):
                 % (suffix, extra),
             )
 
-    def test_undefined_code_addresses_stay_at_the_known_baseline(self):
-        """Guard 3: names must resolve to canonical functions, bar a known gap.
+    def test_named_addresses_resolve_to_canonical_functions(self):
+        """Every named corpus address must have a canonical function.
 
-        1,973 named addresses sit in ``.text`` but appear in neither
-        ``function_index.txt`` nor the canonical export.  They are real code:
-        every one sampled begins ``push ecx; push 0; push <imm32>`` -- the
-        MSVC SEH prologue that Ghidra's analyzer splits off without defining
-        a function.  The gap is real and was silently invisible before; this
-        guard fails if it *grows*, so a future export regression cannot hide
-        behind it.
+        The 2026-11 recovery wave created functions for the 1,973 named
+        addresses that were previously absent and for the 20 startup registrar
+        handlers.  The baseline is zero: a named address that no longer resolves
+        means the canonical export regressed.
         """
         if not INDEX.exists():
             self.skipTest("canonical export not present")
         indexed = set()
         for line in INDEX.read_text(encoding="utf-8", errors="replace").splitlines():
             parts = line.split("\t")
-            if parts and parts[0].startswith("0x"):
+            if not parts or not parts[0]:
+                continue
+            try:
                 indexed.add(int(parts[0], 16))
+            except ValueError:
+                continue
         named = load_named()
         self.assertGreater(len(named), 1000, "corpus looks empty")
         dangling = sorted(set(named) - indexed)
         self.assertLessEqual(
             len(dangling),
             UNDEFINED_CODE_BASELINE,
-            "%d named addresses are absent from function_index.txt (baseline "
-            "%d). New gaps mean the canonical export regressed; see "
+            "%d named addresses are absent from the canonical function index "
+            "(baseline %d). New gaps mean the canonical export regressed; see "
             "docs/funcid_track3_report.md." % (len(dangling), UNDEFINED_CODE_BASELINE),
+        )
+
+    def test_registrar_handlers_resolve_to_canonical_functions(self):
+        """The 20 startup vtable handlers must all have canonical functions."""
+        gap = WORK / "gap_addresses.tsv"
+        if not gap.exists():
+            self.skipTest("gap_addresses.tsv not present")
+        if not INDEX.exists():
+            self.skipTest("canonical export not present")
+        indexed = set()
+        for line in INDEX.read_text(encoding="utf-8", errors="replace").splitlines():
+            parts = line.split("\t")
+            if not parts or not parts[0]:
+                continue
+            try:
+                indexed.add(int(parts[0], 16))
+            except ValueError:
+                continue
+        handlers = []
+        for i, line in enumerate(gap.read_text(encoding="utf-8").splitlines()):
+            if i == 0:
+                continue
+            fields = line.split("\t")
+            if len(fields) >= 3 and fields[2] == "registrar_handler":
+                handlers.append(int(fields[0], 16))
+        self.assertEqual(len(handlers), 20, "expected 20 registrar handlers")
+        missing = sorted(set(handlers) - indexed)
+        self.assertEqual(
+            missing,
+            [],
+            "registrar handlers missing from the canonical export: %s" %
+            ", ".join("0x%08x" % a for a in missing),
         )
 
     def test_registrar_handler_reach_is_recorded(self):

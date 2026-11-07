@@ -141,5 +141,7 @@ testing disabled, no caller-closure file or target token is present in the
 generated graph, and the production DLL/host hashes remain unchanged.
 
 This closes a precise caller boundary, not the whole game. Canonical export
-coverage remains 63,326/63,326, while FuncID semantic reconstruction and a
+coverage was 63,326/63,326 at the time of this caller-closure work; the 2026-11
+recovery wave raised the corpus to 81,280 functions (see
+`docs/code_recovery_wave.md`), while FuncID semantic reconstruction and a
 playable game-equivalent runtime remain separate, much larger completion axes.

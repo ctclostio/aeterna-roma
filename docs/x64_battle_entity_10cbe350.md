@@ -119,3 +119,21 @@ The regression cleanup preserves exact authority bytes: three unit-test reads
 now avoid CRLF translation, and the historical wave wiring pin includes the
 artifact-absence skip guards already merged in `658d6a2/acfb6a1`. The oracle
 test file has an LF checkout rule so that updated pin remains reproducible.
+
+The subsequent [type and ownership milestone](type_recovery.md) adds an opaque
+`rome2_owned_battle_entity` API in `port/recovered_types/owned_entity.h`.
+It deep-copies all nine native string members and every vector element,
+captures the supplying allocator, rolls back failed construction, and releases
+through that captured authority. It publishes valid native empty sentinels.
+The legacy borrowed projection described above remains available. The new
+adapter does not claim original write-order equivalence, callable vtables, or
+the original incoming by-value string destructor.
+
+Layer 3 adds the owning copy for `FUN_101350c0`. The observed guest `+0x50`
+word now has a native field at `+0x60`; activation/count/owner fields shift
+four bytes until the climate record at `+0x80`, and the total native extent
+stays 288 bytes. The vector is now correctly named capacity/count/items at
+guest `+0xb4/+0xb8/+0xbc` and native `+0xd8/+0xdc/+0xe0`. The copy ignores
+source capacity, reconstructs the two fixed names, and deeply owns all seven
+other string members and the item strings. See
+[unit-card ownership](unitcard_ownership_recovery.md) for evidence and limits.

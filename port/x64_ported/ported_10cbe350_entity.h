@@ -244,7 +244,8 @@ typedef struct rome2_entity_ctor_args {
 
 /*
  * The reconstructed record.  Offsets come straight from the MOV [EDI+imm]
- * instructions of FUN_10cbe350; the `+0x..` marker on each line is the x86
+ * instructions of FUN_10cbe350 and its copy helper FUN_101350c0;
+ * the `+0x..` marker on each line is the x86
  * image offset, the host offset is pinned by the layout contract below.
  */
 typedef struct rome2_battle_entity {
@@ -257,6 +258,7 @@ typedef struct rome2_battle_entity {
     float                  grid_extent_min;       /* +0x03c DAT_11f958ec    */
     float                  grid_extent_max;       /* +0x040 DAT_11f958f0    */
     rome2_recovered_str    descriptor_text;       /* +0x044                 */
+    uint32_t               field_050;             /* +0x050 copied by FUN_101350c0 */
     float                  activation_radius_min; /* +0x054 literal 2048.0f */
     float                  activation_radius_max; /* +0x058 literal 2048.0f */
     uint32_t               point_count;           /* +0x05c literal 3       */
@@ -269,8 +271,8 @@ typedef struct rome2_battle_entity {
     rome2_recovered_str    label_alt;             /* +0x0a0 from arg00      */
     uint32_t               tag_lo;                /* +0x0ac arg01[0]        */
     uint32_t               tag_hi;                /* +0x0b0 arg01[1]        */
-    uint32_t               item_count;            /* +0x0b4 arg10->count    */
-    uint32_t               item_alloc_count;      /* +0x0b8 arg10->count    */
+    uint32_t               item_capacity;         /* +0x0b4 arg10->count    */
+    uint32_t               item_count;            /* +0x0b8 arg10->count    */
     rome2_recovered_str   *items;                 /* +0x0bc heap block      */
     rome2_recovered_str    effect_kind;           /* +0x0c0 arg17           */
     uint8_t                flag_0cc;              /* +0x0cc arg18 low byte  */
@@ -306,22 +308,23 @@ _Static_assert(offsetof(rome2_battle_entity, grid_extent_max) == 0x04c,
     "grid_extent_max");
 _Static_assert(offsetof(rome2_battle_entity, descriptor_text) == 0x050,
     "descriptor_text");
-_Static_assert(offsetof(rome2_battle_entity, activation_radius_min) == 0x060,
+_Static_assert(offsetof(rome2_battle_entity, field_050) == 0x060, "field_050");
+_Static_assert(offsetof(rome2_battle_entity, activation_radius_min) == 0x064,
     "activation_radius_min");
-_Static_assert(offsetof(rome2_battle_entity, point_count) == 0x068,
+_Static_assert(offsetof(rome2_battle_entity, point_count) == 0x06c,
     "point_count");
-_Static_assert(offsetof(rome2_battle_entity, owner_id) == 0x06c, "owner_id");
-_Static_assert(offsetof(rome2_battle_entity, mode) == 0x070, "mode");
-_Static_assert(offsetof(rome2_battle_entity, field_068) == 0x074, "field_068");
-_Static_assert(offsetof(rome2_battle_entity, owner_ref) == 0x078, "owner_ref");
+_Static_assert(offsetof(rome2_battle_entity, owner_id) == 0x070, "owner_id");
+_Static_assert(offsetof(rome2_battle_entity, mode) == 0x074, "mode");
+_Static_assert(offsetof(rome2_battle_entity, field_068) == 0x078, "field_068");
+_Static_assert(offsetof(rome2_battle_entity, owner_ref) == 0x07c, "owner_ref");
 _Static_assert(offsetof(rome2_battle_entity, climate) == 0x080, "climate");
 _Static_assert(offsetof(rome2_battle_entity, label_alt) == 0x0c0, "label_alt");
 _Static_assert(offsetof(rome2_battle_entity, tag_lo) == 0x0d0, "tag_lo");
 _Static_assert(offsetof(rome2_battle_entity, tag_hi) == 0x0d4, "tag_hi");
-_Static_assert(offsetof(rome2_battle_entity, item_count) == 0x0d8,
+_Static_assert(offsetof(rome2_battle_entity, item_count) == 0x0dc,
     "item_count");
-_Static_assert(offsetof(rome2_battle_entity, item_alloc_count) == 0x0dc,
-    "item_alloc_count");
+_Static_assert(offsetof(rome2_battle_entity, item_capacity) == 0x0d8,
+    "item_capacity");
 _Static_assert(offsetof(rome2_battle_entity, items) == 0x0e0, "items");
 _Static_assert(offsetof(rome2_battle_entity, effect_kind) == 0x0e8,
     "effect_kind");

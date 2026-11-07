@@ -1,13 +1,11 @@
 # Phase 4.2 — Battle Unit Card Descriptor (`0x10145c70`)
 
-Status: provisional test-only projection. Its passing value tests do not admit
-the original helper/ownership boundary. A read-only Ghidra probe on 2026-11-02
-confirmed follow-up work: `0x10145f4a` reads `E0+0x08` (arg01), then adds four
-before the `0x10132ce0` call; the current host adapter forwards arg01 directly.
-The `0x101350c0` call at `0x10145f83` also receives the allocated block in ECX,
-which the current attachment callback cannot receive. The helper calls at
-`0x10145f29` and `0x10145f35` remain unimplemented. The historical reconstruction
-notes below must be read with those outstanding gaps.
+Status: bounded test-only projection. Step 2 layer 2 corrected the typed tag
+vector source/receiver boundary and the attachment's allocated receiver. A
+separate native owner now composes the recovered tag, attachment, scalar
+containers, fauna records and typed UTF-16 lifetime for explicit decoded
+configuration. Original XML/resource setup still prevents full constructor
+equivalence. See [ownership recovery](unitcard_ownership_recovery.md) for scope.
 
 Reconstruction of the battle unit card descriptor constructor recovered from
 `empire.retail.dll`. This is the record the settlement battle benchmark harness
@@ -104,13 +102,14 @@ recover their sentinel handling, since Ghidra's summary inlines them away:
 
 | Helper | Body | Behaviour |
 |---|---|---|
-| `FUN_100f1700` | `0x100f1700..0x100f171c` | copy-assign `{length, capacity, data}`, then `FUN_100ef2c0(data, data+length)`; `RET 4` |
+| `FUN_100f1700` | `0x100f1700..0x100f171f` | deep-copy `length` bytes through `FUN_100ef2c0(data, data+length)`; resulting capacity equals length; `RET 4` |
 | `FUN_100f1800` | `0x100f1800..0x100f182d` | `strlen` then assign; `RET 4` |
 | `FUN_100f1850` | `0x100f1850..0x100f1866` | `{0, 0, 0x11af408e}`, bare `RET` |
 | `FUN_100f1c10` | `0x100f1c10..0x100f1c26` | `{0, 0, 0x11af4090}`, bare `RET` |
 | `FUN_100f1c80` | `0x100f1c80..0x100f1cb3` | rejects `0x11af408e` and `NULL`, else frees `data[-4]` |
 
-The record has ten string members. Nine use sentinel `A` (`0x11af408e`); the
+The constructor initializes fourteen descriptor members. Thirteen use sentinel
+`A` (`0x11af408e`); the
 member at `this+0x0fc` is the only one cleared through `FUN_100f1c10` and
 therefore carries sentinel `B` (`0x11af4090`). Both sentinels are zero-filled
 image regions, so they are distinguishable pointers that both spell `""`.
@@ -119,12 +118,14 @@ image regions, so they are distinguishable pointers that both spell `""`.
 
 ```
 0x10145f3a  PUSH 0x10              ; FUN_100d12b0 -> 0x10 byte tag block
+0x10145f4e  ADD ECX,0x4           ; original arg01+4 source vector
 0x10145f52  LEA ECX,[EDI+0x4]      ; construct the payload at block+4
 0x10145f5a  MOV [EDI],0x1173fae4   ; install the vtable
 0x10145f64  MOV [ESI+0x20],EDI     ; store at this+0x020
 
 0x10145f6f  PUSH 0xe8              ; FUN_100d12b0 -> 0xE8 byte attachment
-0x10145f81  CALL 0x101350c0        ; entered with arg00
+0x10145f81  MOV ECX,EAX           ; allocated attachment receiver
+0x10145f83  CALL 0x101350c0        ; source arg00 on stack
 0x10145f8c  MOV [ESI+0x1c],EAX     ; store at this+0x01c
 ```
 
@@ -139,24 +140,37 @@ ownership effects listed above prevent full constructor equivalence. The
 `RET 0x44` shape has no Win64 equivalent, so the seventeen words arrive in a
 `rome2_unit_card_args` record whose member order is the stack index.
 
-The x86 record is `0x178` bytes. Sixteen members hold a 32-bit pointer that
-becomes eight bytes on x64, and the compiler inserts eight more bytes of
-natural alignment, so the host record is `0x1C8` bytes. The header pins every
-host offset with `_Static_assert`; each declaration carries the recovered x86
-offset in a trailing comment.
+The observed x86 constructor prefix spans `0x178` bytes; this alone does not
+prove the size of the complete class. The separate native host projection is
+`0x1C8` bytes, reflecting its explicit C fields and host alignment. The header
+pins selected host offsets with `_Static_assert`; original x86 offsets are
+recorded separately. `port/recovered_types/guest32_layouts.h` now provides an
+independent fixed-width original prefix and stack-argument layout.
 
-One retail read is not modelled. `FUN_1024e480` is entered with
+`FUN_1024e480` is entered with
 `ECX = this+0x13c`, and the next write in the constructor is at `this+0x14c`.
-Nothing between those two addresses is read back inside this constructor, so
-the port guarantees only that the sixteen bytes at `+0x13c` are zeroed.
+The authenticated helper performs four zero dword stores. The recovered
+layout therefore gives that region an explicit four-word type. This does not
+establish its later methods or lifetime. The legacy host projection retains a
+zeroed byte region at its chosen native offset.
+
+The new native string runtime and typed initial-global snapshots are described
+in [type_recovery.md](type_recovery.md). The nested tag types and owning copy
+are documented in [unitcard_tag_type_recovery.md](unitcard_tag_type_recovery.md).
+Native tag storage is 24 bytes and native attachment projection storage is
+288 bytes, separately from the original 16/232-byte requests. The callback
+now receives the allocated attachment receiver. Layer 3 implements those
+subobjects and typed UTF-16 lifetime in a separate 472-byte native owning
+projection; the legacy projection remains bounded. Original XML/resource
+loading and decoding still require implementation.
 
 ## Verification
 
-`port/x64_runtime/test_battle_unitcard_10145c70.c` runs thirteen groups, each
-assertion annotated with the instruction that recovers it:
+`port/x64_runtime/test_battle_unitcard_10145c70.c` checks original projections
+and the explicit native boundary rules:
 
 - record layout and every pinned host offset;
-- both string sentinels and the ten-member census;
+- both string sentinels and the fourteen-member census;
 - the class 6 / class 14 immutability predicate;
 - every literal-zeroed field;
 - the `DAT_11afbf14`/`18` colour duplication and the `-1.0f` grid bound;
@@ -164,7 +178,9 @@ assertion annotated with the instruction that recovers it:
 - the byte-flag projection;
 - the `arg15 || DAT_11afbd20` truth table in all four combinations;
 - the mutable-class gate across seven classes;
-- the `0x10` tag block and the `0xE8` attachment;
+- typed vector source/receiver identity, native allocation extents, and the
+  separately retained original `0x10`/`0xE8` requests;
+- failures at either allocation and missing initializer guards;
 - NULL host and NULL argument guards.
 
 `assert` is elided under the `/DNDEBUG` Release profile, so the harness uses a

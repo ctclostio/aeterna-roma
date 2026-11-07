@@ -4,15 +4,17 @@
  * String bytes are borrowed; only the widened item vector is host-owned.
  */
 #include "ported_10cbe350_entity.h"
+#include "../recovered_types/image_defaults.h"
 
 #include <string.h>
 
 void rome2_entity_globals_from_image(rome2_entity_globals *globals)
 {
+    const rome2_initial_global_snapshot initial = rome2_recovered_image_defaults();
     if (globals != NULL) {
         /* Initial image values, not observations of live engine globals. */
-        globals->grid_extent_min = 0.0f;
-        globals->grid_extent_max = 0.0f;
+        globals->grid_extent_min = initial.entity_grid_min;
+        globals->grid_extent_max = initial.entity_grid_max;
     }
 }
 
@@ -139,7 +141,7 @@ rome2_battle_entity *rome2_battle_entity_ctor(rome2_battle_entity *self,
         result.tag_hi = args->arg01[1];
     }
     result.item_count = count;
-    result.item_alloc_count = count;
+    result.item_capacity = count;
     result.items = items;
     rome2_entity_str_assign_view(&result.effect_kind, args->arg17);
     result.flag_0cc = (uint8_t)args->arg18;         /* 0x10cbe505/513 */
@@ -166,6 +168,6 @@ bool rome2_battle_entity_release_items(rome2_battle_entity *self,
     }
     self->items = NULL;
     self->item_count = 0;
-    self->item_alloc_count = 0;
+    self->item_capacity = 0;
     return true;
 }

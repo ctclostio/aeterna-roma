@@ -211,11 +211,19 @@ typedef uint32_t undefined4; typedef uint64_t undefined8;
 typedef uint8_t  byte;       typedef uint16_t ushort;
 typedef uint32_t uint;       typedef uint8_t  ubyte;
 typedef int      undefined4_signed_hack_dummy;
-/* x87 extended precision (Ghidra float10); MSVC has no 80-bit long double */
-typedef long double float10;
+/* Exact storage only: numeric x87 operations need an explicit recovered port. */
+typedef struct { uint8_t bytes[10]; } float10;
 typedef int64_t  longlong;   typedef uint64_t ulonglong;
-typedef uint32_t undefined3; typedef uint32_t undefined5;
-typedef uint32_t undefined6; typedef uint64_t undefined7;
+/* Exact guest storage, not host scalar arithmetic types. */
+typedef struct { uint8_t bytes[3]; } undefined3;
+typedef struct { uint8_t bytes[5]; } undefined5;
+typedef struct { uint8_t bytes[6]; } undefined6;
+typedef struct { uint8_t bytes[7]; } undefined7;
+typedef char rome2_storage_u3_must_be_3[(sizeof(undefined3) == 3) ? 1 : -1];
+typedef char rome2_storage_u5_must_be_5[(sizeof(undefined5) == 5) ? 1 : -1];
+typedef char rome2_storage_u6_must_be_6[(sizeof(undefined6) == 6) ? 1 : -1];
+typedef char rome2_storage_u7_must_be_7[(sizeof(undefined7) == 7) ? 1 : -1];
+typedef char rome2_storage_f10_must_be_10[(sizeof(float10) == 10) ? 1 : -1];
 
 /* calling conventions collapse under MS x64 */
 #define __thiscall

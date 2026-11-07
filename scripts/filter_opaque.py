@@ -1,9 +1,38 @@
 #!/usr/bin/env python3
-"""Filter opaque_types candidates: drop any type already defined by system headers.
-Usage: python filter_opaque.py <candidates_file> <out_file>"""
-import subprocess, sys
-from pathlib import Path
+"""Generate src/include/opaque_types.h: incomplete forward declarations for
+type names whose memory layouts have not been recovered.
+
+Probe mode (legacy workflow; one MSVC compile per candidate):
+    python filter_opaque.py CANDIDATES OUT
+  Each candidate is compiled as `NAME *p;` after PROBE_PRELUDE. Names the
+  system headers already define as types are dropped; the rest are emitted
+  as incomplete struct forward declarations.
+
+Re-render mode (no compiler probes; the set of names is preserved):
+    python filter_opaque.py --rerender HEADER [--output OUT | --check]
+  Reads the names declared by an existing opaque header (legacy placeholder
+  bodies, `typedef struct NAME NAME;`, or the current form) and writes them in
+  the current form. --check exits 1 instead of writing when HEADER is stale.
+
+No mode ever emits a type body. Each name becomes
+    typedef struct opaque_NAME NAME;
+an incomplete type: pointers to it work, while sizeof, field access and
+by-value use fail to compile until a layout is recovered from evidence and
+defined elsewhere. The tag prefix keeps a name from binding to a same-named
+system struct tag; for example, windows.h defines the host x64 struct _CONTEXT.
+"""
+from __future__ import annotations
+
+import argparse
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+from collections.abc import Callable, Iterable
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 
 VCVARS = r"C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
 
@@ -22,60 +51,314 @@ PROBE_PRELUDE = (
     "#include <wtypes.h>\n"
 )
 
-EXCLUDED = {'__int8','__int16','__int32','__int64','_int8','_int16','_int32','_int64',
-            '__int128','_Float16','__cdecl','__stdcall','__thiscall','__fastcall',
-            '__declspec','__pragma','__w64','__ptr32','__ptr64','__restrict'}
+PROBE_WORKERS = 12
 
-def msvc_env():
-    import os
-    import subprocess as sp
-    cmd = f'"{VCVARS}" >nul 2>&1 && set'
-    out = sp.check_output(cmd, shell=True, text=True, errors='replace')
-    env = dict(os.environ)
+# Struct tags live in their own namespace. The prefix keeps every opaque tag
+# distinct from system tags, so each name stays incomplete. Without it,
+# 15 current names (e.g. _CONTEXT, _LIST_ENTRY, hostent) would silently
+# alias complete host-layout structs from the PROBE_PRELUDE headers, and
+# _EXCEPTION_DISPOSITION would clash with excpt.h's enum tag (C2011).
+TAG_PREFIX = "opaque_"
+
+_IDENTIFIER_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
+
+# Compiler-specific keywords (MSVC). Legacy candidate lists contain some of these;
+# they are builtins, not unknown types.
+EXCLUDED = frozenset({
+    "__int8", "__int16", "__int32", "__int64", "_int8", "_int16", "_int32", "_int64",
+    "__int128", "_Float16", "__cdecl", "__stdcall", "__thiscall", "__fastcall",
+    "__declspec", "__pragma", "__w64", "__ptr32", "__ptr64", "__restrict",
+    "__vectorcall", "__clrcall", "__inline", "__forceinline", "__asm", "__based",
+    "__try", "__except", "__finally", "__leave", "__unaligned", "__alignof",
+    "__sptr", "__uptr", "__assume", "_cdecl", "_stdcall", "_fastcall", "_inline",
+    "_asm", "_Pragma",
+})
+
+C_KEYWORDS = frozenset({
+    # C89 through C23
+    "auto", "break", "case", "char", "const", "continue", "default", "do",
+    "double", "else", "enum", "extern", "float", "for", "goto", "if", "inline",
+    "int", "long", "register", "restrict", "return", "short", "signed", "sizeof",
+    "static", "struct", "switch", "typedef", "union", "unsigned", "void",
+    "volatile", "while", "alignas", "alignof", "bool", "constexpr", "false",
+    "nullptr", "static_assert", "thread_local", "true", "typeof",
+    "typeof_unqual", "_Alignas", "_Alignof", "_Atomic", "_BitInt", "_Bool",
+    "_Complex", "_Decimal128", "_Decimal32", "_Decimal64", "_Generic",
+    "_Imaginary", "_Noreturn", "_Static_assert", "_Thread_local",
+})
+
+# Rejected too, so the generated header stays includable from C++.
+CXX_KEYWORDS = frozenset({
+    "and", "and_eq", "asm", "bitand", "bitor", "catch", "char8_t", "char16_t",
+    "char32_t", "class", "compl", "concept", "consteval", "constinit",
+    "const_cast", "co_await", "co_return", "co_yield", "decltype", "delete",
+    "dynamic_cast", "explicit", "export", "friend", "mutable", "namespace",
+    "new", "noexcept", "not", "not_eq", "operator", "or", "or_eq", "private",
+    "protected", "public", "reinterpret_cast", "requires", "static_cast",
+    "template", "this", "throw", "try", "typeid", "typename", "using",
+    "virtual", "wchar_t", "xor", "xor_eq",
+})
+
+RESERVED_WORDS = EXCLUDED | C_KEYWORDS | CXX_KEYWORDS
+
+HEADER_PREAMBLE = """\
+#pragma once
+/* Generated by scripts/filter_opaque.py -- do not edit by hand.
+ *
+ * Type names used by the legacy decompiled sources whose memory layouts have
+ * NOT been recovered. Each name is an incomplete struct type. No size,
+ * alignment, or field is implied.
+ *
+ *   Allowed:  pointers to these types (declare, store, compare, pass, return)
+ *             and extern object declarations, which allocate no storage.
+ *   Rejected: sizeof, field access, pointer arithmetic, arrays, by-value
+ *             objects, and function definitions taking or returning one of
+ *             these types by value. These need an explicitly recovered,
+ *             evidence-backed layout, defined in its own header with the
+ *             name removed from this list.
+ *
+ * Tags use the "opaque_" prefix so a name never binds to a same-named system
+ * struct (e.g. the host x64 struct _CONTEXT) with a different layout.
+ *
+ * MSVC C (14.51) accepts these ISO C constraint violations and copies nothing
+ * for them: whole-object assignment (*a = *b), passing *p by value to a
+ * prototyped function, and using a by-value call result. They are just as
+ * invalid without a recovered layout.
+ */
+"""
+
+_DECL_RE = re.compile(r"typedef struct (?P<tag>[A-Za-z_][A-Za-z0-9_]*) (?P<name>[A-Za-z_][A-Za-z0-9_]*);")
+_LEGACY_PLACEHOLDER_RE = re.compile(
+    r"typedef struct \{ unsigned char _pad_\[[0-9]+\]; \} (?P<name>[A-Za-z_][A-Za-z0-9_]*);")
+_COMMENT_RE = re.compile(r"/\*.*?\*/", re.DOTALL)
+
+
+class InvalidIdentifierError(ValueError):
+    """A type name that is not safe to emit as a C identifier."""
+
+
+def validate_identifier(name: object) -> str:
+    """Return name if it is a plain ASCII C identifier that is not reserved."""
+    if not isinstance(name, str):
+        raise InvalidIdentifierError(f"type name must be str, got {type(name).__name__}: {name!r}")
+    if not _IDENTIFIER_RE.fullmatch(name):
+        raise InvalidIdentifierError(f"not a C identifier: {name!r}")
+    if name in RESERVED_WORDS:
+        raise InvalidIdentifierError(f"reserved keyword cannot be an opaque type: {name!r}")
+    return name
+
+
+def opaque_tag(name: str) -> str:
+    return TAG_PREFIX + validate_identifier(name)
+
+
+def render_forward_declaration(name: str) -> str:
+    return f"typedef struct {opaque_tag(name)} {name};"
+
+
+def render_opaque_header(names: Iterable[str]) -> str:
+    """Render the complete header for names, deduplicated and sorted.
+
+    This function is pure and deterministic. It raises InvalidIdentifierError
+    before producing output if any name is invalid.
+    """
+    unique = sorted({validate_identifier(n) for n in names})
+    lines = [render_forward_declaration(n) for n in unique]
+    for line in lines:  # Defense in depth: no line may carry a body or storage.
+        if not _DECL_RE.fullmatch(line) or any(c in line for c in "{}[]"):
+            raise AssertionError(f"refusing to emit non-forward declaration: {line!r}")
+    return HEADER_PREAMBLE + "".join(line + "\n" for line in lines)
+
+
+def parse_opaque_header(text: str) -> list[str]:
+    """Return the sorted, deduplicated type names declared by an opaque header.
+
+    Accepts `#pragma once`, block comments, blank lines, and the declaration
+    forms this tool or its predecessors emitted. Raises ValueError for any
+    other content, so names are never silently gained or lost.
+    """
+    if "/*" in _COMMENT_RE.sub("", text):
+        raise ValueError("unterminated block comment")
+    # Keep line numbers stable for error messages.
+    stripped = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), text)
+    names: set[str] = set()
+    for lineno, raw in enumerate(stripped.splitlines(), start=1):
+        line = raw.strip()
+        if not line or line == "#pragma once":
+            continue
+        legacy = _LEGACY_PLACEHOLDER_RE.fullmatch(line)
+        if legacy:
+            names.add(validate_identifier(legacy.group("name")))
+            continue
+        decl = _DECL_RE.fullmatch(line)
+        if decl:
+            name, tag = decl.group("name"), decl.group("tag")
+            if tag not in (name, TAG_PREFIX + name):
+                raise ValueError(f"line {lineno}: tag {tag!r} does not match name {name!r}: {line!r}")
+            names.add(validate_identifier(name))
+            continue
+        raise ValueError(f"line {lineno}: unrecognized content in opaque header: {line!r}")
+    return sorted(names)
+
+
+def rerender_header(text: str) -> str:
+    return render_opaque_header(parse_opaque_header(text))
+
+
+def parse_candidates(text: str) -> list[str]:
+    """Extract candidate type names. Line rules match the legacy tool."""
+    cands = []
+    for line in text.splitlines():
+        line = line.strip().rstrip(";")
+        if not line or line.startswith("#") or line.startswith("/*"):
+            continue
+        cands.append(line.split()[-1] if " " in line else line)
+    return cands
+
+
+def classify_candidates(cands: Iterable[str]) -> tuple[list[str], list[str], list[str]]:
+    """Split candidates into (valid, reserved, invalid), each sorted and unique."""
+    valid, reserved, invalid = set(), set(), set()
+    for c in cands:
+        if c in RESERVED_WORDS:
+            reserved.add(c)
+            continue
+        try:
+            valid.add(validate_identifier(c))
+        except InvalidIdentifierError:
+            invalid.add(c)
+    return sorted(valid), sorted(reserved), sorted(invalid)
+
+
+def filter_undefined(names: Iterable[str], is_defined: Callable[[str], bool],
+                     workers: int = 1) -> tuple[list[str], list[str]]:
+    """Split validated names into (undefined, defined) using is_defined."""
+    checked = sorted({validate_identifier(n) for n in names})
+    if workers > 1:
+        with ThreadPoolExecutor(max_workers=workers) as ex:
+            verdicts = list(ex.map(is_defined, checked))
+    else:
+        verdicts = [is_defined(n) for n in checked]
+    undefined = [n for n, d in zip(checked, verdicts) if not d]
+    defined = [n for n, d in zip(checked, verdicts) if d]
+    return undefined, defined
+
+
+def msvc_env(vcvars: str = VCVARS) -> dict[str, str]:
+    """Capture the vcvars64 environment once. Keys are upper-cased because
+    Windows treats environment variable names case-insensitively."""
+    if not Path(vcvars).is_file():
+        raise FileNotFoundError(f"vcvars script not found: {vcvars}")
+    out = subprocess.run(f'"{vcvars}" >nul 2>&1 && set', shell=True, capture_output=True,
+                         text=True, errors="replace", check=True).stdout
+    env = {k.upper(): v for k, v in os.environ.items()}
     for line in out.splitlines():
-        if '=' in line:
-            k, v = line.split('=', 1)
-            if k.upper() in ('PATH', 'INCLUDE', 'LIB', 'LIBPATH', 'VCINSTALLDIR') or k.startswith('VSCMD') or k.isupper():
-                env[k] = v
+        if "=" in line and not line.startswith("="):
+            k, v = line.split("=", 1)
+            env[k.upper()] = v
     return env
 
-def probe(args):
-    t, env = args
-    if t in EXCLUDED:
-        return t, True  # drop keywords
-    if not t.replace('_', 'a').isalnum():
-        return t, True  # drop anything with weird chars
-    probe_f = Path('build_test') / f'probe_{t}.c'
-    obj_f = probe_f.with_suffix('.obj')
-    probe_f.write_text(PROBE_PRELUDE + t + " *p;\n")
-    cmd = f'cl /nologo /c /W0 "{probe_f}" /Fo"{obj_f}"'
-    r = subprocess.run(cmd, shell=True, capture_output=True, text=True, errors='replace', env=env)
-    ok = r.returncode == 0
-    probe_f.unlink(missing_ok=True)
-    obj_f.unlink(missing_ok=True)
-    return t, ok
 
-def main():
-    cands = []
-    for l in Path(sys.argv[1]).read_text().splitlines():
-        l = l.strip().rstrip(';')
-        if not l or l.startswith('#') or l.startswith('/*'):
-            continue
-        cands.append(l.split()[-1] if ' ' in l else l)
-    Path('build_test').mkdir(exist_ok=True)
+def find_cl(env: dict[str, str]) -> str:
+    cl = shutil.which("cl", path=env.get("PATH", ""))
+    if not cl:
+        raise FileNotFoundError("cl.exe not found on the vcvars PATH")
+    return cl
 
+
+def make_msvc_prober(env: dict[str, str], cl: str, workdir: Path) -> Callable[[str], bool]:
+    """Return is_defined(name). It is True when `name *p;` compiles after PROBE_PRELUDE,
+    meaning the system headers already define name as a type."""
+    def is_defined(name: str) -> bool:
+        name = validate_identifier(name)
+        # One directory per probe. NTFS is case-insensitive, so name-derived
+        # file names could collide across concurrent probes.
+        with tempfile.TemporaryDirectory(dir=workdir) as d:
+            src = Path(d) / "probe.c"
+            src.write_text(PROBE_PRELUDE + f"{name} *p;\n", encoding="ascii", newline="\n")
+            r = subprocess.run([cl, "/nologo", "/c", str(src), f"/Fo{Path(d) / 'probe.obj'}"],
+                               capture_output=True, text=True, errors="replace", env=env, cwd=d)
+        return r.returncode == 0
+    return is_defined
+
+
+def write_text_lf(path: Path, text: str) -> None:
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(text, encoding="ascii", newline="\n")
+    os.replace(tmp, path)
+
+
+def _read_text(path: Path) -> str:
+    return path.read_text(encoding="ascii")  # universal newlines: CRLF checkouts compare equal
+
+
+def run_rerender(header: Path, output: Path | None, check: bool) -> int:
+    old = _read_text(header)
+    new = rerender_header(old)
+    names = parse_opaque_header(new)
+    if check:
+        if old == new:
+            print(f"up to date: {header} ({len(names)} names)")
+            return 0
+        print(f"stale: {header}; run: python scripts/filter_opaque.py --rerender {header}",
+              file=sys.stderr)
+        return 1
+    dest = output or header
+    write_text_lf(dest, new)
+    print(f"wrote {dest}: {len(names)} incomplete forward declarations (no compiler probes)")
+    return 0
+
+
+def run_probe(candidates_path: Path, out_path: Path) -> int:
+    # Non-ASCII bytes decode to U+FFFD and are then rejected as invalid names.
+    text = candidates_path.read_text(encoding="utf-8", errors="replace")
+    valid, reserved, invalid = classify_candidates(parse_candidates(text))
+    if invalid:
+        print(f"rejected {len(invalid)} invalid candidate name(s); nothing written:", file=sys.stderr)
+        for c in invalid:
+            print(f"  {c!r}", file=sys.stderr)
+        return 2
     env = msvc_env()
-    args_list = [(t, env) for t in cands]
+    cl = find_cl(env)
+    with tempfile.TemporaryDirectory(prefix="filter_opaque_") as workdir:
+        undefined, defined = filter_undefined(valid, make_msvc_prober(env, cl, Path(workdir)),
+                                              workers=PROBE_WORKERS)
+    write_text_lf(out_path, render_opaque_header(undefined))
+    print(f"kept={len(undefined)} dropped_as_defined={len(defined)} skipped_reserved={len(reserved)}")
+    print("dropped:", " ".join(defined[:30]))
+    if reserved:
+        print("skipped reserved:", " ".join(reserved))
+    return 0
 
-    exists, missing = [], []
-    with ThreadPoolExecutor(max_workers=12) as ex:
-        for t, ok in ex.map(probe, args_list):
-            (exists if ok else missing).append(t)
-    out = ["#pragma once", "/* Auto-generated opaque fwd decls (system-collision filtered).\n   Sized dummy bodies so BY-VALUE struct use compiles; real layouts come from RTTI recovery later. */"]
-    out += [f"typedef struct {{ unsigned char _pad_[64]; }} {t};" for t in sorted(missing)]
-    Path(sys.argv[2]).write_text('\n'.join(out) + '\n')
-    print(f"kept={len(missing)} dropped_as_defined={len(exists)}")
-    print("dropped:", ' '.join(sorted(exists)[:30]))
 
-if __name__ == '__main__':
-    main()
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("candidates", nargs="?", type=Path, help="probe mode: candidate type list")
+    parser.add_argument("out", nargs="?", type=Path, help="probe mode: header to write")
+    parser.add_argument("--rerender", metavar="HEADER", type=Path,
+                        help="re-render HEADER's names without compiler probes")
+    parser.add_argument("--output", metavar="OUT", type=Path,
+                        help="with --rerender: write here instead of in place")
+    parser.add_argument("--check", action="store_true",
+                        help="with --rerender: exit 1 if HEADER is not up to date; write nothing")
+    args = parser.parse_args(argv)
+    if args.rerender:
+        if args.candidates or args.out:
+            parser.error("--rerender does not take positional arguments")
+        if args.check and args.output:
+            parser.error("--check and --output are mutually exclusive")
+        try:
+            return run_rerender(args.rerender, args.output, args.check)
+        except ValueError as e:
+            print(f"error: {e}", file=sys.stderr)
+            return 2
+    if args.output or args.check:
+        parser.error("--output/--check require --rerender")
+    if not (args.candidates and args.out):
+        parser.error("probe mode requires CANDIDATES and OUT")
+    return run_probe(args.candidates, args.out)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

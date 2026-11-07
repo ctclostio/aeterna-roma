@@ -1,0 +1,1594 @@
+{
+  "schema": "rome2-recovered-types-v1",
+  "image": {
+    "sha256": "d0d9805f41b69f2e5e9a54fbe07c327f18e311e76116e219512ad328bde43528",
+    "bytes": 28278272
+  },
+  "layout_header": "guest32_layouts.h",
+  "scope": "Original guest32 layouts and constructor prefixes, not whole-class size proofs or native vtables. Native ownership is an explicit separate adaptation.",
+  "functions": [
+    {
+      "address": "10132ce0",
+      "bytes": 534,
+      "sha256": "c837b61883a619f6e52086ce690706a1355e07e073b6130261ef60f1b201b4c4",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "ordinary_return": "receiver",
+      "scope": "tag vector copy: guest 0x88 outer / 0x4c nested elements; native allocation/cleanup is an explicit adaptation"
+    },
+    {
+      "address": "100f1aa0",
+      "bytes": 32,
+      "sha256": "cec1214bba5a2c2c8c45487abf0da2412df9dcb634da206f6f6e74f6c619e92e",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "ordinary_return": "receiver",
+      "scope": "UTF-16 descriptor copy calls FUN_100ef330; establishes tag element +0x5c width"
+    },
+    {
+      "address": "101350c0",
+      "bytes": 485,
+      "sha256": "335564a6259859e7c423cc59a49be611dfdd547cc14ac988e12cac43de9290a7",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "ordinary_return": "receiver",
+      "scope": "attachment copy boundary; no whole native copy implementation admitted yet"
+    },
+    {
+      "address": "100ef2c0",
+      "bytes": 111,
+      "sha256": "12af44082fcc9372e2f8a1e93544777c847dfba294763d08b2d7b672c8712c07",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "ordinary_return": "void",
+      "scope": "normal admitted x86 ABI; not a native callable address"
+    },
+    {
+      "address": "100ef330",
+      "bytes": 124,
+      "sha256": "b343025d84a700b1a9e37ffcafc5222ad53a23643c1c99aede37ab1e2193b93d",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "ordinary_return": "void",
+      "scope": "normal admitted x86 ABI; not a native callable address"
+    },
+    {
+      "address": "100f1700",
+      "bytes": 32,
+      "sha256": "b914ce9c4151eda34ea7777f588df95d50c9b94093c4ee3d3513192c6e5c517d",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "ordinary_return": "receiver",
+      "scope": "normal admitted x86 ABI; not a native callable address"
+    },
+    {
+      "address": "100f1800",
+      "bytes": 45,
+      "sha256": "06b2d04110cea9e1990988f408e0d6296cd3537b3e6dfceb35dd2c3f8eda39be",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "ordinary_return": "receiver",
+      "scope": "normal admitted x86 ABI; not a native callable address"
+    },
+    {
+      "address": "100f1850",
+      "bytes": 23,
+      "sha256": "0541274ac5725ae5fdaa540c970d6799ca59b91b6ec670f1c9e029bd0c0af484",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "ordinary_return": "receiver",
+      "scope": "normal admitted x86 ABI; not a native callable address"
+    },
+    {
+      "address": "100f1c10",
+      "bytes": 23,
+      "sha256": "6c689fc50bf6bfcfb73dc23095cfc6c98a757df32867c8d8b77514129bb8a2a1",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "ordinary_return": "receiver",
+      "scope": "normal admitted x86 ABI; not a native callable address"
+    },
+    {
+      "address": "100f1c80",
+      "bytes": 51,
+      "sha256": "c3b92c58ae938828a43b1d30e28633219c048958d42415bcd1569ef4296e178a",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "ordinary_return": "void",
+      "scope": "normal admitted x86 ABI; not a native callable address"
+    },
+    {
+      "address": "100f1cc0",
+      "bytes": 51,
+      "sha256": "bfd9dcaa85b434c25e5a4d48c326f43f9adf0c0b75ddf8d129030723a0f7cef4",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "ordinary_return": "void",
+      "scope": "normal admitted x86 ABI; not a native callable address"
+    },
+    {
+      "address": "100e2460",
+      "bytes": 252,
+      "sha256": "33066e9680f5ed234e0f9fcc114d0542a33b4280cda936ed55e7e6b9b7c82123",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "ordinary_return": "AL",
+      "scope": "normal admitted x86 ABI; not a native callable address"
+    },
+    {
+      "address": "1024e480",
+      "bytes": 30,
+      "sha256": "70844698163fc21a11bfa395853263ac95ca8ae05e1238e40c7df2c2c36782e0",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "ordinary_return": "receiver",
+      "scope": "normal admitted x86 ABI; not a native callable address"
+    },
+    {
+      "address": "10145c70",
+      "bytes": 832,
+      "sha256": "e2d6235963c0daebcf8aa0a1d5ea5ab74632131fb8de4ad22879fd040344d649",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 68,
+      "ordinary_return": "receiver",
+      "scope": "normal admitted x86 ABI; not a native callable address"
+    },
+    {
+      "address": "10cbe350",
+      "bytes": 512,
+      "sha256": "1a9cdb6c8d2dbeafae459afa588c05fc2f3ca2361bcde655da5183e241e55525",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 76,
+      "ordinary_return": "receiver",
+      "scope": "normal admitted x86 ABI; not a native callable address"
+    },
+    {
+      "address": "10cc1a10",
+      "bytes": 127,
+      "sha256": "2c717aad747c2446ea358488d2d4b9c0c7ddcde3c482398ced48ac23b816227c",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 24,
+      "ordinary_return": "receiver",
+      "scope": "normal admitted x86 ABI; not a native callable address"
+    },
+    {
+      "address": "10328370",
+      "bytes": 86,
+      "sha256": "bec69b504f123c179f4979be965d6aa61325848185ca5705b1eb60e0ff3d19fd",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "ordinary_return": "receiver",
+      "scope": "linked-slot constructor; native slot widths differ deliberately"
+    },
+    {
+      "address": "1064d4e0",
+      "bytes": 84,
+      "sha256": "c304d266ce00a18b711492c4128e0651f5ac9efedd5b1b4f0942790f737b9f3e",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "ordinary_return": "receiver",
+      "scope": "linked-slot constructor; native slot widths differ deliberately"
+    },
+    {
+      "address": "10132c50",
+      "bytes": 134,
+      "sha256": "93855487d37580201a8841c7517bc29a7e55d00ddc45035e57eb0e28a5af4081",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "ordinary_return": "receiver",
+      "scope": "string-vector copy: source +4 count, +8 items; capacity unread"
+    },
+    {
+      "address": "1016db10",
+      "bytes": 238,
+      "sha256": "5071978279a5e5d8a3b3f42137c3da5a1bc1b44ccc26b0503a6ba0c2c1f3d863",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "ordinary_return": "unused",
+      "scope": "unit-card word vector append and shared index update"
+    },
+    {
+      "address": "101a9110",
+      "bytes": 249,
+      "sha256": "ce6104ce5aaebc513b057f1f95fbff0cfbce28eacf92ce36422706d08df6184c",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "ordinary_return": "unused",
+      "scope": "pair-vector append; alias-aware growth"
+    },
+    {
+      "address": "1016ee30",
+      "bytes": 163,
+      "sha256": "be8cabd54e9cae85afccf060aabe7f2a02baeb269fd64fd6904ce55c30ac1cb2",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "ordinary_return": "unused",
+      "scope": "append normalized float pair and shared index update; finite native domain"
+    },
+    {
+      "address": "101a97f0",
+      "bytes": 312,
+      "sha256": "43546682f03ffd38f54c96ca875f9fc0315afdcbbce3f533811d63449fc5d94c",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "ordinary_return": "unused",
+      "scope": "nested fauna cleanup, count reset, optional XML/resource setup; native decoded branch only"
+    },
+    {
+      "address": "1015e280",
+      "bytes": 140,
+      "sha256": "80c3144839e509fe86470b4d802d7f324f1c7b9b8d84b09a35ad2b8ee3866d6c",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "ordinary_return": "unused",
+      "scope": "ECX points to a holder containing the card pointer; XML child iteration"
+    },
+    {
+      "address": "101a8b20",
+      "bytes": 453,
+      "sha256": "e89fce40e952142bb6e87c934c3f5973fdd0e30aa7e45a59a059878375bf2180",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "ordinary_return": "unused",
+      "scope": "44-byte fauna record append; transfer nested string vector ownership on growth"
+    },
+    {
+      "address": "10141630",
+      "bytes": 3014,
+      "sha256": "87874ccbde25374e0c2aa5cf160dac93fade867daab928bbf0b55c3393f9c582",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "ordinary_return": "receiver",
+      "scope": "XML fauna decoder; native XML adapter, semantic record decoder and resource-backed factory implemented in admitted domain"
+    },
+    {
+      "address": "100d79c0",
+      "bytes": 231,
+      "sha256": "ee17e4294b12e22415ffbc29ebec421349baf6315129c827234a0da87efbc8b5",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX bucket value address or zero",
+      "scope": "UTF16 keyed hash lookup, 16-byte buckets",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations"
+    },
+    {
+      "address": "100f28a0",
+      "bytes": 53,
+      "sha256": "030760392678649f424695d9dea0545c5fa6ea6355885677abefbb823fa0060e",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "AL boolean",
+      "scope": "length-bounded narrow descriptor equality",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations"
+    },
+    {
+      "address": "100f28e0",
+      "bytes": 61,
+      "sha256": "aa47db69795299a7bc84176e6dd5438ecf45ff60e4f3f567fecab68547433ab1",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "AL boolean",
+      "scope": "narrow descriptor compared with NUL-terminated literal",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations"
+    },
+    {
+      "address": "100f2920",
+      "bytes": 57,
+      "sha256": "a9655eb471577651de98eb090d11b58ea2a5781987bd3481b1c8420bbea592fe",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "AL boolean",
+      "scope": "case-sensitive UTF16 descriptor equality",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations"
+    },
+    {
+      "address": "10102bc0",
+      "bytes": 70,
+      "sha256": "f282cabf1598dc93f7b64dbfa9c34dbdd4ecca9fca68c0fc3ef5724a995f1908",
+      "receiver_register": "none",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "unused",
+      "scope": "ASCII lowercase in prepared byte buffer; publish output descriptor",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations"
+    },
+    {
+      "address": "10103d10",
+      "bytes": 430,
+      "sha256": "d1b60e61df85d91470268086e7d928db2cab90ab2cf944bd243f36f8128ea916",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX output descriptor",
+      "scope": "encode each UTF16 unit independently into one/two/three bytes",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations"
+    },
+    {
+      "address": "101053f0",
+      "bytes": 90,
+      "sha256": "809fc71f24ac20aae58273986f7f725c27be953beadf25253989a1bf4aca2320",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "AL full-length success",
+      "scope": "unsigned decimal multiply-add modulo2^32; no sign/space",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations"
+    },
+    {
+      "address": "101705f0",
+      "bytes": 127,
+      "sha256": "26ae9a22de463fa3ad13171ea56f393b1a64d632f693d6dd7fa527a81fbe1a7c",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "ST0 from binary32",
+      "scope": "UTF16 string to float via wide stream, initialized zero fallback",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations"
+    },
+    {
+      "address": "10182e60",
+      "bytes": 4,
+      "sha256": "840cd7c1c41b518c1fe191951395dcac56c16a63d65f97ad855355ba794b2ca7",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX name descriptor",
+      "scope": "XML name at receiver+8",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations"
+    },
+    {
+      "address": "101b9270",
+      "bytes": 17,
+      "sha256": "30364f342efd6b5b4cba03b97371f659a77d747667ac418358002a789188ee52",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "AL ready",
+      "scope": "follow linked state source at+0, read root ready flag+4",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations"
+    },
+    {
+      "address": "10cbb440",
+      "bytes": 36,
+      "sha256": "40cf5cc4e28c468706917340bc3f127672f1fb7c72546962c48cafb8966af04c",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX consumed as conversion count",
+      "scope": "variadic CRT scan wrapper; first two fixed stack arguments",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations",
+      "variadic": true,
+      "stack_argument_bytes_scope": "minimum fixed argument extent; variadic tail is call-dependent"
+    },
+    {
+      "address": "112aab60",
+      "bytes": 379,
+      "sha256": "ea68dd52eb9b50bd4f3decd6873d91d66d2735e6bcaea3315d10646b1b6d9b8b",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX receiver",
+      "scope": "known 128-byte XML prefix constructor and supplied loader callback",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations"
+    },
+    {
+      "address": "112b5130",
+      "bytes": 32,
+      "sha256": "7ee533d35e02cedc05fe5345368a3a0f84a49afae039f74182bb37b0db9b2845",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX child count",
+      "scope": "ready XML child count+0x6c",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations"
+    },
+    {
+      "address": "112b5150",
+      "bytes": 75,
+      "sha256": "dbdffd84ddaeb14b36d3f83174a4a27c825f02e557c942b375ecacb5a11e4734",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX first matching node",
+      "scope": "named child table+0x20; first item; selected flag+5",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations"
+    },
+    {
+      "address": "112b51a0",
+      "bytes": 43,
+      "sha256": "2994bf876f23221663bbfd331706fe2de37bbf70af828ef566ab5cb98167bde3",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX node",
+      "scope": "ordinal child via pointer array+0x70",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations"
+    },
+    {
+      "address": "112b51d0",
+      "bytes": 51,
+      "sha256": "e534640921276926aa458c6dff34bb791d79b1d64087d6651040e4407b68685a",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX zero/one",
+      "scope": "ready XML named-child existence query",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations"
+    },
+    {
+      "address": "113467a0",
+      "bytes": 134,
+      "sha256": "9bd1e2c402aafb666a53c95c2abcc497ff2dd8f419e0450dc058aabf699bec77",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX stream",
+      "scope": "wide stream float extraction and stream-state update",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations"
+    },
+    {
+      "address": "11346920",
+      "bytes": 87,
+      "sha256": "40033bb663769b04f133754b9bd1e25098b1e66231d8d817e4ae67128c6ba9cc",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX stream",
+      "scope": "insert NUL-terminated UTF16 units into wide stream",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations"
+    },
+    {
+      "address": "11347490",
+      "bytes": 477,
+      "sha256": "80ece9def6d60c3ffd3984a18d8b555650acaed0cbbbd4623c672be057818369",
+      "receiver_register": "none",
+      "stack_argument_bytes": 32,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "output parameters",
+      "scope": "normalized float scan and separately rounded SSE MULSS scaling",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations"
+    },
+    {
+      "address": "11347ed0",
+      "bytes": 3699,
+      "sha256": "eff52de57e3707c4416cba79344ec46f6df1c39e0d04488dffa83bb81c311fc8",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX decimal adjustment",
+      "scope": "bounded 36-digit mantissa and eight-digit exponent token normalizer",
+      "abi_authority": "root inference from retained assembly; not callable native addresses or original source declarations",
+      "return_instruction_addresses": [
+        "11348bc9"
+      ],
+      "return_instruction_authority": "all RET instructions from complete REA assembly; body ends in a backward JMP"
+    }
+  ],
+  "globals": [
+    {
+      "address": "11af4088",
+      "width": 1,
+      "kind": "narrow terminator byte",
+      "initial_hex_le": "00",
+      "storage": "zero_fill",
+      "scope": "initial image snapshot; not live process state"
+    },
+    {
+      "address": "11af408e",
+      "width": 1,
+      "kind": "narrow empty sentinel byte",
+      "initial_hex_le": "00",
+      "storage": "zero_fill",
+      "scope": "initial image snapshot; not live process state"
+    },
+    {
+      "address": "11af4090",
+      "width": 2,
+      "kind": "UTF-16 empty sentinel unit",
+      "initial_hex_le": "0000",
+      "storage": "zero_fill",
+      "scope": "initial image snapshot; not live process state"
+    },
+    {
+      "address": "119f3eb0",
+      "width": 4,
+      "kind": "optional allocation observer code identity",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial image snapshot; not live process state"
+    },
+    {
+      "address": "11afbf14",
+      "width": 4,
+      "kind": "unit-card colour float bits",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial image snapshot; not live process state"
+    },
+    {
+      "address": "11afbf18",
+      "width": 4,
+      "kind": "unit-card colour float bits",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial image snapshot; not live process state"
+    },
+    {
+      "address": "11afbd20",
+      "width": 1,
+      "kind": "unit-card flag byte",
+      "initial_hex_le": "00",
+      "storage": "zero_fill",
+      "scope": "initial image snapshot; not live process state"
+    },
+    {
+      "address": "11971460",
+      "width": 4,
+      "kind": "unit-card extent float bits",
+      "initial_hex_le": "000080bf",
+      "storage": "file",
+      "scope": "initial image snapshot; not live process state"
+    },
+    {
+      "address": "11971464",
+      "width": 4,
+      "kind": "unit-card extent float bits",
+      "initial_hex_le": "000080bf",
+      "storage": "file",
+      "scope": "initial image snapshot; not live process state"
+    },
+    {
+      "address": "11f958ec",
+      "width": 4,
+      "kind": "entity extent float bits",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial image snapshot; not live process state"
+    },
+    {
+      "address": "11f958f0",
+      "width": 4,
+      "kind": "entity extent float bits",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial image snapshot; not live process state"
+    },
+    {
+      "address": "1173e2d0",
+      "width": 4,
+      "initial_hex_le": "0000803f",
+      "storage": "file",
+      "interpretation": "binary32 1.0, coordinate squared-length threshold"
+    },
+    {
+      "address": "11745360",
+      "width": 4,
+      "initial_hex_le": "00002041",
+      "storage": "file",
+      "interpretation": "probability positive scale binary32 10"
+    },
+    {
+      "address": "118a1418",
+      "width": 4,
+      "initial_hex_le": "8096184b",
+      "storage": "file",
+      "interpretation": "probability grouped positive scale binary32 10000000"
+    },
+    {
+      "address": "1173e2bc",
+      "width": 4,
+      "initial_hex_le": "cdcccc3d",
+      "storage": "file",
+      "interpretation": "probability negative scale binary32 0.1"
+    },
+    {
+      "address": "118a1414",
+      "width": 4,
+      "initial_hex_le": "97bfd633",
+      "storage": "file",
+      "interpretation": "probability grouped negative scale exact binary32 bits0x33d6bf97"
+    },
+    {
+      "address": "1177f34c",
+      "width": 4,
+      "initial_hex_le": "25660000",
+      "storage": "file",
+      "interpretation": "CRT input format ASCII percent-f and padding"
+    },
+    {
+      "address": "1174e2b4",
+      "width": 5,
+      "initial_hex_le": "6465657200",
+      "storage": "file",
+      "interpretation": "ASCII animal literal deer"
+    },
+    {
+      "address": "1174e2bc",
+      "width": 5,
+      "initial_hex_le": "776f6c6600",
+      "storage": "file",
+      "interpretation": "ASCII animal literal wolf"
+    },
+    {
+      "address": "1174e2c4",
+      "width": 5,
+      "initial_hex_le": "6c696f6e00",
+      "storage": "file",
+      "interpretation": "ASCII animal literal lion"
+    },
+    {
+      "address": "1174e2cc",
+      "width": 9,
+      "initial_hex_le": "656c657068616e7400",
+      "storage": "file",
+      "interpretation": "ASCII animal literal elephant"
+    },
+    {
+      "address": "1174e2d8",
+      "width": 6,
+      "initial_hex_le": "63616d656c00",
+      "storage": "file",
+      "interpretation": "ASCII animal literal camel"
+    },
+    {
+      "address": "1174e2e0",
+      "width": 5,
+      "initial_hex_le": "626f617200",
+      "storage": "file",
+      "interpretation": "ASCII animal literal boar"
+    },
+    {
+      "address": "1174e2e8",
+      "width": 6,
+      "initial_hex_le": "686f72736500",
+      "storage": "file",
+      "interpretation": "ASCII animal literal horse"
+    },
+    {
+      "address": "1174e2f0",
+      "width": 6,
+      "initial_hex_le": "6d696c616e00",
+      "storage": "file",
+      "interpretation": "ASCII animal literal milan"
+    },
+    {
+      "address": "1174e2f8",
+      "width": 8,
+      "initial_hex_le": "76756c7475726500",
+      "storage": "file",
+      "interpretation": "ASCII animal literal vulture"
+    },
+    {
+      "address": "1174e300",
+      "width": 12,
+      "initial_hex_le": "747572746c655f646f766500",
+      "storage": "file",
+      "interpretation": "ASCII animal literal turtle_dove"
+    },
+    {
+      "address": "1174e30c",
+      "width": 5,
+      "initial_hex_le": "63726f7700",
+      "storage": "file",
+      "interpretation": "ASCII animal literal crow"
+    },
+    {
+      "address": "1174e314",
+      "width": 5,
+      "initial_hex_le": "6962697300",
+      "storage": "file",
+      "interpretation": "ASCII animal literal ibis"
+    },
+    {
+      "address": "1174e31c",
+      "width": 8,
+      "initial_hex_le": "70656173616e7400",
+      "storage": "file",
+      "interpretation": "ASCII animal literal peasant"
+    },
+    {
+      "address": "1174e324",
+      "width": 6,
+      "initial_hex_le": "7768616c6500",
+      "storage": "file",
+      "interpretation": "ASCII animal literal whale"
+    },
+    {
+      "address": "1174e32c",
+      "width": 8,
+      "initial_hex_le": "73656167756c6c00",
+      "storage": "file",
+      "interpretation": "ASCII animal literal seagull"
+    },
+    {
+      "address": "1174e334",
+      "width": 26,
+      "initial_hex_le": "6d0069006e005f0065006e007400690074006900650073000000",
+      "storage": "file",
+      "interpretation": "UTF16 XML key/path min_entities"
+    },
+    {
+      "address": "1174e350",
+      "width": 26,
+      "initial_hex_le": "6d00610078005f0065006e007400690074006900650073000000",
+      "storage": "file",
+      "interpretation": "UTF16 XML key/path max_entities"
+    },
+    {
+      "address": "1174e36c",
+      "width": 36,
+      "initial_hex_le": "73007000610077006e005f00700072006f0062006100620069006c006900740079000000",
+      "storage": "file",
+      "interpretation": "UTF16 XML key/path spawn_probability"
+    },
+    {
+      "address": "1174e390",
+      "width": 34,
+      "initial_hex_le": "73007000610077006e005f0063006f006e0064006900740069006f006e0073000000",
+      "storage": "file",
+      "interpretation": "UTF16 XML key/path spawn_conditions"
+    },
+    {
+      "address": "1174e3b4",
+      "width": 16,
+      "initial_hex_le": "63006c0069006d006100740065000000",
+      "storage": "file",
+      "interpretation": "UTF16 XML key/path climate"
+    },
+    {
+      "address": "1174e3c4",
+      "width": 10,
+      "initial_hex_le": "740069006c0065000000",
+      "storage": "file",
+      "interpretation": "UTF16 XML key/path tile"
+    },
+    {
+      "address": "1174e3e4",
+      "width": 14,
+      "initial_hex_le": "73006500610073006f006e000000",
+      "storage": "file",
+      "interpretation": "UTF16 XML key/path season"
+    },
+    {
+      "address": "1174e418",
+      "width": 24,
+      "initial_hex_le": "740069006d0065005f006f0066005f006400610079000000",
+      "storage": "file",
+      "interpretation": "UTF16 XML key/path time_of_day"
+    },
+    {
+      "address": "1174e430",
+      "width": 28,
+      "initial_hex_le": "700072006500630069007000690074006100740069006f006e000000",
+      "storage": "file",
+      "interpretation": "UTF16 XML key/path precipitation"
+    },
+    {
+      "address": "1174e7d0",
+      "width": 26,
+      "initial_hex_le": "6600610075006e0061005f0063006f006e006600690067000000",
+      "storage": "file",
+      "interpretation": "UTF16 XML key/path fauna_config"
+    },
+    {
+      "address": "1174eaa8",
+      "width": 48,
+      "initial_hex_le": "5300630072006900700074002f006600610075006e0061005f0063006f006e006600690067002e0078006d006c000000",
+      "storage": "file",
+      "interpretation": "UTF16 XML key/path Script/fauna_config.xml"
+    },
+    {
+      "address": "1174e3d0",
+      "width": 7,
+      "initial_hex_le": "696e6c616e6400",
+      "storage": "file",
+      "interpretation": "ASCII condition literal inland"
+    },
+    {
+      "address": "1174e3d8",
+      "width": 9,
+      "initial_hex_le": "6f70656e5f73656100",
+      "storage": "file",
+      "interpretation": "ASCII condition literal open_sea"
+    },
+    {
+      "address": "1174e124",
+      "width": 8,
+      "initial_hex_le": "636f617374616c00",
+      "storage": "file",
+      "interpretation": "ASCII condition literal coastal"
+    },
+    {
+      "address": "1174e3f4",
+      "width": 4,
+      "initial_hex_le": "616e7900",
+      "storage": "file",
+      "interpretation": "ASCII condition literal any"
+    },
+    {
+      "address": "1174e3f8",
+      "width": 7,
+      "initial_hex_le": "737072696e6700",
+      "storage": "file",
+      "interpretation": "ASCII condition literal spring"
+    },
+    {
+      "address": "1174e400",
+      "width": 7,
+      "initial_hex_le": "73756d6d657200",
+      "storage": "file",
+      "interpretation": "ASCII condition literal summer"
+    },
+    {
+      "address": "1174e408",
+      "width": 7,
+      "initial_hex_le": "617574756d6e00",
+      "storage": "file",
+      "interpretation": "ASCII condition literal autumn"
+    },
+    {
+      "address": "1174e410",
+      "width": 7,
+      "initial_hex_le": "77696e74657200",
+      "storage": "file",
+      "interpretation": "ASCII condition literal winter"
+    },
+    {
+      "address": "1173fa6c",
+      "width": 4,
+      "initial_hex_le": "64617900",
+      "storage": "file",
+      "interpretation": "ASCII condition literal day"
+    },
+    {
+      "address": "1173fa70",
+      "width": 6,
+      "initial_hex_le": "6e6967687400",
+      "storage": "file",
+      "interpretation": "ASCII condition literal night"
+    },
+    {
+      "address": "1173f9e0",
+      "width": 4,
+      "initial_hex_le": "64727900",
+      "storage": "file",
+      "interpretation": "ASCII condition literal dry"
+    },
+    {
+      "address": "1173f9e4",
+      "width": 5,
+      "initial_hex_le": "7261696e00",
+      "storage": "file",
+      "interpretation": "ASCII condition literal rain"
+    },
+    {
+      "address": "1173f984",
+      "width": 5,
+      "initial_hex_le": "736e6f7700",
+      "storage": "file",
+      "interpretation": "ASCII condition literal snow"
+    },
+    {
+      "address": "1173f9ec",
+      "width": 4,
+      "initial_hex_le": "666f6700",
+      "storage": "file",
+      "interpretation": "ASCII condition literal fog"
+    }
+  ],
+  "vtables": [
+    {
+      "address": "1173fae4",
+      "first_slot_code_identity": "10cecea0",
+      "scope": "first slot only; native prototype and complete table length unresolved"
+    },
+    {
+      "address": "1174bbb0",
+      "first_slot_code_identity": "10163230",
+      "scope": "first slot only; native prototype and complete table length unresolved"
+    },
+    {
+      "address": "1174bbd4",
+      "first_slot_code_identity": "1015e4df",
+      "scope": "first slot only; native prototype and complete table length unresolved"
+    },
+    {
+      "address": "1174bbfc",
+      "first_slot_code_identity": "1015e4e7",
+      "scope": "first slot only; native prototype and complete table length unresolved"
+    },
+    {
+      "address": "1174e12c",
+      "first_slot_code_identity": "10162f60",
+      "scope": "first slot only; native prototype and complete table length unresolved"
+    },
+    {
+      "address": "1174e150",
+      "first_slot_code_identity": "1015e4c7",
+      "scope": "first slot only; native prototype and complete table length unresolved"
+    },
+    {
+      "address": "1174e178",
+      "first_slot_code_identity": "1015e4cf",
+      "scope": "first slot only; native prototype and complete table length unresolved"
+    },
+    {
+      "address": "1174dfec",
+      "first_slot_code_identity": "101631a0",
+      "scope": "first slot only; native prototype and complete table length unresolved"
+    },
+    {
+      "address": "1174e010",
+      "first_slot_code_identity": "1015e4d7",
+      "scope": "first slot only; native prototype and complete table length unresolved"
+    }
+  ],
+  "instruction_witnesses": [
+    {
+      "address": "10145f4a",
+      "hex": "8b4c241083c104518d4f04e886cdfeffc707e4fa7311",
+      "purpose": "arg01+4 source, block+4 receiver, FUN_10132ce0, then tag vtable identity"
+    },
+    {
+      "address": "10145f80",
+      "hex": "578bc8e838f1feff",
+      "purpose": "attachment source pushed, allocated block in ECX, FUN_101350c0"
+    },
+    {
+      "address": "100ef2c0",
+      "hex": "568bf18b0689460485c0750bc746088e40af",
+      "purpose": "length/capacity prefix"
+    },
+    {
+      "address": "100f1850",
+      "hex": "c701000000008bc1c7410400000000c741088e40af11c3",
+      "purpose": "empty triple writes"
+    },
+    {
+      "address": "100f1c10",
+      "hex": "c701000000008bc1c7410400000000c741089040af11c3",
+      "purpose": "UTF-16 empty triple writes"
+    },
+    {
+      "address": "1024e480",
+      "hex": "c701000000008bc1c7410400000000c7410800000000c7410c00000000c3",
+      "purpose": "four dwords and receiver return"
+    },
+    {
+      "address": "10cbe3b3",
+      "hex": "8b4c24408b018947288b41048d4f30",
+      "purpose": "origin source and two-word projection"
+    },
+    {
+      "address": "10cbe486",
+      "hex": "8b4b04",
+      "purpose": "source descriptor count +4"
+    },
+    {
+      "address": "10cbe4e0",
+      "hex": "83c60c83c30c",
+      "purpose": "twelve-byte string vector strides"
+    },
+    {
+      "address": "10cc1a8c",
+      "hex": "c21800",
+      "purpose": "climate stack-pop boundary"
+    },
+    {
+      "address": "10cbe54d",
+      "hex": "c24c00",
+      "purpose": "entity stack-pop boundary"
+    },
+    {
+      "address": "10145fad",
+      "hex": "c24400",
+      "purpose": "unit-card stack-pop boundary"
+    },
+    {
+      "address": "1013515a",
+      "hex": "8b46508d4c2408894750",
+      "purpose": "attachment source +0x50 load and destination +0x50 store"
+    },
+    {
+      "address": "1016db10",
+      "hex": "568bf18b56608b465c3bd0730f8b4e648b442408890491",
+      "purpose": "word vector capacity +0x5c, count +0x60 and backing +0x64"
+    },
+    {
+      "address": "101a9110",
+      "hex": "56578bf98b77048b073bf0731b8b5708",
+      "purpose": "pair vector capacity +0, count +4 and backing +8"
+    },
+    {
+      "address": "1016ee3b",
+      "hex": "568d4f68e8cca20300",
+      "purpose": "coordinate vector receiver is unit-card+0x68"
+    },
+    {
+      "address": "1016ee5e",
+      "hex": "f30f59d4f30f59c3f30f115c2408f30f1164240cf30f58d00f2fd176220f57c0f30f51c2f30f5ec80f28c1f30f59ccf30f59c3f30f114c240cf30f11442408",
+      "purpose": "binary32 y*y + x*x, compare, sqrt, reciprocal and separate products"
+    },
+    {
+      "address": "101a9802",
+      "hex": "6b86600100002c8b9e6401000003c33bd8",
+      "purpose": "fauna count +0x160, backing +0x164 and 44-byte stride"
+    },
+    {
+      "address": "101a9860",
+      "hex": "c7866001000000000000",
+      "purpose": "setup clears fauna count; capacity/backing retained"
+    },
+    {
+      "address": "1015e2b2",
+      "hex": "8b0f8d4424145081c15c010000e85ca80400",
+      "purpose": "setup callback dereferences holder then adds +0x15c for fauna append"
+    },
+    {
+      "address": "10105419",
+      "hex": "8d0c8003c9890e83c1d00fb70283c20203c18906",
+      "purpose": "uint decimal modulo32 multiply-add and next UTF16 unit"
+    },
+    {
+      "address": "10102bd7",
+      "hex": "80f9417c0b80f95a7f0680c120880c02",
+      "purpose": "ASCII uppercase A..Z only, add0x20 in prepared buffer"
+    },
+    {
+      "address": "112aab68",
+      "hex": "8d4e08c7060000000066c746040100e89470e4fe68f8b573118d4e14e82770e4fe",
+      "purpose": "XML name+8, text+0x14 and ready/selected flags initialization"
+    },
+    {
+      "address": "112aaca6",
+      "hex": "c7466c00000000c7467000000000c7467400000000c7467800000000c7467c00000000",
+      "purpose": "XML children count+0x6c/items+0x70 and last known word+0x7c"
+    },
+    {
+      "address": "112b514b",
+      "hex": "8b466c5ec3",
+      "purpose": "XML child count at+0x6c"
+    },
+    {
+      "address": "112b516b",
+      "hex": "8d4e20e84d28e2fe",
+      "purpose": "named-child table receiver at+0x20"
+    },
+    {
+      "address": "112b518c",
+      "hex": "8b005e8b40088b00c6400501c20400",
+      "purpose": "load named list, items+8, first pointer and selected flag+5"
+    },
+    {
+      "address": "112b51bd",
+      "hex": "8b4e708b4424085e8b0481",
+      "purpose": "ordinal XML child pointer through+0x70"
+    },
+    {
+      "address": "113474f5",
+      "hex": "f30f59c1f30f59c2",
+      "purpose": "two separate binary32 positive grouped scaling multiplications"
+    },
+    {
+      "address": "11347550",
+      "hex": "f30f59c1f30f59c2",
+      "purpose": "two separate binary32 negative grouped scaling multiplications"
+    },
+    {
+      "address": "11347570",
+      "hex": "f30f59c1",
+      "purpose": "negative remainder multiplication remains MULSS"
+    },
+    {
+      "address": "113480f0",
+      "hex": "83fd24",
+      "purpose": "36 significant mantissa digit limit"
+    }
+  ],
+  "ownership": {
+    "10132ce0": {
+      "vector_bytes": 12,
+      "source_capacity": "unread",
+      "source_count_offset": 4,
+      "source_items_offset": 8,
+      "destination_capacity": "source count",
+      "destination_count": "source count",
+      "outer_stride": 136,
+      "outer_string8_offset": 0,
+      "outer_string16_offset": 92,
+      "nested_vector_offset": 124,
+      "nested_stride": 76,
+      "nested_string8_offset": 0,
+      "outer_bit_copy_ranges": [
+        [
+          12,
+          16
+        ],
+        [
+          28,
+          2
+        ],
+        [
+          32,
+          48
+        ],
+        [
+          80,
+          7
+        ],
+        [
+          88,
+          4
+        ],
+        [
+          104,
+          20
+        ]
+      ],
+      "nested_bit_copy_ranges": [
+        [
+          12,
+          64
+        ]
+      ],
+      "unobserved_outer_ranges": [
+        [
+          30,
+          2
+        ],
+        [
+          87,
+          1
+        ]
+      ],
+      "scope": "copy-domain evidence, not semantic identities of scalar words or original destructor order"
+    },
+    "100ef2c0": {
+      "element_bytes": 1,
+      "allocation_extra_bytes": 9,
+      "capacity": "length",
+      "payload_alignment_bytes": 4,
+      "hidden_guest_raw_base_bytes": 4
+    },
+    "100ef330": {
+      "element_bytes": 2,
+      "allocation_extra_bytes": 10,
+      "capacity": "length_units",
+      "payload_alignment_bytes": 4,
+      "hidden_guest_raw_base_bytes": 4
+    },
+    "native_adaptation": "Separate non-copyable native owners retain raw allocation and matching release callbacks; no host pointer is stored in the guest hidden cell.",
+    "101a8b20": {
+      "guest_record_bytes": 44,
+      "nested_string_vector_offset": 32,
+      "nested_count_offset": 36,
+      "nested_items_offset": 40,
+      "growth": "capacity 0->1 then double",
+      "relocation": "copy record then zero old nested-vector cells +0x20/+0x24/+0x28",
+      "native_adaptation": "private string owners stay at stable addresses; only views and owner pointers relocate",
+      "scalar_dwords": 8
+    },
+    "101a97f0": {
+      "guest_vector_offset": 348,
+      "count_offset": 352,
+      "backing_offset": 356,
+      "clear": "destroy every nested string vector, set count=0, retain outer capacity/backing",
+      "default_resource": "Script/fauna_config.xml",
+      "root_key": "fauna_config",
+      "native_scope": "decoded API plus default-resource PFH4/XML adapter factory/reload; explicit mount order and explicit errors; full engine VFS/loader behavior remains unadmitted"
+    },
+    "1015e280": {
+      "receiver": "pointer to holder containing card guest identity at +0",
+      "stack_argument": "opaque XML node guest identity",
+      "append_receiver": "holder.card + 0x15c"
+    },
+    "10141630": {
+      "guest_record_bytes": 44,
+      "native_record_bytes": 48,
+      "scalar_offsets": {
+        "animal_type": 0,
+        "min_entities": 4,
+        "max_entities": 8,
+        "spawn_probability_binary32": 12,
+        "tile_mask": 16,
+        "season_mask": 20,
+        "time_of_day_mask": 24,
+        "precipitation_mask": 28
+      },
+      "animal_ids": {
+        "deer": 0,
+        "wolf": 1,
+        "lion": 2,
+        "elephant": 3,
+        "camel": 4,
+        "boar": 5,
+        "horse": 6,
+        "milan": 7,
+        "turtle_dove": 8,
+        "crow": 9,
+        "vulture": 10,
+        "ibis": 11,
+        "peasant": 12,
+        "whale": 13,
+        "seagull": 14
+      },
+      "default_animal_id": 0,
+      "nested_climate_vector_offset": 32,
+      "key_comparison": "UTF16 case-sensitive; first matching scalar node; all repeated condition/climate nodes in document order",
+      "values": "independent UTF16-unit byte encoding then ASCII lowercase",
+      "uint_parser": "digits only, modulo2^32; any invalid character makes scalar zero",
+      "float_parser": "36 significant mantissa digits, eight exponent digits, percent-f scan then original separately rounded MULSS scaling; private C locale adaptation"
+    },
+    "112aab60": {
+      "guest_known_prefix_bytes": 128,
+      "name_offset": 8,
+      "text_offset": 20,
+      "named_index_offset": 32,
+      "secondary_index_offset": 68,
+      "bucket_strides": [
+        16,
+        48
+      ],
+      "children_capacity_offset": 104,
+      "children_count_offset": 108,
+      "children_items_offset": 112,
+      "class_size_complete": false,
+      "native_adapter": "independent owned XmlLite DOM, not a native overlay of guest layout"
+    }
+  },
+  "rea_evidence": {
+    "evidence_id": "ev_e221a4f06bb4df691902dfef8a7b4f6835c07a5ca27cfb629bedfbcdae0a75cc",
+    "operation": "analyze_function",
+    "provider": "ghidra",
+    "procedure": "0x100ef2c0",
+    "retained_local_path": "out/type-recovery-20261103/rea-string-function.json",
+    "retained_record_sha256": "c64574176d6e99cf8de6b748fbf251beab11206ce35c91211e30579715b435e6",
+    "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x100ef2c0 --provider ghidra --format json",
+    "scope": "static analysis; decompiler types are observations, not source declarations"
+  },
+  "rea_layer2_evidence": {
+    "provider": "ghidra",
+    "version": "12.1.3",
+    "scope": "static observations from a private immutable-source session; no shared database edits or native callable vtable claims",
+    "records": [
+      {
+        "evidence_id": "ev_1e5fef19ff860e18bd220c5bce833b9d165b4d056aa7432ed8aedf7aeba823d2",
+        "operation": "analyze_function",
+        "procedure": "0x10132ce0",
+        "retained_local_path": "out/type-layer2-20261103/tag-copy.json",
+        "retained_record_sha256": "15da2abb45b194efaf32dc1b7d1e468961d4e06d1745d6a61e98067ed9eaf661",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x10132ce0 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_40720dc470541c21756ede0f0c0413312b73009a56ef6a5c6b5ce35c4fb36365",
+        "operation": "inspect_analysis_view",
+        "procedure": "0x100f1aa0",
+        "retained_local_path": "out/type-layer2-20261103/wide-copy-assembly.json",
+        "retained_record_sha256": "a6ce1db94e3f7957ce4aa0d5676d460f71ed643d093dd3924b94b69632fc8587",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x100f1aa0 --provider ghidra --format json",
+        "parent_evidence_id": "ev_f4044fa497324a66d26296519d34811c0bcf8e44492ecff43d3c3f02afb0a86c",
+        "scope": "complete assembly view; parent dossier retained in snapshot after MCP transport-budget rejection"
+      },
+      {
+        "evidence_id": "ev_1a9c91ac141a4e6c224c85b54d73c516574ed85768db8e637c36cd549bc3a03b",
+        "operation": "analyze_function",
+        "procedure": "0x101350c0",
+        "retained_local_path": "out/type-layer2-20261103/attachment-copy.json",
+        "retained_record_sha256": "8871885cdb4fa115266740fee754c138835774ac14febfddee51372abfb4d494",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x101350c0 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_a355774563bb8c74423af13b900a74319d2a5b04dd084a65e441fa3ee91bb8c2",
+        "operation": "analyze_function",
+        "procedure": "0x10145c70",
+        "retained_local_path": "out/type-layer2-20261103/unitcard-constructor.json",
+        "retained_record_sha256": "25d3fbfdf2d2b94b030fac73270ed6ac40ac39d057a315eab3a0519589528696",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x10145c70 --provider ghidra --format json"
+      }
+    ],
+    "closed_snapshot_local_path": "out/type-layer2-20261103/session.rea.json",
+    "closed_snapshot_sha256": "c65570191f5ff0705f6a46ec697d89698a5d41fc7ac9c2d2a50212c8511bf928"
+  },
+  "rea_layer3_evidence": {
+    "provider": "ghidra",
+    "version": "12.1.3",
+    "scope": "private immutable-source session; static evidence, not runtime execution or original source declarations",
+    "records": [
+      {
+        "evidence_id": "ev_4d271f9be6645d40ffdbe2fafcdf04731eb13cc0dd6a182770c4de074fcc4adc",
+        "operation": "analyze_function",
+        "procedure": "0x10132c50",
+        "retained_local_path": "out/type-layer3-20261103/10132c50.json",
+        "retained_record_sha256": "c6467b7c51fd8159c2d077f8a75c15eaaef2c1f23822645b67d88a748e075cff",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x10132c50 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_66f88db527f6d20ed9b342023c4f4e67ea32a7ee50b8ca19e12ae075c4e6a0ee",
+        "operation": "analyze_function",
+        "procedure": "0x1016db10",
+        "retained_local_path": "out/type-layer3-20261103/1016db10.json",
+        "retained_record_sha256": "d84172475780b5e4eb9f02f69572a9ee4a1381fd1e54e4c28d7cd7d727df33b8",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x1016db10 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_cd00e0dc74338c2003c829a8cb6a683d178aa9860233e53620b3d7f21985e869",
+        "operation": "analyze_function",
+        "procedure": "0x101a9110",
+        "retained_local_path": "out/type-layer3-20261103/101a9110.json",
+        "retained_record_sha256": "8610a245f46952915dadbba755d741d414f5d911d902d5040a132575563d3406",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x101a9110 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_6b7d02ac2962667b184d91c480a54c6e6c8ff3d02b82fc7ae019829bd300f0f5",
+        "operation": "analyze_function",
+        "procedure": "0x1016ee30",
+        "retained_local_path": "out/type-layer3-20261103/1016ee30.json",
+        "retained_record_sha256": "07a958aaba973ff5acf0b6269446d01b3d7a1b0eca5f39401285b69972ef261a",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x1016ee30 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_7b6863671fc50ad38a60a2a553fce559bb5e6ba704d5024df453fabab39b0995",
+        "operation": "analyze_function",
+        "procedure": "0x101a97f0",
+        "retained_local_path": "out/type-layer3-20261103/101a97f0.json",
+        "retained_record_sha256": "11db5c6369bf02ea3882f84144d4b261192bb6a94d2ddcc7260e059825754f58",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x101a97f0 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_ad7a45b5717687f2c28b079901eacb47930e8b9978ad5f204f1a7a259cc44a9e",
+        "operation": "analyze_function",
+        "procedure": "0x1015e280",
+        "retained_local_path": "out/type-layer3-20261103/1015e280.json",
+        "retained_record_sha256": "50e33c7112c6c08af1e429b0c64021fd4c2b21fde2168c4cc2cabc0526cdae0f",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x1015e280 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_3aa4ccf0a3ce56af0311f30dd08b56f86dc85c963f60ef9e9656f63c08c8d99b",
+        "operation": "analyze_function",
+        "procedure": "0x101a8b20",
+        "retained_local_path": "out/type-layer3-20261103/101a8b20.json",
+        "retained_record_sha256": "a0107770f16a861eabd993efeccd6eaf56434654826786f1598daf03d3bffc51",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x101a8b20 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_b9dd73fd819f29a1558cfe618c45b8a84c63575231003d649c7787942a99a534",
+        "operation": "analyze_function",
+        "procedure": "0x10141630",
+        "retained_local_path": "out/type-layer3-20261103/10141630.json",
+        "retained_record_sha256": "25b9590760adfdf605c37be39411cd13720687ba0b02e40a25874b1560038240",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x10141630 --provider ghidra --format json"
+      }
+    ],
+    "closed_snapshot_local_path": "out/type-layer3-20261103/session.rea.json",
+    "closed_snapshot_sha256": "57ec88af2bcf62b67a0bddfc19e8fff2164fcfb1df58927adfbef29874bcfb03"
+  },
+  "rea_layer4_evidence": {
+    "provider": "ghidra",
+    "version": "12.1.3",
+    "scope": "20 new helper analyses, two complete assembly views after transport limits, five data reads; static evidence only",
+    "records": [
+      {
+        "evidence_id": "ev_333aa842ce1441a457733474ca7f5037aa0e3526c175760073eeb17bdde73376",
+        "operation": "analyze_function",
+        "procedure": "0x100d79c0",
+        "retained_local_path": "out/type-layer4-20261103/fn-100d79c0.json",
+        "retained_record_sha256": "28017d711c8188d0638f750e7b53620cd9650b638d1c0513502e02edcf0c726b",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x100d79c0 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_32c348bcaea17ed3732aeaaf879cc1f91ad503daf7e0cd8258cfa713720b900f",
+        "operation": "inspect_analysis_view",
+        "procedure": "0x100f28a0",
+        "retained_local_path": "out/type-layer4-20261103/compare-100f28a0-assembly.json",
+        "retained_record_sha256": "d8d8cac39b84af4b62f5f0af48eeb38ee4321ff486998f0f63f98ccfecadf1ce",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x100f28a0 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_ac4b9af7eaef2402df90d316ef5bbf4510bf414a8667ebc04995f3ec184c6229",
+        "operation": "inspect_analysis_view",
+        "procedure": "0x100f28e0",
+        "retained_local_path": "out/type-layer4-20261103/compare-100f28e0-assembly.json",
+        "retained_record_sha256": "b0cced5d6a562e5268a3b5777cd70a2b0c6b4f323316355d2ab1c6beabc14fa2",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x100f28e0 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_7b8cf69dedcb2f0fb82340f490c9ac8056c9d1a6e11278474eb7bccd92d1f5ae",
+        "operation": "analyze_function",
+        "procedure": "0x100f2920",
+        "retained_local_path": "out/type-layer4-20261103/fn-100f2920.json",
+        "retained_record_sha256": "ef14d8cfc60344d0373970013180c02dc0c625f48f855e5e39e0db48ee036f95",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x100f2920 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_611d1fb51046f86824d94fbb2f96800f33d2a2f9338b748614d9badf0febfc92",
+        "operation": "analyze_function",
+        "procedure": "0x10102bc0",
+        "retained_local_path": "out/type-layer4-20261103/fn-10102bc0.json",
+        "retained_record_sha256": "677e1f6b4a5c57a1adc163cc0d1b8c2181a372db8f5bd2aaac404d6e7b42a470",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x10102bc0 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_16746c228920411e01586976c341703f98870f2830b2d28592cb49763b1c40de",
+        "operation": "analyze_function",
+        "procedure": "0x10103d10",
+        "retained_local_path": "out/type-layer4-20261103/fn-10103d10.json",
+        "retained_record_sha256": "7f7c5ea8027bdfa3b277fedc57355f5f2e32920e4d91771e5811c429a763779e",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x10103d10 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_ad1b9ee8a8cb11ed5aa67de688bc1bea019cb3f38fd94e6a849ede9ee48c5b30",
+        "operation": "analyze_function",
+        "procedure": "0x101053f0",
+        "retained_local_path": "out/type-layer4-20261103/fn-101053f0.json",
+        "retained_record_sha256": "4ea5d7cddaae7cc4aa8fbc84143156a5c21f85a9b5981e29fae2144f3d649c77",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x101053f0 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_438fb58151b40eaab952c1539f665ba23dddc1d0eaeba408719e34dc9ab27969",
+        "operation": "analyze_function",
+        "procedure": "0x101705f0",
+        "retained_local_path": "out/type-layer4-20261103/fn-101705f0.json",
+        "retained_record_sha256": "76c5734b22ac96383e5ee1ba38fd202965a184b7aa2d629ea0d78fcec63c2a3d",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x101705f0 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_08043e637e10aa10bd1ebcb479d6a50ba2a60dace3773fbf6905e96673eb3ffc",
+        "operation": "analyze_function",
+        "procedure": "0x10182e60",
+        "retained_local_path": "out/type-layer4-20261103/fn-10182e60.json",
+        "retained_record_sha256": "6286c37812eff592bd038dd8f00e6ee23c9a233213a1ed83ba79d9b0bc32e9ef",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x10182e60 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_aa31274202561cd8d9d53aeef31268ad5e9a99e38600d316c4acd3408917cae3",
+        "operation": "analyze_function",
+        "procedure": "0x101b9270",
+        "retained_local_path": "out/type-layer4-20261103/fn-101b9270.json",
+        "retained_record_sha256": "7a5b727b25f8f5a05071461cacd51ef3a9de40dc19b97ddef5c64710c4a64790",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x101b9270 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_e5ba171c61eaafa06bfe8fa3cb69730f21155a3fc4637c670d160ef74263a35e",
+        "operation": "analyze_function",
+        "procedure": "0x10cbb440",
+        "retained_local_path": "out/type-layer4-20261103/fn-10cbb440.json",
+        "retained_record_sha256": "b2fafa4d1ed381479e5bbbcbf4c68b554460c75a10d98c47bd6c5285e8f6dc97",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x10cbb440 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_64e526309bbaa085161f3ef849568558602f64f8ff76d86fa96e7209f2805fae",
+        "operation": "analyze_function",
+        "procedure": "0x112aab60",
+        "retained_local_path": "out/type-layer4-20261103/fn-112aab60.json",
+        "retained_record_sha256": "2fc38cd1b06e2257c29dd7dc90c6fdd41a0213050a669ef25a97d6bade514f2c",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x112aab60 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_fa2f1d5c78aec0cde3fe11eec7173ba271fbfe771ba8da6cdb67b09d3f15f42e",
+        "operation": "analyze_function",
+        "procedure": "0x112b5130",
+        "retained_local_path": "out/type-layer4-20261103/fn-112b5130.json",
+        "retained_record_sha256": "f7e0e431940b5e854e4854a901cb2cbbc7a9d9153c846d21a5d0381bfdac364b",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x112b5130 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_6f07e02bd46223dc3fc4a484bee0ae9d815f176407d9adaf0bf450b802315457",
+        "operation": "analyze_function",
+        "procedure": "0x112b5150",
+        "retained_local_path": "out/type-layer4-20261103/fn-112b5150.json",
+        "retained_record_sha256": "887b45429bf728ad87a054a424f99c65e031fed61166fb3b4bfdf9dfe543b921",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x112b5150 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_35f8d11c5a0435c952f728b7d68eabf6b80e173e55eb450d0e28ebdad1096f04",
+        "operation": "analyze_function",
+        "procedure": "0x112b51a0",
+        "retained_local_path": "out/type-layer4-20261103/fn-112b51a0.json",
+        "retained_record_sha256": "8ef60f049be34a489340444b9d5b805f2115c38926fd5971b9c37494d36b6318",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x112b51a0 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_651ec0a564894848861051b75617bc79d982bbf433379208bdd519d5c615087f",
+        "operation": "analyze_function",
+        "procedure": "0x112b51d0",
+        "retained_local_path": "out/type-layer4-20261103/fn-112b51d0.json",
+        "retained_record_sha256": "7e9295c7a4c9f6a5f9b33186185108b2b5b099f7e5c11b3d311b8db311fe90c4",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x112b51d0 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_2c425d94d133f0806abe1d7ef22434f1e7e005dbf0282841435c464fc5940851",
+        "operation": "analyze_function",
+        "procedure": "0x113467a0",
+        "retained_local_path": "out/type-layer4-20261103/fn-113467a0.json",
+        "retained_record_sha256": "e6509956fb02ea905dff2ce1c2d4ca62bc4070d200da8f18d9a54acdfd585234",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x113467a0 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_afd0ba9a4bf51214d9e4ad6e399fe6e88ec272027026fd86d8cb5089d9b3cf5f",
+        "operation": "analyze_function",
+        "procedure": "0x11346920",
+        "retained_local_path": "out/type-layer4-20261103/fn-11346920.json",
+        "retained_record_sha256": "f17ad738e672bd6bb114781a3b849fda3ddb1153101b1c3538a816b92afdef28",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x11346920 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_89aac3c5d37648ccd5f1c0ad9f44dfbd93652412256cbd15a7147d4b19cd2178",
+        "operation": "analyze_function",
+        "procedure": "0x11347490",
+        "retained_local_path": "out/type-layer4-20261103/fn-11347490.json",
+        "retained_record_sha256": "678b963e56915c9f4176a70d78ece17c12e7a4c77a5c9c32a4e1da839582b9b0",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x11347490 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_f4275a5494de4867a656104186e24e847efe7626234ce2d7f6952dc107842cc9",
+        "operation": "analyze_function",
+        "procedure": "0x11347ed0",
+        "retained_local_path": "out/type-layer4-20261103/fn-11347ed0.json",
+        "retained_record_sha256": "3ed69eeea790f3ce4439537cd11ad2c6a88b17a761e32c5c3e69a3ebdb56481e",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x11347ed0 --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_04277f177549ef65d6aba7554fd3290856b92740e43fd55760cb19382da96ae9",
+        "operation": "read_bytes",
+        "address": "0x11745360",
+        "retained_local_path": "out/type-layer4-20261103/data-11745360.json",
+        "retained_record_sha256": "b868b5c921dfcb7677696b52482eb7fb97bb1e0b98a02685549b3cbbb90f1a42"
+      },
+      {
+        "evidence_id": "ev_25c7f457bfe19274b0c6d7cb74e84a36bc7a98f7aa5c024407798b26907b9f11",
+        "operation": "read_bytes",
+        "address": "0x118a1418",
+        "retained_local_path": "out/type-layer4-20261103/data-118a1418.json",
+        "retained_record_sha256": "1df63dbdcc100a1607b5a8a28977f79b697d3622a8a49e24f9d9b1bc235d104c"
+      },
+      {
+        "evidence_id": "ev_dfe3c725a99d5e25940a49fd11ef0de35486f5b5264690073d7e50a0e8051107",
+        "operation": "read_bytes",
+        "address": "0x1173e2bc",
+        "retained_local_path": "out/type-layer4-20261103/data-1173e2bc.json",
+        "retained_record_sha256": "0f841400eb997bb9047cab0c3fda7ff5e142cfd26f2fc0b7b36a25ea0a06a438"
+      },
+      {
+        "evidence_id": "ev_c1f5a7d7508835a881bb52686da09308a23ac238e6835b2d0b8fb3d31b53c778",
+        "operation": "read_bytes",
+        "address": "0x118a1414",
+        "retained_local_path": "out/type-layer4-20261103/data-118a1414.json",
+        "retained_record_sha256": "a920f5e6e839f59c504d787811f079fe5d7b65b40644dd07589a80149faf4593"
+      },
+      {
+        "evidence_id": "ev_586ddc6301268df84280095a9bfa9743311d964fddd775b0276ad1cdbd4d7841",
+        "operation": "read_bytes",
+        "address": "0x1177f34c",
+        "retained_local_path": "out/type-layer4-20261103/data-1177f34c.json",
+        "retained_record_sha256": "df09b1c824e3c5d0a6a1552b3b69a0d5b739ff7db57794901caa0a3c1ef17551"
+      }
+    ],
+    "closed_snapshot_local_path": "out/type-layer4-20261103/session.rea.json",
+    "closed_snapshot_sha256": "1c47582957d245f6be359ab53f5fb27bffa2e1002c3863ebb7a5711545766e14",
+    "closed_evidence_records": 42
+  }
+}

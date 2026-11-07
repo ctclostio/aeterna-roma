@@ -19,7 +19,7 @@
  * Every field offset below is read directly off the store instructions of the
  * function body (MOV [ESI+imm], ...) and is not inferred.  The 17 stack words
  * are addressed E0+4 .. E0+0x44 where E0 is the entry stack pointer; the
- * `arg01 .. arg16` names below preserve that index (arg N lives at E0+4+4*N).
+ * `arg00 .. arg16` names below preserve that index (arg N lives at E0+4+4*N).
  *
  * The x86 ABI passes seventeen independent words, several of which are read
  * only as a byte or only as a dword.  The Win64 ABI has no equivalent, so the
@@ -30,6 +30,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include "../recovered_types/tag_types.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,11 +39,12 @@ extern "C" {
 #define ROME2_PORT_10145C70_UNITCARD_PC UINT32_C(0x10145c70)
 
 /*
- * Recovered std::string ABI.
+ * Recovered engine string descriptor (not a standard-library ABI claim).
  *
  * FUN_100f1850 writes {0, 0, 0x11af408e} and returns via a bare RET.
  * FUN_100f1c10 writes {0, 0, 0x11af4090} and returns via a bare RET.
- * FUN_100f1700 copies [len, cap, data] and calls FUN_100ef2c0(data, data+len).
+ * FUN_100f1700 deep-copies length bytes through FUN_100ef2c0(data, data+len);
+ * the resulting capacity equals length, rather than the source capacity.
  * FUN_100f1800 writes strlen(src) then calls FUN_100ef2c0(src, src+len).
  * FUN_100f1c80 reads data, rejects 0x11af408e and NULL, then frees data[-4].
  *
@@ -68,9 +70,11 @@ extern "C" {
 #define ROME2_UNITCARD_RECORD_SIZE_X86         0x178u
 #define ROME2_UNITCARD_RECORD_SIZE             0x1C8u
 
-/* Heap block sizes requested through FUN_100d12b0 (thunk to FUN_100fcc80). */
-#define ROME2_UNITCARD_TAG_BLOCK_SIZE          0x10u
-#define ROME2_UNITCARD_ATTACHMENT_BLOCK_SIZE   0xE8u
+/* Original requests and distinct native projection extents. */
+#define ROME2_UNITCARD_TAG_GUEST_ALLOCATION_SIZE          0x10u
+#define ROME2_UNITCARD_ATTACHMENT_GUEST_ALLOCATION_SIZE   0xE8u
+#define ROME2_UNITCARD_TAG_BLOCK_SIZE          (sizeof(rome2_unit_card_tag))
+#define ROME2_UNITCARD_ATTACHMENT_BLOCK_SIZE   0x120u
 
 /* this+0x118 is written as the literal 1 at 0x10145e25. */
 #define ROME2_UNITCARD_LIT_ENABLED             UINT32_C(1)
@@ -109,7 +113,8 @@ _Static_assert(offsetof(rome2_recovered_str, data) == 8,
 _Static_assert(offsetof(rome2_recovered_str, capacity) == 4,
     "recovered string capacity must stay at +4");
 
-/* Dispatch pointer triple stored at this+0x000 by the inlined base ctor. */
+/* Three guest vtable identities and the zero scalar at original +0x0c.
+ * These four-byte cells are not callable native pointers. */
 typedef struct rome2_dispatch_triple {
     uint32_t slot0;
     uint32_t slot1;
@@ -136,35 +141,44 @@ typedef struct rome2_unit_card_globals {
     float grid_extent_unset_hi;    /* DAT_11971464 */
 } rome2_unit_card_globals;
 
-/* Heap block laid down by FUN_100d12b0 and stored at this+0x020. */
-typedef struct rome2_unit_card_tag {
-    uint32_t vtable;             /* PTR_FUN_1173fae4 at offset +0 of the block */
-    void *payload;               /* constructed at block + 4 by FUN_10132ce0 */
-} rome2_unit_card_tag;
+struct rome2_battle_entity;
 
 /*
  * Host services the constructor performs through engine calls that have no
  * standalone x86 counterpart in this reconstruction.
  *
- *   alloc_block  -> FUN_100d12b0 / FUN_100fcc80(size, heap 0)
- *   init_tag     -> FUN_10132ce0, entered at (block + 4) with the caller's arg
- *   init_attache -> FUN_101350c0, entered with arg00
+ *   alloc_block  -> native projection allocation (24 / 288 bytes, not the
+ *                   original 16 / 232-byte guest requests)
+ *   init_tag     -> FUN_10132ce0 copy boundary: destination/source vectors,
+ *                   &block->elements and &arg01->elements. Those are +8 in
+ *                   native records, corresponding to original guest +4.
+ *   init_attachment -> FUN_101350c0: allocated receiver AND arg00 source
  *   finish_setup -> FUN_101a97f0, entered with (this, 0) on both exits
+ *
+ * alloc_block returns storage suitably aligned for these native records.
+ * Callbacks initialise the supplied native receivers and return normally.
+ * A missing initializer suppresses its allocation. A NULL native arg01 means
+ * an empty source (a checked host convenience). The caller owns both blocks
+ * and any nested data its callbacks create; this legacy projection has no
+ * general destroy API. owned_tag.h supplies a separate fully owned tag copy.
+ * Other helper effects and complete constructor equivalence remain unproved.
  */
 typedef struct rome2_unit_card_host {
     void *(*alloc_block)(size_t size);
-    void (*init_tag)(void *tag_slot, const void *source);
-    void *(*init_attachment)(const void *source);
+    void (*init_tag)(rome2_unit_card_tag_vector *destination,
+        const rome2_unit_card_tag_vector *source);
+    void (*init_attachment)(struct rome2_battle_entity *receiver,
+        const struct rome2_battle_entity *source);
     void (*finish_setup)(void *self);
 } rome2_unit_card_host;
 
 /*
  * The seventeen recovered stack words, in ABI order.
  *
- *   arg00  E0+0x04  pointer  ; TAG_SUBOBJECT source, handed to FUN_10132ce0 as
- *                              (arg00 + 4) at 0x10145f4a.  Also gates the
- *                              0xE8-byte attachment allocation at 0x10145f67.
- *   arg01  E0+0x08  pointer  ; construction source for the 0x10-byte tag block.
+ *   arg00  E0+0x04  pointer  ; entity copy source for FUN_101350c0; gates the
+ *                              original 0xE8-byte attachment allocation.
+ *   arg01  E0+0x08  pointer  ; tag source; guest source vector is arg01+4 at
+ *                              0x10145f4e. Native: &arg01->elements.
  *   arg02  E0+0x0c  byte     ; -> this+0x024 (0x10145cac)
  *   arg03  E0+0x10  dword    ; -> this+0x00c (0x10145c8f)
  *   arg04  E0+0x14  byte     ; -> this+0x040 (0x10145cc3)
@@ -184,8 +198,8 @@ typedef struct rome2_unit_card_host {
  *   arg16  E0+0x44  byte     ; -> this+0x138 (0x10145e8f)
  */
 typedef struct rome2_unit_card_args {
-    const void *arg00;
-    const void *arg01;
+    const struct rome2_battle_entity *arg00;
+    const rome2_unit_card_tag *arg01;
     uint8_t arg02;
     uint32_t arg03;
     uint8_t arg04;
@@ -214,7 +228,7 @@ typedef struct rome2_unit_card {
     uint32_t          field_008;                 /* +0x008 zeroed          */
     uint32_t          owner;                     /* +0x00c arg03           */
     rome2_recovered_str str_010;                 /* +0x010 FUN_100f1850    */
-    void             *attachment;                /* +0x01c FUN_101350c0    */
+    struct rome2_battle_entity *attachment;       /* +0x01c FUN_101350c0    */
     rome2_unit_card_tag *tag;                    /* +0x020 FUN_100d12b0    */
     uint8_t           selector;                  /* +0x024 arg02           */
     rome2_recovered_str str_028;                 /* +0x028 FUN_100f1850    */
@@ -347,7 +361,7 @@ _Static_assert(offsetof(rome2_unit_card, pad_176) == 0x1c6, "pad_176");
  * Vtable anchors recovered from .rdata; the tag block installed at this+0x020
  * receives PTR_FUN_1173fae4 as its first dword.
  */
-#define ROME2_UNITCARD_TAG_VTABLE             UINT32_C(0x1173fae4)
+#define ROME2_UNITCARD_TAG_VTABLE             ROME2_TAG_VTABLE_IDENTITY
 #define ROME2_UNITCARD_TAG_VTABLE_FIRST_SLOT  UINT32_C(0x10cecea0)
 
 /* Reset a recovered string view to the FUN_100f1850 / FUN_100f1c10 sentinels. */
@@ -358,12 +372,11 @@ void rome2_unit_card_str_reset_alt(rome2_recovered_str *dst);
 bool rome2_unit_card_class_is_immutable(uint32_t unit_class);
 
 /*
- * Port of the 0x10145c70 constructor body.
- *
- * `self` is written in full and left in the state the retail constructor
- * produces.  `args` and `globals` are read-only; `host` supplies the four
- * engine services.  A NULL `host` entry is treated as a failed allocation,
- * which reproduces the two JZ branches at 0x10145f48 and 0x10145f6d.
+ * Bounded native projection of selected constructor fields. `args` and
+ * `globals` are read-only; NULL globals select image defaults. Missing host
+ * services suppress the affected allocation/call. No claim is made that this
+ * reproduces FUN_1016db10, FUN_1016ee30, FUN_101a97f0, original write order or
+ * general ownership behavior. Caller supplies writable native self storage.
  */
 void rome2_unit_card_ctor(
     rome2_unit_card *self,
