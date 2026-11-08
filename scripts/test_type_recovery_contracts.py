@@ -35,6 +35,34 @@ class ImageMappingTests(unittest.TestCase):
             with self.subTest(size=len(data)), self.assertRaises((ValueError, struct.error)):
                 contracts.parse_pe32(data)
 
+    def test_disjoint_body_reads_exclude_gap_bytes(self):
+        data = bytes(range(32)); sections = [(0x1000, 24, 4, 24)]
+        function = {"address": "10001000", "bytes": 7, "body_ranges": [
+            {"start": "10001000", "end": "10001002"},
+            {"start": "10001008", "end": "1000100b"}]}
+        self.assertEqual(contracts.function_body_parts(data, 0x10000000, sections, function),
+                         [(0x10001000, data[4:7]), (0x10001008, data[12:16])])
+        function = {"address": "10001000", "bytes": 3}
+        self.assertEqual(contracts.function_body_parts(data, 0x10000000, sections, function),
+                         [(0x10001000, data[4:7])])
+
+    def test_invalid_body_range_sets_are_rejected(self):
+        data = bytes(range(32)); sections = [(0x1000, 24, 4, 24)]
+        good = {"address": "10001000", "bytes": 7, "body_ranges": [
+            {"start": "10001000", "end": "10001002"},
+            {"start": "10001008", "end": "1000100b"}]}
+        cases = []
+        for ranges in ([], list(reversed(good["body_ranges"])),
+                       [{"start": "10001000", "end": "10001004"},
+                        {"start": "10001004", "end": "10001005"}],
+                       [{"start": "10001002", "end": "10001000"}]):
+            mutant = copy.deepcopy(good); mutant["body_ranges"] = ranges; cases.append(mutant)
+        for field, value in (("bytes", 6), ("bytes", 0), ("bytes", True), ("address", "10001005")):
+            mutant = copy.deepcopy(good); mutant[field] = value; cases.append(mutant)
+        for mutant in cases:
+            with self.subTest(mutant=mutant), self.assertRaises(ValueError):
+                contracts.function_body_parts(data, 0x10000000, sections, mutant)
+
 
 @unittest.skipUnless((contracts.ROOT / "Total War Rome II/empire.retail.dll").is_file(),
                      "original game image is absent")
@@ -47,7 +75,7 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 55)
+        self.assertEqual(result["functions"], 72)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -200,6 +228,76 @@ class TypeContractProvenanceTests(unittest.TestCase):
         # No existence/drive-letter check: byte +1 is ':', byte +2 is '/' or
         # '\\'. Only AL is assigned 0/1; upper EAX is not an integer boolean.
         self.assertEqual(body, bytes.fromhex("8b4424048078013a750e8a40023c5c74043c2f7503b001c332c0c3"))
+
+    def test_vfs_secondary_dispatch_and_selected_targets(self):
+        globals_ = {g["address"]: bytes.fromhex(g["initial_hex_le"]) for g in self.registry["globals"]}
+        self.assertEqual(struct.unpack("<II", globals_["119e1004"]), (0x1189791C, 0x11897994))
+        self.assertEqual(struct.unpack("<II", globals_["118978e8"]), (0x112BD130, 0x112BD3B0))
+        self.assertEqual(struct.unpack("<II", globals_["11897994"]), (0x112BD0C0, 0x112BD0C0))
+        w = {w["address"]: bytes.fromhex(w["hex"]) for w in self.registry["instruction_witnesses"]}
+        self.assertEqual(w["112a7c63"], bytes.fromhex("8d58048b03"))
+        self.assertEqual(w["112a7c7d"], bytes.fromhex("8b7804"))
+        self.assertEqual(w["112a7cab"], bytes.fromhex("ffd7"))
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_vfs_active_hit_branches_are_present(self):
+        w = {w["address"]: bytes.fromhex(w["hex"]) for w in self.registry["instruction_witnesses"]}
+        first, second = w["112bd49f"], w["112bd5a3"]
+        self.assertEqual(first[9:11], bytes.fromhex("0f84"))
+        self.assertEqual(0x112BD4A8 + 6 + struct.unpack_from("<i", first, 11)[0], 0x112BD5A3)
+        self.assertEqual(second[6:8], bytes.fromhex("0f84"))
+        self.assertEqual(0x112BD5A9 + 6 + struct.unpack_from("<i", second, 8)[0], 0x112BD64C)
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_vfs_hash_uses_signed_independent_halfword_sums(self):
+        registry = copy.deepcopy(self.registry)
+        w = {w["address"]: w for w in registry["instruction_witnesses"]}
+        self.assertEqual(w["100f3061"]["hex"], "660fbec26603f8")
+        self.assertEqual(w["100f306f"]["hex"], "660fbec26603f0")
+        helper = next(f for f in registry["functions"] if f["address"] == "100f3040")
+        self.assertEqual((helper["stack_argument_bytes"], helper["callee_pop_bytes"]), (4, 4))
+        w["100f3061"]["hex"] = w["100f3061"]["hex"].replace("0fbe", "0fb6", 1)
+        with self.assertRaisesRegex(ValueError, "instruction witness"):
+            contracts.validate_contracts(self.image, registry)
+
+    def test_vfs_name_match_precedes_empty_and_returns_value_cell(self):
+        w = {w["address"]: bytes.fromhex(w["hex"]) for w in self.registry["instruction_witnesses"]}
+        self.assertEqual(w["101206e0"], bytes.fromhex("8b013b4424040f94c0c20400"))
+        self.assertEqual(w["112c1191"], bytes.fromhex("84c0756c"))
+        self.assertEqual(w["112c119e"][:3], bytes.fromhex("8d4b08"))
+        self.assertEqual(w["112c1204"], bytes.fromhex("8d4204"))
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_vfs_empty_wrapper_slots_and_counter_call_arity(self):
+        table = next(g for g in self.registry["globals"] if g["address"] == "11897be0")
+        words = struct.unpack("<12I", bytes.fromhex(table["initial_hex_le"]))
+        self.assertEqual((words[4], words[11]), (0x100DBC00, 0x100DBC00))
+        w = {w["address"]: bytes.fromhex(w["hex"]) for w in self.registry["instruction_witnesses"]}
+        self.assertEqual(w["112bd66e"], bytes.fromhex("c707e07b8911"))
+        self.assertEqual(w["112d0c80"], bytes.fromhex("ff4108c20800"))
+        helper = next(f for f in self.registry["functions"] if f["address"] == "112d0c80")
+        self.assertEqual((helper["stack_argument_bytes"], helper["callee_pop_bytes"]), (8, 8))
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_disjoint_original_bodies_exclude_reported_gaps(self):
+        helpers = {f["address"]: f for f in self.registry["functions"] if "body_ranges" in f}
+        self.assertEqual(set(helpers), {"112a8ff0", "112bbd10"})
+        base, sections = contracts.parse_pe32(self.image)
+        for address, gap in (("112a8ff0", 9), ("112bbd10", 3)):
+            helper = helpers[address]
+            parts = contracts.function_body_parts(self.image, base, sections, helper)
+            self.assertEqual(len(parts), 2)
+            self.assertEqual(sum(len(data) for _, data in parts), helper["bytes"])
+            self.assertEqual(parts[-1][0] + len(parts[-1][1]) - parts[0][0] - helper["bytes"], gap)
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_stack_return_cannot_be_in_a_body_gap(self):
+        registry = copy.deepcopy(self.registry)
+        helper = next(f for f in registry["functions"] if f["address"] == "112a8ff0")
+        gap = int(helper["body_ranges"][0]["end"], 16) + 1
+        helper["return_instruction_addresses"] = [f"{gap:08x}"]
+        with self.assertRaisesRegex(ValueError, "stack return"):
+            contracts.validate_contracts(self.image, registry)
 
     def test_legacy_bom_filter_advances_by_bytes(self):
         witnesses = {w["address"]: bytes.fromhex(w["hex"])

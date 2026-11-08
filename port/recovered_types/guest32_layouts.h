@@ -34,6 +34,25 @@ typedef struct rome2_xml_state_prefix32 {
     uint8_t unobserved_005[3];
 } rome2_xml_state_prefix32;
 
+/* The XML loader selects the interface at manager+4. Only these two
+ * dispatch words are admitted here, not the full manager class or vtables. */
+typedef struct rome2_vfs_dispatch_prefix32 {
+    rome2_vtable_address32 table_000;
+    rome2_vtable_address32 table_004;
+} rome2_vfs_dispatch_prefix32;
+
+/* FUN_112c1130's name table. Name words are compared as opaque 32-bit
+ * identities; neither their ownership nor interning policy is admitted. */
+typedef struct rome2_vfs_name_table_layout32 {
+    rome2_data_address32 items;
+    uint32_t bucket_count;
+    uint32_t empty_name;
+} rome2_vfs_name_table_layout32;
+typedef struct rome2_vfs_name_slot_layout32 {
+    uint32_t name;
+    rome2_data_address32 value;
+} rome2_vfs_name_slot_layout32;
+
 /* FUN_100e2460's handler vector: capacity precedes count. */
 typedef struct rome2_handler_vector_layout32 {
     uint32_t unobserved_00;
@@ -331,6 +350,13 @@ _Static_assert(sizeof(rome2_string8_layout32) == 12, "narrow descriptor extent")
 _Static_assert(sizeof(rome2_string16_layout32) == 12, "UTF-16 descriptor extent");
 _Static_assert(sizeof(rome2_xml_state_prefix32) == 8, "known XML state prefix extent");
 ROME2_LAYOUT_ASSERT(rome2_xml_state_prefix32, ready, 4);
+_Static_assert(sizeof(rome2_vfs_dispatch_prefix32) == 8, "known VFS dispatch prefix extent");
+ROME2_LAYOUT_ASSERT(rome2_vfs_dispatch_prefix32, table_004, 4);
+_Static_assert(sizeof(rome2_vfs_name_table_layout32) == 12, "known VFS name-table descriptor");
+ROME2_LAYOUT_ASSERT(rome2_vfs_name_table_layout32, bucket_count, 4);
+ROME2_LAYOUT_ASSERT(rome2_vfs_name_table_layout32, empty_name, 8);
+_Static_assert(sizeof(rome2_vfs_name_slot_layout32) == 8, "original VFS name-table slot stride");
+ROME2_LAYOUT_ASSERT(rome2_vfs_name_slot_layout32, value, 4);
 ROME2_LAYOUT_ASSERT(rome2_string8_layout32, capacity, 4);
 ROME2_LAYOUT_ASSERT(rome2_string8_layout32, data, 8);
 ROME2_LAYOUT_ASSERT(rome2_string16_layout32, data, 8);

@@ -78,6 +78,32 @@ def image_bytes(data: bytes, base: int, sections, address: int, size: int,
     return matches[0]
 
 
+def function_body_parts(image: bytes, base: int, sections, function: dict):
+    """Read curated body ranges, excluding gaps in a Ghidra AddressSet."""
+    entry = int(function["address"], 16)
+    size = function["bytes"]
+    if type(size) is not int or size <= 0:
+        raise ValueError("invalid function body size")
+    ranges = function.get("body_ranges")
+    if ranges is None:
+        data, _ = image_bytes(image, base, sections, entry, size)
+        return [(entry, data)]
+    if not isinstance(ranges, list) or not ranges:
+        raise ValueError("invalid function body ranges")
+    parts = []
+    previous_end = -1
+    for item in ranges:
+        start, end = int(item["start"], 16), int(item["end"], 16)
+        if start > end or start <= previous_end:
+            raise ValueError("invalid function body ranges: unordered or overlapping")
+        data, _ = image_bytes(image, base, sections, start, end - start + 1)
+        parts.append((start, data)); previous_end = end
+    if sum(len(data) for _, data in parts) != size or not any(
+            start <= entry < start + len(data) for start, data in parts):
+        raise ValueError("function body ranges disagree with size or entry")
+    return parts
+
+
 def validate_contracts(image: bytes, registry: dict) -> dict:
     if len(image) != IMAGE_SIZE or hashlib.sha256(image).hexdigest() != IMAGE_SHA256:
         raise ValueError("original image differs from pinned target")
@@ -93,8 +119,8 @@ def validate_contracts(image: bytes, registry: dict) -> dict:
         if len(set(addresses)) != len(addresses):
             raise ValueError(f"duplicate {category} identity")
     for function in registry["functions"]:
-        body, _ = image_bytes(image, base, sections, int(function["address"], 16),
-                              function["bytes"])
+        parts = function_body_parts(image, base, sections, function)
+        body = b"".join(data for _, data in parts)
         if hashlib.sha256(body).hexdigest() != function["sha256"]:
             raise ValueError(f"function bytes changed: {function['address']}")
         stack = function["stack_argument_bytes"]
@@ -107,7 +133,7 @@ def validate_contracts(image: bytes, registry: dict) -> dict:
         tail = b"\xc3" if pop == 0 else b"\xc2" + struct.pack("<H", pop)
         returns = function.get("return_instruction_addresses")
         if returns is None:
-            if not body.endswith(tail):
+            if not parts[-1][1].endswith(tail):
                 raise ValueError(f"stack return disagrees: {function['address']}")
         else:
             # Some complete functions end in a backward branch; their RET is
@@ -115,10 +141,11 @@ def validate_contracts(image: bytes, registry: dict) -> dict:
             # complete assembly, while retaining the full original-body hash.
             if not isinstance(returns, list) or not returns or len(set(returns)) != len(returns):
                 raise ValueError("invalid explicit return instruction list")
-            entry_address = int(function["address"], 16)
             for address in returns:
-                offset = int(address, 16) - entry_address
-                if offset < 0 or offset + len(tail) > len(body) or body[offset:offset + len(tail)] != tail:
+                pc = int(address, 16)
+                if not any(start <= pc and pc + len(tail) <= start + len(data)
+                           and data[pc - start:pc - start + len(tail)] == tail
+                           for start, data in parts):
                     raise ValueError(f"stack return disagrees: {function['address']}")
     for entry in registry["globals"]:
         value, storage = image_bytes(image, base, sections, int(entry["address"], 16),

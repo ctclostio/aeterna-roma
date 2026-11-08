@@ -257,11 +257,49 @@ Shared Ghidra state, canonical exports and frozen admission locks were unchanged
 See [XML loader recovery](docs/xml_loader_recovery.md) and the
 [verification record](port/recovered_types/verification.json).
 
+### Layer 7 — VFS dispatch, filename hash and table probing, 2026-11-07
+
+- [x] Resolve the XML loader's secondary-interface slot to active/static
+  targets and trace original hit branches omitted by pseudocode.
+- [x] Establish ordinary active-miss empty-wrapper representation while
+  preserving allocator, release and unwind limits.
+- [x] Add a bounded dispatch observer that keeps guest code identities separate
+  from native pointers and performs no original-code execution.
+- [x] Port the alternating signed-byte/16-bit filename hash and circular
+  name-table probing with checked views and an explicit probe budget.
+- [x] Preserve match-before-empty semantics, full 32-bit key equality and the
+  distinction between a matched NULL value and a missing key.
+- [x] Extend function provenance to database-reported disjoint body ranges;
+  retain actual code bytes and reject returns in gaps.
+
+Both native profiles pass **64 local suites**, including installed-resource
+comparisons. New dispatch/name suites run **2,459 / 134,705 checks**. All **37
+focused contract tests** pass, and the clean public suite passes **865 tests**
+on both Python versions with 264 expected private-evidence skips. The registry
+verifies **72 function bodies, 63 globals, 12 first vtable slots and 62
+instruction windows**. Two noncontiguous bodies exclude nine/three gap bytes.
+
+Seventeen new function dossiers and a validated 28-record bundle support this
+pass. The oversized constant-zero dossier was consumed through retained views
+and complete export. A fresh private session was used after prior snapshot
+reuse ended unexpectedly; prior records stayed intact. The session was closed.
+Argon's read-only native review found no confirmed defect; hypotheses were
+checked against assembly, including the always-successful memory-reader setup
+and the real active hit branches. The release entry still lacks a decoded
+procedure, so its raw bytes do not admit a release ABI or lifetime equivalence.
+
+Native resource APIs retain explicit diagnostics. The new helpers observe
+dispatch/name-table state; they do not construct managers, populate mounts,
+open files, intern names or reproduce original locking/unwinding. Full mount
+priority and normalization remain separate obligations. See
+[VFS recovery](docs/vfs_recovery.md) and the
+[verification record](port/recovered_types/verification.json).
+
 ### Remaining work
 
 1. Extend the verified resource-backed domain toward the original resource
-   manager: recover VFS dispatch targets and missing-entry/unwind behavior,
-   mount/dependency/mod precedence, full normalization rules, exact partial
+   manager: recover mount/name-table population and dependency/mod precedence,
+   complete missing-entry release/unwind behavior, full normalization rules, exact partial
    parser/exception outcomes, and the rest of the original XML object ABI. Historic CRT/locale
    behavior and full resource-backed constructor equivalence remain open.
 2. Recover the remaining unit-card methods and meanings of opaque 32-bit

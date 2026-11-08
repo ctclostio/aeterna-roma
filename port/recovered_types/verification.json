@@ -1,6 +1,6 @@
 {
   "schema": "rome2-type-recovery-verification-v1",
-  "scope": "Layer 6 records current native XML loader primitives and original failure-path distinctions. Earlier top-level and layer 2/3/4/5 results and source hashes are historical milestone snapshots; none declares whole-engine equivalence.",
+  "scope": "Layer 7 records current native VFS dispatch/name primitives and static hit/miss distinctions. Earlier top-level/layer results and source hashes are historical snapshots; none declares whole-engine equivalence.",
   "python_focused": {
     "tests": 82,
     "failures": 0,
@@ -344,7 +344,7 @@
       "sha256": "5f38a41f1ad01d590c2ca13c5bfd7b1ce3eeabdf00d0369630d799da6dd07ae4"
     }
   ],
-  "updated_utc": "2026-11-08T01:12:38+00:00",
+  "updated_utc": "2026-11-08T02:19:35+00:00",
   "layer2": {
     "status": "complete for admitted tag copy domain and typed helper boundary",
     "tag_allocation_failure_positions": 11,
@@ -576,7 +576,7 @@
       "whole-engine class/vtable/allocator/threading recovery"
     ]
   },
-  "current_layer": "layer6",
+  "current_layer": "layer7",
   "layer5": {
     "status": "direct XML-node native setup verified; original XML ABI, resource-manager precedence and loader failure behavior remain open",
     "node_setup": {
@@ -1272,6 +1272,446 @@
       "remaining original XML object ABI and state-source semantics",
       "historical CRT/locale/FP-environment equivalence",
       "remaining unit-card methods/opaque fields and whole-engine class/vtable/allocator/threading recovery"
+    ]
+  },
+  "layer7": {
+    "status": "bounded native dispatch observation, signed-byte name hash and name-table probe verified; static active/static open and ordinary miss representation recovered; mount policy and lifetime/unwind remain open",
+    "original_image_contracts": {
+      "schema": "rome2-recovered-types-v1",
+      "verified": true,
+      "functions": 72,
+      "globals": 63,
+      "vtables": 12,
+      "instruction_witnesses": 62,
+      "scope": "static original-image evidence; native behavior requires separate tests"
+    },
+    "python_focused_contract_tests": 37,
+    "native_tests": {
+      "analyze": {
+        "suites": 64,
+        "failed": 0,
+        "local_ctest_log": "out/vfs-layer7-20261107/analyze/Testing/Temporary/LastTest.log",
+        "log_sha256": "8b9b5b406493a457ebffa85e7bccb31b7b1d0277bc2c6d69aebc98b737ea6fdc",
+        "junit_sha256": "e8f006862d8ff80ae42f2aa7d27a2c7c7b166def1c99990122d646dd84fa5dca"
+      },
+      "asan": {
+        "suites": 64,
+        "failed": 0,
+        "local_ctest_log": "out/vfs-layer7-20261107/asan/Testing/Temporary/LastTest.log",
+        "log_sha256": "15be5fd353b42bd0da44c4f90b42b9562f4378ad395aa361aa978974d29ae96d",
+        "junit_sha256": "bc17684f5c14d0c70acda501acc767c5ee8137878e2e660061be1b01a1a9ef65"
+      },
+      "installed_asset_oracle_included": true,
+      "assertions_enabled": true,
+      "public_asset_free_suites": 63
+    },
+    "dispatch_tests": {
+      "active_checks": 2459,
+      "object_alignment_residues": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "table_alignment_residues": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "scope": "secondary interface manager+4, slot+4 identities across split checked views; no original calls"
+    },
+    "name_tests": {
+      "active_checks": 134705,
+      "all_two_byte_hash_inputs": 65536,
+      "descriptor_alignment_residues": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "slot_alignment_residues": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "cases": [
+        "signed bytes and independent16-bit wrap; NUL/span bounds",
+        "full32-bit identity equality and high-half-only collision distinction",
+        "unsigned hash, circular probe order and full-table miss",
+        "match before empty-name detection, including zero name/value and sentinel query",
+        "checked descriptor/numeric array extent, visited key and matched value mappings",
+        "exact/clipped probe budgets, output preservation and 32-bit endpoints"
+      ]
+    },
+    "body_range_validation": {
+      "scope": "curated database-reported AddressSet ranges; full original compiler-source coverage not asserted",
+      "functions": [
+        {
+          "procedure": "112a8ff0",
+          "body_bytes": 943,
+          "span_bytes": 952,
+          "excluded_gap_bytes": 9,
+          "parts": 2
+        },
+        {
+          "procedure": "112bbd10",
+          "body_bytes": 180,
+          "span_bytes": 183,
+          "excluded_gap_bytes": 3,
+          "parts": 2
+        }
+      ],
+      "checks": [
+        "file-backed ranges sorted/disjoint, exact inclusive lengths and entry containment",
+        "concatenated code-byte hash excludes gaps",
+        "explicit RET wholly inside one part; terminal RET cannot span a gap",
+        "legacy contiguous contracts retain behavior"
+      ]
+    },
+    "original_observations": [
+      "getter initializes active instance before selecting static/active manager by mode byte",
+      "active/static secondary slot+4 targets112bd3b0/112bd0c0",
+      "two active hit lanes are present in assembly despite pseudocode omission",
+      "ordinary active miss allocates non-null empty wrapper under successful allocation; length/data slots share zero body",
+      "wrapper counter+8 increment consumes8 unused stack bytes",
+      "copying a name word does not establish refcount/ownership semantics",
+      "hash collision/probe order does not establish mount/insertion precedence"
+    ],
+    "native_adaptations": [
+      "borrowed stable guest mappings; code/data identities never become native callable pointers",
+      "name hash split from probe; caller supplies compatible hash/opaque identity",
+      "whole numeric table extent validation, mapped visited cells and explicit probe budget",
+      "matched value read is additional checked observation; NULL value remains a match",
+      "no manager construction, interning, file I/O, locking, ownership or unwind model added",
+      "existing resource/XML APIs retain explicit diagnostics"
+    ],
+    "public_python_clean": {
+      "checkout": "tracked public files plus reviewed patch, no original image/canonical exports",
+      "runs": [
+        {
+          "version": "3.14",
+          "tests": 865,
+          "skipped": 264,
+          "failures": 0,
+          "errors": 0,
+          "local_log": "out/vfs-layer7-20261107/public-clean-python314.log",
+          "log_sha256": "4e9ee097238be113df194d5943d52dc575ce195b0e784541f845ce898f841f79"
+        },
+        {
+          "version": "3.15",
+          "tests": 865,
+          "skipped": 264,
+          "failures": 0,
+          "errors": 0,
+          "local_log": "out/vfs-layer7-20261107/public-clean-python315.log",
+          "log_sha256": "072e53d402550be013312ee5a526d5aa5972d19162a59cefae8ced6bfa887eb8"
+        }
+      ]
+    },
+    "corpus_tree_full_suite": "not rerun; earlier corpus-tree issues remain recorded and frozen locks unchanged",
+    "installed_assets": {
+      "record": "port/recovered_types/fauna_assets.json",
+      "archives": 2,
+      "entrypoints": [
+        "rome2_owned_unit_card_create_from_packs",
+        "rome2_owned_unit_card_setup_from_packs"
+      ],
+      "explicit_precedence_orders": 2,
+      "original_game_execution": false,
+      "record_sha256": "590b4383acd1ba59047ffb9744313edd629036ad7156b3e0140b37ff7563dbe3"
+    },
+    "rea": {
+      "new_function_dossiers": 17,
+      "new_hash_pinned_records": 28,
+      "validated_bundle_records": 28,
+      "session_closed": true,
+      "original_game_execution": false,
+      "closed_snapshot_local_path": "out/vfs-layer7-20261107/session.rea.json",
+      "closed_snapshot_sha256": "534ad983cf66e9676e1eeaec0eb334cf9006651a429c1e07f3a23c441699d65e",
+      "validated_bundle_local_path": "out/vfs-layer7-20261107/validated-evidence-bundle.json",
+      "validated_bundle_sha256": "f78699cd91a7dc17a0c23a16a74b0d73439fe21b02e4989920fa4860be1d526d",
+      "transport_recovery": "100dbc00 analysis completed; retained views plus full canonical exported record consumed without reanalysis",
+      "unsupported_release": "112daae0 has no decoded procedure/instruction; raw bytes retained, no complete body/ABI admitted",
+      "session_start": "prior snapshot reuse ended unexpectedly; fresh private target session used and prior hashes verified unchanged",
+      "shared_ghidra_and_canonical_exports_changed": false
+    },
+    "review": {
+      "requested": "Google Argon second eyes; Max previously unavailable",
+      "availability": "highest installed available Argon High/High used",
+      "findings": "native helpers and range validator reviews found no confirmed defect; scout hypotheses independently checked, incorrect empty-reader-failure implication rejected",
+      "final_test_note": "root strengthened high-half collision identity and unsigned-hash cases after native review; final64 native suites passed",
+      "runs": [
+        {
+          "name": "argon-vfs",
+          "model": "gemini-4-argon-high",
+          "requested_effort": "high",
+          "status": "SUCCESS",
+          "tools_used": [
+            "read_file"
+          ],
+          "conversation_id": "a7ad3c4c-54d8-4b95-acf8-4fc4850aa083",
+          "events_local_path": "out/vfs-layer7-20261107/argon-vfs.events.jsonl",
+          "events_sha256": "5d1bd159ae4e8437d91f69f9b952b33c1f54168885c77a4748b920a99d9f52b1",
+          "review_local_path": "out/vfs-layer7-20261107/argon-vfs.md",
+          "review_sha256": "b2a9f546da401c220a9601bad9c8ca4d331aae755a3ae130be5732882e8a6c84"
+        },
+        {
+          "name": "argon-code",
+          "model": "gemini-4-argon-high",
+          "requested_effort": "high",
+          "status": "SUCCESS",
+          "tools_used": [
+            "read_file"
+          ],
+          "conversation_id": "aefabf6f-9eb6-439e-967e-4b0b32c2026e",
+          "events_local_path": "out/vfs-layer7-20261107/argon-code.events.jsonl",
+          "events_sha256": "8928976c04ba9c1aeced1b6f27027db09be3e8f9835ac4fc155b33fa1a5cfd28",
+          "review_local_path": "out/vfs-layer7-20261107/argon-code.md",
+          "review_sha256": "0606a0076fe929ac67cca43524d2c6abb9e14139ca2abac574812fb4366f6329"
+        },
+        {
+          "name": "argon-ranges",
+          "model": "gemini-4-argon-high",
+          "requested_effort": "high",
+          "status": "SUCCESS",
+          "tools_used": [
+            "read_file"
+          ],
+          "conversation_id": "1733fbd5-5e95-4f1b-bfef-66cd4eaf1b7c",
+          "events_local_path": "out/vfs-layer7-20261107/argon-ranges.events.jsonl",
+          "events_sha256": "5bd12134166e299e868f0e8a0387731fb472b08d7ec85525975e9692044e932c",
+          "review_local_path": "out/vfs-layer7-20261107/argon-ranges.md",
+          "review_sha256": "883ea478d45c33ccfce473f1dcf6664787b7536d1226439d8d7acbf6e89ab51b"
+        }
+      ]
+    },
+    "local_logs": "out/vfs-layer7-20261107/",
+    "source_hash_scope": "UTF-8 with CRLF/CR normalized to LF; current resource/XML/VFS recovery, tests and docs",
+    "sources": [
+      {
+        "path": "README.md",
+        "bytes": 25079,
+        "sha256": "8b2809d776f6df650990fead4acbbc3ada3ef5deea11c697488c9806803a4d60"
+      },
+      {
+        "path": "docs/unitcard_resource_recovery.md",
+        "bytes": 10039,
+        "sha256": "97c4517c260f05bfbd3e91a588b8deb0e397d2f99368457fb44922b27078966d"
+      },
+      {
+        "path": "docs/vfs_recovery.md",
+        "bytes": 8249,
+        "sha256": "b948b63c0c79988cfb45be677d41e764d436d627f499ddd32cf7b91488ca184e"
+      },
+      {
+        "path": "docs/xml_loader_recovery.md",
+        "bytes": 10853,
+        "sha256": "cd1c54709149a8d93fb65fb0201b7b1466b40408ac8f409554355f90ab485433"
+      },
+      {
+        "path": "port/recovered_types/CMakeLists.txt",
+        "bytes": 4452,
+        "sha256": "b7efb1489d99414c5fa11f501f39d8759e9f3e4ce6265abbb2ce428d8f967efc"
+      },
+      {
+        "path": "port/recovered_types/contracts.json",
+        "bytes": 106170,
+        "sha256": "69342b5966926ac4847ebd59ba570d2e4352059a7ef88c2ec600461c24466562"
+      },
+      {
+        "path": "port/recovered_types/fauna_asset_probe.c",
+        "bytes": 3051,
+        "sha256": "486d4306fbbee7bd0b3b286a6db5b1df508b0cfceff196ff569bf7a149179644"
+      },
+      {
+        "path": "port/recovered_types/fauna_config.c",
+        "bytes": 12023,
+        "sha256": "f7c154d03514f6e99ce90054cf13a1da8005aec2dda187972ebbb9d5e9abf29d"
+      },
+      {
+        "path": "port/recovered_types/fauna_config.h",
+        "bytes": 3054,
+        "sha256": "9313687f26b6d65a3da40b141f9a4535ea5040ad3740c402df9eb9c3f8509c5f"
+      },
+      {
+        "path": "port/recovered_types/guest32_layouts.h",
+        "bytes": 20493,
+        "sha256": "65860cbcfa2ede6a803dd04b1bf6549c65a29451e601e4daf57d4199129922b1"
+      },
+      {
+        "path": "port/recovered_types/native_xml.c",
+        "bytes": 11832,
+        "sha256": "0e16d0bc50e48d4a3290e000be974e65a1593208d9df7f18a1f9191761061cbc"
+      },
+      {
+        "path": "port/recovered_types/native_xml.h",
+        "bytes": 2555,
+        "sha256": "70bd1f4fe5aae18aaceb479f487e9ace232bcf62fb0d44204ae6633ff0fa915e"
+      },
+      {
+        "path": "port/recovered_types/owned_fauna.c",
+        "bytes": 9394,
+        "sha256": "f879f67256c4676eb5e251045135a3478c940f8ba08a3209a5d20d8ecb478e82"
+      },
+      {
+        "path": "port/recovered_types/owned_fauna.h",
+        "bytes": 3821,
+        "sha256": "9813242e118f4ff2e2a221850768d2f481a8d8544b50bbeffd3855658ae04304"
+      },
+      {
+        "path": "port/recovered_types/owned_unit_card.c",
+        "bytes": 16055,
+        "sha256": "7299a2d87abbf8f2f178c16fe18b31960c531bae7f4d89f0f9f50f6e6f1c28fa"
+      },
+      {
+        "path": "port/recovered_types/owned_unit_card.h",
+        "bytes": 6921,
+        "sha256": "8d3d0766d4a6826d8937819f65563b409d587c4ef5f76e16d6c6ddd1ed273cc6"
+      },
+      {
+        "path": "port/recovered_types/pack_resource.c",
+        "bytes": 12117,
+        "sha256": "13e9b43193dc1309a3d64e109dd6d30185ef38538f6a0a44d072492c2c197053"
+      },
+      {
+        "path": "port/recovered_types/pack_resource.h",
+        "bytes": 1944,
+        "sha256": "c85b2002cd2d6ad0d4eb966b4595c2f15b32b83b4359c7cc55792ad30c6e8407"
+      },
+      {
+        "path": "port/recovered_types/test_fauna_config.c",
+        "bytes": 9339,
+        "sha256": "122f89ba8ba541cb2696b9a7c8fcc65155ec69d64ec2af7ce6840688c7043df4"
+      },
+      {
+        "path": "port/recovered_types/test_native_xml.c",
+        "bytes": 9363,
+        "sha256": "fd68911474707bad7e136ce863c3f95bb1d04f8747f941b2eaff9634b18f22ab"
+      },
+      {
+        "path": "port/recovered_types/test_pack_resource.c",
+        "bytes": 36226,
+        "sha256": "b3e2fda413ecdd78fa269566e65d11dcd7600dabaa21433379d3c27d1d4ecd56"
+      },
+      {
+        "path": "port/recovered_types/test_resource_support.h",
+        "bytes": 2422,
+        "sha256": "4f750e041cf8af2ffbfa7ffd29e429d390dd2b4d0bcdc71abda7b4dd69877269"
+      },
+      {
+        "path": "port/recovered_types/test_unit_card_resource.c",
+        "bytes": 22761,
+        "sha256": "cf9eb4fb19c3983b4a5200c3c465f012b6f36a87c0fa7e3bacb09f7394391e18"
+      },
+      {
+        "path": "port/recovered_types/test_unit_card_xml_node.c",
+        "bytes": 12462,
+        "sha256": "6161d19a143df36df9c2444d72818e916c02c787c25c4adbaa97b292b65add60"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_dispatch.c",
+        "bytes": 7136,
+        "sha256": "ec0838a860e24f3697ea69799b059b18d48cc664e3659203c928c9fd97fb6f39"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_name.c",
+        "bytes": 11026,
+        "sha256": "9c73a25796bf2e9f552bcf15a2e53e6d3aab2f40f36687d799457bd418c787c5"
+      },
+      {
+        "path": "port/recovered_types/test_xml_loader_policy.c",
+        "bytes": 9012,
+        "sha256": "92e9dd7be968306792b395484606849e88f16a114e943029457e44dbf2891b17"
+      },
+      {
+        "path": "port/recovered_types/unit_card_resource.c",
+        "bytes": 7384,
+        "sha256": "2ea6d1e9f301824556604bf21113ec5dffe3ab5b99e9b50180cbffa9df539feb"
+      },
+      {
+        "path": "port/recovered_types/unit_card_resource.h",
+        "bytes": 4644,
+        "sha256": "476989c945bb7e50dfecc176a10ce89239d493588019f2fe9363f67cce23ea8b"
+      },
+      {
+        "path": "port/recovered_types/vfs_dispatch.c",
+        "bytes": 1176,
+        "sha256": "72ca65a5e769f0deadcded43312bc53b86644be444c3f8c6862d7c1a0eb2b26b"
+      },
+      {
+        "path": "port/recovered_types/vfs_dispatch.h",
+        "bytes": 1617,
+        "sha256": "40a65225effaeb2b44831ee5e15924f6d1ff18fbe604fb1162e35cbeae5cb381"
+      },
+      {
+        "path": "port/recovered_types/vfs_name.c",
+        "bytes": 2836,
+        "sha256": "ea5d733e037883f76e26fc6b40a0ebd31a4da76ecf4a2a648319b3b70cf3c21d"
+      },
+      {
+        "path": "port/recovered_types/vfs_name.h",
+        "bytes": 2584,
+        "sha256": "c7fc1cd9b94f084e5c8e98f5d34a0e9ac80dc6dc4ed24e344b2f4cdff83fe7a5"
+      },
+      {
+        "path": "port/recovered_types/xml_loader_policy.c",
+        "bytes": 2257,
+        "sha256": "e7b8bb303f944bd66dd40658f505aea74858e6cc31da0e218738876cb28057df"
+      },
+      {
+        "path": "port/recovered_types/xml_loader_policy.h",
+        "bytes": 2966,
+        "sha256": "42b9f8355ae302d3737eb844bd109fcc9ada27b294338431aa315619476638a1"
+      },
+      {
+        "path": "progress.md",
+        "bytes": 20086,
+        "sha256": "4259a90afd6c7f14f01d0394affc36f962504dc08e6598c9c69bd964f025851e"
+      },
+      {
+        "path": "scripts/test_type_recovery_contracts.py",
+        "bytes": 20488,
+        "sha256": "3669fa60e99194bb49f90e61acc72fd6dcd5083418473b5f85181aabfed111df"
+      },
+      {
+        "path": "scripts/type_recovery_contracts.py",
+        "bytes": 9226,
+        "sha256": "148a6cbc2cbfdff19c2f30ed9fe4e85219a3602ac36a71e6397e7059f058b153"
+      },
+      {
+        "path": "scripts/verify_fauna_resources.py",
+        "bytes": 6911,
+        "sha256": "2bcb22d882509671d6a5c2c590ca87cac2fb774099ed75884b16b415ed9e108c"
+      },
+      {
+        "path": "tests/native/CMakeLists.txt",
+        "bytes": 6960,
+        "sha256": "37a9225e989bd6925e2285d8929a8052acacea0af43f9ad13434f7ff5c691fc3"
+      }
+    ],
+    "remaining": [
+      "mount/name-table population and dependency/mod/insertion precedence",
+      "complete missing-entry release, allocator-failure and exception/unwind behavior",
+      "full normalization, parser equivalence and remaining original XML/VFS ABI",
+      "historical CRT/locale/FP equivalence and whole-engine ownership/vtable/threading recovery"
     ]
   }
 }

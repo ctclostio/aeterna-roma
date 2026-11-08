@@ -117,8 +117,9 @@ ordinary control-flow observations:
 4. The VFS branch calls `0x10104b10` to initialize a temporary memory reader.
    This helper always returns `AL=1` on its ordinary return. The loader's
    subsequent false branch is real code but is not evidence of a VFS
-   not-found test. Virtual-dispatch targets, lookup failures and unwinding still
-   need recovery before mapping native `PACK_NOT_FOUND` to original behavior.
+   not-found test. Subsequent [VFS recovery](vfs_recovery.md) identifies the
+   active/static dispatch and empty-wrapper miss representation. Allocator,
+   release and unwind limits still prevent full failure-equivalence claims.
 5. A false `0x101271a0` parser result takes a diagnostic-string path and then
    rejoins the same import preparation at `0x112a7e14`. The import loop is not
    gated on parser success. The recursive parser `0x10127640` calls the

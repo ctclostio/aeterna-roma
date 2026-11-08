@@ -12,10 +12,11 @@ build and test reconstructed native components and source tools without the
 original game or private analysis exports. This remains a work in progress.
 
 The current recovery checklist is [progress.md](progress.md). Its latest milestone
-adds [XML loader policy recovery](docs/xml_loader_recovery.md), including path
-classification, legacy byte preparation, linked readiness and original loader
-failure distinctions. Earlier [resource and XML-node setup](docs/unitcard_resource_recovery.md)
-includes allocation-failure checks and installed-asset comparisons.
+adds [VFS dispatch and filename-table recovery](docs/vfs_recovery.md), including
+bounded dispatch observation, signed-byte hashing, collision probing and
+original hit/miss distinctions. Earlier [XML loader policy](docs/xml_loader_recovery.md)
+and [resource setup](docs/unitcard_resource_recovery.md) include byte preparation,
+ownership tests and installed-asset comparisons.
 
 ## License
 
