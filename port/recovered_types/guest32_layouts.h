@@ -25,6 +25,15 @@ typedef struct rome2_string16_layout32 {
     rome2_data_address32 data;
 } rome2_string16_layout32;
 
+/* FUN_101b9270 follows +0 until NULL, then reads only the root's byte +4.
+ * FUN_112aab60 initializes +0 to zero and the word at +4 to one. This is an
+ * observed prefix, not a complete XML class or an ownership declaration. */
+typedef struct rome2_xml_state_prefix32 {
+    rome2_data_address32 state_source;
+    uint8_t ready;
+    uint8_t unobserved_005[3];
+} rome2_xml_state_prefix32;
+
 /* FUN_100e2460's handler vector: capacity precedes count. */
 typedef struct rome2_handler_vector_layout32 {
     uint32_t unobserved_00;
@@ -320,6 +329,8 @@ _Static_assert(sizeof(rome2_data_address32) == 4, "guest data addresses stay 32-
 _Static_assert(sizeof(rome2_code_address32) == 4, "guest code addresses stay 32-bit");
 _Static_assert(sizeof(rome2_string8_layout32) == 12, "narrow descriptor extent");
 _Static_assert(sizeof(rome2_string16_layout32) == 12, "UTF-16 descriptor extent");
+_Static_assert(sizeof(rome2_xml_state_prefix32) == 8, "known XML state prefix extent");
+ROME2_LAYOUT_ASSERT(rome2_xml_state_prefix32, ready, 4);
 ROME2_LAYOUT_ASSERT(rome2_string8_layout32, capacity, 4);
 ROME2_LAYOUT_ASSERT(rome2_string8_layout32, data, 8);
 ROME2_LAYOUT_ASSERT(rome2_string16_layout32, data, 8);

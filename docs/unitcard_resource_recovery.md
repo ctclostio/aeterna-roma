@@ -151,9 +151,12 @@ the game binaries and full local REA dossiers remain outside Git.
 
 Recover the complete game resource manager's mount/dependency/mod precedence,
 the original quiet-failure and exception paths, and the original XML object ABI.
-The attempted focused REA query at callback `0x112b5110` reported no procedure
-at that address; it did not establish loader success/failure behavior. The native
-explicit-node adapter above is verified independently from retained setup/child
-decoder evidence. Continue the other unit-card methods and opaque-word meanings. Complete
+The callback at `0x112b5110` is not a standalone Ghidra procedure; the subsequent
+[filename-loader recovery](xml_loader_recovery.md) follows its 20-byte adapter
+into `0x112a7b60` and establishes specific read/parse failure distinctions.
+Missing VFS entries, full normalization/mount policy and parser equivalence
+remain open. The native explicit-node adapter above is verified independently
+from retained setup/child decoder evidence. Continue the other unit-card methods
+and opaque-word meanings. Complete
 engine/FaceFX layouts, callable vtables, allocator/threading behavior and game
 playability remain outside this milestone. See [progress.md](../progress.md).

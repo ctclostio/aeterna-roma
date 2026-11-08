@@ -1,6 +1,6 @@
 {
   "schema": "rome2-type-recovery-verification-v1",
-  "scope": "Layer 5 records the current native resource/XML-node setup domain. Earlier top-level and layer 2/3/4 results and source hashes are historical milestone snapshots; none declares whole-engine equivalence.",
+  "scope": "Layer 6 records current native XML loader primitives and original failure-path distinctions. Earlier top-level and layer 2/3/4/5 results and source hashes are historical milestone snapshots; none declares whole-engine equivalence.",
   "python_focused": {
     "tests": 82,
     "failures": 0,
@@ -344,7 +344,7 @@
       "sha256": "5f38a41f1ad01d590c2ca13c5bfd7b1ce3eeabdf00d0369630d799da6dd07ae4"
     }
   ],
-  "updated_utc": "2026-11-07T17:55:31+00:00",
+  "updated_utc": "2026-11-08T01:12:38+00:00",
   "layer2": {
     "status": "complete for admitted tag copy domain and typed helper boundary",
     "tag_allocation_failure_positions": 11,
@@ -576,7 +576,7 @@
       "whole-engine class/vtable/allocator/threading recovery"
     ]
   },
-  "current_layer": "layer5",
+  "current_layer": "layer6",
   "layer5": {
     "status": "direct XML-node native setup verified; original XML ABI, resource-manager precedence and loader failure behavior remain open",
     "node_setup": {
@@ -923,6 +923,355 @@
       "full historical CRT/locale/FP-environment equivalence",
       "remaining unit-card opaque fields/methods",
       "whole-engine class/vtable/allocator/threading recovery"
+    ]
+  },
+  "layer6": {
+    "status": "native path-prefix, legacy BOM byte preparation and linked readiness verified; original filename-loader distinctions established statically; full VFS/parser/XML ABI equivalence remains open",
+    "original_image_contracts": {
+      "schema": "rome2-recovered-types-v1",
+      "verified": true,
+      "functions": 55,
+      "globals": 57,
+      "vtables": 9,
+      "instruction_witnesses": 45,
+      "scope": "static original-image evidence; native behavior requires separate tests"
+    },
+    "python_original_contract_tests": 28,
+    "native_tests": {
+      "analyze": {
+        "suites": 62,
+        "failed": 0,
+        "local_ctest_log": "out/loader-layer6-20261107/analyze/Testing/Temporary/LastTest.log",
+        "log_sha256": "602458f9c8b46f8add812a437e94f54daf789c92480711ed67fa76d06837d882",
+        "junit_sha256": "fc7666071923dc6011b7782d89e80e74a377daddaa5dd1c3d3c5d65718f9ce15"
+      },
+      "asan": {
+        "suites": 62,
+        "failed": 0,
+        "local_ctest_log": "out/loader-layer6-20261107/asan/Testing/Temporary/LastTest.log",
+        "log_sha256": "5386a8b832396710ac8ac256cfdf775ab0768c0741feaa60efd18f07dbf9bae8",
+        "junit_sha256": "c52fd03b2738839de10a65a9c679d67f9fd0a27920b73d4f67bfedb901a6d48a"
+      },
+      "installed_asset_oracle_included": true,
+      "assertions_enabled": true,
+      "public_asset_free_suites": 61
+    },
+    "policy_tests": {
+      "active_checks": 200779,
+      "two_byte_prefixes": 65536,
+      "raw_ready_values": 256,
+      "chain_nodes": 256,
+      "mapped_view_truncations": 1793,
+      "cases": [
+        "already-normalized path routing without existence/drive-letter validation",
+        "in-place nonzero-byte compaction for either two-byte BOM marker; high-byte order preserved",
+        "unrecognized UTF-8 BOM, embedded NUL, short inputs and failed-capacity output preservation",
+        "non-monotone unaligned state-source chain; four mapped link bytes and five root bytes",
+        "self/multiple-node cycles, exact work budgets, unmapped/overflowing addresses and unchanged output"
+      ]
+    },
+    "original_loader_observations": [
+      "path normalization precedes a byte-prefix test; this is not file-existence-based loose-file fallback",
+      "direct-file open failure returns before allocation/parse/import; a fresh destination therefore reaches setup missing-root quiet-empty behavior",
+      "failed/short ReadFile still joins buffer preparation; not proof of empty output",
+      "VFS temporary reader initializer always returns AL=1 on ordinary return; its caller test is not a VFS not-found contract",
+      "false parser status rejoins import preparation; parser node append precedes full validation and failure epilogue does not roll back nodes",
+      "BOM handling drops zero BYTES, not Unicode transcoding",
+      "imported +0 state-source link is explicitly supplied; direct XML parent/ownership identity is not admitted",
+      "callback is 20 bytes including RET; Ghidra instruction facts decode it with procedure=None"
+    ],
+    "native_adaptations": [
+      "checked spans/capacity and deterministic zero/one-byte text inputs",
+      "explicit node budget, checked guest mappings and unchanged root-reader output on error",
+      "new primitives are isolated; existing XmlLite/resource error behavior unchanged",
+      "ABI metadata describes observed registers/stack widths, not source C++ classes or callable x64 addresses"
+    ],
+    "public_python_clean": {
+      "checkout": "tracked public files plus reviewed current patch; no original image or canonical exports",
+      "runs": [
+        {
+          "version": "3.14",
+          "tests": 856,
+          "skipped": 257,
+          "failures": 0,
+          "errors": 0,
+          "local_log": "out/loader-layer6-20261107/public-clean-python314.log",
+          "log_sha256": "478c31b27e4784c24eaa354bf166e20d3c02fa769bd5fd30b9035486198b87dd"
+        },
+        {
+          "version": "3.15",
+          "tests": 856,
+          "skipped": 257,
+          "failures": 0,
+          "errors": 0,
+          "local_log": "out/loader-layer6-20261107/public-clean-python315.log",
+          "log_sha256": "c53615060cc6af2b9592976b6b4e01f8bb8bd47b4bdf476126e3be2a7e1dd394"
+        }
+      ]
+    },
+    "corpus_tree_full_suite": "not rerun; unresolved layer5 corpus-tree failures remain recorded; no frozen provenance locks relaxed",
+    "installed_assets": {
+      "record": "port/recovered_types/fauna_assets.json",
+      "archives": 2,
+      "entrypoints": [
+        "rome2_owned_unit_card_create_from_packs",
+        "rome2_owned_unit_card_setup_from_packs"
+      ],
+      "explicit_precedence_orders": 2,
+      "original_game_execution": false,
+      "record_sha256": "590b4383acd1ba59047ffb9744313edd629036ad7156b3e0140b37ff7563dbe3"
+    },
+    "rea": {
+      "new_function_dossiers": 9,
+      "new_hash_pinned_records": 12,
+      "verified_prior_layer3_records": 8,
+      "verified_prior_layer4_records": 25,
+      "new_function_addresses": [
+        "0x112a7b60",
+        "0x100f3b20",
+        "0x10104b10",
+        "0x101049d0",
+        "0x101271a0",
+        "0x112ce6b0",
+        "0x10121510",
+        "0x10127640",
+        "0x101279d0"
+      ],
+      "closed_snapshot_local_path": "out/loader-layer6-20261107/session.rea.json",
+      "closed_snapshot_sha256": "cd158dfc0720dbad6521f66e09d86de6459cb540454306f428b2d639d5806c94",
+      "closed_evidence_records": 55,
+      "validated_bundle_local_path": "out/loader-layer6-20261107/validated-evidence-bundle.json",
+      "validated_bundle_sha256": "2003fb5f4f47a3d6e53bb1079a4f968595d607321c7b82735c370222ca7ffdbb",
+      "session_closed": true,
+      "source_immutable": true,
+      "original_game_execution": false,
+      "shared_ghidra_and_canonical_exports_changed": false
+    },
+    "review": {
+      "requested": "Google Argon second eyes; Max requested earlier",
+      "availability": "installed CLI offers Argon High/High as highest available variant; prior Max rejection not retried",
+      "findings": "bounded policy/text reviews found no confirmed defect; early existence-based routing hypothesis rejected against original assembly",
+      "runs": [
+        {
+          "name": "argon-loader",
+          "model": "gemini-4-argon-high",
+          "requested_effort": "high",
+          "status": "SUCCESS",
+          "tools_used": [
+            "read_file"
+          ],
+          "conversation_id": "b4774d38-847d-4daa-a29e-9081be1609ab",
+          "events_local_path": "out/loader-layer6-20261107/argon-loader.events.jsonl",
+          "events_sha256": "ef8cbb3e1fe15c041017323a15c7aca2fd858c7512e738ecb09f43bc580cc549",
+          "review_local_path": "out/loader-layer6-20261107/argon-loader.md",
+          "review_sha256": "b93e3e4de99aa0440fb9d2cfc088c19ad31d3c34a3b29ecf79dbd4f9706fda38"
+        },
+        {
+          "name": "argon-policy",
+          "model": "gemini-4-argon-high",
+          "requested_effort": "high",
+          "status": "SUCCESS",
+          "tools_used": [
+            "read_file"
+          ],
+          "conversation_id": "2cd5a04b-f5cc-41a4-9833-5af4e7ed50a2",
+          "events_local_path": "out/loader-layer6-20261107/argon-policy.events.jsonl",
+          "events_sha256": "1c46f5c55681a7fa17fdd0e37cbf69b0b402ed4c799515637295c88b21e1a2d0",
+          "review_local_path": "out/loader-layer6-20261107/argon-policy.md",
+          "review_sha256": "239a645f17c09e0fe011dad3284f5734964819226935bfb4e4dcef51daa124b1"
+        },
+        {
+          "name": "argon-text",
+          "model": "gemini-4-argon-high",
+          "requested_effort": "high",
+          "status": "SUCCESS",
+          "tools_used": [
+            "read_file"
+          ],
+          "conversation_id": "3d1cb67d-12ec-490e-a850-3a37643f049f",
+          "events_local_path": "out/loader-layer6-20261107/argon-text.events.jsonl",
+          "events_sha256": "03a126d26884837c4996aa9f3e225419a9d8125f28a45676f0a6c5dd0990da88",
+          "review_local_path": "out/loader-layer6-20261107/argon-text.md",
+          "review_sha256": "817fc83143664be2e9305eff82932ec8314a77511fc8952993594c5d5994c929"
+        }
+      ]
+    },
+    "local_logs": "out/loader-layer6-20261107/",
+    "source_hash_scope": "UTF-8 with CRLF/CR normalized to LF; current resource/XML loader recovery, tests and docs",
+    "sources": [
+      {
+        "path": "README.md",
+        "bytes": 25025,
+        "sha256": "30afe5e5a6f14b1e884b588ff0ddb9c8f37a39acc6d63e142bcbc537260e8df5"
+      },
+      {
+        "path": "docs/unitcard_resource_recovery.md",
+        "bytes": 10039,
+        "sha256": "97c4517c260f05bfbd3e91a588b8deb0e397d2f99368457fb44922b27078966d"
+      },
+      {
+        "path": "docs/xml_loader_recovery.md",
+        "bytes": 10783,
+        "sha256": "2300df95d48498fece0b6a721d8c442055ff906b1f477334643ca9e1bfbe773f"
+      },
+      {
+        "path": "port/recovered_types/CMakeLists.txt",
+        "bytes": 4374,
+        "sha256": "21397733a16c628c379b7705d7f23aa0bbf8e05b2d51162f42410a0536059035"
+      },
+      {
+        "path": "port/recovered_types/contracts.json",
+        "bytes": 77304,
+        "sha256": "8a1d2e1f0f26aa9c350279d69b894408b646a0962284ce8179aec35c6d2342bc"
+      },
+      {
+        "path": "port/recovered_types/fauna_asset_probe.c",
+        "bytes": 3051,
+        "sha256": "486d4306fbbee7bd0b3b286a6db5b1df508b0cfceff196ff569bf7a149179644"
+      },
+      {
+        "path": "port/recovered_types/fauna_config.c",
+        "bytes": 12023,
+        "sha256": "f7c154d03514f6e99ce90054cf13a1da8005aec2dda187972ebbb9d5e9abf29d"
+      },
+      {
+        "path": "port/recovered_types/fauna_config.h",
+        "bytes": 3054,
+        "sha256": "9313687f26b6d65a3da40b141f9a4535ea5040ad3740c402df9eb9c3f8509c5f"
+      },
+      {
+        "path": "port/recovered_types/guest32_layouts.h",
+        "bytes": 19202,
+        "sha256": "a37ed1c417c48c726d6e9396a673a3552d4ce6a523fc84bdb4d549d42ece5d64"
+      },
+      {
+        "path": "port/recovered_types/native_xml.c",
+        "bytes": 11832,
+        "sha256": "0e16d0bc50e48d4a3290e000be974e65a1593208d9df7f18a1f9191761061cbc"
+      },
+      {
+        "path": "port/recovered_types/native_xml.h",
+        "bytes": 2555,
+        "sha256": "70bd1f4fe5aae18aaceb479f487e9ace232bcf62fb0d44204ae6633ff0fa915e"
+      },
+      {
+        "path": "port/recovered_types/owned_fauna.c",
+        "bytes": 9394,
+        "sha256": "f879f67256c4676eb5e251045135a3478c940f8ba08a3209a5d20d8ecb478e82"
+      },
+      {
+        "path": "port/recovered_types/owned_fauna.h",
+        "bytes": 3821,
+        "sha256": "9813242e118f4ff2e2a221850768d2f481a8d8544b50bbeffd3855658ae04304"
+      },
+      {
+        "path": "port/recovered_types/owned_unit_card.c",
+        "bytes": 16055,
+        "sha256": "7299a2d87abbf8f2f178c16fe18b31960c531bae7f4d89f0f9f50f6e6f1c28fa"
+      },
+      {
+        "path": "port/recovered_types/owned_unit_card.h",
+        "bytes": 6921,
+        "sha256": "8d3d0766d4a6826d8937819f65563b409d587c4ef5f76e16d6c6ddd1ed273cc6"
+      },
+      {
+        "path": "port/recovered_types/pack_resource.c",
+        "bytes": 12117,
+        "sha256": "13e9b43193dc1309a3d64e109dd6d30185ef38538f6a0a44d072492c2c197053"
+      },
+      {
+        "path": "port/recovered_types/pack_resource.h",
+        "bytes": 1944,
+        "sha256": "c85b2002cd2d6ad0d4eb966b4595c2f15b32b83b4359c7cc55792ad30c6e8407"
+      },
+      {
+        "path": "port/recovered_types/test_fauna_config.c",
+        "bytes": 9339,
+        "sha256": "122f89ba8ba541cb2696b9a7c8fcc65155ec69d64ec2af7ce6840688c7043df4"
+      },
+      {
+        "path": "port/recovered_types/test_native_xml.c",
+        "bytes": 9363,
+        "sha256": "fd68911474707bad7e136ce863c3f95bb1d04f8747f941b2eaff9634b18f22ab"
+      },
+      {
+        "path": "port/recovered_types/test_pack_resource.c",
+        "bytes": 36226,
+        "sha256": "b3e2fda413ecdd78fa269566e65d11dcd7600dabaa21433379d3c27d1d4ecd56"
+      },
+      {
+        "path": "port/recovered_types/test_resource_support.h",
+        "bytes": 2422,
+        "sha256": "4f750e041cf8af2ffbfa7ffd29e429d390dd2b4d0bcdc71abda7b4dd69877269"
+      },
+      {
+        "path": "port/recovered_types/test_unit_card_resource.c",
+        "bytes": 22761,
+        "sha256": "cf9eb4fb19c3983b4a5200c3c465f012b6f36a87c0fa7e3bacb09f7394391e18"
+      },
+      {
+        "path": "port/recovered_types/test_unit_card_xml_node.c",
+        "bytes": 12462,
+        "sha256": "6161d19a143df36df9c2444d72818e916c02c787c25c4adbaa97b292b65add60"
+      },
+      {
+        "path": "port/recovered_types/test_xml_loader_policy.c",
+        "bytes": 9012,
+        "sha256": "92e9dd7be968306792b395484606849e88f16a114e943029457e44dbf2891b17"
+      },
+      {
+        "path": "port/recovered_types/unit_card_resource.c",
+        "bytes": 7384,
+        "sha256": "2ea6d1e9f301824556604bf21113ec5dffe3ab5b99e9b50180cbffa9df539feb"
+      },
+      {
+        "path": "port/recovered_types/unit_card_resource.h",
+        "bytes": 4644,
+        "sha256": "476989c945bb7e50dfecc176a10ce89239d493588019f2fe9363f67cce23ea8b"
+      },
+      {
+        "path": "port/recovered_types/xml_loader_policy.c",
+        "bytes": 2257,
+        "sha256": "e7b8bb303f944bd66dd40658f505aea74858e6cc31da0e218738876cb28057df"
+      },
+      {
+        "path": "port/recovered_types/xml_loader_policy.h",
+        "bytes": 2966,
+        "sha256": "42b9f8355ae302d3737eb844bd109fcc9ada27b294338431aa315619476638a1"
+      },
+      {
+        "path": "progress.md",
+        "bytes": 17695,
+        "sha256": "5fc925aeceaac0aab9c1f4e2fbddd6a1f32553976145fb6d2e592a91db80f14a"
+      },
+      {
+        "path": "scripts/test_type_recovery_contracts.py",
+        "bytes": 13967,
+        "sha256": "a011ebe08554cfe5b1a2421d41d2e844fc9ff2ff6d139a2da6495367893055a6"
+      },
+      {
+        "path": "scripts/type_recovery_contracts.py",
+        "bytes": 7986,
+        "sha256": "9043b4408c80bc4a3e411d5232850e37081838314e1c31ac86c11e9143385e5e"
+      },
+      {
+        "path": "scripts/verify_fauna_resources.py",
+        "bytes": 6911,
+        "sha256": "2bcb22d882509671d6a5c2c590ca87cac2fb774099ed75884b16b415ed9e108c"
+      },
+      {
+        "path": "tests/native/CMakeLists.txt",
+        "bytes": 6960,
+        "sha256": "37a9225e989bd6925e2285d8929a8052acacea0af43f9ad13434f7ff5c691fc3"
+      }
+    ],
+    "remaining": [
+      "VFS virtual dispatch and missing-entry/unwind contracts",
+      "mount/dependency/mod precedence and full registered-prefix normalization",
+      "exact malformed/partial parser outputs and original exception behavior",
+      "remaining original XML object ABI and state-source semantics",
+      "historical CRT/locale/FP-environment equivalence",
+      "remaining unit-card methods/opaque fields and whole-engine class/vtable/allocator/threading recovery"
     ]
   }
 }

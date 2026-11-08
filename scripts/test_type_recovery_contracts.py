@@ -47,7 +47,7 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 46)
+        self.assertEqual(result["functions"], 55)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -171,6 +171,57 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual(branch[9], 0xE8)
         self.assertEqual(0x101A9873 + 5 + struct.unpack_from("<i", branch, 10)[0], 0x1015E280)
         self.assertEqual(0x101A986C + 2 + branch[3], 0x101A9883)
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_xml_root_state_initialization_and_raw_flag_read(self):
+        witnesses = {w["address"]: bytes.fromhex(w["hex"])
+                     for w in self.registry["instruction_witnesses"]}
+        self.assertEqual(witnesses["112aab6b"], bytes.fromhex("c7060000000066c746040100"))
+        self.assertEqual(witnesses["101b927d"], bytes.fromhex("8a4104c3"))
+        base, sections = contracts.parse_pe32(self.image)
+        walk, _ = contracts.image_bytes(self.image, base, sections, 0x101B9270, 17)
+        self.assertEqual(walk, bytes.fromhex("8b0185c074078bc8e9f3ffffff8a4104c3"))
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_loader_callback_adapts_two_stack_arguments(self):
+        witnesses = {w["address"]: bytes.fromhex(w["hex"])
+                     for w in self.registry["instruction_witnesses"]}
+        adapter = witnesses["112b5110"]
+        self.assertEqual(len(adapter), 20)
+        self.assertEqual(adapter[:14], bytes.fromhex("51ff74240c8d4c2407ff74240ce8"))
+        self.assertEqual(0x112B511D + 5 + struct.unpack_from("<i", adapter, 14)[0], 0x112A7B60)
+        self.assertEqual(adapter[18:], bytes.fromhex("59c3"))
+        self.assertEqual(witnesses["112aacc9"], bytes.fromhex("ff54243083c408"))
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_drive_rooted_predicate_is_a_byte_prefix_test(self):
+        base, sections = contracts.parse_pe32(self.image)
+        body, _ = contracts.image_bytes(self.image, base, sections, 0x100F3B20, 27)
+        # No existence/drive-letter check: byte +1 is ':', byte +2 is '/' or
+        # '\\'. Only AL is assigned 0/1; upper EAX is not an integer boolean.
+        self.assertEqual(body, bytes.fromhex("8b4424048078013a750e8a40023c5c74043c2f7503b001c332c0c3"))
+
+    def test_legacy_bom_filter_advances_by_bytes(self):
+        witnesses = {w["address"]: bytes.fromhex(w["hex"])
+                     for w in self.registry["instruction_witnesses"]}
+        # INC ECX, not a UTF-16 stride. Zero bytes are skipped; retained bytes
+        # are copied without transcoding, then a NUL terminator is written.
+        self.assertEqual(witnesses["112a7d80"], bytes.fromhex("8a0184c0740388024246413bf372f1c60200"))
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_read_and_parse_failures_do_not_imply_empty_output(self):
+        witnesses = {w["address"]: bytes.fromhex(w["hex"])
+                     for w in self.registry["instruction_witnesses"]}
+        for address in (0x112A7C40, 0x112A7C57):
+            jump = witnesses[f"{address:08x}"]
+            self.assertEqual(jump[0], 0xE9)
+            self.assertEqual(address + 5 + struct.unpack_from("<i", jump, 1)[0], 0x112A7D4B)
+        self.assertEqual(witnesses["112a7de7"], bytes.fromhex("84c07529"))
+        self.assertEqual(0x112A7DE9 + 2 + witnesses["112a7de7"][3], 0x112A7E14)
+        initial_import = witnesses["112a7e31"]
+        self.assertEqual(initial_import[:6], bytes.fromhex("566a00538bcd"))
+        self.assertEqual(0x112A7E37 + 5 + struct.unpack_from("<i", initial_import, 7)[0], 0x112CE6B0)
+        self.assertEqual(witnesses["10127b9d"], bytes.fromhex("8d4201894304"))
         self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
 
     def test_wrong_stack_abi_rejected(self):

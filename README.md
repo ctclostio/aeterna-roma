@@ -12,9 +12,10 @@ build and test reconstructed native components and source tools without the
 original game or private analysis exports. This remains a work in progress.
 
 The current recovery checklist is [progress.md](progress.md). Its latest milestone
-adds [unit-card resource and XML-node setup](docs/unitcard_resource_recovery.md),
-including clear-before-load order, direct-node decoding, allocation-failure
-checks and installed-asset comparisons.
+adds [XML loader policy recovery](docs/xml_loader_recovery.md), including path
+classification, legacy byte preparation, linked readiness and original loader
+failure distinctions. Earlier [resource and XML-node setup](docs/unitcard_resource_recovery.md)
+includes allocation-failure checks and installed-asset comparisons.
 
 ## License
 

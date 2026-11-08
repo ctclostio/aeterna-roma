@@ -218,11 +218,51 @@ nonempty backing-allocation behavior. Details:
 [setup recovery](docs/unitcard_resource_recovery.md) and
 [verification record](port/recovered_types/verification.json).
 
+### Layer 6 — XML loader policy and failure distinctions, 2026-11-07
+
+- [x] Follow the 20-byte callback adapter into the original filename loader
+  and recover nine focused function dossiers in one private REA session.
+- [x] Distinguish normalized drive-rooted routing from file-existence or
+  archive precedence; retain complete normalization/VFS policy as open work.
+- [x] Establish direct-file open-failure return, continued buffer processing
+  after failed/short reads, and import despite a false parser result.
+- [x] Recover the legacy BOM byte filter without treating it as Unicode
+  conversion; add a bounded in-place native helper.
+- [x] Record the fixed-width XML state prefix and add a checked root-state
+  reader with an explicit work budget and preserved output on failure.
+- [x] Verify native path routing, byte preparation and linked readiness with
+  original-byte contracts, optimized/ASan tests and independent Argon review.
+
+The new policy suite runs **200,779 checks**, including every two-byte prefix
+for the legacy filter, every raw readiness byte, a non-monotone unaligned chain,
+all mapped-view truncations, cycles, work limits and address-space boundaries.
+Both native profiles pass **62 local suites**, including installed-resource
+comparisons. The clean public suite passes **856 tests** on Python 3.14 and
+3.15, with 257 expected private-evidence skips. All **28 original-image tests**
+pass; the registry verifies **55 function bodies, 57 globals, nine first vtable
+slots and 45 instruction windows**.
+
+The complete filename-loader assembly shows why blanket quiet-empty fallback
+would be wrong: failed/short reads still reach byte preparation, and parser
+failure does not suppress import of temporary nodes. Existing native resource
+APIs retain explicit diagnostics. Direct-file open failure is a narrower
+statically established quiet-empty case for a fresh destination. Missing VFS
+entry behavior and exact partial-tree/exception outcomes remain open.
+
+Argon reviewed the new helpers read-only using the highest installed Argon
+High/High variant. Review suggestions were checked against assembly; an early
+existence-based routing hypothesis was rejected. The private REA session was
+closed, its 55-record bundle validated, and 12 new retained records hash-pinned.
+Shared Ghidra state, canonical exports and frozen admission locks were unchanged.
+See [XML loader recovery](docs/xml_loader_recovery.md) and the
+[verification record](port/recovered_types/verification.json).
+
 ### Remaining work
 
 1. Extend the verified resource-backed domain toward the original resource
-   manager: recover mount/dependency/mod precedence, quiet-failure/exception
-   ordering, and the original XML object ABI. Historic CRT/locale
+   manager: recover VFS dispatch targets and missing-entry/unwind behavior,
+   mount/dependency/mod precedence, full normalization rules, exact partial
+   parser/exception outcomes, and the rest of the original XML object ABI. Historic CRT/locale
    behavior and full resource-backed constructor equivalence remain open.
 2. Recover the remaining unit-card methods and meanings of opaque 32-bit
    words before widening any of them into native pointers or ownership links.

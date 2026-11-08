@@ -486,6 +486,147 @@
         "11348bc9"
       ],
       "return_instruction_authority": "all RET instructions from complete REA assembly; body ends in a backward JMP"
+    },
+    {
+      "address": "112a7b60",
+      "bytes": 845,
+      "sha256": "3a513483e73e1401385b6b2e4fbb68dfb78e191087a6cd5d8d233bde36d626f3",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX saved ECX context; callback ignores result",
+      "scope": "XML filename loader; ECX is scratch context, not an admitted class instance; two stack arguments are destination and original UTF-16 path",
+      "return_instruction_addresses": [
+        "112a7bf2",
+        "112a7d0b",
+        "112a7eaa"
+      ],
+      "abi_authority": "Root inference from caller and retained decoded assembly; convention describes register/stack shape, not a recovered C++ class or callable native address"
+    },
+    {
+      "address": "100f3b20",
+      "bytes": 27,
+      "sha256": "dceba3ddbf79e39bd840f8de1e4a93eb178681d39bcf9c2f58b6677a4f31f340",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "AL 0/1 only; upper EAX is not a Boolean result",
+      "scope": "narrow path prefix at bytes+1/+2; no existence check or drive-letter validation",
+      "return_instruction_addresses": [
+        "100f3b37",
+        "100f3b3a"
+      ],
+      "abi_authority": "Root inference from caller and retained decoded assembly; convention describes register/stack shape, not a recovered C++ class or callable native address"
+    },
+    {
+      "address": "10104b10",
+      "bytes": 30,
+      "sha256": "12a9b9c022f1472d37b7f7c4b9238d94b582eff9358f7b6b86fdf568b46f170a",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "AL always 1 on ordinary return",
+      "scope": "initialize temporary memory reader from pointer/length; not a VFS success predicate",
+      "return_instruction_addresses": [
+        "10104b2b"
+      ],
+      "abi_authority": "Root inference from caller and retained decoded assembly; convention describes register/stack shape, not a recovered C++ class or callable native address"
+    },
+    {
+      "address": "101049d0",
+      "bytes": 152,
+      "sha256": "42ab4604e76f77d5d9473389198c46ca4015ed1dde3fa0091864619d1bfcc7f5",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "AL file-open success",
+      "scope": "Win32 read-only file-open state and error capture; source class identity not admitted",
+      "return_instruction_addresses": [
+        "10104a40",
+        "10104a65"
+      ],
+      "abi_authority": "Root inference from caller and retained decoded assembly; convention describes register/stack shape, not a recovered C++ class or callable native address"
+    },
+    {
+      "address": "101271a0",
+      "bytes": 486,
+      "sha256": "a415bb3e24f75cb1a4feecfad893c55b38091cfe7795d3109c0e8a22a0b263b2",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "AL parser result",
+      "scope": "legacy parser entry; rejects a negative leading signed byte; default recovered signature is not authoritative",
+      "return_instruction_addresses": [
+        "101271b5",
+        "1012737c"
+      ],
+      "abi_authority": "Root inference from caller and retained decoded assembly; convention describes register/stack shape, not a recovered C++ class or callable native address"
+    },
+    {
+      "address": "112ce6b0",
+      "bytes": 581,
+      "sha256": "ecdadb014f757881f7272a07bb1c79802e20623a3ee91d3bde20ae0a08f81400",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 12,
+      "calling_convention": "thiscall",
+      "ordinary_return": "none admitted",
+      "scope": "import a parsed node and recursively its children; forward scratch context and explicitly supplied state-source link",
+      "return_instruction_addresses": [
+        "112ce8f2"
+      ],
+      "abi_authority": "Root inference from caller and retained decoded assembly; convention describes register/stack shape, not a recovered C++ class or callable native address"
+    },
+    {
+      "address": "10121510",
+      "bytes": 382,
+      "sha256": "bb1eadfad5227ffc0ee9b4d101bce6d7bd43c03ad4b0a57673b4696d0961a822",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX first stack destination",
+      "scope": "path normalization composition and registered-prefix loop; complete normalization semantics remain open",
+      "return_instruction_addresses": [
+        "1012168d"
+      ],
+      "abi_authority": "Root inference from caller and retained decoded assembly; convention describes register/stack shape, not a recovered C++ class or callable native address"
+    },
+    {
+      "address": "10127640",
+      "bytes": 642,
+      "sha256": "0fc3880064dc1ee33fe761535bc4c0ad23e29a38f4388f4dac1e60143c4c6c7f",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 12,
+      "calling_convention": "thiscall",
+      "ordinary_return": "AL parse result",
+      "scope": "recursive parser with forwarded scratch context; appends a node before completing validation and has a failure epilogue without rollback",
+      "return_instruction_addresses": [
+        "101278b3",
+        "101278bf"
+      ],
+      "abi_authority": "Root inference from caller and retained decoded assembly; convention describes register/stack shape, not a recovered C++ class or callable native address"
+    },
+    {
+      "address": "101279d0",
+      "bytes": 546,
+      "sha256": "411b7ca17294f7f5f7aad5665355756471a2c6bac1d5e2c5f9da1275ab87166f",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX newly appended parsed-node address",
+      "scope": "temporary parsed-node vector growth/append; stride 0x3c and count publication before node initialization",
+      "return_instruction_addresses": [
+        "10127bf1"
+      ],
+      "abi_authority": "Root inference from caller and retained decoded assembly; convention describes register/stack shape, not a recovered C++ class or callable native address"
     }
   ],
   "globals": [
@@ -1117,6 +1258,61 @@
       "address": "101a986a",
       "hex": "85c07415508d4c240ce8084afbff",
       "purpose": "Nonzero explicit XML node calls child decoder 1015e280 through the card-pointer holder; zero branches to default resource path 101a9883"
+    },
+    {
+      "address": "112aab6b",
+      "hex": "c7060000000066c746040100",
+      "purpose": "XML constructor initializes the linked state source to NULL and the ready/adjacent flag word to 0x0001"
+    },
+    {
+      "address": "101b927d",
+      "hex": "8a4104c3",
+      "purpose": "Read the final linked XML state's raw ready byte at +4 into AL, then return"
+    },
+    {
+      "address": "112b5110",
+      "hex": "51ff74240c8d4c2407ff74240ce83e2affff59c3",
+      "purpose": "Twenty-byte callback adapter: local scratch receiver, forwarded document/path arguments, call 112a7b60, POP ECX and cdecl RET"
+    },
+    {
+      "address": "112aacc9",
+      "hex": "ff54243083c408",
+      "purpose": "XML constructor calls the supplied callback indirectly, then caller-cleans its two stack arguments"
+    },
+    {
+      "address": "112a7d80",
+      "hex": "8a0184c0740388024246413bf372f1c60200",
+      "purpose": "Legacy BOM filter increments the source by one byte, drops zero bytes, preserves nonzero byte order and appends NUL"
+    },
+    {
+      "address": "112a7c40",
+      "hex": "e906010000",
+      "purpose": "Short ReadFile result still jumps to buffer preparation at 112a7d4b"
+    },
+    {
+      "address": "112a7c57",
+      "hex": "e9ef000000",
+      "purpose": "ReadFile success/failure join still jumps to buffer preparation at 112a7d4b"
+    },
+    {
+      "address": "112a7de7",
+      "hex": "84c07529",
+      "purpose": "Parser success branches to child import preparation; false follows a diagnostic-string path that rejoins the same import preparation"
+    },
+    {
+      "address": "112a7e31",
+      "hex": "566a00538bcde874680200",
+      "purpose": "Initial parsed-node import receives destination, a zero state-source link and source node; ECX carries scratch context"
+    },
+    {
+      "address": "10127705",
+      "hex": "8d4d24e8c3020000",
+      "purpose": "Recursive parser appends a temporary child node before completing tag validation"
+    },
+    {
+      "address": "10127b9d",
+      "hex": "8d4201894304",
+      "purpose": "Parsed-node append publishes count+1 in vector offset+4"
     }
   ],
   "ownership": {
@@ -1600,5 +1796,108 @@
     "closed_snapshot_local_path": "out/type-layer4-20261103/session.rea.json",
     "closed_snapshot_sha256": "1c47582957d245f6be359ab53f5fb27bffa2e1002c3863ebb7a5711545766e14",
     "closed_evidence_records": 42
+  },
+  "rea_layer6_evidence": {
+    "scope": "Original XML filename-loader, path predicate, parser/import control flow and callback adapter; static source-immutable private session only",
+    "records": [
+      {
+        "evidence_id": "ev_eca13a1b967d37d502eb0d8663455d08b4ab433b4149ddd5d476351462df626a",
+        "operation": "analyze_function",
+        "procedure": "0x112a7b60",
+        "retained_local_path": "out/loader-layer6-20261107/fn-112a7b60.json",
+        "retained_record_sha256": "7b91a9b308b6eef84ca6ab4f1ec04bbf97c48d00649ebe3117e20b0f7cd54147",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x112a7b60 --snapshot out/loader-layer6-20261107/session.rea.json --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_3261555d0c6647ba15668b6a35e3c3f8770db8b44383577f55644a489dedafe4",
+        "operation": "analyze_function",
+        "procedure": "0x100f3b20",
+        "retained_local_path": "out/loader-layer6-20261107/fn-100f3b20.json",
+        "retained_record_sha256": "2cbed91bcad5466258036dd8d66a45fddc3fe4b3de2f881b6103a6827a90c888",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x100f3b20 --snapshot out/loader-layer6-20261107/session.rea.json --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_a3340283dfd2fdcfa09d4dfc7859380446225a762d83f9458d6b41e712cdcd6d",
+        "operation": "analyze_function",
+        "procedure": "0x10104b10",
+        "retained_local_path": "out/loader-layer6-20261107/fn-10104b10.json",
+        "retained_record_sha256": "c8ca4d137b486e8aeb851a07d1e9459d427df8cab8e7b2c9ac88f7906c9d7d0a",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x10104b10 --snapshot out/loader-layer6-20261107/session.rea.json --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_ed9a47359e6ce6e1cee946f1304e5a073236b4c9b268caa97e35fa6ccdd4072c",
+        "operation": "analyze_function",
+        "procedure": "0x101049d0",
+        "retained_local_path": "out/loader-layer6-20261107/fn-101049d0.json",
+        "retained_record_sha256": "107435267f3a8260cd03d96677c9676965349e0c003be858d9062b53759263d7",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x101049d0 --snapshot out/loader-layer6-20261107/session.rea.json --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_d04c524676064bc11bb4a77bf15739e7bd7d59dabe654694cefa4618e615bd3f",
+        "operation": "analyze_function",
+        "procedure": "0x101271a0",
+        "retained_local_path": "out/loader-layer6-20261107/fn-101271a0.json",
+        "retained_record_sha256": "ed2096ba79f53c59c3721f8e7b3a524c851ff2350a74411a66e2d29a83541b3d",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x101271a0 --snapshot out/loader-layer6-20261107/session.rea.json --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_98f061488778849275f1f7fc0bb815206b04c93e8dc09bff693bf1a90369614a",
+        "operation": "analyze_function",
+        "procedure": "0x112ce6b0",
+        "retained_local_path": "out/loader-layer6-20261107/fn-112ce6b0.json",
+        "retained_record_sha256": "96800ddd7ac6092f7169a39c634bcd049b7f67ce12e4fed679380d76cd371122",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x112ce6b0 --snapshot out/loader-layer6-20261107/session.rea.json --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_8d77228d5b602ac97dd7f54aa94baa178471a148abc308ee53274488b88617e8",
+        "operation": "analyze_function",
+        "procedure": "0x10121510",
+        "retained_local_path": "out/loader-layer6-20261107/fn-10121510.json",
+        "retained_record_sha256": "3bab0cdb5eca90e78f52ad7d5d573098250f0220157a66cc3f505b7ec683714d",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x10121510 --snapshot out/loader-layer6-20261107/session.rea.json --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_78b1a4a5fcfa2c4a2bfd2987deef75b94cba0d4bae4c1663627aec729d852f6d",
+        "operation": "analyze_function",
+        "procedure": "0x10127640",
+        "retained_local_path": "out/loader-layer6-20261107/fn-10127640.json",
+        "retained_record_sha256": "ecd786edd128cfd33175c8c29a29f72fc845c4cae76c6f567085aa28d171abce",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x10127640 --snapshot out/loader-layer6-20261107/session.rea.json --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_dd41731ecbfcec7873446befe95aac36a4092a4c16a61c1582eec4394aaf9a9c",
+        "operation": "analyze_function",
+        "procedure": "0x101279d0",
+        "retained_local_path": "out/loader-layer6-20261107/fn-101279d0.json",
+        "retained_record_sha256": "aa489b88638e082e2c28ec8dad5c89459f39bc661fb1c33196c30426a9ce40a5",
+        "reproduce": "rea function \"Total War Rome II/empire.retail.dll\" 0x101279d0 --snapshot out/loader-layer6-20261107/session.rea.json --provider ghidra --format json"
+      },
+      {
+        "evidence_id": "ev_b055a0dd49d3546c10effd2d2e63bb4f7f2b99e48d7378598b6ef070ed131c4a",
+        "operation": "read_bytes",
+        "address": "0x112b5110",
+        "retained_local_path": "out/loader-layer6-20261107/bytes-112b5110-20.json",
+        "retained_record_sha256": "1685b82cbb96080732b4076cd225c75122c25d06153e8f49df2b222f9f863e90"
+      },
+      {
+        "evidence_id": "ev_cf269a77e2d0c3187e7c9e91477a6e99a0aed9168dec955d7d8c9fdff5d3d726",
+        "operation": "inspect_native_instruction",
+        "address": "0x112b5110",
+        "retained_local_path": "out/loader-layer6-20261107/instruction-112b5110.json",
+        "retained_record_sha256": "20e4c2cfd383325f75ea57da327ea5df94a3e70ddac3d31d1431c67cbb130605"
+      },
+      {
+        "evidence_id": "ev_7c1e99cc97d02f64a8b5e9a7f53a4f0818d6785044f465d50f2277bbccf17380",
+        "operation": "inspect_native_instruction",
+        "address": "0x112b5123",
+        "retained_local_path": "out/loader-layer6-20261107/instruction-112b5123.json",
+        "retained_record_sha256": "971a60d51fccbd3b406d6149de900c0a134f89baf34c9e16fe505865c47d6e82"
+      }
+    ],
+    "closed_snapshot_local_path": "out/loader-layer6-20261107/session.rea.json",
+    "closed_snapshot_sha256": "cd158dfc0720dbad6521f66e09d86de6459cb540454306f428b2d639d5806c94",
+    "closed_evidence_records": 55,
+    "exported_bundle_local_path": "out/loader-layer6-20261107/evidence-bundle.json",
+    "exported_bundle_sha256": "2003fb5f4f47a3d6e53bb1079a4f968595d607321c7b82735c370222ca7ffdbb"
   }
 }

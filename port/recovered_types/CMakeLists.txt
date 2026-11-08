@@ -39,6 +39,7 @@ add_library(rome2_recovered_types STATIC
   native_xml.c native_xml.h
   fauna_config.c fauna_config.h
   unit_card_resource.c unit_card_resource.h
+  xml_loader_policy.c xml_loader_policy.h
   ../x64_runtime/guest32.c
   ../x64_ported/ported_10cbe350_entity.c
   ../x64_ported/ported_10145c70_unitcard.c
@@ -53,7 +54,7 @@ target_link_libraries(rome2_recovered_types PUBLIC xmllite shlwapi uuid)
 configure_type_target(rome2_recovered_types)
 
 if(BUILD_TESTING)
-  foreach(test IN ITEMS layout_bridge owned_string owned_entity free_list_pool owned_tag owned_attachment scalar_vectors owned_fauna unit_card_observer owned_unit_card pack_resource native_xml fauna_config unit_card_resource unit_card_xml_node)
+  foreach(test IN ITEMS layout_bridge owned_string owned_entity free_list_pool owned_tag owned_attachment scalar_vectors owned_fauna unit_card_observer owned_unit_card pack_resource native_xml fauna_config unit_card_resource unit_card_xml_node xml_loader_policy)
     add_executable(rome2_${test}_tests test_${test}.c)
     target_link_libraries(rome2_${test}_tests PRIVATE rome2_recovered_types)
     configure_type_target(rome2_${test}_tests)
