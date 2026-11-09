@@ -5,3 +5,7 @@
 ## 2024-10-24 - [Overzealous test artifacts]
 **Learning:** Running test suites and profiling tools often generates temporary files in the repository. These must be explicitly cleaned up to avoid committing garbage to version control.
 **Action:** Always run `git clean -fdx` or check `git status` carefully before committing changes.
+
+## 2024-05-19 - Regex Compilation Overhead
+**Learning:** For simple string manipulations in Python (e.g., stripping whitespace or removing specific characters), preferring native string methods (`str.split()`, `str.join()`, `str.replace()`) over regular expressions (`re.sub`) avoids regex compilation and execution overhead, maximizing code performance.
+**Action:** Replaced `re.sub(r"\s+", " ", value).strip()` with `" ".join(value.split())` in scripts like `pi_startup_abi_oracle_gate.py`.
