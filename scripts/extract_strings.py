@@ -39,10 +39,11 @@ def main():
     counts = {}
     samples = {}
     # Bolt: pre-compile regexes for performance
-    compiled_subsystems = {name: re.compile(rx, re.I) for name, rx in SUBSYSTEMS.items()}
+    compiled_subsystems = [(name, re.compile(rx)) for name, rx in SUBSYSTEMS.items()]
     for off, s in lines:
-        for name, rx in compiled_subsystems.items():
-            if rx.search(s):
+        s_lower = s.lower()
+        for name, rx in compiled_subsystems:
+            if rx.search(s_lower):
                 counts[name] = counts.get(name, 0) + 1
                 samples.setdefault(name, [])
                 if len(samples[name]) < 8: samples[name].append(hex(off) + " " + s[:80])
