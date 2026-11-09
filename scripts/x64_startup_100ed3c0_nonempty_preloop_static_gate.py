@@ -118,7 +118,7 @@ def _sha256(data: bytes) -> str:
 
 
 def _compact(text: str) -> str:
-    return re.sub(r"\s+", "", text)
+    return "".join(text.split())
 
 
 def _check_exact(
@@ -227,7 +227,7 @@ def inspect_header_text(text: str) -> list[str]:
     ):
         findings.append("caller-visible ownership controls must be mutable")
 
-    contract_compact = re.sub(r"[\s*]+", "", text)
+    contract_compact = "".join(text.replace("*", "").split())
     contract_tokens = (
         "partially overlapping spans are rejected",
         "temporary_owner LIVE",
@@ -238,7 +238,7 @@ def inspect_header_text(text: str) -> list[str]:
         "performs no guest/native pointer cast",
     )
     for token in contract_tokens:
-        if re.sub(r"[\s*]+", "", token) not in contract_compact:
+        if "".join(token.replace("*", "").split()) not in contract_compact:
             findings.append(f"header ownership/containment contract changed: {token}")
     return sorted(set(findings))
 

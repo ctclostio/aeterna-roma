@@ -142,7 +142,7 @@ def _sha256(data: bytes) -> str:
 
 
 def _compact(text: str) -> str:
-    return re.sub(r"\s+", "", text)
+    return "".join(text.split())
 
 
 def _token_digest(code: str) -> str:
