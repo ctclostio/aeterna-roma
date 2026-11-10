@@ -858,7 +858,7 @@ def _finite_json_float(value: str) -> float:
 
 
 def _normalized_text(value: Any) -> str:
-    return re.sub(r"\s+", " ", value).strip().lower() if isinstance(value, str) else ""
+    return " ".join(value.split()).lower() if isinstance(value, str) else ""
 
 
 def _resolve_contained_file(

@@ -5,3 +5,6 @@
 ## 2024-10-24 - [Overzealous test artifacts]
 **Learning:** Running test suites and profiling tools often generates temporary files in the repository. These must be explicitly cleaned up to avoid committing garbage to version control.
 **Action:** Always run `git clean -fdx` or check `git status` carefully before committing changes.
+## 2024-05-24 - String Optimization
+**Learning:** Using `re.sub` for simple string stripping (whitespace, `*`, `/`) is up to 6x slower than native string chaining like `"".join(text.replace("*", " ").split())`.
+**Action:** Prefer native string methods over regular expressions for string manipulation.

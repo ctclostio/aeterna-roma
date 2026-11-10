@@ -511,8 +511,8 @@ def normalized_signature(value: Any) -> str:
     if not isinstance(value, str):
         return ""
     normalized = value.casefold().replace("__cdecl", "")
-    normalized = re.sub(r"\s+", "", normalized)
-    normalized = re.sub(r"\(\*+\)", "", normalized)
+    normalized = "".join(normalized.split())
+    normalized = normalized.replace("(*)", "").replace("(**)", "")
     return normalized
 
 

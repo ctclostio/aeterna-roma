@@ -151,7 +151,7 @@ def _decode_utf8(path: pathlib.Path) -> tuple[str | None, list[str]]:
 
 
 def _compact(text: str) -> str:
-    return re.sub(r"\s+", "", text)
+    return "".join(text.split())
 
 
 def _sha256(data: bytes) -> str:

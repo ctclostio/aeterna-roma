@@ -607,7 +607,7 @@ def check_evidence_root(root: Path) -> list[str]:
 
         conclusion = document.get("conclusion")
         normalized_conclusion = (
-            re.sub(r"\s+", " ", conclusion).strip()
+            " ".join(conclusion.split())
             if isinstance(conclusion, str)
             else None
         )

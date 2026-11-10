@@ -164,7 +164,7 @@ TEST_CASE_LABELS = (
 
 
 def _compact(text: str) -> str:
-    return re.sub(r"\s+", "", text)
+    return "".join(text.split())
 
 
 def _sha256(text: str) -> str:
