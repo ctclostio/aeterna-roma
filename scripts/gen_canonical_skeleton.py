@@ -832,7 +832,7 @@ def parse_canonical_definition(text: str, expected_name: str) -> Definition:
         function_refs[match.group(0)] += 1
     data_refs = Counter(match.group(0) for match in DATA_REF_RE.finditer(definition_mask))
     return Definition(
-        declaration=re.sub(r"\s+", " ", declaration),
+        declaration=" ".join(declaration.split()),
         start_char=start,
         end_char=body_end,
         start_line=text.count("\n", 0, start) + 1,

@@ -85,7 +85,7 @@ def strip_templates(txt):
 
 def sanitize(txt):
     # normalize whitespace around scope resolution from line-wrapping
-    txt = re.sub(r'\s*::\s*', '::', txt)
+    txt = "::".join([part.strip() for part in txt.split("::")])
     # flatten Ns::Class::member -> Ns_Class_member
     def flat(m):
         return m.group(1).replace('::', '_')
