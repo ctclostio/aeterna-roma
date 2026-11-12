@@ -94,6 +94,55 @@ typedef struct rome2_vfs_candidate_node_prefix32 {
     rome2_data_address32 archive;
 } rome2_vfs_candidate_node_prefix32;
 
+/* FUN_112a77b0 initializes the 32-byte dependency hash-map header at 0x12032a58
+ * (8 bucket pairs, mask 7, max_idx 8); FUN_112afff0 hashes key [str+8], masks
+ * with +0x18, reads bucket pair at +0x0c, and compares against +0x04 list_head. */
+typedef struct rome2_vfs_dep_bucket_pair32 {
+    rome2_data_address32 first;
+    rome2_data_address32 last;
+} rome2_vfs_dep_bucket_pair32;
+
+typedef struct rome2_vfs_dep_hashmap_layout32 {
+    uint32_t load_factor_bits;
+    rome2_data_address32 list_head;
+    uint32_t count;
+    rome2_data_address32 buckets;
+    rome2_data_address32 buckets_end;
+    rome2_data_address32 buckets_cap;
+    uint32_t mask;
+    uint32_t max_idx;
+} rome2_vfs_dep_hashmap_layout32;
+
+/* FUN_112afff0, FUN_112b5090, and FUN_112bb620 inspect the 36-byte hash-map
+ * list nodes: +0/+4 list links, +0x08 string8 key, +0x1c dependency RB-tree. */
+typedef struct rome2_vfs_dep_graph_node_prefix32 {
+    rome2_data_address32 next;
+    rome2_data_address32 prev;
+    rome2_string8_layout32 name;
+    uint32_t unobserved_014[2];
+    rome2_vfs_tree_header_layout32 deps;
+} rome2_vfs_dep_graph_node_prefix32;
+
+/* FUN_112b5090, FUN_112bb620, and FUN_112a4c00 read the 28-byte dependency
+ * edge RB-tree nodes: +0x0d is_nil, +0x10 target string8. */
+typedef struct rome2_vfs_dep_edge_node_prefix32 {
+    rome2_data_address32 left;
+    rome2_data_address32 parent;
+    rome2_data_address32 right;
+    uint8_t color;
+    uint8_t is_nil;
+    uint8_t unobserved_00e[2];
+    rome2_string8_layout32 target_name;
+} rome2_vfs_dep_edge_node_prefix32;
+
+/* FUN_112e1500 reads +0x00 pack_props (checking low nibble of byte +0x1c) and
+ * passes +0x14 archive_name (string8) to FUN_112d59f0. */
+typedef struct rome2_vfs_archive_candidate_prefix32 {
+    rome2_data_address32 pack_props;
+    uint32_t unobserved_004[4];
+    rome2_string8_layout32 archive_name;
+} rome2_vfs_archive_candidate_prefix32;
+
 /* FUN_100e2460's handler vector: capacity precedes count. */
 typedef struct rome2_handler_vector_layout32 {
     uint32_t unobserved_00;
@@ -479,6 +528,23 @@ ROME2_LAYOUT_ASSERT(rome2_unit_card_prefix32, auxiliary, 0x13c);
 ROME2_LAYOUT_ASSERT(rome2_unit_card_prefix32, grid_min_bits, 0x154);
 ROME2_LAYOUT_ASSERT(rome2_unit_card_prefix32, fauna, 0x15c);
 ROME2_LAYOUT_ASSERT(rome2_unit_card_prefix32, zero_176, 0x176);
+
+_Static_assert(sizeof(rome2_vfs_dep_bucket_pair32) == 8, "dependency bucket pair size");
+_Static_assert(sizeof(rome2_vfs_dep_hashmap_layout32) == 0x20, "dependency hashmap size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_dep_hashmap_layout32, list_head, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dep_hashmap_layout32, count, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dep_hashmap_layout32, buckets, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dep_hashmap_layout32, mask, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dep_hashmap_layout32, max_idx, 0x1c);
+_Static_assert(sizeof(rome2_vfs_dep_graph_node_prefix32) == 0x24, "dependency graph node size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_dep_graph_node_prefix32, name, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dep_graph_node_prefix32, deps, 0x1c);
+_Static_assert(sizeof(rome2_vfs_dep_edge_node_prefix32) == 0x1c, "dependency edge node size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_dep_edge_node_prefix32, is_nil, 0x0d);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dep_edge_node_prefix32, target_name, 0x10);
+_Static_assert(sizeof(rome2_vfs_archive_candidate_prefix32) == 0x20, "archive candidate prefix size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_archive_candidate_prefix32, pack_props, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_archive_candidate_prefix32, archive_name, 0x14);
 
 #undef ROME2_LAYOUT_ASSERT
 #endif

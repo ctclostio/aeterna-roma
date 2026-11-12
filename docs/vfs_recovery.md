@@ -329,4 +329,22 @@ tests** pass in `scripts/test_type_recovery_contracts.py`.
 These results combine static original-image evidence with separately tested
 native adaptations. The game was not executed. Shared Ghidra state, canonical
 exports and frozen admission locks were unchanged. Game binaries, assets and
+## Layer 10: Dependency-Graph Traversal, Candidate Comparator & Registration Callees
+
+Layer 10 promotes the static dependency-graph observations from Layer 9 into checked C17 implementations and extends REA static recovery across `0x112cfc10`'s registration, table-lookup, and RB-tree insertion callees.
+
+- New REA dossier evidence (closing snapshot `out/vfs-layer10-20261112/session.rea.json`, 70 total validated records: 54 reused Layer 9 + 13 new primary records + 3 `inspect_analysis_view` projections for `0x10101a40`):
+  - `0x10101a40` (`ev_92e95663ffcfed02c3de66bce4c48650ad0878878dd2946d50c6aaf51bb57c26`, 4 bytes): unchecked `[ECX + 8]` C-string data accessor (`MOV EAX, [ECX + 8]; RET`). Exceeded default direct MCP budget (`resource_constraint`) and was recovered through `inspect_analysis_view` and the validated evidence bundle.
+  - `0x112ac2d0` (`ev_d886b60b9a9acf9283e9015b56674f0ae9752649fd67c1865d3df963ccd1323f`, 83 bytes): `_Tree_unchecked_const_iterator::operator++` over RB-tree nodes using `is_nil` at `+0x0d`; descends right subtree's leftmost child when non-nil, else climbs parents (`+0x04`) while non-nil and equal to `parent->right` (`+0x08`).
+  - `0x112a4c00` (`ev_5c40521d8cc010eb33d429a4d376d187aafea12d87060663d3fd14abf8439406`, 119 bytes, `cdecl`, 16 stack bytes): linear RB-tree scan over `[first, last)` comparing node `+0x10` `string8` via `0x100f28a0`.
+  - `0x112bb620` (`ev_b69d6b0d80533e14c2d52d8087da07db2887a1a582b92549227a49938d613d54`, 365 bytes): recursive dependency closure collector over graph `+0x08` RB-tree building an output 28-byte-sentinel RB-tree via `0x112a4230`/`0x112a3c90`.
+  - `0x112a4320` (`ev_9b22125fccc9184239bf334455c84a47d2bfd2d47d3c70401d67e951f158d724`, 323 bytes) & `0x112a30b0` (`ev_bafb8b6e62bb1162abcb510a0fd8e55288e5c8e5ba3188844ba882a415e839f8`, 617 bytes): unique-key RB-tree find-or-insert (`0x101206f0` + `0x112a37b0`) and 20-byte candidate-set node allocation + red-black fixup.
+  - `0x112d4cc0` (`ev_84e72b10cacc48b42a1d015f57e536e58f03dd71bc565fdea35b6036e6e3bdd0`, 274 non-contiguous bytes) & `0x112d4de0` (`ev_b04046b9f9970f5b28941c7244915474b3f1943f4c2461e3069cdea054a6db11`, 278 non-contiguous bytes): guarded static initializers for `0x12032a1c` (71-bucket 8-byte VFS archive hash table) and `0x120329e0` (71-bucket 20-byte open-pack hash table with `0x12032a8c` empty sentinel).
+  - `0x112c13f0` (`ev_a513e1632234915a3a0d5f4c746d7e2b66f485d1c32e80d4c8cb9d6c7c3434eb`, 183 bytes): linear probing hash lookup in `0x120329e0` (`hash % [ECX+4]`), returning `slot + 0x0c` on match.
+  - `0x112dd6b0` (`ev_326584ba7fc290fa27fe593e0079408239a2cf6ce7553ca99b75897f2bfa2838`, 560 bytes): normalized hash-table `emplace` with `2*count + 1` growth on 8-byte name tables (`0x12032a1c`).
+  - Data reads: `0x12032944` (`ev_9adca7b9f466d009acb9789d963f8242014d35a093ab4548a53badf1e32c3e10`, 8 bytes zero-fill), `0x12032960` (`ev_aa8e0ac600d85125077f9557d06b2dce3c3498c3cfcb19b39d341a659c2b4c7c`, 12 bytes zero-fill), and `0x1173dfac` (`ev_0573040a0a8632af60b29250cec4553d9ea50d2b777c638cdb595f45b3e19e57`, `"\\"` + `"1.21"`).
+- Native checked recovery (`port/recovered_types/guest32_layouts.h`, `vfs_dependency_graph.h/.c`, `test_vfs_dependency_graph.c`):
+  - Fixed-width 32-bit layouts: `rome2_vfs_dep_bucket_pair32` (8 bytes), `rome2_vfs_dep_hashmap_layout32` (32 bytes), `rome2_vfs_dep_graph_node_prefix32` (36 bytes), `rome2_vfs_dep_edge_node_prefix32` (28 bytes), and `rome2_vfs_archive_candidate_prefix32` (32 bytes).
+  - Bounded helpers: `rome2_vfs_string8_equals32` (`0x100f28a0`), `rome2_vfs_dep_hashmap_find32` (`0x112afff0`), `rome2_vfs_dep_edge_next32` (`0x112ac2d0`), `rome2_vfs_dep_reachable32` (`0x112d59f0` -> `0x112b5090`), and `rome2_vfs_compare_archive_candidates32` (`0x112e1500`: `b` depends on `a` -> `true`; `a` depends on `b` -> `false`; else `((*(*a))[0x1c] & 0xf) > ((*(*b))[0x1c] & 0xf)` read lazily). Unlike original `0x112b5090`, cycles and oversized chains fail closed with `ROME2_VFS_DEP_STEP_LIMIT`.
+
 full retained evidence remain outside Git. See [progress.md](../progress.md).

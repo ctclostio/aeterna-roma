@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 90)
-        self.assertEqual(result["globals"], 71)
+        self.assertEqual(result["functions"], 100)
+        self.assertEqual(result["globals"], 74)
         self.assertEqual(result["vtables"], 14)
-        self.assertEqual(result["instruction_witnesses"], 110)
+        self.assertEqual(result["instruction_witnesses"], 127)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -377,11 +377,36 @@ class TypeContractProvenanceTests(unittest.TestCase):
             self.assertEqual((globals_[addr]["width"], globals_[addr]["storage"]), (width, "zero_fill"))
         self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
 
+    def test_dependency_tree_increment_and_registration_callees(self):
+        w = {w["address"]: bytes.fromhex(w["hex"]) for w in self.registry["instruction_witnesses"]}
+        self.assertEqual(w["10101a40"], bytes.fromhex("8b4108c3"))
+        self.assertEqual(w["112ac2d6"], bytes.fromhex("8b7a08807f0d007422"))
+        self.assertEqual(w["112ac2df"], bytes.fromhex("8b420480780d0075123b5008750d8906"))
+        self.assertEqual(w["112ac310"], bytes.fromhex("8b018bf98bc880780d0074f4"))
+        self.assertEqual(0x112A4C18 + 5 + struct.unpack_from("<i", w["112a4c13"], 6)[0], 0x100F28A0)
+        self.assertEqual(0x112BB76F + 5 + struct.unpack_from("<i", w["112bb76b"], 5)[0], 0x112AC2D0)
+        self.assertEqual(w["112a432e"], bytes.fromhex("8b730457894c241488442410807e0d007549"))
+        self.assertEqual(0x112A4438 + 5 + struct.unpack_from("<i", w["112a4434"], 5)[0], 0x112A37B0)
+        self.assertEqual(w["112a32e5"][:12], bytes.fromhex("890e8971048b4a0480790c00"))
+        self.assertEqual(w["112d4ce3"], bytes.fromhex("b81c2a03125ec3"))
+        self.assertEqual(w["112d4e03"], bytes.fromhex("b8e02903125ec3"))
+        self.assertEqual(0x112C13FB + 5 + struct.unpack_from("<i", w["112c13fb"], 1)[0], 0x10101A40)
+        self.assertEqual(0x112C1405 + 5 + struct.unpack_from("<i", w["112c13fb"], 11)[0], 0x100F3040)
+        self.assertEqual(w["112c149c"], bytes.fromhex("5f5e5d8d410c5b59c20400"))
+        self.assertEqual(0x112DD6D8 + 5 + struct.unpack_from("<i", w["112dd6cd"], 12)[0], 0x10101A40)
+        self.assertEqual(w["112dd8c5"][-3:], bytes.fromhex("c20800"))
+        globals_ = {g["address"]: g for g in self.registry["globals"]}
+        self.assertEqual((globals_["12032944"]["width"], globals_["12032944"]["storage"]), (8, "zero_fill"))
+        self.assertEqual((globals_["12032960"]["width"], globals_["12032960"]["storage"]), (12, "zero_fill"))
+        self.assertEqual((globals_["1173dfac"]["width"], globals_["1173dfac"]["storage"]), (8, "file"))
+        self.assertEqual(bytes.fromhex(globals_["1173dfac"]["initial_hex_le"]), b"\\\x00\x00\x001.21")
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
     def test_disjoint_original_bodies_exclude_reported_gaps(self):
         helpers = {f["address"]: f for f in self.registry["functions"] if "body_ranges" in f}
-        self.assertEqual(set(helpers), {"112a8ff0", "112bbd10"})
+        self.assertEqual(set(helpers), {"112a8ff0", "112bbd10", "112d4cc0", "112d4de0"})
         base, sections = contracts.parse_pe32(self.image)
-        for address, gap in (("112a8ff0", 9), ("112bbd10", 3)):
+        for address, gap in (("112a8ff0", 9), ("112bbd10", 3), ("112d4cc0", 4), ("112d4de0", 7)):
             helper = helpers[address]
             parts = contracts.function_body_parts(self.image, base, sections, helper)
             self.assertEqual(len(parts), 2)

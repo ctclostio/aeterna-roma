@@ -367,13 +367,53 @@ Completed deliverables:
   public tests** (with 272 expected private-evidence skips) on Python 3.14 and
   Python 3.15.
 
+### Layer 10 — archive dependency-graph reachability, candidate priority comparator, and tree/registration callees (completed, 2026-11-12)
+
+Target: close the exact semantics and native helper coverage of the archive
+dependency graph and candidate priority comparator (`0x112e1500` -> `0x112d59f0`
+-> `0x112b5090` -> `0x112afff0`), including narrow-string data resolution
+(`0x10101a40`) and RB-tree iterator traversal (`0x112ac2d0`), while recovering
+the archive-registration tree/candidate insertion and pack-resolution callees
+from `0x112cfc10` (`0x112a4c00`, `0x112bb620`, `0x112a4320`, `0x112a30b0`,
+`0x112d4cc0`, `0x112d4de0`, `0x112c13f0`, `0x112dd6b0`).
+
+Completed and verified:
+- [x] Opened a private REA session reusing the closed Layer 9 snapshot
+  (`out/vfs-layer10-20261112/session.rea.json`) and recovered all 10 target
+  function dossiers (`0x10101a40` via `inspect_analysis_view` and validated
+  bundle record after `resource_constraint`) and 3 global reads (`0x12032944`,
+  `0x12032960`, `0x1173dfac`), validating the 70-record evidence bundle
+  (`54` reused Layer 9 + `13` new primary + `3` extra views).
+- [x] Verified and locked fixed-width 32-bit layouts in `port/recovered_types/guest32_layouts.h`:
+  `rome2_vfs_dep_bucket_pair32` (8 bytes), `rome2_vfs_dep_hashmap_layout32`
+  (32 bytes), `rome2_vfs_dep_graph_node_prefix32` (36 bytes),
+  `rome2_vfs_dep_edge_node_prefix32` (28 bytes), and
+  `rome2_vfs_archive_candidate_prefix32` (32 bytes).
+- [x] Implemented bounded C17 helpers `rome2_vfs_string8_equals32` (`0x100f28a0`),
+  `rome2_vfs_dep_hashmap_find32` (`0x112afff0`), `rome2_vfs_dep_edge_next32`
+  (`0x112ac2d0`), `rome2_vfs_dep_reachable32` (`0x112d59f0` -> `0x112b5090`), and
+  `rome2_vfs_compare_archive_candidates32` (`0x112e1500`) in
+  `port/recovered_types/vfs_dependency_graph.h/.c` with explicit hash-chain,
+  RB-tree step, DFS depth (`<= 64`), total visit, and string-byte budgets
+  (failing closed with `ROME2_VFS_DEP_STEP_LIMIT` on cycles).
+- [x] Verified `test_vfs_dependency_graph.c` (`127 checks passed` covering signed/high-byte
+  `string8` equality, hash collision chains stopping after `last`, unbalanced 7-node
+  RB-tree in-order traversal and bounded step limits, DAGs/diamonds/cycles, lazy
+  `pack_props` `0x1c & 0xf` tie-breaking, alignment residues 0–7, and truncations),
+  passing **67/67** native suites under `/W4 /WX /analyze` and ASan (`ROME2_TYPES_ASAN=ON`).
+- [x] Extended `port/recovered_types/contracts.json` (`100` functions, `74` globals,
+  `14` vtables, `127` instruction witnesses, verified under original binary) and
+  `scripts/test_type_recovery_contracts.py` (`45` tests OK), ran clean public-checkout
+  suites on Python 3.14 & Python 3.15 (`873` tests run, `273` skipped, `OK`), and
+  updated `docs/vfs_recovery.md`, `progress.md`, `README.md`, and `verification.json`.
+
 ### Remaining work
 
-1. Extend the verified resource-backed domain toward the original resource
-   manager: recover archive registration (`0x112cfc10`) tree/candidate-set
-   insertion and pack-dependency graph population, complete missing-entry
-   release/unwind behavior, full normalization rules, exact partial
-   parser/exception outcomes, and the rest of the original XML object ABI.
+1. Extend the verified resource-backed domain toward full archive registration
+   (`0x112cfc10`) orchestration and its remaining tree/closure callees
+   (`0x112a37b0`, `0x112a3c90`, `0x112a4230`, `0x112ca9d0`), complete
+   missing-entry release/unwind behavior, full normalization rules, exact
+   partial parser/exception outcomes, and the rest of the original XML object ABI.
    Historic CRT/locale behavior and full resource-backed constructor equivalence
    remain open.
 2. Recover the remaining unit-card methods and meanings of opaque 32-bit

@@ -1196,6 +1196,182 @@
         "112b510d"
       ],
       "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "10101a40",
+      "bytes": 4,
+      "sha256": "916ae10aa3fd76a4d5b25b2fb66e9df0fd04957c7ab10930268d1ed7808be689",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX data pointer at [ECX + 8]",
+      "scope": "unchecked C-string data accessor for 12-byte string8 descriptors; returns [ECX + 8] directly without length check",
+      "return_instruction_addresses": [
+        "10101a43"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112ac2d0",
+      "bytes": 83,
+      "sha256": "c6a368067fc8aaf66ee7125575b117a6f32584a87554eb98fecec906aab08ba0",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX iterator cell pointer",
+      "scope": "red-black tree const iterator increment (_Tree_unchecked_const_iterator::operator++); walks right-leftmost when non-nil or climbs parents while equal to right child",
+      "return_instruction_addresses": [
+        "112ac300",
+        "112ac322"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112a4c00",
+      "bytes": 119,
+      "sha256": "db9a466c48e6d0fc5dc964202c2e53fec3cbebffc47aa4614b80a6078b69cee0",
+      "receiver_register": "none",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX output iterator pointer",
+      "scope": "linear RB-tree scan over [first, last) comparing edge+0x10 string8 against query via 100f28a0",
+      "return_instruction_addresses": [
+        "112a4c6d",
+        "112a4c76"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112bb620",
+      "bytes": 365,
+      "sha256": "d847ef48a41c854d83ce44480690aabf3aded01ceaa497728bc8fd541f7108cb",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX output tree pointer",
+      "scope": "recursive dependency closure collector over graph+8 RB-tree into a new 28-byte-sentinel RB-tree via 112a4230/112a3c90",
+      "return_instruction_addresses": [
+        "112bb78a"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112a4320",
+      "bytes": 323,
+      "sha256": "7da027e22fda618aa945f62aafe9dc7a5e808bf928cf13e8d1729c876905833d",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 16,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX {node, inserted} pair pointer",
+      "scope": "unique-key RB-tree lower-bound find-or-insert ordered by 101206f0 and allocated via 112a37b0",
+      "return_instruction_addresses": [
+        "112a43b5",
+        "112a444d",
+        "112a4460"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112a30b0",
+      "bytes": 617,
+      "sha256": "b90249eecfee9b1dea0f3d81db882d27f6d64126f90f6460feaf7d78c6077bfb",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 16,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX inserted RB-tree node pointer",
+      "scope": "allocates and links 20-byte RB-tree candidate node and performs red-black color fixup rotations/recoloring",
+      "return_instruction_addresses": [
+        "112a330c"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112d4cc0",
+      "bytes": 274,
+      "sha256": "b5232a47fcd29c31bde8b80802f215ae9bc44840e2539d2e02d91e96340356d4",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX singleton address 12032a1c",
+      "scope": "guarded static initializer for the 71-bucket 8-byte VFS archive/name hash table at 12032a1c",
+      "return_instruction_addresses": [
+        "112d4ce9"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "body_ranges": [
+        {
+          "start": "112d4cc0",
+          "end": "112d4d9b"
+        },
+        {
+          "start": "112d4da0",
+          "end": "112d4dd5"
+        }
+      ]
+    },
+    {
+      "address": "112d4de0",
+      "bytes": 278,
+      "sha256": "81a8c27c73bf1879035538902ce33e9772762bddbd73fb8950b8eab14d961db6",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX singleton address 120329e0",
+      "scope": "guarded static initializer for the 71-bucket 20-byte open-pack hash table at 120329e0 with empty sentinel 12032a8c",
+      "return_instruction_addresses": [
+        "112d4e09"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "body_ranges": [
+        {
+          "start": "112d4de0",
+          "end": "112d4eb8"
+        },
+        {
+          "start": "112d4ec0",
+          "end": "112d4efc"
+        }
+      ]
+    },
+    {
+      "address": "112c13f0",
+      "bytes": 183,
+      "sha256": "06739d3246af4db062d278ae67f29ed2f92725d48c5b217c599bf75ebcfc5644",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX entry+0xc pointer or 0 on miss",
+      "scope": "open-pack hash-table lookup via 10101a40/100f3040 mod [ECX+4] linear probing 20-byte slots",
+      "return_instruction_addresses": [
+        "112c1499",
+        "112c14a4"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112dd6b0",
+      "bytes": 560,
+      "sha256": "052738512d749ef2cc480a7733716f632cf90bd45115ba3155484d301d7cd9e6",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX assigned slot+4 value pointer",
+      "scope": "normalized string hash-table emplace with 2*count+1 growth on 8-byte name tables such as 12032a1c",
+      "return_instruction_addresses": [
+        "112dd8c2",
+        "112dd8dd"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
     }
   ],
   "globals": [
@@ -1719,6 +1895,30 @@
       "kind": "initial archive dependency-graph string hash-map header",
       "initial_hex_le": "0000000000000000000000000000000000000000000000000000000000000000",
       "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "12032944",
+      "width": 8,
+      "kind": "initial VFS singleton table header storage at 12032944..1203294b preceding candidate/count header",
+      "initial_hex_le": "0000000000000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "12032960",
+      "width": 12,
+      "kind": "initial VFS singleton table storage at 12032960..1203296b",
+      "initial_hex_le": "000000000000000000000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1173dfac",
+      "width": 8,
+      "kind": "static path-separator string \"\\\" (0x5c,0x00,0x00,0x00) followed by version string \"1.21\"",
+      "initial_hex_le": "5c000000312e3231",
+      "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
     }
   ],
@@ -2344,6 +2544,91 @@
       "address": "112b50da",
       "hex": "8d4424188bcb5055e8a9ffffff84c0751b",
       "purpose": "dependency walk recurses on resolved graph node and returns AL=1 on transitive hit"
+    },
+    {
+      "address": "10101a40",
+      "hex": "8b4108c3",
+      "purpose": "string8 data accessor returns [ECX + 8] pointer directly"
+    },
+    {
+      "address": "112ac2d6",
+      "hex": "8b7a08807f0d007422",
+      "purpose": "RB-tree increment reads right child at [EDX + 8] and tests +0xd is_nil"
+    },
+    {
+      "address": "112ac2df",
+      "hex": "8b420480780d0075123b5008750d8906",
+      "purpose": "RB-tree increment climbs parent at +4 while !is_nil and current == parent.right"
+    },
+    {
+      "address": "112ac310",
+      "hex": "8b018bf98bc880780d0074f4",
+      "purpose": "RB-tree increment descends leftmost children while +0xd is_nil is zero"
+    },
+    {
+      "address": "112a4c13",
+      "hex": "8d46105350e883dce4fe83c40884c07540",
+      "purpose": "linear tree scan compares edge node +0x10 string8 against query via 100f28a0"
+    },
+    {
+      "address": "112bb76b",
+      "hex": "8d4c2410e85c0bffff",
+      "purpose": "recursive closure collector advances tree iterator using 112ac2d0"
+    },
+    {
+      "address": "112a432e",
+      "hex": "8b730457894c241488442410807e0d007549",
+      "purpose": "unique-key RB-tree insert loads root at [head+4] and tests +0xd is_nil"
+    },
+    {
+      "address": "112a4434",
+      "hex": "ff74241ce873f3ffff8945008bc5c6450401",
+      "purpose": "unique-key RB-tree insert allocates node via 112a37b0 and sets inserted=1 at [EBP+4]"
+    },
+    {
+      "address": "112a32e5",
+      "hex": "890e8971048b4a0480790c000f8479feffff",
+      "purpose": "RB-tree node link step checks [parent+0xc] color byte for red-black fixup"
+    },
+    {
+      "address": "112d4ce3",
+      "hex": "b81c2a03125ec3",
+      "purpose": "guarded singleton returns VFS archive hash table address 12032a1c"
+    },
+    {
+      "address": "112d4da0",
+      "hex": "578d0cf0e887b0e4fe463b35202a0312",
+      "purpose": "disjoint tail loop initializes 8-byte hash buckets at 12032a1c via 1011fe30"
+    },
+    {
+      "address": "112d4e03",
+      "hex": "b8e02903125ec3",
+      "purpose": "guarded singleton returns open-pack hash table address 120329e0"
+    },
+    {
+      "address": "112d4ec0",
+      "hex": "688c2a03128d0c06e833c8e1fe478d7614",
+      "purpose": "disjoint tail loop initializes 20-byte open-pack buckets at 120329e0 with 12032a8c"
+    },
+    {
+      "address": "112c13fb",
+      "hex": "e84006e4fe508d4c2417e8361ce3fe33d2f77604",
+      "purpose": "open-pack lookup reads [ECX+8] via 10101a40, hashes via 100f3040, and takes mod [ESI+4]"
+    },
+    {
+      "address": "112c149c",
+      "hex": "5f5e5d8d410c5b59c20400",
+      "purpose": "open-pack lookup returns LEA [ECX + 0xc] on match and pops 4 stack bytes"
+    },
+    {
+      "address": "112dd6cd",
+      "hex": "8d4c2418e81a52e2fe8bc8e86343e2fe",
+      "purpose": "name-table emplace normalizes key via 101028f0 and extracts C-string via 10101a40"
+    },
+    {
+      "address": "112dd8c5",
+      "hex": "8b4424285f8b008942048b065e5d8d04d883c0045b83c410c20800",
+      "purpose": "name-table emplace stores value into [EDX+4], computes [EAX+EBX*8]+4, and pops 8 stack bytes"
     }
   ],
   "ownership": {
@@ -3361,6 +3646,115 @@
     "limitations": [
       "native tree helper bounds traversal by max_steps and string prefix comparisons by max_name_bytes without red-black rebalancing or node allocation",
       "static dependency-graph reachability (112d4fa0/112a77b0/112afff0/112b5090) is recovered as original-image evidence; full pack-header dependency population remains a separate layer"
+    ]
+  },
+  "rea_layer10_evidence": {
+    "scope": "dependency-graph RB-tree iterator increment, string8 accessor, 0x112cfc10 archive registration/insertion callees, and bounded dependency-graph/comparator validation",
+    "records": [
+      {
+        "evidence_id": "ev_92e95663ffcfed02c3de66bce4c48650ad0878878dd2946d50c6aaf51bb57c26",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer10-20261112/fn-10101a40-bundle-record.json",
+        "retained_record_sha256": "abb3795b81eb47145c081d8f95a434b81469022d15fb4113715ba9bb5e54c36d",
+        "retained_record_format": "validated bundle evidence record"
+      },
+      {
+        "evidence_id": "ev_d886b60b9a9acf9283e9015b56674f0ae9752649fd67c1865d3df963ccd1323f",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer10-20261112/fn-112ac2d0.json",
+        "retained_record_sha256": "b7ef5359fd9f739f7530d330a9c9f5c298862902a32501d236eee34de5fbd2f2",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5c40521d8cc010eb33d429a4d376d187aafea12d87060663d3fd14abf8439406",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer10-20261112/fn-112a4c00.json",
+        "retained_record_sha256": "a1d3e91a23697e67b27bba181f9efb83697e1afeda753efd704cf1bf93ecb908",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_b69d6b0d80533e14c2d52d8087da07db2887a1a582b92549227a49938d613d54",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer10-20261112/fn-112bb620.json",
+        "retained_record_sha256": "4fc1396513c230f1bf63c88d2bb01dbcace448f88817cf0afad94f57fbf60a69",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_9b22125fccc9184239bf334455c84a47d2bfd2d47d3c70401d67e951f158d724",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer10-20261112/fn-112a4320.json",
+        "retained_record_sha256": "83610effecf0c368de2f0302ae6f2a2cb6b079f57d4bbaa56e68db1e9730a814",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_bafb8b6e62bb1162abcb510a0fd8e55288e5c8e5ba3188844ba882a415e839f8",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer10-20261112/fn-112a30b0.json",
+        "retained_record_sha256": "3f155441850d56ff8824f3db76eb9981728d4bb359d30d90fc4abae91160ac57",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_84e72b10cacc48b42a1d015f57e536e58f03dd71bc565fdea35b6036e6e3bdd0",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer10-20261112/fn-112d4cc0.json",
+        "retained_record_sha256": "e616bba75380dd584fce01ab9051368a1e8ef80f487129975faa31cf45ce5da2",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_b04046b9f9970f5b28941c7244915474b3f1943f4c2461e3069cdea054a6db11",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer10-20261112/fn-112d4de0.json",
+        "retained_record_sha256": "9c32fa16aa5952e7f70f94c3d89fb316bf7ef010baa3bad7196508cf4955278d",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_a513e1632234915a3a0d5f4c746d7e2b66f485d1c32e80d4c8cb9d6c7c3434eb",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer10-20261112/fn-112c13f0.json",
+        "retained_record_sha256": "386fcc45b7e2e422b3dffe54b4147e24e1863eddb315521e115f969f14b9581a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_326584ba7fc290fa27fe593e0079408239a2cf6ce7553ca99b75897f2bfa2838",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer10-20261112/fn-112dd6b0.json",
+        "retained_record_sha256": "1811594eda720cc0c6385e70a4c14490892ef9296d2bb83f52c906313603aa0c",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_9adca7b9f466d009acb9789d963f8242014d35a093ab4548a53badf1e32c3e10",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer10-20261112/data-12032944.json",
+        "retained_record_sha256": "65d988308ca9e393a5cb9d93f1b7931f99340a4f3ba6a4cce2a5c2ee19d9df7c",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_aa8e0ac600d85125077f9557d06b2dce3c3498c3cfcb19b39d341a659c2b4c7c",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer10-20261112/data-12032960.json",
+        "retained_record_sha256": "20af28b509c83527a19fcb3c98b3092235893b9480f1248465ba3eea7ea79c57",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_0573040a0a8632af60b29250cec4553d9ea50d2b777c638cdb595f45b3e19e57",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer10-20261112/data-1173dfac.json",
+        "retained_record_sha256": "c15613d250838ca8475a2fd8fedfb83225c5cc60d4d988a45f06d5e725696188",
+        "retained_record_format": "original MCP result envelope"
+      }
+    ],
+    "closed_snapshot_local_path": "out/vfs-layer10-20261112/session.rea.json",
+    "closed_snapshot_sha256": "4096901f0ee1b3ef5b036a1aa58c1335ad06d65fbeee500f072ade678b847f77",
+    "closed_evidence_records": 70,
+    "new_evidence_records": 13,
+    "reused_layer9_evidence_records": 54,
+    "extra_evidence_views_count": 3,
+    "validated_bundle_local_path": "out/vfs-layer10-20261112/validated-evidence-bundle.json",
+    "validated_bundle_sha256": "9287bb196a6da016f204f511b7e4fb032d6d4da5776ccc812b120730c4f343a8",
+    "limitations": [
+      "0x10101a40 exceeded default direct MCP result budget and was retrieved via inspect_analysis_view and validated bundle record",
+      "native dependency-graph helpers bound hash chains, RB-tree steps, recursion depth (<=64), visit count, and name lengths, failing closed with STEP_LIMIT on cycles unlike original 0x112b5090",
+      "0x112cfc10 full body orchestration and remaining callees (0x112a37b0, 0x112a3c90, 0x112a4230, 0x112ca9d0) remain future registration layers"
     ]
   }
 }
