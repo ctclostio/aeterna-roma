@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 81)
-        self.assertEqual(result["globals"], 68)
+        self.assertEqual(result["functions"], 90)
+        self.assertEqual(result["globals"], 71)
         self.assertEqual(result["vtables"], 14)
-        self.assertEqual(result["instruction_witnesses"], 90)
+        self.assertEqual(result["instruction_witnesses"], 110)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -337,6 +337,43 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual(w["112d5a50"], bytes.fromhex("32c05dc20800"))
         globals_ = {g["address"]: g for g in self.registry["globals"]}
         for addr, width in (("120329b4", 12), ("12032a34", 8), ("12032a7c", 12)):
+            self.assertEqual((globals_[addr]["width"], globals_[addr]["storage"]), (width, "zero_fill"))
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_name_entry_comparator_chain_and_signed_byte_order(self):
+        w = {w["address"]: bytes.fromhex(w["hex"]) for w in self.registry["instruction_witnesses"]}
+        self.assertEqual(w["101206f0"], bytes.fromhex("8b0985c97505b001c20400"))
+        self.assertEqual(w["101206fb"], bytes.fromhex("8b44240485c0750532c0c20400"))
+        self.assertEqual(0x1012070A + 5 + struct.unpack_from("<i", w["10120708"], 3)[0], 0x100F2FE0)
+        self.assertEqual(0x100F2FE8 + 5 + struct.unpack_from("<i", w["100f2fe0"], 9)[0], 0x100F7040)
+        self.assertEqual(w["100f2fe0"][13:], bytes.fromhex("c1e81fc3"))
+        self.assertEqual(w["100f7040"], bytes.fromhex("8b5424048b4108568b31578b3a8b5208"))
+        self.assertEqual(w["100f7070"][:6], bytes.fromhex("0fbe0a0fbe00"))
+        self.assertEqual(w["100f70a0"][:6], bytes.fromhex("0fbe0a0fbe00"))
+        self.assertEqual(w["100f70d0"][7:13], bytes.fromhex("0fbe000fbe0a"))
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_archive_tree_search_and_sentinel_initializers(self):
+        w = {w["address"]: bytes.fromhex(w["hex"]) for w in self.registry["instruction_witnesses"]}
+        self.assertEqual(w["112c025f"], bytes.fromhex("8b388bdf8b7704807e0d00"))
+        self.assertEqual(0x112C027C + 5 + struct.unpack_from("<i", w["112c0279"], 4)[0], 0x101206F0)
+        self.assertEqual(0x112C02AC + 5 + struct.unpack_from("<i", w["112c02aa"], 3)[0], 0x101206F0)
+        self.assertIn(bytes.fromhex("66c7420c0101"), w["112a7599"])
+        self.assertEqual(w["112a7698"], bytes.fromhex("8b008903c7430400000000c7430800000000"))
+        self.assertIn(bytes.fromhex("66c7410c0101"), w["112a76e2"])
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_archive_dependency_graph_singleton_and_recursive_walk(self):
+        w = {w["address"]: bytes.fromhex(w["hex"]) for w in self.registry["instruction_witnesses"]}
+        self.assertEqual(w["112d503e"][:5], bytes.fromhex("b9582a0312"))
+        self.assertEqual(0x112D5056 + 5 + struct.unpack_from("<i", w["112d503e"], 25)[0], 0x112A77B0)
+        self.assertEqual(w["112a783b"][:20], bytes.fromhex("c7471807000000c7471c08000000c7070000803f"))
+        self.assertEqual(w["112b000b"][:3], bytes.fromhex("8b5718"))
+        self.assertEqual(w["112b5098"][:5], bytes.fromhex("8b308bd957"))
+        self.assertEqual(0x112B50B5 + 5 + struct.unpack_from("<i", w["112b50b0"], 6)[0], 0x100F28A0)
+        self.assertEqual(0x112B50E2 + 5 + struct.unpack_from("<i", w["112b50da"], 9)[0], 0x112B5090)
+        globals_ = {g["address"]: g for g in self.registry["globals"]}
+        for addr, width in (("12032950", 12), ("12032a40", 24), ("12032a58", 32)):
             self.assertEqual((globals_[addr]["width"], globals_[addr]["storage"]), (width, "zero_fill"))
         self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
 

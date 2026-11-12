@@ -1,6 +1,6 @@
 {
   "schema": "rome2-type-recovery-verification-v1",
-  "scope": "Layer 8 records bounded fixed-capacity VFS name-table assignment and static population/duplicate-suppression/candidate-comparator distinctions. Earlier top-level/layer results and source hashes are historical snapshots; none declares whole-engine equivalence.",
+  "scope": "Layer 9 records bounded archive-name red-black tree search, narrow string8 comparator ordering, winning-archive table resolution, and static dependency-graph reachability recovery. Earlier top-level/layer results and source hashes are historical snapshots; none declares whole-engine equivalence.",
   "python_focused": {
     "tests": 82,
     "failures": 0,
@@ -344,7 +344,7 @@
       "sha256": "5f38a41f1ad01d590c2ca13c5bfd7b1ce3eeabdf00d0369630d799da6dd07ae4"
     }
   ],
-  "updated_utc": "2026-11-12T17:18:37+00:00",
+  "updated_utc": "2026-11-12T17:51:01+00:00",
   "layer2": {
     "status": "complete for admitted tag copy domain and typed helper boundary",
     "tag_allocation_failure_positions": 11,
@@ -576,7 +576,7 @@
       "whole-engine class/vtable/allocator/threading recovery"
     ]
   },
-  "current_layer": "layer8",
+  "current_layer": "layer9",
   "layer5": {
     "status": "direct XML-node native setup verified; original XML ABI, resource-manager precedence and loader failure behavior remain open",
     "node_setup": {
@@ -2115,6 +2115,369 @@
     "remaining": [
       "archive-name tree (112c0250) node layout and lookup/insertion mechanics",
       "dependency-graph relation (112b5090), candidate-set ordering (112a7690) and full mount/mod precedence",
+      "complete missing-entry release, allocator-failure and exception/unwind behavior",
+      "full normalization, parser equivalence, remaining XML/VFS ABI, historical CRT/locale/FP equivalence and whole-engine recovery"
+    ]
+  },
+  "layer9": {
+    "status": "bounded archive-name tree search, narrow string8 comparator chain, winning-archive table resolution and static dependency-graph reachability verified; full archive registration/rebalancing and lifetime/unwind remain open",
+    "original_image_contracts": {
+      "schema": "rome2-recovered-types-v1",
+      "verified": true,
+      "functions": 90,
+      "globals": 71,
+      "vtables": 14,
+      "instruction_witnesses": 110,
+      "scope": "static original-image evidence; native behavior requires separate tests"
+    },
+    "python_focused_contract_tests": 44,
+    "native_tests": {
+      "analyze": {
+        "suites": 66,
+        "failed": 0,
+        "local_ctest_log": "out/vfs-layer9-20261112/analyze/Testing/Temporary/LastTest.log",
+        "log_sha256": "1842defbb6c1a2646e8b2e05b27ed18626039b6df2331ff89fd3aef95625aac1",
+        "junit_sha256": "d65ef09cbbf2794cc17642072a7b2de1082c12c8b6a352cc0793aa661656fb24"
+      },
+      "asan": {
+        "suites": 66,
+        "failed": 0,
+        "local_ctest_log": "out/vfs-layer9-20261112/asan/Testing/Temporary/LastTest.log",
+        "log_sha256": "74e06245e5db3a0aff7ece779cd75c8f1c2e38efccf51c65951103afb6f1be4f",
+        "junit_sha256": "b02e2a1cc4a64ec7484e0ae516770bdc1f648eec558b93533dc5ab164bcfbb12"
+      },
+      "installed_asset_oracle_included": true,
+      "assertions_enabled": true,
+      "public_asset_free_suites": 65
+    },
+    "archive_tree_tests": {
+      "active_checks": 134286,
+      "exhaustive_signed_byte_pairs": 65536,
+      "exhaustive_bst_node_counts": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "alignment_residues": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "cases": [
+        "FUN_101206f0 zero-identity asymmetry ((0, 0) -> true, (0, rhs) -> true, (lhs, 0) -> false) without reading guest memory",
+        "exhaustive 256x256 signed-byte comparisons matching FUN_100f7040 MOVSX + FUN_100f2fe0 SHR EAX, 0x1f",
+        "zero-length descriptor non-dereference, ignored +4 capacity, unsigned length tie-break and max_bytes step limits",
+        "exhaustive 0..7-node BST lower-bound searches across alignment residues 0..7, query_name==0 non-match even with a zero-key node, and duplicate lower-bound selection",
+        "cyclic/deep tree step limits, non-nil sentinel rejection, empty candidate-set rejection, and end-to-end composition with rome2_vfs_assign_name32 and rome2_vfs_probe_name32"
+      ]
+    },
+    "original_observations": [
+      "101206f0 returns AL=1 immediately when *ECX == 0 (even when [ESP+4] == 0), AL=0 when *ECX != 0 and [ESP+4] == 0, and delegates nonzero pairs to 100f2fe0 -> 100f7040",
+      "100f7040 reads only +0 (length) and +8 (data) of each narrow string8 descriptor, compares min(len_lhs, len_rhs) bytes using signed MOVSX byte differences, and tie-breaks by unsigned length",
+      "112a7550 initializes 8-byte archive-name tree headers with a 24-byte self-linked sentinel head (0x0101 at +0xc); 112a7690 initializes 12-byte candidate-set headers with comparator at +0 and a 20-byte sentinel head at +4",
+      "112c0250 performs lower-bound traversal from [head+4] while node+0xd == 0 using 101206f0(node+0x10, query) and rejects candidate when 101206f0(query, [candidate+0x10]) is nonzero",
+      "112d4fa0 initializes dependency-graph singleton 12032a40 and its hash map 12032a58 via 112a77b0; 112b5090 walks [node+0x1c] testing string equality via 100f28a0 and recursive reachability via 112afff0 + 112b5090"
+    ],
+    "native_adaptations": [
+      "rome2_vfs_compare_name_less32 and rome2_vfs_search_archive_tree32 operate over borrowed guest32 read views with explicit max_steps and max_name_bytes budgets",
+      "optional resolve_archive_table follows candidate_set -> set_head -> winner_node -> archive + 4 and validates nil/non-nil markers before writing output",
+      "existing dispatch, hash, probe, assignment, XML and pack-resource helpers retain their contracts and explicit diagnostics"
+    ],
+    "public_python_clean": {
+      "checkout": "tracked public files plus Layer 9 changes, no original image/canonical exports",
+      "runs": [
+        {
+          "version": "3.14",
+          "tests": 872,
+          "skipped": 272,
+          "failures": 0,
+          "errors": 0,
+          "local_log": "out/vfs-layer9-20261112/public-clean-python314.log",
+          "log_sha256": "05312f65f96624a12ba8d07274c6edc69e9526b33de34e8a54ed682661a4ed6a"
+        },
+        {
+          "version": "3.15",
+          "tests": 872,
+          "skipped": 272,
+          "failures": 0,
+          "errors": 0,
+          "local_log": "out/vfs-layer9-20261112/public-clean-python315.log",
+          "log_sha256": "c2bf20343feb5078082bb5af1d2df42b4b9787828ee059f2d93f994613bdce6a"
+        }
+      ]
+    },
+    "corpus_tree_full_suite": "not rerun; earlier corpus-tree issues remain recorded and frozen locks unchanged",
+    "installed_assets": {
+      "record": "port/recovered_types/fauna_assets.json",
+      "archives": 2,
+      "entrypoints": [
+        "rome2_owned_unit_card_create_from_packs",
+        "rome2_owned_unit_card_setup_from_packs"
+      ],
+      "explicit_precedence_orders": 2,
+      "original_game_execution": false,
+      "record_sha256": "590b4383acd1ba59047ffb9744313edd629036ad7156b3e0140b37ff7563dbe3"
+    },
+    "rea": {
+      "new_function_dossiers": 9,
+      "new_data_records": 3,
+      "new_hash_pinned_records": 12,
+      "reused_layer8_records": 42,
+      "validated_bundle_records": 54,
+      "session_closed": true,
+      "original_game_execution": false,
+      "closed_snapshot_local_path": "out/vfs-layer9-20261112/session.rea.json",
+      "closed_snapshot_sha256": "667bfe355828711441a7b785d462b43a34a4fee4e393aa5cca625d3d9cb8317d",
+      "validated_bundle_local_path": "out/vfs-layer9-20261112/validated-evidence-bundle.json",
+      "validated_bundle_sha256": "98327a2ac1c45f6ec8d88eb9902acd4db705de32d17efb508de58f09142560b7",
+      "shared_ghidra_and_canonical_exports_changed": false
+    },
+    "local_logs": "out/vfs-layer9-20261112/",
+    "source_hash_scope": "UTF-8 with CRLF/CR normalized to LF; current resource/XML/VFS recovery, tests and docs",
+    "sources": [
+      {
+        "path": "README.md",
+        "bytes": 25252,
+        "sha256": "55b6a033359a07a4375e5a028b081164c8b0a3178643dfec540bb7c5ebe2d294"
+      },
+      {
+        "path": "docs/unitcard_resource_recovery.md",
+        "bytes": 10039,
+        "sha256": "97c4517c260f05bfbd3e91a588b8deb0e397d2f99368457fb44922b27078966d"
+      },
+      {
+        "path": "docs/vfs_recovery.md",
+        "bytes": 20823,
+        "sha256": "9243baeddcbe3ee7ce631d69f5ac0e0e426053c99198095b1511373916b4835f"
+      },
+      {
+        "path": "docs/xml_loader_recovery.md",
+        "bytes": 10853,
+        "sha256": "cd1c54709149a8d93fb65fb0201b7b1466b40408ac8f409554355f90ab485433"
+      },
+      {
+        "path": "port/recovered_types/CMakeLists.txt",
+        "bytes": 4563,
+        "sha256": "84da1b9d55d48288c1ff8bf179fd7501f12b0833cc1e19f0c333694e7ce67390"
+      },
+      {
+        "path": "port/recovered_types/contracts.json",
+        "bytes": 143933,
+        "sha256": "7120c530645fb418335db16f76c03ad896b30dd2f872a13487f73db8d2c9f887"
+      },
+      {
+        "path": "port/recovered_types/fauna_asset_probe.c",
+        "bytes": 3051,
+        "sha256": "486d4306fbbee7bd0b3b286a6db5b1df508b0cfceff196ff569bf7a149179644"
+      },
+      {
+        "path": "port/recovered_types/fauna_config.c",
+        "bytes": 12023,
+        "sha256": "f7c154d03514f6e99ce90054cf13a1da8005aec2dda187972ebbb9d5e9abf29d"
+      },
+      {
+        "path": "port/recovered_types/fauna_config.h",
+        "bytes": 3054,
+        "sha256": "9313687f26b6d65a3da40b141f9a4535ea5040ad3740c402df9eb9c3f8509c5f"
+      },
+      {
+        "path": "port/recovered_types/guest32_layouts.h",
+        "bytes": 23344,
+        "sha256": "ee32dc82192d54d4ecac0cf62c42883edff348dce2a7efa45376f11dac352884"
+      },
+      {
+        "path": "port/recovered_types/native_xml.c",
+        "bytes": 11832,
+        "sha256": "0e16d0bc50e48d4a3290e000be974e65a1593208d9df7f18a1f9191761061cbc"
+      },
+      {
+        "path": "port/recovered_types/native_xml.h",
+        "bytes": 2555,
+        "sha256": "70bd1f4fe5aae18aaceb479f487e9ace232bcf62fb0d44204ae6633ff0fa915e"
+      },
+      {
+        "path": "port/recovered_types/owned_fauna.c",
+        "bytes": 9394,
+        "sha256": "f879f67256c4676eb5e251045135a3478c940f8ba08a3209a5d20d8ecb478e82"
+      },
+      {
+        "path": "port/recovered_types/owned_fauna.h",
+        "bytes": 3821,
+        "sha256": "9813242e118f4ff2e2a221850768d2f481a8d8544b50bbeffd3855658ae04304"
+      },
+      {
+        "path": "port/recovered_types/owned_unit_card.c",
+        "bytes": 16055,
+        "sha256": "7299a2d87abbf8f2f178c16fe18b31960c531bae7f4d89f0f9f50f6e6f1c28fa"
+      },
+      {
+        "path": "port/recovered_types/owned_unit_card.h",
+        "bytes": 6921,
+        "sha256": "8d3d0766d4a6826d8937819f65563b409d587c4ef5f76e16d6c6ddd1ed273cc6"
+      },
+      {
+        "path": "port/recovered_types/pack_resource.c",
+        "bytes": 12117,
+        "sha256": "13e9b43193dc1309a3d64e109dd6d30185ef38538f6a0a44d072492c2c197053"
+      },
+      {
+        "path": "port/recovered_types/pack_resource.h",
+        "bytes": 1944,
+        "sha256": "c85b2002cd2d6ad0d4eb966b4595c2f15b32b83b4359c7cc55792ad30c6e8407"
+      },
+      {
+        "path": "port/recovered_types/test_fauna_config.c",
+        "bytes": 9339,
+        "sha256": "122f89ba8ba541cb2696b9a7c8fcc65155ec69d64ec2af7ce6840688c7043df4"
+      },
+      {
+        "path": "port/recovered_types/test_native_xml.c",
+        "bytes": 9363,
+        "sha256": "fd68911474707bad7e136ce863c3f95bb1d04f8747f941b2eaff9634b18f22ab"
+      },
+      {
+        "path": "port/recovered_types/test_pack_resource.c",
+        "bytes": 36226,
+        "sha256": "b3e2fda413ecdd78fa269566e65d11dcd7600dabaa21433379d3c27d1d4ecd56"
+      },
+      {
+        "path": "port/recovered_types/test_resource_support.h",
+        "bytes": 2422,
+        "sha256": "4f750e041cf8af2ffbfa7ffd29e429d390dd2b4d0bcdc71abda7b4dd69877269"
+      },
+      {
+        "path": "port/recovered_types/test_unit_card_resource.c",
+        "bytes": 22761,
+        "sha256": "cf9eb4fb19c3983b4a5200c3c465f012b6f36a87c0fa7e3bacb09f7394391e18"
+      },
+      {
+        "path": "port/recovered_types/test_unit_card_xml_node.c",
+        "bytes": 12462,
+        "sha256": "6161d19a143df36df9c2444d72818e916c02c787c25c4adbaa97b292b65add60"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_archive_tree.c",
+        "bytes": 20909,
+        "sha256": "fbb12603753f2c0a15e3381196b94e4e7ac421d199ba2696ec4658332473d694"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_dispatch.c",
+        "bytes": 7136,
+        "sha256": "ec0838a860e24f3697ea69799b059b18d48cc664e3659203c928c9fd97fb6f39"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_name.c",
+        "bytes": 11026,
+        "sha256": "9c73a25796bf2e9f552bcf15a2e53e6d3aab2f40f36687d799457bd418c787c5"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_name_assign.c",
+        "bytes": 12834,
+        "sha256": "d78fb3dedda4c0e43d61b0ca73ea3bf7316df070f2623abfe1d690f64b7ef514"
+      },
+      {
+        "path": "port/recovered_types/test_xml_loader_policy.c",
+        "bytes": 9012,
+        "sha256": "92e9dd7be968306792b395484606849e88f16a114e943029457e44dbf2891b17"
+      },
+      {
+        "path": "port/recovered_types/unit_card_resource.c",
+        "bytes": 7384,
+        "sha256": "2ea6d1e9f301824556604bf21113ec5dffe3ab5b99e9b50180cbffa9df539feb"
+      },
+      {
+        "path": "port/recovered_types/unit_card_resource.h",
+        "bytes": 4644,
+        "sha256": "476989c945bb7e50dfecc176a10ce89239d493588019f2fe9363f67cce23ea8b"
+      },
+      {
+        "path": "port/recovered_types/vfs_archive_tree.c",
+        "bytes": 8551,
+        "sha256": "e42b64b148db05054a7005ab389ab2f9a8459583a35dcfc6073fc21e9fe01d19"
+      },
+      {
+        "path": "port/recovered_types/vfs_archive_tree.h",
+        "bytes": 3748,
+        "sha256": "2176ca486eb6243d5249920f263ef6d78faae6d7c5282d8e7f78b5877e675af1"
+      },
+      {
+        "path": "port/recovered_types/vfs_dispatch.c",
+        "bytes": 1176,
+        "sha256": "72ca65a5e769f0deadcded43312bc53b86644be444c3f8c6862d7c1a0eb2b26b"
+      },
+      {
+        "path": "port/recovered_types/vfs_dispatch.h",
+        "bytes": 1617,
+        "sha256": "40a65225effaeb2b44831ee5e15924f6d1ff18fbe604fb1162e35cbeae5cb381"
+      },
+      {
+        "path": "port/recovered_types/vfs_name.c",
+        "bytes": 2836,
+        "sha256": "ea5d733e037883f76e26fc6b40a0ebd31a4da76ecf4a2a648319b3b70cf3c21d"
+      },
+      {
+        "path": "port/recovered_types/vfs_name.h",
+        "bytes": 2615,
+        "sha256": "c7028847bf344131fa3a497d5145434002bcb4129c1ca62cacb1e79d127f6fc6"
+      },
+      {
+        "path": "port/recovered_types/vfs_name_assign.c",
+        "bytes": 3127,
+        "sha256": "b0077f660afe2be7a8439f9be8021ce15b56f0e0be11201417e54949f5a4552a"
+      },
+      {
+        "path": "port/recovered_types/vfs_name_assign.h",
+        "bytes": 2575,
+        "sha256": "875f3ccbfa9aca543ac2bdaa56a0f06bf73df4b73dc0758b2279ff1f3e46cdc7"
+      },
+      {
+        "path": "port/recovered_types/xml_loader_policy.c",
+        "bytes": 2257,
+        "sha256": "e7b8bb303f944bd66dd40658f505aea74858e6cc31da0e218738876cb28057df"
+      },
+      {
+        "path": "port/recovered_types/xml_loader_policy.h",
+        "bytes": 2966,
+        "sha256": "42b9f8355ae302d3737eb844bd109fcc9ada27b294338431aa315619476638a1"
+      },
+      {
+        "path": "progress.md",
+        "bytes": 24801,
+        "sha256": "e5314229df5e5f817cb19372183dc05c7a7571609d8c4963cceafba6f10ec0a3"
+      },
+      {
+        "path": "scripts/test_type_recovery_contracts.py",
+        "bytes": 28104,
+        "sha256": "a44cec9c2e37b86bb3e8bf15dac570521b0f8b49758601dd837d582ea2a0cebd"
+      },
+      {
+        "path": "scripts/type_recovery_contracts.py",
+        "bytes": 9226,
+        "sha256": "148a6cbc2cbfdff19c2f30ed9fe4e85219a3602ac36a71e6397e7059f058b153"
+      },
+      {
+        "path": "scripts/verify_fauna_resources.py",
+        "bytes": 6911,
+        "sha256": "2bcb22d882509671d6a5c2c590ca87cac2fb774099ed75884b16b415ed9e108c"
+      },
+      {
+        "path": "tests/native/CMakeLists.txt",
+        "bytes": 6960,
+        "sha256": "37a9225e989bd6925e2285d8929a8052acacea0af43f9ad13434f7ff5c691fc3"
+      }
+    ],
+    "remaining": [
+      "archive registration (112cfc10) red-black tree insertion/rebalancing and pack-dependency graph population",
       "complete missing-entry release, allocator-failure and exception/unwind behavior",
       "full normalization, parser equivalence, remaining XML/VFS ABI, historical CRT/locale/FP equivalence and whole-engine recovery"
     ]

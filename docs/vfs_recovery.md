@@ -229,12 +229,102 @@ full-table replacement and 32-bit endpoints). The focused contract module
 passes **41 tests**. Clean public Python runs pass **869 tests** on 3.14 and
 3.15, with 269 expected private-evidence skips each.
 
-The registry verifies **81 function bodies, 68 globals, 14 first vtable slots
-and 90 instruction windows**. The resumed private REA session reused the
+The registry verifies **90 function bodies, 71 globals, 14 first vtable slots
+and 110 instruction windows**. The resumed private REA session reused the
 28-record Layer 7 snapshot, added 14 new records (9 function dossiers and 5
 data reads), validated the 42-record bundle, and closed the session cleanly.
 Argon High's read-only code and original-assembly reviews found no confirmed
 defect.
+
+## Layer 9 — archive-name tree search, narrow string8 comparator chain, winning-archive resolution, and dependency-graph reachability
+
+### Original-image evidence (`out/vfs-layer9-20261112/`)
+
+Layer 9 reuses the closed 42-record Layer 8 REA snapshot and adds 12 new
+shipped-artifact records (`54` total validated records in
+`out/vfs-layer9-20261112/validated-evidence-bundle.json`):
+
+1. **Name-entry less-than comparator chain (`0x101206f0 -> 0x100f2fe0 -> 0x100f7040`)**:
+   - `0x101206f0` (`ev_b86b5e36108b208f0c86bdbe8a98a00df14bf7a88062a5178c6244f66171739a`,
+     `__thiscall`, `ECX` left name-cell address, `[ESP+4]` right name identity,
+     `RET 0x4` at `0x101206f8`, `0x10120705`, `0x10120712`): loads `ECX = [ECX]`;
+     if `ECX == 0`, returns `AL = 1` immediately (`0x101206f6`) even when
+     `[ESP+4] == 0`. Otherwise loads `EAX = [ESP+4]`; if `EAX == 0`, returns
+     `AL = 0` (`0x10120703`). When both identities are nonzero, calls
+     `0x100f2fe0(ECX, EAX)`.
+   - `0x100f2fe0` (`ev_c652589f2c76214017fd3649e08a8eb98468899f181f293c28d7bf08338f60be`,
+     `cdecl`, 8 stack bytes, `RET` at `0x100f2ff0`): forwards both narrow
+     string descriptor addresses to `0x100f7040` and shifts bit 31 into `AL`
+     (`SHR EAX, 0x1f` at `0x100f2fed`).
+   - `0x100f7040` (`ev_fa78e06ba01a3fc4fb9c8446c50fb33a7ff18dc1c6a0fb24570bb2cb04e32f02`,
+     `__thiscall`, `ECX` left descriptor, `[ESP+4]` right descriptor, `RET 0x4`
+     at `0x100f707f`, `0x100f70b1`, `0x100f70d4`, `0x100f70e1`): reads only `+0`
+     (`length`) and `+8` (`data`) of each `rome2_string8_layout32` (`+4`
+     capacity is untouched), compares `min(len_lhs, len_rhs)` bytes, and at the
+     first differing byte computes a signed difference (`MOVSX` at
+     `0x100f7070`, `0x100f70a0`, `0x100f70d7`). When the shared prefix matches,
+     returns `-1` (`len_lhs < len_rhs`), `+1` (`len_lhs > len_rhs`), or `0`
+     (`len_lhs == len_rhs`). Zero-length prefixes do not dereference `data`.
+2. **Archive-name red-black tree and candidate-set sentinel initializers (`0x112a7550`, `0x112a7690`) and tree search (`0x112c0250`)**:
+   - `0x112a7550` (`ev_409142c5c63fb96cfdbcf6b5f5c63eb8e529d7f55427587e1b99a26bdbe13ff2`,
+     `__thiscall`, `ECX` 8-byte tree header, `RET` at `0x112a75ab`): zeroes
+     `+0` and `+4`, allocates a 24-byte sentinel head via `0x101060c0`,
+     self-links `+0/+4/+8`, writes `0x0101` at `+0x0c` (`color = 1`, `is_nil = 1`
+     at `+0x0d`), and stores the sentinel head at `header+0`.
+   - `0x112a7690` (`ev_0037c46d40dd10fb2e5c5701164c6b75e969b27be4f524a77ca5db1b9a241715`,
+     `__thiscall`, `ECX` 12-byte candidate-set header, `[ESP+4]` comparator
+     pointer, `RET 0x4` at `0x112a76f5`): copies `*comparator_ptr` to `set+0`,
+     zeroes `set+4` and `set+8`, allocates a 20-byte sentinel head via
+     `0x10106000`, self-links `+0/+4/+8`, writes `0x0101` at `+0x0c`, and stores
+     the sentinel head at `set+4`.
+   - `0x112c0250` (`ev_9ee17fa70254b62aa68e29487792b2bc5067beee9f432b44456ab17e76c90051`):
+     loads `head = [ECX]`, `candidate = head`, `node = [head + 4]`, and loops
+     while `byte [node + 0x0d] == 0`, stepping right (`[node + 8]`) when
+     `0x101206f0(node + 0x10, *query_ptr)` is nonzero and otherwise setting
+     `candidate = node` and stepping left (`[node + 0]`). After reaching a nil
+     node, requires `candidate != head` and `0x101206f0(query_ptr, [candidate + 0x10]) == 0`.
+     Because `0x101206f0` returns `1` whenever `*ECX == 0`, `*query_ptr == 0`
+     never matches any tree node.
+3. **Static archive dependency-graph singleton and transitive walk (`0x112d4fa0`, `0x112a77b0`, `0x112afff0`, `0x112b5090`)**:
+   - `0x112d4fa0` (`ev_64053e6da557d0ef414bcdf45dbcaab0df623e720a7b7938ab39321b5526e5ab`):
+     TLS-guarded initializer for `0x12032a40` (`data-12032a40.json`,
+     `ev_6006e5e5bc9e5a0cad55b1a9682223c1301269e5209b4e4564abce6791311c30`) and
+     its embedded hash map at `0x12032a58` (`data-12032a58.json`,
+     `ev_8b62b947a06d64c8d13348aa2b45dca89fcdeba8343af5fc1ba85cad64ba8df3`),
+     alongside VFS archive-tree carrier `0x12032950` (`data-12032950.json`,
+     `ev_dbad385843b9414480f1f8d571f5673c6f2887418b41f1455e9dcc2fff542720`).
+   - `0x112a77b0` (`ev_d4da763e91620b284792ec898207df25daedbb9d57d0b6de177e04d9e895f562`):
+     initializes the 32-byte string hash map with a 36-byte list sentinel at
+     `+4`, 8 `(first, last)` bucket pairs at `+0x0c`, mask `7` at `+0x18`,
+     threshold `8` at `+0x1c`, and float `1.0f` (`0x3f800000`) at `+0`.
+   - `0x112afff0` (`ev_6317dc58ab050ab8a3b434b4aa97d42307ac69c47f9a3d0f9431d198a38d0fa6`):
+     hashes query string data via `0x10101a40` + `0x100f3040`, masks with
+     `[ECX + 0x18]`, and walks the bucket chain comparing `node + 8` via
+     `0x100f28a0`.
+   - `0x112b5090` (`ev_017d17ce35975c7ab7c06101ab2337d356133eb32bd6df25884a76aa19529fd8`):
+     walks the in-order dependency tree rooted at `[node + 0x1c]`, returning
+     `AL = 1` on direct string equality (`0x100f28a0(cur + 0x10, target)`) or
+     recursive reachability (`0x112afff0` + `0x112b5090`).
+
+### Native layout and bounded helper verification
+
+`port/recovered_types/guest32_layouts.h` adds fixed-width guest layouts
+`rome2_vfs_tree_header_layout32` (`8` bytes), `rome2_vfs_tree_node_prefix32`
+(`24` bytes), `rome2_vfs_candidate_set_layout32` (`12` bytes), and
+`rome2_vfs_candidate_node_prefix32` (`20` bytes).
+`port/recovered_types/vfs_archive_tree.h` and `vfs_archive_tree.c` implement
+`rome2_vfs_compare_name_less32` and `rome2_vfs_search_archive_tree32`,
+bounding tree steps by `max_steps` and string prefix comparisons by
+`max_name_bytes`, and optionally resolving the winning archive's local name
+table descriptor (`[winner + 0x10] + 4`) for composition with
+`rome2_vfs_probe_name32`.
+
+Both `/W4 /WX /analyze` and ASan native profiles pass **66 test suites**, with
+`rome2_vfs_archive_tree_tests` executing **134,286 checks** across exhaustive
+256x256 signed-byte comparisons, zero-identity asymmetry, 0-to-7-node BSTs
+across alignment residues 0–7, duplicate lower-bound selection, cycle/step
+limits, and end-to-end winning-archive table probing. All **44 focused contract
+tests** pass in `scripts/test_type_recovery_contracts.py`.
 
 These results combine static original-image evidence with separately tested
 native adaptations. The game was not executed. Shared Ghidra state, canonical

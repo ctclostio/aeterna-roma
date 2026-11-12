@@ -53,6 +53,47 @@ typedef struct rome2_vfs_name_slot_layout32 {
     rome2_data_address32 value;
 } rome2_vfs_name_slot_layout32;
 
+/* FUN_112a7550 initializes +0 to the 24-byte sentinel node and +4 to zero;
+ * FUN_112c0250 reads +0 as the tree sentinel head. */
+typedef struct rome2_vfs_tree_header_layout32 {
+    rome2_data_address32 head;
+    uint32_t count;
+} rome2_vfs_tree_header_layout32;
+
+/* FUN_112a7550 allocates 24-byte sentinel nodes and writes 0x0101 at +0xc;
+ * FUN_112c0250 reads +0 (left), +4 (root on head), +8 (right), +0xd (is_nil),
+ * +0x10 (key name identity), and FUN_112ce0c0 reads +0x14 (candidate set). */
+typedef struct rome2_vfs_tree_node_prefix32 {
+    rome2_data_address32 left;
+    rome2_data_address32 parent;
+    rome2_data_address32 right;
+    uint8_t color;
+    uint8_t is_nil;
+    uint8_t unobserved_00e[2];
+    uint32_t key;
+    rome2_data_address32 value;
+} rome2_vfs_tree_node_prefix32;
+
+/* FUN_112a7690 copies comparator code identity to +0, stores the 20-byte
+ * sentinel head at +4, and zeroes +8; FUN_112ce0c0 reads +4. */
+typedef struct rome2_vfs_candidate_set_layout32 {
+    rome2_code_address32 comparator;
+    rome2_data_address32 head;
+    uint32_t count;
+} rome2_vfs_candidate_set_layout32;
+
+/* FUN_112a7690 allocates 20-byte sentinel nodes; FUN_112ce0c0 reads +0 on
+ * the sentinel head to select the leftmost node and +0x10 for the archive. */
+typedef struct rome2_vfs_candidate_node_prefix32 {
+    rome2_data_address32 left;
+    rome2_data_address32 parent;
+    rome2_data_address32 right;
+    uint8_t color;
+    uint8_t is_nil;
+    uint8_t unobserved_00e[2];
+    rome2_data_address32 archive;
+} rome2_vfs_candidate_node_prefix32;
+
 /* FUN_100e2460's handler vector: capacity precedes count. */
 typedef struct rome2_handler_vector_layout32 {
     uint32_t unobserved_00;
@@ -357,6 +398,24 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_name_table_layout32, bucket_count, 4);
 ROME2_LAYOUT_ASSERT(rome2_vfs_name_table_layout32, empty_name, 8);
 _Static_assert(sizeof(rome2_vfs_name_slot_layout32) == 8, "original VFS name-table slot stride");
 ROME2_LAYOUT_ASSERT(rome2_vfs_name_slot_layout32, value, 4);
+_Static_assert(sizeof(rome2_vfs_tree_header_layout32) == 8, "known VFS tree header extent");
+ROME2_LAYOUT_ASSERT(rome2_vfs_tree_header_layout32, count, 4);
+_Static_assert(sizeof(rome2_vfs_tree_node_prefix32) == 24, "original VFS tree node extent");
+ROME2_LAYOUT_ASSERT(rome2_vfs_tree_node_prefix32, parent, 4);
+ROME2_LAYOUT_ASSERT(rome2_vfs_tree_node_prefix32, right, 8);
+ROME2_LAYOUT_ASSERT(rome2_vfs_tree_node_prefix32, color, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_tree_node_prefix32, is_nil, 0x0d);
+ROME2_LAYOUT_ASSERT(rome2_vfs_tree_node_prefix32, key, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_tree_node_prefix32, value, 0x14);
+_Static_assert(sizeof(rome2_vfs_candidate_set_layout32) == 12, "known VFS candidate set extent");
+ROME2_LAYOUT_ASSERT(rome2_vfs_candidate_set_layout32, head, 4);
+ROME2_LAYOUT_ASSERT(rome2_vfs_candidate_set_layout32, count, 8);
+_Static_assert(sizeof(rome2_vfs_candidate_node_prefix32) == 20, "original VFS candidate node extent");
+ROME2_LAYOUT_ASSERT(rome2_vfs_candidate_node_prefix32, parent, 4);
+ROME2_LAYOUT_ASSERT(rome2_vfs_candidate_node_prefix32, right, 8);
+ROME2_LAYOUT_ASSERT(rome2_vfs_candidate_node_prefix32, color, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_candidate_node_prefix32, is_nil, 0x0d);
+ROME2_LAYOUT_ASSERT(rome2_vfs_candidate_node_prefix32, archive, 0x10);
 ROME2_LAYOUT_ASSERT(rome2_string8_layout32, capacity, 4);
 ROME2_LAYOUT_ASSERT(rome2_string8_layout32, data, 8);
 ROME2_LAYOUT_ASSERT(rome2_string16_layout32, data, 8);

@@ -333,15 +333,49 @@ confirmed defect or overclaim. Shared Ghidra state, canonical exports and
 frozen admission locks were unchanged. See [VFS recovery](docs/vfs_recovery.md)
 and the [verification record](port/recovered_types/verification.json).
 
+### Layer 9 — archive-name tree search, string-key ordering, winning-archive resolution and dependency-graph walk (complete, 2026-11-12)
+
+Target: trace the two-level archive lookup in `0x112ce0c0` (`0x112c0250` ->
+`0x112ce0f2` -> `0x112c1130`), the name-entry less-than comparator chain
+(`0x101206f0` -> `0x100f2fe0` -> `0x100f7040`), tree/candidate-set sentinel
+initialization (`0x112a7550`, `0x112a7690`), and the dependency-graph lookup
+and reachability routines (`0x112d4fa0`, `0x112a77b0`, `0x112afff0`,
+`0x112b5090`).
+
+Completed deliverables:
+- [x] Opened a private REA session from the Layer 8 snapshot (`out/vfs-layer9-20261112/`)
+  and recovered 12 new records (9 function dossiers for `0x101206f0`,
+  `0x100f2fe0`, `0x100f7040`, `0x112a7550`, `0x112a7690`, `0x112d4fa0`,
+  `0x112a77b0`, `0x112afff0` and `0x112b5090`, plus 3 global reads for
+  `0x12032950`, `0x12032a40` and `0x12032a58`), producing a validated 54-record
+  evidence bundle and closed session snapshot.
+- [x] Added fixed-width guest layouts in `port/recovered_types/guest32_layouts.h`
+  for `rome2_vfs_tree_header_layout32` (`8` bytes), `rome2_vfs_tree_node_prefix32`
+  (`24` bytes), `rome2_vfs_candidate_set_layout32` (`12` bytes), and
+  `rome2_vfs_candidate_node_prefix32` (`20` bytes).
+- [x] Implemented bounded native helpers `rome2_vfs_compare_name_less32` and
+  `rome2_vfs_search_archive_tree32` in `port/recovered_types/vfs_archive_tree.h`
+  and `vfs_archive_tree.c`, preserving `lhs == 0` asymmetry (`(0, 0) -> true`),
+  signed-byte lexicographic order, lower-bound traversal with explicit step/byte
+  budgets, and optional winning-archive table descriptor resolution
+  (`[winner + 0x10] + 4`).
+- [x] Verified **66 native test suites** across both `/W4 /WX /analyze` and ASan
+  profiles, with `rome2_vfs_archive_tree_tests` executing **134,286 checks**.
+- [x] Extended `port/recovered_types/contracts.json` to **90 functions, 71
+  globals, 14 vtables and 110 instruction witnesses**, verified by **44 focused
+  contract tests** in `scripts/test_type_recovery_contracts.py` and **872 clean
+  public tests** (with 272 expected private-evidence skips) on Python 3.14 and
+  Python 3.15.
+
 ### Remaining work
 
 1. Extend the verified resource-backed domain toward the original resource
-   manager: recover archive-name tree (`0x112c0250`) node layout and search/insert
-   mechanics, `0x112b5090` dependency-graph relation semantics, `0x112a7690`
-   candidate-set ordering, complete missing-entry release/unwind behavior, full
-   normalization rules, exact partial parser/exception outcomes, and the rest of
-   the original XML object ABI. Historic CRT/locale behavior and full
-   resource-backed constructor equivalence remain open.
+   manager: recover archive registration (`0x112cfc10`) tree/candidate-set
+   insertion and pack-dependency graph population, complete missing-entry
+   release/unwind behavior, full normalization rules, exact partial
+   parser/exception outcomes, and the rest of the original XML object ABI.
+   Historic CRT/locale behavior and full resource-backed constructor equivalence
+   remain open.
 2. Recover the remaining unit-card methods and meanings of opaque 32-bit
    words before widening any of them into native pointers or ownership links.
 3. Continue engine/FaceFX class recovery, complete vtable bounds and callable

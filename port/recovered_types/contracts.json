@@ -1054,6 +1054,148 @@
         "112d5a53"
       ],
       "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "101206f0",
+      "bytes": 37,
+      "sha256": "4b1ec01dce65e22b5abbf642a0f6566577254507579797be0b0d854d0a6a4490",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "AL less-than predicate",
+      "scope": "name-entry less-than wrapper; zero left-hand identity returns true immediately, zero right-hand returns false, nonzero pair delegates to 100f2fe0",
+      "return_instruction_addresses": [
+        "101206f8",
+        "10120705",
+        "10120712"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "100f2fe0",
+      "bytes": 17,
+      "sha256": "347d8e6248b7a6187a61b29b7db6a9b2ec3ea0b6da3f35a5d6ccddb650e00ef4",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "AL negative-sign predicate",
+      "scope": "narrow string less-than adapter; forwards two string descriptor addresses to 100f7040 and shifts sign bit 31 into AL",
+      "return_instruction_addresses": [
+        "100f2ff0"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "100f7040",
+      "bytes": 164,
+      "sha256": "a01f50f1a66f947e6b424f4c9fead24c0bc2f367d142893340fc5f5b911379a1",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX signed three-way comparison",
+      "scope": "narrow string8 comparator; reads +0 length and +8 data only, compares shared prefix as signed bytes, and tie-breaks by unsigned length",
+      "return_instruction_addresses": [
+        "100f707f",
+        "100f70b1",
+        "100f70d4",
+        "100f70e1"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112a7550",
+      "bytes": 92,
+      "sha256": "fb3d094d339d65d1a46fb611bb0c9b5b42a3fa840f34219c70945d6287c771ac",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX receiver",
+      "scope": "archive-name red-black tree header initializer; zeroes +0/+4 and allocates 24-byte self-linked sentinel head with 0x0101 at +0xc",
+      "return_instruction_addresses": [
+        "112a75ab"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112a7690",
+      "bytes": 104,
+      "sha256": "5ddcb8e656c90c46a4797f090a8813013aec46910a73f155aaa1336709327f98",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX receiver",
+      "scope": "archive candidate-set header initializer; stores comparator at +0, zeroes +4/+8, and allocates 20-byte self-linked sentinel head with 0x0101 at +0xc",
+      "return_instruction_addresses": [
+        "112a76f5"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112d4fa0",
+      "bytes": 215,
+      "sha256": "c6a662cdcd6752ea75f470b50196c3c12991eff5cd49a023f3fdfabb2fbf79a7",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX singleton address 12032a40",
+      "scope": "guarded static initializer for the archive dependency-graph singleton at 12032a40..12032a77",
+      "return_instruction_addresses": [
+        "112d4fc1"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112a77b0",
+      "bytes": 162,
+      "sha256": "bab93ab94f002fa79435b871329d2849fd72ac511061e186574772be342497bd",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX receiver",
+      "scope": "dependency-graph string hash-map initializer; allocates 36-byte list sentinel and 8 bucket pairs with mask 7 and load factor 1.0f",
+      "return_instruction_addresses": [
+        "112a7851"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112afff0",
+      "bytes": 127,
+      "sha256": "4da04f252f9745ecede43d8434f3d2ed9d9fe5d9c2095e58e183b76be5c9be48",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX output destination; node written through it",
+      "scope": "dependency-graph hash-map lookup; hashes string data via 100f3040, probes bucket chain at +0xc, and compares node+8 via 100f28a0",
+      "return_instruction_addresses": [
+        "112b0061",
+        "112b006c"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112b5090",
+      "bytes": 128,
+      "sha256": "84cca2d27a0e5e4a920b80f291cb0b6d6dad2488a36ca04da98ef12413ed80cc",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "AL transitive dependency predicate",
+      "scope": "recursive dependency-tree walk over node+0x1c; checks direct string equality via 100f28a0 or transitive reachability via 112afff0 and 112b5090",
+      "return_instruction_addresses": [
+        "112b5103",
+        "112b510d"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
     }
   ],
   "globals": [
@@ -1553,6 +1695,30 @@
       "kind": "archive-entry dispatch prefix",
       "initial_hex_le": "b0d12a1170322d11",
       "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "12032950",
+      "width": 12,
+      "kind": "initial VFS singleton archive-name tree and count carrier at 12032948+8",
+      "initial_hex_le": "000000000000000000000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "12032a40",
+      "width": 24,
+      "kind": "initial archive dependency-graph RB-tree headers",
+      "initial_hex_le": "000000000000000000000000000000000000000000000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "12032a58",
+      "width": 32,
+      "kind": "initial archive dependency-graph string hash-map header",
+      "initial_hex_le": "0000000000000000000000000000000000000000000000000000000000000000",
+      "storage": "zero_fill",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
     }
   ],
@@ -2078,6 +2244,106 @@
       "address": "112d5a50",
       "hex": "32c05dc20800",
       "purpose": "relationship false path sets AL only and consumes8 stack bytes"
+    },
+    {
+      "address": "101206f0",
+      "hex": "8b0985c97505b001c20400",
+      "purpose": "zero left-hand name identity returns AL=1 immediately without reading right-hand argument"
+    },
+    {
+      "address": "101206fb",
+      "hex": "8b44240485c0750532c0c20400",
+      "purpose": "nonzero left-hand with zero right-hand identity returns AL=0 before string comparison"
+    },
+    {
+      "address": "10120708",
+      "hex": "5051e8d128fdff83c408c20400",
+      "purpose": "both nonzero identities delegate to 100f2fe0 and pop 4-byte stack argument"
+    },
+    {
+      "address": "100f2fe0",
+      "hex": "ff7424088b4c2408e853400000c1e81fc3",
+      "purpose": "wrapper invokes 100f7040 and shifts signed comparison result by 31 bits into AL"
+    },
+    {
+      "address": "100f7040",
+      "hex": "8b5424048b4108568b31578b3a8b5208",
+      "purpose": "comparator reads only +0 length and +8 data of both narrow string descriptors"
+    },
+    {
+      "address": "100f7070",
+      "hex": "0fbe0a0fbe002bc175655f83c8ff5ec20400",
+      "purpose": "shorter-left branch computes signed byte difference or returns -1 when shared prefix matches"
+    },
+    {
+      "address": "100f70a0",
+      "hex": "0fbe0a0fbe002bc175355fb8010000005ec20400",
+      "purpose": "longer-left branch computes signed byte difference or returns +1 when shared prefix matches"
+    },
+    {
+      "address": "100f70d0",
+      "hex": "5f33c05ec204000fbe000fbe0a2bc15f5ec20400",
+      "purpose": "equal-length branch returns 0 on full match or signed byte difference at first mismatch"
+    },
+    {
+      "address": "112c025f",
+      "hex": "8b388bdf8b7704807e0d00",
+      "purpose": "tree search loads sentinel head at +0, root at head+4, and tests node+0xd nil flag"
+    },
+    {
+      "address": "112c0279",
+      "hex": "8d4e10e86f04e6fe84c074058b7608eb048bfe8b36807e0d00",
+      "purpose": "lower-bound loop compares node+0x10 against query and steps right on less or records candidate and steps left"
+    },
+    {
+      "address": "112c02aa",
+      "hex": "8bcde83f04e6fe84c0750e8b44241889385f5e5d5b59c20800",
+      "purpose": "post-loop check rejects candidate when query compares less than candidate+0x10"
+    },
+    {
+      "address": "112a7599",
+      "hex": "891289520489520866c7420c01015f89135bc3",
+      "purpose": "archive-name tree initializer self-links 24-byte sentinel head and writes 0x0101 at +0xc"
+    },
+    {
+      "address": "112a7698",
+      "hex": "8b008903c7430400000000c7430800000000",
+      "purpose": "candidate-set initializer stores comparator at +0 and zeroes +4 and +8"
+    },
+    {
+      "address": "112a76e2",
+      "hex": "890989490489490866c7410c01015f894b045bc20400",
+      "purpose": "candidate-set initializer self-links 20-byte sentinel head, writes 0x0101 at +0xc, and stores head at +4"
+    },
+    {
+      "address": "112d503e",
+      "hex": "b9582a0312890089400489400866c7400c0101a3502a0312e85527fdff",
+      "purpose": "dependency-graph singleton initializer populates third RB-tree sentinel and initializes hash map at 12032a58"
+    },
+    {
+      "address": "112a783b",
+      "hex": "c7471807000000c7471c08000000c7070000803f5f5ec3",
+      "purpose": "dependency hash-map initializer sets bucket mask 7, bucket threshold 8, and load factor 1.0f"
+    },
+    {
+      "address": "112b000b",
+      "hex": "8b57188b5c241423d08b470c8b7f048d34d08b0689033bc77441",
+      "purpose": "dependency hash-map lookup masks hash with +0x18 and indexes 8-byte bucket pairs at +0xc"
+    },
+    {
+      "address": "112b5098",
+      "hex": "8b308bd9578b761c8b068944241c3bc6",
+      "purpose": "recursive dependency walk loads dependency tree head at node+0x1c and starts at leftmost child"
+    },
+    {
+      "address": "112b50b0",
+      "hex": "8d78105557e8e6d7e3fe83c40884c07545",
+      "purpose": "dependency walk compares embedded string at node+0x10 against target via 100f28a0"
+    },
+    {
+      "address": "112b50da",
+      "hex": "8d4424188bcb5055e8a9ffffff84c0751b",
+      "purpose": "dependency walk recurses on resolved graph node and returns AL=1 on transitive hit"
     }
   ],
   "ownership": {
@@ -2995,6 +3261,106 @@
       "first new import was stopped by turn interruption; no dossier completed there; resumed private session reused unchanged layer7 snapshot",
       "archive dependency predicate delegates112b5090; relation orientation/transitivity/cycles and full mod/mount policy remain unresolved",
       "native assignment has no growth, release/retain, interning, file I/O, locking or original exception/unwind model"
+    ]
+  },
+  "rea_layer9_evidence": {
+    "scope": "archive-name red-black tree search, narrow string8 comparator chain, winning-archive table resolution, and static dependency-graph reachability recovery",
+    "records": [
+      {
+        "evidence_id": "ev_f4560332ad753688380e98a4ff0cb9e25c4f2638b18ce044aa1019f6d17381c5",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer9-20261112/fn-101206f0.json",
+        "retained_record_sha256": "d7f95f9ce623b63c6988352627f1636fa267b5d23dcfe1fe7c9933dfb1498f2b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_544eba60227db74a01f7d40e8224ae9d2f66ebc3ea6186a783447ce3f726ac2c",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer9-20261112/fn-100f2fe0.json",
+        "retained_record_sha256": "ee67b9d06b965735fdb93708d68be6fb9c1d5edb08506f652a3b1f0c0b057c3e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c4389a9110ad8965f3d79da1088edb4554d02980ad3a102d7ad9052062df7b19",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer9-20261112/fn-100f7040.json",
+        "retained_record_sha256": "f28fbb0f6a0ef336bf6fe6383c0f2b29fc82c3980a06946711c07f87a0eb7def",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_77428f1838352f7c6273aefe46c5fa51ce8e725ac4d315774a7e2fabeddf85b1",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer9-20261112/fn-112a7550.json",
+        "retained_record_sha256": "dd0cfd1851abe0acdd7445fdece3fd4d656a3e6f29a433717adb40328abad28a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_76e9a29fced4aea3d7ecdaec4be97619b8c8f2125095fe5f83dd01702ebe1667",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer9-20261112/fn-112a7690.json",
+        "retained_record_sha256": "07f90465802a27b2846385c0362f8756301b204f3dfbf7bf2a7673a6ab5571b5",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_f36b645801085d56a40f137eaa77ca5843f49633c1a42ade22145b5d3e4ef74a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer9-20261112/fn-112d4fa0.json",
+        "retained_record_sha256": "6eaaa27ac5d0cd72ee29f10cbaefc6802744e769772e1f159fa5c48efb29ceb6",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_a845e901d4078007f5ffd40b20ff154d79d41be3536472a4276f4bdd8a45c89b",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer9-20261112/fn-112a77b0.json",
+        "retained_record_sha256": "400a66df1b530acf98b5baf2a28eebd7992eced9980eecf97c9fe45f0536b405",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_2acdb0c4c55c065560ea3ec5842a96fa83ee18252556c67025a46c136177d63f",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer9-20261112/fn-112afff0.json",
+        "retained_record_sha256": "0cd340b91a053d60209f19a0e3e944f16f859437aef44ed1f6be6a65332a802d",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_2d1f60e243ac42330a65c62bb5e4b66330ddd07627a877c3d3790cec58a65298",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer9-20261112/fn-112b5090.json",
+        "retained_record_sha256": "5b7f0889172d9c8e2373742b5ce9b5bc722896a6bee10298e93e02fb61a98ade",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_dbad385843b9414480f1f8d571f5673c6f2887418b41f1455e9dcc2fff542720",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer9-20261112/data-12032950.json",
+        "retained_record_sha256": "d2e1e7fa180ea97643404f95d10251a52f5513ac10a2e12cb530fd70367ad8d4",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_6006e5e5bc9e5a0cad55b1a9682223c1301269e5209b4e4564abce6791311c30",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer9-20261112/data-12032a40.json",
+        "retained_record_sha256": "cbde0a67422698f8db8b601c1266f615d5647976e531000d843a58ea4134266a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_8b62b947a06d64c8d13348aa2b45dca89fcdeba8343af5fc1ba85cad64ba8df3",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer9-20261112/data-12032a58.json",
+        "retained_record_sha256": "6c9c6c4b96b102290776d075643712ae85f703a57233c573419a1243cedc8a3a",
+        "retained_record_format": "original MCP result envelope"
+      }
+    ],
+    "closed_snapshot_local_path": "out/vfs-layer9-20261112/session.rea.json",
+    "closed_snapshot_sha256": "667bfe355828711441a7b785d462b43a34a4fee4e393aa5cca625d3d9cb8317d",
+    "closed_evidence_records": 54,
+    "new_evidence_records": 12,
+    "reused_layer8_evidence_records": 42,
+    "validated_bundle_local_path": "out/vfs-layer9-20261112/validated-evidence-bundle.json",
+    "validated_bundle_sha256": "98327a2ac1c45f6ec8d88eb9902acd4db705de32d17efb508de58f09142560b7",
+    "limitations": [
+      "native tree helper bounds traversal by max_steps and string prefix comparisons by max_name_bytes without red-black rebalancing or node allocation",
+      "static dependency-graph reachability (112d4fa0/112a77b0/112afff0/112b5090) is recovered as original-image evidence; full pack-header dependency population remains a separate layer"
     ]
   }
 }
