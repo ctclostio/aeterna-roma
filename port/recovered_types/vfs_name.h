@@ -20,7 +20,8 @@ typedef enum rome2_vfs_name_status {
     ROME2_VFS_NAME_BAD_ARGUMENT,
     ROME2_VFS_NAME_INVALID_TABLE,
     ROME2_VFS_NAME_RANGE_ERROR,
-    ROME2_VFS_NAME_PROBE_LIMIT
+    ROME2_VFS_NAME_PROBE_LIMIT,
+    ROME2_VFS_NAME_TABLE_FULL
 } rome2_vfs_name_status;
 
 typedef struct rome2_vfs_name_match32 {

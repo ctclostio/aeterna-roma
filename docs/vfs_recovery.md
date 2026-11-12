@@ -1,10 +1,10 @@
-# VFS dispatch and filename-table recovery
+# VFS dispatch, filename-table and candidate-policy recovery
 
-This milestone traces the XML loader into the original VFS and adds native
-helpers for dispatch observation, filename hashing and name-table probing.
-They operate on bounded byte spans and fixed-width guest views. File opening,
-mount creation, name lifetime, locking and exception handling remain outside
-the native helpers.
+This document traces the XML loader into the original VFS and records native
+helpers for dispatch observation, filename hashing, name-table probing and
+fixed-capacity name-table assignment. They operate on bounded byte spans and
+fixed-width guest views. File opening, mount creation, table growth, name
+lifetime, locking and exception handling remain outside the native helpers.
 
 ## Selected interface and targets
 
@@ -100,9 +100,93 @@ smaller of bucket count and caller-supplied probe budget. Budget exhaustion
 before a complete scan is inconclusive, not a missing-key result. All non-OK
 results preserve output.
 
-The helpers do not intern names or populate the table. Probe order establishes
-collision handling, while mount and insertion policy determine which file value
-is stored. Full archive/mod/dependency precedence remains open.
+The probe helper does not intern names or populate the table. Probe order
+establishes collision handling, while assignment, archive-manifest indexing and
+candidate comparison determine which entry is stored or selected.
+
+## Name-table assignment and population policies
+
+Generic assignment routine `0x112ddee0` takes the 12-byte table descriptor in
+`ECX` and two stack pointers (`[ESP+0x24]` key address, `[ESP+0x28]` value
+address) with `RET 0x8`. It starts at unsigned `hash % bucket_count`
+(`0x112ddf17`), scans `[index, count)`, and wraps once across `[0, index)`.
+At each slot, full 32-bit key equality via `0x101206e0` (`0x112ddf51`,
+`0x112ddfb1`) precedes empty-marker equality against `descriptor+8`
+(`0x112ddf6c`, `0x112ddfc9`):
+
+- **Equal key (`0x112de0a0`)**: overwrites only `slot+4` with `*value_ptr` and
+  returns the `slot+4` address in `EAX`.
+- **Unequal empty slot (`0x112de073`)**: copies the 32-bit key word into
+  `slot+0` via `0x1011fe30`, writes `*value_ptr` into `slot+4`, and returns
+  the `slot+4` address in `EAX`.
+- **Full scan (`0x112ddfea`)**: grows bucket count to `2 * count + 1`,
+  allocates `count * 8` bytes via `0x10102f50`, initializes only the key words
+  with the empty marker (`0x112de010`), recursively reinserts non-sentinel
+  entries (`0x112de040`), frees the old buffer via `0x100fcc50`, and retries.
+
+`rome2_vfs_assign_name32` adapts the fixed-capacity assignment loop over a
+checked read-only descriptor view and a writable slot view:
+
+- It validates descriptor mapping, nonzero `items` and `bucket_count`, and
+  whole-array 32-bit extent (`buckets * 8 <= 2^32 - items`) before probing.
+- Only visited keys and the selected slot's value cell must be mapped. All
+  read preflight checks complete before the first byte is written; any non-OK
+  result preserves all backing bytes and the caller's output struct.
+- Equality has priority over the empty marker at the same slot. An equal key
+  writes only `slot+4`; an unequal empty slot writes both `slot+0` and `slot+4`.
+- `matched_key` reports `key == name` rather than claiming live occupancy.
+  When `name == empty_name`, equality wins and updates `slot+4` while leaving
+  `slot+0` equal to the empty marker; callers requiring live occupancy must
+  reserve the descriptor's empty-name identity.
+- A full scan without a candidate returns `ROME2_VFS_NAME_TABLE_FULL`; stopping
+  earlier at `max_probes < bucket_count` returns `ROME2_VFS_NAME_PROBE_LIMIT`.
+  No table growth, allocation, old-value release, or new-value retain is
+  performed.
+
+Three distinct population behaviors exist in the original binary and must not
+be conflated:
+
+1. **Generic table assignment (`0x112ddee0`)**: unconditionally overwrites
+   `slot+4` on key match and returns `slot+4`.
+2. **Loose-file cache replacement (`0x112b8830`)**: probes the global loose-file
+   table (`0x112bbd10` -> `0x120329b4`) via `0x112c1130`. If the existing slot
+   holds a nonzero pointer, it invokes vtable slot `+0` with argument `1`
+   (`0x112b8848`) before allocating a `0x20`-byte entry (vtable `0x11897710`).
+   If allocation returns `NULL`, it zeroes the new pointer (`0x112b8861`,
+   `0x112b88b6`) and still assigns through `0x112ddee0`.
+3. **Archive-local duplicate suppression (`0x112a9560`)**: initializes an
+   archive-local table at `receiver+4` with 8 buckets (`0x112a957c`). While
+   reading manifest records, equal-key hits in either probe segment (`0x112a98a5`,
+   `0x112a98f1`) reach `0x112a9913` (`ADD ECX, 4; JNZ 0x112a9ae2`), testing the
+   non-null value-cell address rather than dereferencing its stored value. A
+   hit skips pooled entry allocation (vtable `0x118976c0`) and `0x112ddee0`
+   insertion (`0x112a99b2`), retaining the **first equal key within a single
+   archive**.
+
+## Archive-name tree and candidate comparison
+
+Cross-archive lookup does not use a single flat hash table:
+
+- `0x112c01f0` initializes and returns the global archive-name tree header at
+  `0x12032a34` (`0x112c020c`), distinct from the loose-file hash table at
+  `0x120329b4` (`0x112bbd10`) and the archive-entry vector at `0x12032a7c`.
+- `0x112ce0c0` searches `0x12032a34` via `0x112c0250`, selects an archive
+  candidate from the matched node, and probes that archive's local table at
+  `archive+4` via `0x112c1130` (`0x112ce0f2`).
+- Archive registration `0x112cfc10` recurses on dependency names (`0x112cfde8`)
+  and installs candidate comparator `0x112e1500` via `0x112a7690` (`0x112d03ee`).
+- Comparator `0x112e1500` tests relationship predicate `0x112d59f0(b+0x14, a+0x14)`
+  first (`0x112e1513`, returning `AL=1` when true), then `0x112d59f0(a+0x14, b+0x14)`
+  second (`0x112e1530`, returning `AL=0` when true). When both are false, it
+  compares low nibbles `((*a)[0x1c] & 0xf) > ((*b)[0x1c] & 0xf)` (`0x112e1553`,
+  `CMP CL, AL; SETA AL`).
+- Predicate `0x112d59f0` (`ECX` receiver, `RET 0x8`) returns `AL=0` (`0x112d5a50`)
+  when the two name words are equal or either tree lookup misses (`0x112d5a21`,
+  `0x112d5a36`), and otherwise delegates to `0x112b5090`.
+
+Graph relation orientation, transitivity, cycle handling, tie behavior, mount
+order and complete mod/dependency precedence remain open and are not claimed by
+the native table helpers.
 
 ## Evidence and checks
 
@@ -111,34 +195,46 @@ Target: `empire.retail.dll`, 28,278,272 bytes, SHA-256
 
 | Observation | REA Evidence ID |
 |---|---|
-| Manager getter | `ev_4d0e00db30ddc08a5a13b20a0d0fc035caf0872c9f2bcd6877815632c67930eb` |
-| Manager constructor | `ev_6c40ca90fe707265a35b6480edc7c8841d27b514404cac9945b1b268c157a7dc` |
-| Active open, including hit branches | `ev_51f0ccc9883c4bf5b5380f385aa21392604ccc645ad1971966094701daaaf37e` |
-| Candidate lookup | `ev_83d0b52360a70d3967dc94ba52451c8a22a5e430e20d97b5ca3b8873b828e171` |
-| Name-table probe | `ev_46568ec6ecd324258cbb2d93ed839de0abc54f24decbd44d86a13f5d92d47cd4` |
-| Signed-byte hash | `ev_e4ef52a235eebce63bbe514cc075de91b8d27dc9cb159bc2723aad513c358a3f` |
-| Constant-zero method body | `ev_b64e0ec622feb710c3ce1b7ba220e46aeba3858e7e38b452e7161a58e3b0b433` |
+| Manager getter (`0x112e3d20`) | `ev_4d0e00db30ddc08a5a13b20a0d0fc035caf0872c9f2bcd6877815632c67930eb` |
+| Manager constructor (`0x112a8ff0`) | `ev_6c40ca90fe707265a35b6480edc7c8841d27b514404cac9945b1b268c157a7dc` |
+| Active open, including hit branches (`0x112bd3b0`) | `ev_51f0ccc9883c4bf5b5380f385aa21392604ccc645ad1971966094701daaaf37e` |
+| Candidate lookup (`0x112bd6f0`) | `ev_83d0b52360a70d3967dc94ba52451c8a22a5e430e20d97b5ca3b8873b828e171` |
+| Name-table probe (`0x112c1130`) | `ev_46568ec6ecd324258cbb2d93ed839de0abc54f24decbd44d86a13f5d92d47cd4` |
+| Signed-byte hash (`0x100f3040`) | `ev_e4ef52a235eebce63bbe514cc075de91b8d27dc9cb159bc2723aad513c358a3f` |
+| Constant-zero method body (`0x100dbc00`) | `ev_b64e0ec622feb710c3ce1b7ba220e46aeba3858e7e38b452e7161a58e3b0b433` |
+| Generic name-table assignment (`0x112ddee0`) | `ev_fc90da58242a60ebfdb5e2fa7d5ae21fb245d4afea335dfab2beeaedffc949fa` |
+| Loose-file cache replacement (`0x112b8830`) | `ev_9a424b1e81cb60c6d63f498df934a1f51f9b743f7fb7c9d7c12ff3e0443d0384` |
+| Archive-local index construction (`0x112a9560`) | `ev_56c2b42df7f1403fcced8983ee13f77d0b406a05a5d06e1bb24a5bcf4f841c0c` |
+| Archive/loose candidate resolver (`0x112ce0c0`) | `ev_3d0b3efb24d97b171c7c41937beda85442aaabc9b08628cf55821e8c8f6c6efc` |
+| Archive-name tree getter (`0x112c01f0`) | `ev_1e177296ddb686297577c33c9f8dd17ba5db33e3fcb4d95c5676534da2a8d42d` |
+| Archive-name tree search (`0x112c0250`) | `ev_6d43de59e9579357a63ee90a6c1924faf96f6521a82717260b123b47f4c41ea3` |
+| Archive registration & comparator setup (`0x112cfc10`) | `ev_fcd3057b7759aa6242448c9dc812e4e863017604cda5e5e2ed21b8b5a6026c34` |
+| Archive-candidate comparator (`0x112e1500`) | `ev_33395abb4c1e84da327073bed4a7a78ac27c75a560061386e0527fe3394c13fe` |
+| Archive relationship predicate (`0x112d59f0`) | `ev_b9b2dff7841abfef758940617640957886af8fca4b5240625fac37cdedb31d61` |
 
 The constructor and table initializer have disjoint database-reported bodies:
 943 code bytes within a 952-byte span, and 180 within a 183-byte span. The
-validator now supports explicit inclusive body ranges, hashes their code bytes
+validator supports explicit inclusive body ranges, hashes their code bytes
 in order, and requires return instructions to lie wholly inside a body range.
 The nine- and three-byte gaps remain outside the admitted code. Legacy
 contiguous contracts retain their behavior.
 
-Verification: **64 local native suites** pass in optimized and ASan profiles.
-The dispatch suite runs **2,459 checks** and the names suite **134,705**, including
-all two-byte hash inputs, signed/16-bit wrap cases, collisions differing only in
-high identity bits, unsigned hashes, split/unaligned mappings, wrap order,
-empty/match order, NULL values, probe budgets and 32-bit endpoints. The focused
-contract module passes **37 tests**. Clean public Python runs pass **865 tests**
-on 3.14 and 3.15, with 264 expected private-evidence skips each.
+Verification: **65 local native suites** pass in optimized (`/W4 /WX /analyze`)
+and ASan profiles. The dispatch suite runs **2,459 checks**, the name-probe
+suite **134,705 checks**, and the name-assignment suite **346,378 checks**
+(including an exhaustive minimum-circular-distance oracle across all 3-key
+states of 1-to-5-slot tables, all start indices, probe budgets, sentinel and
+zero queries, alignment residues 0–7, truncations, partial slot mappings,
+full-table replacement and 32-bit endpoints). The focused contract module
+passes **41 tests**. Clean public Python runs pass **869 tests** on 3.14 and
+3.15, with 269 expected private-evidence skips each.
 
-The registry verifies **72 function bodies, 63 globals, 12 first vtable slots
-and 62 instruction windows**. The private 28-record bundle was validated and
-the native session closed. The large constant-zero dossier exceeded the MCP
-response budget; retained views and its complete exported record were used
-without repeating analysis. Argon's native code review found no confirmed defect.
+The registry verifies **81 function bodies, 68 globals, 14 first vtable slots
+and 90 instruction windows**. The resumed private REA session reused the
+28-record Layer 7 snapshot, added 14 new records (9 function dossiers and 5
+data reads), validated the 42-record bundle, and closed the session cleanly.
+Argon High's read-only code and original-assembly reviews found no confirmed
+defect.
 
 These results combine static original-image evidence with separately tested
 native adaptations. The game was not executed. Shared Ghidra state, canonical

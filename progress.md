@@ -295,13 +295,53 @@ priority and normalization remain separate obligations. See
 [VFS recovery](docs/vfs_recovery.md) and the
 [verification record](port/recovered_types/verification.json).
 
+### Layer 8 — VFS name-table assignment, duplicate suppression and archive-candidate comparison, 2026-11-12
+
+- [x] Recover generic hash-table assignment `0x112ddee0` and adapt its
+  fixed-capacity probing/write loop as `rome2_vfs_assign_name32`.
+- [x] Preserve equal-key priority over the empty marker, write preflight before
+  mutation, `TABLE_FULL` vs. `PROBE_LIMIT` distinction, and sentinel-query
+  `matched_key` semantics.
+- [x] Distinguish generic overwrite (`0x112ddee0`), loose-file cache
+  old-entry slot-0 teardown and `NULL`-fallback assignment (`0x112b8830`), and
+  archive-local first-equal-key duplicate suppression (`0x112a9560`).
+- [x] Separate the global archive-name tree (`0x112c01f0` -> `0x12032a34`,
+  `0x112c0250`) and archive-candidate resolver (`0x112ce0c0`) from the
+  loose-file hash table (`0x112bbd10` -> `0x120329b4`).
+- [x] Recover archive registration comparator installation (`0x112cfc10` ->
+  `0x112e1500`) and directional relationship predicate checks (`0x112d59f0`)
+  without overclaiming full dependency-graph or mount-order semantics.
+- [x] Verify with an exhaustive small-table circular-distance oracle, strict
+  `/W4 /WX /analyze` and ASan native builds, original-byte contracts, and
+  independent Argon High code/assembly reviews.
+
+Both native profiles pass **65 local suites**, including installed-resource
+comparisons. The new assignment suite runs **346,378 checks**, covering all
+three-key states of 1-to-5-slot tables across all start indices, probe budgets,
+sentinel/zero queries and zero/nonzero values, plus alignment residues 0–7,
+truncations, key-only collisions, minimally mapped selected slots, full-table
+replacement and 32-bit endpoints. All **41 focused contract tests** pass, and
+the clean public suite passes **869 tests** on Python 3.14 and 3.15 with 269
+expected private-evidence skips each. The registry verifies **81 function
+bodies, 68 globals, 14 first vtable slots and 90 instruction windows**.
+
+Fourteen new REA records (nine function dossiers and five data reads) were
+added in a resumed private session on top of the 28-record Layer 7 snapshot,
+producing a validated 42-record bundle and closed session snapshot. Argon High's
+read-only native code review and original-assembly review both found no
+confirmed defect or overclaim. Shared Ghidra state, canonical exports and
+frozen admission locks were unchanged. See [VFS recovery](docs/vfs_recovery.md)
+and the [verification record](port/recovered_types/verification.json).
+
 ### Remaining work
 
 1. Extend the verified resource-backed domain toward the original resource
-   manager: recover mount/name-table population and dependency/mod precedence,
-   complete missing-entry release/unwind behavior, full normalization rules, exact partial
-   parser/exception outcomes, and the rest of the original XML object ABI. Historic CRT/locale
-   behavior and full resource-backed constructor equivalence remain open.
+   manager: recover archive-name tree (`0x112c0250`) node layout and search/insert
+   mechanics, `0x112b5090` dependency-graph relation semantics, `0x112a7690`
+   candidate-set ordering, complete missing-entry release/unwind behavior, full
+   normalization rules, exact partial parser/exception outcomes, and the rest of
+   the original XML object ABI. Historic CRT/locale behavior and full
+   resource-backed constructor equivalence remain open.
 2. Recover the remaining unit-card methods and meanings of opaque 32-bit
    words before widening any of them into native pointers or ownership links.
 3. Continue engine/FaceFX class recovery, complete vtable bounds and callable

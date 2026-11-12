@@ -1,6 +1,6 @@
 {
   "schema": "rome2-type-recovery-verification-v1",
-  "scope": "Layer 7 records current native VFS dispatch/name primitives and static hit/miss distinctions. Earlier top-level/layer results and source hashes are historical snapshots; none declares whole-engine equivalence.",
+  "scope": "Layer 8 records bounded fixed-capacity VFS name-table assignment and static population/duplicate-suppression/candidate-comparator distinctions. Earlier top-level/layer results and source hashes are historical snapshots; none declares whole-engine equivalence.",
   "python_focused": {
     "tests": 82,
     "failures": 0,
@@ -344,7 +344,7 @@
       "sha256": "5f38a41f1ad01d590c2ca13c5bfd7b1ce3eeabdf00d0369630d799da6dd07ae4"
     }
   ],
-  "updated_utc": "2026-11-08T02:19:35+00:00",
+  "updated_utc": "2026-11-12T17:18:37+00:00",
   "layer2": {
     "status": "complete for admitted tag copy domain and typed helper boundary",
     "tag_allocation_failure_positions": 11,
@@ -576,7 +576,7 @@
       "whole-engine class/vtable/allocator/threading recovery"
     ]
   },
-  "current_layer": "layer7",
+  "current_layer": "layer8",
   "layer5": {
     "status": "direct XML-node native setup verified; original XML ABI, resource-manager precedence and loader failure behavior remain open",
     "node_setup": {
@@ -1712,6 +1712,411 @@
       "complete missing-entry release, allocator-failure and exception/unwind behavior",
       "full normalization, parser equivalence and remaining original XML/VFS ABI",
       "historical CRT/locale/FP equivalence and whole-engine ownership/vtable/threading recovery"
+    ]
+  },
+  "layer8": {
+    "status": "bounded fixed-capacity native name-table assignment verified; generic overwrite, loose-cache replacement, archive-local duplicate suppression, archive-name tree separation and candidate-comparator predicates recovered; full mount/dependency policy and lifetime/unwind remain open",
+    "original_image_contracts": {
+      "schema": "rome2-recovered-types-v1",
+      "verified": true,
+      "functions": 81,
+      "globals": 68,
+      "vtables": 14,
+      "instruction_witnesses": 90,
+      "scope": "static original-image evidence; native behavior requires separate tests"
+    },
+    "python_focused_contract_tests": 41,
+    "native_tests": {
+      "analyze": {
+        "suites": 65,
+        "failed": 0,
+        "local_ctest_log": "out/vfs-layer8-20261107/analyze/Testing/Temporary/LastTest.log",
+        "log_sha256": "a5e82f70a920f94cbf886af68b977a4c657178d11928d3f34b78fd4486435cfd",
+        "junit_sha256": "beac3c4943b7592a1058944337cb5c8c8c1306d9bdec862ce1a0b1e490f54e41"
+      },
+      "asan": {
+        "suites": 65,
+        "failed": 0,
+        "local_ctest_log": "out/vfs-layer8-20261107/asan/Testing/Temporary/LastTest.log",
+        "log_sha256": "4a451445377a3f3a005d8dbdfc9819638fc0acb03a0d13714640cbed5f55fb41",
+        "junit_sha256": "6737fc33ae93c0f830ce64db38e5dbdd13ea36f3dfb7ac06f43ee516121fb37e"
+      },
+      "installed_asset_oracle_included": true,
+      "assertions_enabled": true,
+      "public_asset_free_suites": 64
+    },
+    "assignment_tests": {
+      "active_checks": 346378,
+      "exhaustive_small_table_buckets": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "descriptor_alignment_residues": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "slot_alignment_residues": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "cases": [
+        "independent minimum circular-distance oracle across all 3-key states of 1..5 slot tables, all start indices, budgets, sentinel/zero queries and zero/nonzero values",
+        "equal-key priority over empty marker at the same slot; value-only write on equal key, key+value write on unequal empty marker",
+        "sentinel query (name == empty_name) updates value and reports matched_key=true while keeping empty-key marker intact",
+        "complete read preflight of visited keys and selected slot value before any write; backing and output preserved on all non-OK paths",
+        "TABLE_FULL vs PROBE_LIMIT distinction, full-table equal-key replacement, minimally mapped selected slots and 32-bit endpoints"
+      ]
+    },
+    "original_observations": [
+      "112ddee0 probes unsigned hash % count with wrap, checks 32-bit key equality before empty marker, overwrites slot+4 on equal key, copies key and writes slot+4 on unequal empty marker, and grows full tables to 2*count+1",
+      "112b8830 probes loose-file table 120329b4, invokes old nonzero entry slot+0 with argument 1 before allocating 0x20-byte entry (vtable 11897710), falls back to zero on NULL allocation and assigns via 112ddee0",
+      "112a9560 initializes archive-local table at receiver+4 with 8 buckets and skips pooled allocation (vtable 118976c0) and 112ddee0 insertion when inline probe hits a valid value-cell address, retaining the first equal key per archive",
+      "112c01f0 returns global archive-name tree 12032a34 (searched by 112c0250 in 112ce0c0 before probing selected archive+4 via 112c1130), distinct from loose-file table 120329b4",
+      "112cfc10 recurses on archive dependencies and registers comparator 112e1500 via 112a7690; 112e1500 checks 112d59f0(b+0x14, a+0x14) then 112d59f0(a+0x14, b+0x14), falling back to strict unsigned low-nibble comparison ((*a)[0x1c] & 0xf) > ((*b)[0x1c] & 0xf)"
+    ],
+    "native_adaptations": [
+      "fixed-capacity assignment over borrowed read descriptor and writable slot views; no growth, allocation, retain/release or locking",
+      "visited keys and selected slot value validated before mutation; non-OK paths preserve all backing bytes and output",
+      "matched_key reports key equality (including name == empty_name); callers needing live occupancy reserve empty_name",
+      "existing dispatch, hash, probe, XML and pack-resource helpers retain their contracts and explicit diagnostics"
+    ],
+    "public_python_clean": {
+      "checkout": "tracked public files plus reviewed Layer 8 patch, no original image/canonical exports",
+      "runs": [
+        {
+          "version": "3.14",
+          "tests": 869,
+          "skipped": 269,
+          "failures": 0,
+          "errors": 0,
+          "local_log": "out/vfs-layer8-20261107/public-clean-python314.log",
+          "log_sha256": "18ac0f4c8dffafd014574d172ab4f4873b810cdb1f0d81a4646eaf83225a1fb5"
+        },
+        {
+          "version": "3.15",
+          "tests": 869,
+          "skipped": 269,
+          "failures": 0,
+          "errors": 0,
+          "local_log": "out/vfs-layer8-20261107/public-clean-python315.log",
+          "log_sha256": "c7b8c2661ad370bdfee3932706523125e936aac1a1974bb2a04083b435acec5b"
+        }
+      ]
+    },
+    "corpus_tree_full_suite": "not rerun; earlier corpus-tree issues remain recorded and frozen locks unchanged",
+    "installed_assets": {
+      "record": "port/recovered_types/fauna_assets.json",
+      "archives": 2,
+      "entrypoints": [
+        "rome2_owned_unit_card_create_from_packs",
+        "rome2_owned_unit_card_setup_from_packs"
+      ],
+      "explicit_precedence_orders": 2,
+      "original_game_execution": false,
+      "record_sha256": "590b4383acd1ba59047ffb9744313edd629036ad7156b3e0140b37ff7563dbe3"
+    },
+    "rea": {
+      "new_function_dossiers": 9,
+      "new_data_records": 5,
+      "new_hash_pinned_records": 14,
+      "reused_layer7_records": 28,
+      "validated_bundle_records": 42,
+      "session_closed": true,
+      "original_game_execution": false,
+      "closed_snapshot_local_path": "out/vfs-layer8-20261107/rea-resumed/session.rea.json",
+      "closed_snapshot_sha256": "7de4613e3947812f93943f0c93c6506530cec66218894ca13ee63b36013a668b",
+      "validated_bundle_local_path": "out/vfs-layer8-20261107/rea-resumed/validated-evidence-bundle.json",
+      "validated_bundle_sha256": "c64a7089a53b8473f27d13af9d207ed683acf328e8de9e65017ef74a7a336032",
+      "shared_ghidra_and_canonical_exports_changed": false
+    },
+    "review": {
+      "requested": "Google Argon second eyes; Max previously unavailable",
+      "availability": "highest installed available Argon High/High used",
+      "findings": "scout, native code and original-assembly reviews found no confirmed defect or overclaim",
+      "runs": [
+        {
+          "name": "argon-scout",
+          "model": "gemini-4-argon-high",
+          "requested_effort": "high",
+          "status": "SUCCESS",
+          "tools_used": [
+            "read_file"
+          ],
+          "conversation_id": "d8c8dddb-ee3b-44da-bdfe-77c5f9ce1000",
+          "events_local_path": "out/vfs-layer8-20261107/argon-scout.events.jsonl",
+          "events_sha256": "7a3335d3138a76ebdcfe346fb20a337b40854db4549ab9a67dc199ff0d17049a",
+          "review_local_path": "out/vfs-layer8-20261107/argon-scout.md",
+          "review_sha256": "4cf67fc9c1f146d2e76b383efea6b528e9e7510bcd35d2e12d335ae4a539544e"
+        },
+        {
+          "name": "argon-code",
+          "model": "gemini-4-argon-high",
+          "requested_effort": "high",
+          "status": "SUCCESS",
+          "tools_used": [
+            "read_file"
+          ],
+          "conversation_id": "4984cefc-12e4-4c72-8350-f556dbecf12f",
+          "events_local_path": "out/vfs-layer8-20261107/argon-code.events.jsonl",
+          "events_sha256": "f5f92e972a741e6be3d8cdda0cadc2731a55010f7434cd4d113dde819c59737b",
+          "review_local_path": "out/vfs-layer8-20261107/argon-code.md",
+          "review_sha256": "eb920cc62590121b559c145bca84cf2a965d3e9ac0b4fa99978e63f9cba58ba8"
+        },
+        {
+          "name": "argon-original",
+          "model": "gemini-4-argon-high",
+          "requested_effort": "high",
+          "status": "SUCCESS",
+          "tools_used": [
+            "read_file"
+          ],
+          "conversation_id": "3eb8dc1a-10e3-4713-8aef-ddb18eada30c",
+          "events_local_path": "out/vfs-layer8-20261107/argon-original.events.jsonl",
+          "events_sha256": "d26f2ac407265517463e87ddf8b105ac55b8b7ea9d8999b6272e2285b2569ab7",
+          "review_local_path": "out/vfs-layer8-20261107/argon-original.md",
+          "review_sha256": "4de29f02dd12b0b7040edc60309a330b4e2d36f6d504077961ef993adf13b9f8"
+        }
+      ]
+    },
+    "local_logs": "out/vfs-layer8-20261107/",
+    "source_hash_scope": "UTF-8 with CRLF/CR normalized to LF; current resource/XML/VFS recovery, tests and docs",
+    "sources": [
+      {
+        "path": "README.md",
+        "bytes": 25132,
+        "sha256": "ca674e69fdf0e1df9abbe735b5e81c33c4071c1829298c04d9d080bc5ea17c4e"
+      },
+      {
+        "path": "docs/unitcard_resource_recovery.md",
+        "bytes": 10039,
+        "sha256": "97c4517c260f05bfbd3e91a588b8deb0e397d2f99368457fb44922b27078966d"
+      },
+      {
+        "path": "docs/vfs_recovery.md",
+        "bytes": 14619,
+        "sha256": "da33a9c8abd202cc21b05369357fcabcbef96900156ca690e11ab2a170ad162c"
+      },
+      {
+        "path": "docs/xml_loader_recovery.md",
+        "bytes": 10853,
+        "sha256": "cd1c54709149a8d93fb65fb0201b7b1466b40408ac8f409554355f90ab485433"
+      },
+      {
+        "path": "port/recovered_types/CMakeLists.txt",
+        "bytes": 4506,
+        "sha256": "b1d653f5097641f2cbd570c022968e5cb5ec3ddbb14e995fa9ff5aac1b0e807b"
+      },
+      {
+        "path": "port/recovered_types/contracts.json",
+        "bytes": 126282,
+        "sha256": "a529de1e20fd1edf36900b7fc4b81efad6013fc81b72b1c6f59ba30b4b5895f6"
+      },
+      {
+        "path": "port/recovered_types/fauna_asset_probe.c",
+        "bytes": 3051,
+        "sha256": "486d4306fbbee7bd0b3b286a6db5b1df508b0cfceff196ff569bf7a149179644"
+      },
+      {
+        "path": "port/recovered_types/fauna_config.c",
+        "bytes": 12023,
+        "sha256": "f7c154d03514f6e99ce90054cf13a1da8005aec2dda187972ebbb9d5e9abf29d"
+      },
+      {
+        "path": "port/recovered_types/fauna_config.h",
+        "bytes": 3054,
+        "sha256": "9313687f26b6d65a3da40b141f9a4535ea5040ad3740c402df9eb9c3f8509c5f"
+      },
+      {
+        "path": "port/recovered_types/guest32_layouts.h",
+        "bytes": 20493,
+        "sha256": "65860cbcfa2ede6a803dd04b1bf6549c65a29451e601e4daf57d4199129922b1"
+      },
+      {
+        "path": "port/recovered_types/native_xml.c",
+        "bytes": 11832,
+        "sha256": "0e16d0bc50e48d4a3290e000be974e65a1593208d9df7f18a1f9191761061cbc"
+      },
+      {
+        "path": "port/recovered_types/native_xml.h",
+        "bytes": 2555,
+        "sha256": "70bd1f4fe5aae18aaceb479f487e9ace232bcf62fb0d44204ae6633ff0fa915e"
+      },
+      {
+        "path": "port/recovered_types/owned_fauna.c",
+        "bytes": 9394,
+        "sha256": "f879f67256c4676eb5e251045135a3478c940f8ba08a3209a5d20d8ecb478e82"
+      },
+      {
+        "path": "port/recovered_types/owned_fauna.h",
+        "bytes": 3821,
+        "sha256": "9813242e118f4ff2e2a221850768d2f481a8d8544b50bbeffd3855658ae04304"
+      },
+      {
+        "path": "port/recovered_types/owned_unit_card.c",
+        "bytes": 16055,
+        "sha256": "7299a2d87abbf8f2f178c16fe18b31960c531bae7f4d89f0f9f50f6e6f1c28fa"
+      },
+      {
+        "path": "port/recovered_types/owned_unit_card.h",
+        "bytes": 6921,
+        "sha256": "8d3d0766d4a6826d8937819f65563b409d587c4ef5f76e16d6c6ddd1ed273cc6"
+      },
+      {
+        "path": "port/recovered_types/pack_resource.c",
+        "bytes": 12117,
+        "sha256": "13e9b43193dc1309a3d64e109dd6d30185ef38538f6a0a44d072492c2c197053"
+      },
+      {
+        "path": "port/recovered_types/pack_resource.h",
+        "bytes": 1944,
+        "sha256": "c85b2002cd2d6ad0d4eb966b4595c2f15b32b83b4359c7cc55792ad30c6e8407"
+      },
+      {
+        "path": "port/recovered_types/test_fauna_config.c",
+        "bytes": 9339,
+        "sha256": "122f89ba8ba541cb2696b9a7c8fcc65155ec69d64ec2af7ce6840688c7043df4"
+      },
+      {
+        "path": "port/recovered_types/test_native_xml.c",
+        "bytes": 9363,
+        "sha256": "fd68911474707bad7e136ce863c3f95bb1d04f8747f941b2eaff9634b18f22ab"
+      },
+      {
+        "path": "port/recovered_types/test_pack_resource.c",
+        "bytes": 36226,
+        "sha256": "b3e2fda413ecdd78fa269566e65d11dcd7600dabaa21433379d3c27d1d4ecd56"
+      },
+      {
+        "path": "port/recovered_types/test_resource_support.h",
+        "bytes": 2422,
+        "sha256": "4f750e041cf8af2ffbfa7ffd29e429d390dd2b4d0bcdc71abda7b4dd69877269"
+      },
+      {
+        "path": "port/recovered_types/test_unit_card_resource.c",
+        "bytes": 22761,
+        "sha256": "cf9eb4fb19c3983b4a5200c3c465f012b6f36a87c0fa7e3bacb09f7394391e18"
+      },
+      {
+        "path": "port/recovered_types/test_unit_card_xml_node.c",
+        "bytes": 12462,
+        "sha256": "6161d19a143df36df9c2444d72818e916c02c787c25c4adbaa97b292b65add60"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_dispatch.c",
+        "bytes": 7136,
+        "sha256": "ec0838a860e24f3697ea69799b059b18d48cc664e3659203c928c9fd97fb6f39"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_name.c",
+        "bytes": 11026,
+        "sha256": "9c73a25796bf2e9f552bcf15a2e53e6d3aab2f40f36687d799457bd418c787c5"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_name_assign.c",
+        "bytes": 12834,
+        "sha256": "d78fb3dedda4c0e43d61b0ca73ea3bf7316df070f2623abfe1d690f64b7ef514"
+      },
+      {
+        "path": "port/recovered_types/test_xml_loader_policy.c",
+        "bytes": 9012,
+        "sha256": "92e9dd7be968306792b395484606849e88f16a114e943029457e44dbf2891b17"
+      },
+      {
+        "path": "port/recovered_types/unit_card_resource.c",
+        "bytes": 7384,
+        "sha256": "2ea6d1e9f301824556604bf21113ec5dffe3ab5b99e9b50180cbffa9df539feb"
+      },
+      {
+        "path": "port/recovered_types/unit_card_resource.h",
+        "bytes": 4644,
+        "sha256": "476989c945bb7e50dfecc176a10ce89239d493588019f2fe9363f67cce23ea8b"
+      },
+      {
+        "path": "port/recovered_types/vfs_dispatch.c",
+        "bytes": 1176,
+        "sha256": "72ca65a5e769f0deadcded43312bc53b86644be444c3f8c6862d7c1a0eb2b26b"
+      },
+      {
+        "path": "port/recovered_types/vfs_dispatch.h",
+        "bytes": 1617,
+        "sha256": "40a65225effaeb2b44831ee5e15924f6d1ff18fbe604fb1162e35cbeae5cb381"
+      },
+      {
+        "path": "port/recovered_types/vfs_name.c",
+        "bytes": 2836,
+        "sha256": "ea5d733e037883f76e26fc6b40a0ebd31a4da76ecf4a2a648319b3b70cf3c21d"
+      },
+      {
+        "path": "port/recovered_types/vfs_name.h",
+        "bytes": 2615,
+        "sha256": "c7028847bf344131fa3a497d5145434002bcb4129c1ca62cacb1e79d127f6fc6"
+      },
+      {
+        "path": "port/recovered_types/vfs_name_assign.c",
+        "bytes": 3127,
+        "sha256": "b0077f660afe2be7a8439f9be8021ce15b56f0e0be11201417e54949f5a4552a"
+      },
+      {
+        "path": "port/recovered_types/vfs_name_assign.h",
+        "bytes": 2575,
+        "sha256": "875f3ccbfa9aca543ac2bdaa56a0f06bf73df4b73dc0758b2279ff1f3e46cdc7"
+      },
+      {
+        "path": "port/recovered_types/xml_loader_policy.c",
+        "bytes": 2257,
+        "sha256": "e7b8bb303f944bd66dd40658f505aea74858e6cc31da0e218738876cb28057df"
+      },
+      {
+        "path": "port/recovered_types/xml_loader_policy.h",
+        "bytes": 2966,
+        "sha256": "42b9f8355ae302d3737eb844bd109fcc9ada27b294338431aa315619476638a1"
+      },
+      {
+        "path": "progress.md",
+        "bytes": 22689,
+        "sha256": "f9f7f09db74cc914e53a7cb259cc88487303d9250ced4a388025b1b79592d671"
+      },
+      {
+        "path": "scripts/test_type_recovery_contracts.py",
+        "bytes": 25157,
+        "sha256": "0c6e95e6573abe2d6eafdd73bca1b15dbb36108c3bef4335992729b0bf444da8"
+      },
+      {
+        "path": "scripts/type_recovery_contracts.py",
+        "bytes": 9226,
+        "sha256": "148a6cbc2cbfdff19c2f30ed9fe4e85219a3602ac36a71e6397e7059f058b153"
+      },
+      {
+        "path": "scripts/verify_fauna_resources.py",
+        "bytes": 6911,
+        "sha256": "2bcb22d882509671d6a5c2c590ca87cac2fb774099ed75884b16b415ed9e108c"
+      },
+      {
+        "path": "tests/native/CMakeLists.txt",
+        "bytes": 6960,
+        "sha256": "37a9225e989bd6925e2285d8929a8052acacea0af43f9ad13434f7ff5c691fc3"
+      }
+    ],
+    "remaining": [
+      "archive-name tree (112c0250) node layout and lookup/insertion mechanics",
+      "dependency-graph relation (112b5090), candidate-set ordering (112a7690) and full mount/mod precedence",
+      "complete missing-entry release, allocator-failure and exception/unwind behavior",
+      "full normalization, parser equivalence, remaining XML/VFS ABI, historical CRT/locale/FP equivalence and whole-engine recovery"
     ]
   }
 }

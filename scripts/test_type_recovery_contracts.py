@@ -75,7 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 72)
+        self.assertEqual(result["functions"], 81)
+        self.assertEqual(result["globals"], 68)
+        self.assertEqual(result["vtables"], 14)
+        self.assertEqual(result["instruction_witnesses"], 90)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -276,7 +279,65 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual(w["112bd66e"], bytes.fromhex("c707e07b8911"))
         self.assertEqual(w["112d0c80"], bytes.fromhex("ff4108c20800"))
         helper = next(f for f in self.registry["functions"] if f["address"] == "112d0c80")
-        self.assertEqual((helper["stack_argument_bytes"], helper["callee_pop_bytes"]), (8, 8))
+        self.assertEqual(helper["stack_argument_bytes"], 8)
+        self.assertEqual(helper["callee_pop_bytes"], 8)
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_vfs_assignment_precedence_and_full_table_growth(self):
+        w = {w["address"]: bytes.fromhex(w["hex"]) for w in self.registry["instruction_witnesses"]}
+        self.assertEqual(w["112ddf17"], bytes.fromhex("8b4e0433d2f7f1"))
+        self.assertEqual(0x112DDF53 + 6 + struct.unpack_from("<i", w["112ddf51"], 4)[0], 0x112DE0A0)
+        self.assertEqual(0x112DDF6E + 6 + struct.unpack_from("<i", w["112ddf6c"], 4)[0], 0x112DE073)
+        self.assertEqual(0x112DDFB3 + 6 + struct.unpack_from("<i", w["112ddfb1"], 4)[0], 0x112DE0A0)
+        self.assertEqual(0x112DDFCB + 6 + struct.unpack_from("<i", w["112ddfc9"], 4)[0], 0x112DE073)
+        self.assertEqual(w["112ddfea"], bytes.fromhex("8d044501000000"))
+        self.assertEqual(w["112ddff5"], bytes.fromhex("894604c1e003"))
+        self.assertEqual(w["112de010"][:6], bytes.fromhex("8b06558d0cd8"))
+        self.assertEqual(w["112de040"][:4], bytes.fromhex("84c0750c"))
+        self.assertEqual(w["112de073"][-4:], bytes.fromhex("8b098908"))
+        self.assertEqual(w["112de0a0"], bytes.fromhex("8b4424285f8b00894204"))
+        helper = next(f for f in self.registry["functions"] if f["address"] == "112ddee0")
+        self.assertEqual((helper["receiver_register"], helper["stack_argument_bytes"], helper["callee_pop_bytes"]), ("ECX", 8, 8))
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_loose_cache_replacement_destroys_old_and_assigns_zero_on_null(self):
+        w = {w["address"]: bytes.fromhex(w["hex"]) for w in self.registry["instruction_witnesses"]}
+        self.assertEqual(w["112b8848"], bytes.fromhex("8b0885c974068b016a01ff10"))
+        self.assertEqual(w["112b8861"], bytes.fromhex("85ff7451"))
+        self.assertEqual(0x112B8863 + 2 + w["112b8861"][3], 0x112B88B6)
+        self.assertEqual(w["112b88b6"][:6], bytes.fromhex("33ff897c2408"))
+        self.assertEqual(0x112B88CD + 5 + struct.unpack_from("<i", w["112b88b6"], 24)[0], 0x112DDEE0)
+        vtable = next(v for v in self.registry["vtables"] if v["address"] == "11897710")
+        self.assertEqual(vtable["first_slot_code_identity"], "112acf40")
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_archive_local_table_retains_first_equal_key(self):
+        w = {w["address"]: bytes.fromhex(w["hex"]) for w in self.registry["instruction_witnesses"]}
+        self.assertEqual(w["112a957c"][:3], bytes.fromhex("8d5804"))
+        self.assertEqual(w["112a957c"][-7:], bytes.fromhex("c7430408000000"))
+        self.assertEqual(0x112A98A7 + 2 + w["112a98a5"][3], 0x112A9913)
+        self.assertEqual(0x112A98F3 + 2 + w["112a98f1"][3], 0x112A9913)
+        self.assertEqual(w["112a9913"][:3], bytes.fromhex("83c104"))
+        self.assertEqual(0x112A9916 + 6 + struct.unpack_from("<i", w["112a9913"], 5)[0], 0x112A9AE2)
+        self.assertEqual(0x112A99BE + 5 + struct.unpack_from("<i", w["112a99b2"], 13)[0], 0x112DDEE0)
+        vtable = next(v for v in self.registry["vtables"] if v["address"] == "118976c0")
+        self.assertEqual(vtable["first_slot_code_identity"], "112ad1b0")
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_archive_tree_and_comparator_predicates_are_distinct(self):
+        w = {w["address"]: bytes.fromhex(w["hex"]) for w in self.registry["instruction_witnesses"]}
+        self.assertEqual(w["112c020c"], bytes.fromhex("b8342a0312c3"))
+        self.assertEqual(0x112CE105 + 5 + struct.unpack_from("<i", w["112ce0f2"], 20)[0], 0x112C1130)
+        self.assertEqual(w["112d03ee"][:8], bytes.fromhex("c744241000152e11"))
+        self.assertEqual(0x112E151B + 5 + struct.unpack_from("<i", w["112e1513"], 9)[0], 0x112D59F0)
+        self.assertEqual(0x112E1534 + 5 + struct.unpack_from("<i", w["112e1530"], 5)[0], 0x112D59F0)
+        self.assertEqual(w["112e1553"], bytes.fromhex("8b401c83e00f3ac80f97c0"))
+        self.assertEqual(w["112d5a21"], bytes.fromhex("3b461c7428"))
+        self.assertEqual(w["112d5a36"], bytes.fromhex("3b461c7413"))
+        self.assertEqual(w["112d5a50"], bytes.fromhex("32c05dc20800"))
+        globals_ = {g["address"]: g for g in self.registry["globals"]}
+        for addr, width in (("120329b4", 12), ("12032a34", 8), ("12032a7c", 12)):
+            self.assertEqual((globals_[addr]["width"], globals_[addr]["storage"]), (width, "zero_fill"))
         self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
 
     def test_disjoint_original_bodies_exclude_reported_gaps(self):
