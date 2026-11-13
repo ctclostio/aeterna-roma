@@ -410,12 +410,12 @@ typedef struct rome2_vfs_ref_block_vtable32 {
 typedef struct rome2_vfs_stream_wrap_vtable_prefix32 {
     rome2_code_address32 scalar_deleting_dtor;   /* 00: 0x112acde0 / 0x112ad0f0 */
     rome2_code_address32 open_checked;           /* 04: 0x112d8d30 / 0x112d8e20 */
-    rome2_code_address32 slot_008;               /* 08 */
-    rome2_code_address32 slot_00c;               /* 0c */
-    rome2_code_address32 slot_010;               /* 10 */
-    rome2_code_address32 slot_014;               /* 14 */
-    rome2_code_address32 slot_018;               /* 18 */
-    rome2_code_address32 slot_01c;               /* 1c */
+    rome2_code_address32 slot_008;               /* 08: 0x10190580 (noop3) */
+    rome2_code_address32 slot_00c;               /* 0c: 0x100e22c0 (noop2) */
+    rome2_code_address32 slot_010;               /* 10: 0x112da9f0 / 0x112dab00 (release_ref) */
+    rome2_code_address32 slot_014;               /* 14: 0x112c8b80 / 0x112c8bc0 (is_valid_or_ready) */
+    rome2_code_address32 slot_018;               /* 18: 0x112d9860 / 0x10369160 (is_open) */
+    rome2_code_address32 slot_01c;               /* 1c: 0x112badf0 / 0x112baef0 (get_data_or_inner) */
 } rome2_vfs_stream_wrap_vtable_prefix32;
 
 /* 20-byte ref-counted stream handle box released/freed (`PUSH 0x14`) by
@@ -434,6 +434,30 @@ typedef struct rome2_vfs_bucket_vec_header32 {
     uint32_t count;                              /* 04 */
     rome2_data_address32 slots;                  /* 08 */
 } rome2_vfs_bucket_vec_header32;
+
+/* 8-byte mapped view box pointed to by `stream_wrap_b32 + 0x20`
+ * (freed via 0x112ad0f0 / 0x112dab00, data_ptr read by 0x112baef0). */
+typedef struct rome2_vfs_stream_view_box32 {
+    rome2_data_address32 mapped_view_base;       /* 00 */
+    rome2_data_address32 data_ptr;               /* 04 */
+} rome2_vfs_stream_view_box32;
+
+/* 16-byte stream handle state prefix pointed to by
+ * `rome2_vfs_stream_handle_box32.sentinel_or_state` (+0x0c). */
+typedef struct rome2_vfs_stream_state_prefix32 {
+    rome2_vtable_address32 vtable;               /* 00 */
+    uint32_t unobserved_004[2];                  /* 04..0b */
+    uint8_t eof_or_closed_00c;                   /* 0c */
+    uint8_t closed_00d;                          /* 0d */
+    uint8_t unobserved_00e[2];                   /* 0e..0f */
+} rome2_vfs_stream_state_prefix32;
+
+/* 8-byte RB-tree header `{ sentinel, size }` observed in 0x112a2470,
+ * 0x112b0710, and 0x112b07a0. */
+typedef struct rome2_vfs_rb_tree_head32 {
+    rome2_data_address32 sentinel;               /* 00 */
+    uint32_t size;                               /* 04 */
+} rome2_vfs_rb_tree_head32;
 
 /* FUN_100e2460's handler vector: capacity precedes count. */
 typedef struct rome2_handler_vector_layout32 {
@@ -958,6 +982,16 @@ _Static_assert(sizeof(rome2_vfs_bucket_vec_header32) == 0x0c, "bucket vec header
 ROME2_LAYOUT_ASSERT(rome2_vfs_bucket_vec_header32, capacity, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_bucket_vec_header32, count, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_bucket_vec_header32, slots, 0x08);
+_Static_assert(sizeof(rome2_vfs_stream_view_box32) == 0x08, "stream view box size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_view_box32, mapped_view_base, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_view_box32, data_ptr, 0x04);
+_Static_assert(sizeof(rome2_vfs_stream_state_prefix32) == 0x10, "stream state prefix size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_state_prefix32, vtable, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_state_prefix32, eof_or_closed_00c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_state_prefix32, closed_00d, 0x0d);
+_Static_assert(sizeof(rome2_vfs_rb_tree_head32) == 0x08, "RB tree head size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_rb_tree_head32, sentinel, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_rb_tree_head32, size, 0x04);
 
 #undef ROME2_LAYOUT_ASSERT
 #endif

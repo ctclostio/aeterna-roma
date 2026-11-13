@@ -641,6 +641,28 @@ validate bounded C17 helpers.
   `scripts/test_type_recovery_contracts.py` (**54** contract tests OK on Python 3.14 & 3.15),
   clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
 
+### Completed: Layer 20 (Stream-Wrapper Vtable Slots `+0x08..+0x1c` & RB Rotate/Iterator Leaves)
+
+- [x] **REA Evidence Extraction (`out/vfs-layer20-20261113/`)**: Recovered all 10
+  remaining slots `+0x08..+0x1c` of stream-wrapper vtables `0x118977ec` &
+  `0x11897790` (`0x10190580`, `0x100e22c0`, `0x112da9f0`, `0x112c8b80`,
+  `0x112d9860`, `0x112badf0`, `0x112dab00`, `0x112c8bc0`, `0x10369160`,
+  `0x112baef0`) plus the 5 RB rotate/iterator leaf helpers from Layer 19
+  (`0x112a2470`, `0x112b0710`, `0x112b0760`, `0x112b0780`, `0x112b07a0`) on top of
+  `out/vfs-layer19-20261113/session.rea.json` (**267** validated records in closed
+  `out/vfs-layer20-20261113/session.rea.json`: `246` reused Layer 19 + `21` new =
+  `9` `analyze_function` + `6` paired `resolve_containing_procedure`/`read_bytes`).
+- [x] **Layouts & Native C17 Helpers**: Locked `rome2_vfs_stream_view_box32` (`8`B),
+  `rome2_vfs_stream_state_prefix32` (`16`B), and `rome2_vfs_rb_tree_head32` (`8`B)
+  in `guest32_layouts.h`, implemented checked C17 helpers in
+  `port/recovered_types/vfs_stream_wrap_ops.h/.c`, and verified
+  `test_vfs_stream_wrap_ops.c` (**18 checks** passed) across **77/77** native
+  suites under `/W4 /WX /sdl /GS /guard:cf /analyze` and ASan.
+- [x] **Contracts, Docs & Public-Clean Parity**: Extended `port/recovered_types/contracts.json`
+  (**218** functions, **110** globals, **20** vtables, **233** instruction witnesses),
+  `scripts/test_type_recovery_contracts.py` (**55** contract tests OK on Python 3.14 & 3.15),
+  clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
+
 ### Remaining work
 
 1. Extend the verified resource-backed domain toward full archive registration
