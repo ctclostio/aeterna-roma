@@ -552,6 +552,30 @@ validate bounded C17 helpers.
   `scripts/test_type_recovery_contracts.py` (**50** contract tests OK on Python 3.14 & 3.15),
   clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
 
+### Current target: Layer 16 (Completed — Pack-Entry Site `0x112a9963`, Base Concrete Slots `0x11849278`, Quota Tracker, RB Sentinel/Recycler & Global Map Probe)
+
+- [x] **REA Evidence Extraction (`out/vfs-layer16-20261113/`)**: Resolved
+  `0x112a9963` inside `0x112a9560`, recovered base vtable `0x11849278` concrete
+  slot `+0x30` (`0x10f9f6e0`) + non-procedure slots (`0x10fa1340`, `0x10f9faa0`,
+  `0x10f9fae0`) and vtable `0x1189a454` slot `+0x00` (`0x112afca0`), iostream
+  wchar_t helpers (`0x113492c0`, `0x11347360`), per-thread VFS quota tracker
+  (`0x112a45c0`), stream slice/open wrappers (`0x112aa5d0`, `0x112ba6c0`),
+  `pack_props` 28B header reader (`0x112a9bc0`), root scan/mount initializer
+  (`0x112b5730`), RB sentinel singleton (`0x112e3eb0`), recursive RB recycler
+  (`0x10cf4d20`), and fresh `0x100d79c0` probe on top of
+  `out/vfs-layer15-20261113/session.rea.json` (**195** validated records in closed
+  `out/vfs-layer16-20261113/session.rea.json`: `174` reused Layer 15 + `21` new).
+- [x] **Layouts & Native C17 Helpers**: Locked `rome2_vfs_pack_header_wire32`,
+  `rome2_vfs_rb_sentinel_node32`, `rome2_vfs_quota_frame32`, and
+  `rome2_vfs_stream_slice_view32` in `guest32_layouts.h`, implemented checked
+  C17 helpers in `port/recovered_types/vfs_quota_map.h/.c`, and verified
+  `test_vfs_quota_map.c` (**25 checks** passed) across **73/73** native suites
+  under `/W4 /WX /sdl /GS /guard:cf /analyze` and ASan.
+- [x] **Contracts, Docs & Public-Clean Parity**: Extended `port/recovered_types/contracts.json`
+  (**164** functions, **93** globals, **17** vtables, **197** instruction witnesses),
+  `scripts/test_type_recovery_contracts.py` (**51** contract tests OK on Python 3.14 & 3.15),
+  clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
+
 ### Remaining work
 
 1. Extend the verified resource-backed domain toward full archive registration

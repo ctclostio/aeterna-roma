@@ -256,6 +256,48 @@ typedef struct rome2_vfs_global_map32 {
     uint32_t reserved_020;
 } rome2_vfs_global_map32;
 
+/* 28-byte wire header read into pack_props+0x18..+0x33 by 0x112a9bc0. */
+typedef struct rome2_vfs_pack_header_wire32 {
+    uint32_t signature;
+    uint32_t flags;
+    uint32_t dep_count;
+    uint32_t dep_bytes;
+    uint32_t entry_count;
+    uint32_t index_bytes;
+    uint32_t default_entry_meta;
+} rome2_vfs_pack_header_wire32;
+
+/* 20-byte RB-tree node allocated by 0x112e3eb0 (0x12032944) and erased by
+ * 0x10cf4d20 onto pool 0x119344f4 (+0x0c color, +0x0d is_nil sentinel). */
+typedef struct rome2_vfs_rb_sentinel_node32 {
+    rome2_data_address32 left;
+    rome2_data_address32 parent;
+    rome2_data_address32 right;
+    uint8_t color;
+    uint8_t is_nil;
+    uint8_t unobserved_00e[2];
+    uint32_t reserved_010;
+} rome2_vfs_rb_sentinel_node32;
+
+/* 32-byte per-thread VFS quota frame prefix updated by 0x112a45c0. */
+typedef struct rome2_vfs_quota_frame32 {
+    uint32_t unobserved_000;
+    uint32_t max_ops;
+    uint32_t max_bytes;
+    uint32_t unobserved_00c[3];
+    uint32_t used_bytes;
+    uint32_t used_ops;
+} rome2_vfs_quota_frame32;
+
+/* 16-byte stream slice request wrapper initialized by 0x112aa5d0. */
+typedef struct rome2_vfs_stream_slice_view32 {
+    rome2_data_address32 entry;
+    uint32_t offset;
+    uint32_t length;
+    uint8_t mode_flag;
+    uint8_t unobserved_00d[3];
+} rome2_vfs_stream_slice_view32;
+
 /* FUN_100e2460's handler vector: capacity precedes count. */
 typedef struct rome2_handler_vector_layout32 {
     uint32_t unobserved_00;
@@ -711,6 +753,28 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_global_map32, bucket_count, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_global_map32, removed_key, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_vfs_global_map32, unused_key, 0x14);
 ROME2_LAYOUT_ASSERT(rome2_vfs_global_map32, reserved_020, 0x20);
+_Static_assert(sizeof(rome2_vfs_pack_header_wire32) == 0x1c, "pack wire header size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_header_wire32, signature, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_header_wire32, flags, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_header_wire32, dep_count, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_header_wire32, dep_bytes, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_header_wire32, entry_count, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_header_wire32, index_bytes, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_header_wire32, default_entry_meta, 0x18);
+_Static_assert(sizeof(rome2_vfs_rb_sentinel_node32) == 0x14, "RB sentinel node size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_rb_sentinel_node32, left, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_rb_sentinel_node32, right, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_rb_sentinel_node32, is_nil, 0x0d);
+_Static_assert(sizeof(rome2_vfs_quota_frame32) == 0x20, "VFS quota frame size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_quota_frame32, max_ops, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_quota_frame32, max_bytes, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_quota_frame32, used_bytes, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_vfs_quota_frame32, used_ops, 0x1c);
+_Static_assert(sizeof(rome2_vfs_stream_slice_view32) == 0x10, "stream slice view size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_slice_view32, entry, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_slice_view32, offset, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_slice_view32, length, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_slice_view32, mode_flag, 0x0c);
 
 #undef ROME2_LAYOUT_ASSERT
 #endif

@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 154)
-        self.assertEqual(result["globals"], 87)
-        self.assertEqual(result["vtables"], 16)
-        self.assertEqual(result["instruction_witnesses"], 187)
+        self.assertEqual(result["functions"], 164)
+        self.assertEqual(result["globals"], 93)
+        self.assertEqual(result["vtables"], 17)
+        self.assertEqual(result["instruction_witnesses"], 197)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -498,16 +498,49 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual(g["12032bf4"]["storage"], "zero_fill")
         self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
 
+    def test_quota_global_map_and_pack_wire_header(self):
+        w = {w["address"]: bytes.fromhex(w["hex"]) for w in self.registry["instruction_witnesses"]}
+        g = {item["address"]: item for item in self.registry["globals"]}
+        v = {item["address"]: item for item in self.registry["vtables"]}
+        self.assertEqual(struct.unpack_from("<I", w["100d79c6"], 1)[0], 0xF73A51C9)
+        self.assertEqual(w["10cf4d43"][5:], bytes.fromhex("8b08890f8938"))
+        self.assertEqual(w["112a4674"], bytes.fromhex("80780c007406017e18ff461c"))
+        self.assertEqual(w["112a9cec"], bytes.fromhex("c7470426000000"))
+        self.assertEqual(w["112e3ee8"][:2], bytes.fromhex("6a14"))
+        self.assertEqual(w["112e3ee8"][-2:], bytes.fromhex("0101"))
+        self.assertEqual(w["112b59be"], bytes.fromhex("c605881a031201"))
+        self.assertEqual(w["10fa1340"][-3:], bytes.fromhex("c20400"))
+        self.assertEqual(w["10f9faa0"][-3:], bytes.fromhex("c20400"))
+        self.assertEqual(w["10f9fae0"][:2], bytes.fromhex("558b"))
+        self.assertEqual(w["112afca0"][:3], bytes.fromhex("568d71"))
+        self.assertEqual(g["119e11e8"]["storage"], "file")
+        self.assertEqual(g["1172f224"]["storage"], "file")
+        for flag in ("12032738", "12031ace", "120326e0", "12032290"):
+            self.assertEqual(g[flag]["storage"], "zero_fill")
+            self.assertEqual(g[flag]["width"], 1)
+        self.assertEqual(v["1189a454"]["first_slot_code_identity"], "112afca0")
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
     def test_disjoint_original_bodies_exclude_reported_gaps(self):
         helpers = {f["address"]: f for f in self.registry["functions"] if "body_ranges" in f}
-        self.assertEqual(set(helpers), {"112a8ff0", "112bbd10", "112d4cc0", "112d4de0", "112e32b0"})
+        self.assertEqual(set(helpers), {"112a8ff0", "112b5730", "112bbd10", "112d4cc0", "112d4de0", "112e32b0"})
         base, sections = contracts.parse_pe32(self.image)
-        for address, gap in (("112a8ff0", 9), ("112bbd10", 3), ("112d4cc0", 4), ("112d4de0", 7), ("112e32b0", 4)):
+        expected_gaps = {
+            "112a8ff0": [9],
+            "112b5730": [10, 21, 30],
+            "112bbd10": [3],
+            "112d4cc0": [4],
+            "112d4de0": [7],
+            "112e32b0": [4],
+        }
+        for address, gaps in expected_gaps.items():
             helper = helpers[address]
             parts = contracts.function_body_parts(self.image, base, sections, helper)
-            self.assertEqual(len(parts), 2)
+            self.assertEqual(len(parts), len(gaps) + 1)
             self.assertEqual(sum(len(data) for _, data in parts), helper["bytes"])
-            self.assertEqual(parts[-1][0] + len(parts[-1][1]) - parts[0][0] - helper["bytes"], gap)
+            observed_gaps = [parts[i + 1][0] - (parts[i][0] + len(parts[i][1])) for i in range(len(gaps))]
+            self.assertEqual(observed_gaps, gaps)
+            self.assertEqual(parts[-1][0] + len(parts[-1][1]) - parts[0][0] - helper["bytes"], sum(gaps))
         self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
 
     def test_stack_return_cannot_be_in_a_body_gap(self):
