@@ -298,6 +298,80 @@ typedef struct rome2_vfs_stream_slice_view32 {
     uint8_t unobserved_00d[3];
 } rome2_vfs_stream_slice_view32;
 
+/* 12-byte ref-counted header prefix of the 0x50-byte block in 0x112d4160
+ * preceding embedded 0x44-byte pack_props at +0x0c.
+ */
+typedef struct rome2_vfs_ref_pack_block_header32 {
+    rome2_vtable_address32 vtable;               /* 00: 0x1189a424 */
+    int32_t strong_ref;                          /* 04 */
+    int32_t weak_ref;                            /* 08 */
+} rome2_vfs_ref_pack_block_header32;
+
+/* 24-byte chained-bucket hash map header shared by 0x101f4f90 and 0x112cbe10. */
+typedef struct rome2_vfs_open_bucket_map32 {
+    uint32_t tag_000;                            /* 00 */
+    uint32_t sentinel_004;                       /* 04 */
+    uint32_t bucket_count;                       /* 08 */
+    rome2_data_address32 buckets;                /* 0c */
+    uint32_t element_count;                      /* 10 */
+    uint32_t max_load_factor_bits;               /* 14: IEEE-754 float32 */
+} rome2_vfs_open_bucket_map32;
+
+/* 12-byte bucket descriptor & 12-byte thread-ID chain node for 0x101f4f90. */
+typedef struct rome2_vfs_open_bucket_slot32 {
+    rome2_data_address32 head;                   /* 00 */
+    rome2_data_address32 tail_or_sentinel;       /* 04 */
+    uint32_t reserved_008;                       /* 08 */
+} rome2_vfs_open_bucket_slot32;
+
+typedef struct rome2_vfs_thread_node32 {
+    rome2_data_address32 prev;                   /* 00 */
+    rome2_data_address32 next;                   /* 04 */
+    uint32_t thread_id;                          /* 08 */
+} rome2_vfs_thread_node32;
+
+/* 16-byte post-scan archive slot descriptor (0x120329c8) initialized by
+ * 0x112baf90 (0x3cb slots x 8 bytes) and swept by 0x112b5450.
+ */
+typedef struct rome2_vfs_post_scan_table32 {
+    rome2_data_address32 entries;                /* 00: 0x120329c8 */
+    uint32_t entry_count;                        /* 04: 0x120329cc (0x3cb) */
+    uint64_t default_entry;                      /* 08: 0x120329d0..0x120329d7 */
+} rome2_vfs_post_scan_table32;
+
+/* 0x38-byte and 0x3c-byte stream wrapper layouts initialized by 0x112a7ae0
+ * (0x118977ec) and 0x112a94d0 (0x11897790).
+ */
+typedef struct rome2_vfs_stream_wrap_a32 {
+    rome2_vtable_address32 vtable;               /* 00: 0x118977ec */
+    uint32_t flag_004;                           /* 04 */
+    uint32_t name_a;                             /* 08 */
+    uint32_t name_b;                             /* 0c */
+    uint32_t args_010[4];                        /* 10..1c */
+    uint32_t zero_020;                           /* 20 */
+    uint32_t zero_024;                           /* 24 */
+    uint8_t flag_028;                            /* 28 */
+    uint8_t unobserved_029[3];
+    uint32_t zero_02c;                           /* 2c */
+    uint32_t zero_030;                           /* 30 */
+    uint8_t flag_034;                            /* 34 */
+    uint8_t unobserved_035[3];
+} rome2_vfs_stream_wrap_a32;
+
+typedef struct rome2_vfs_stream_wrap_b32 {
+    rome2_vtable_address32 vtable;               /* 00: 0x11897790 */
+    uint32_t flag_004;                           /* 04 */
+    uint32_t name_str;                           /* 08 */
+    uint32_t tag_00c;                            /* 0c */
+    uint32_t inner_010[4];                       /* 10..1c */
+    uint32_t zero_020[4];                        /* 20..2c */
+    uint8_t flag_030;                            /* 30 */
+    uint8_t unobserved_031[3];
+    uint8_t flag_034;                            /* 34 */
+    uint8_t unobserved_035[3];
+    uint32_t zero_038;                           /* 38 */
+} rome2_vfs_stream_wrap_b32;
+
 /* FUN_100e2460's handler vector: capacity precedes count. */
 typedef struct rome2_handler_vector_layout32 {
     uint32_t unobserved_00;
@@ -775,6 +849,30 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_stream_slice_view32, entry, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_stream_slice_view32, offset, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_stream_slice_view32, length, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_vfs_stream_slice_view32, mode_flag, 0x0c);
+_Static_assert(sizeof(rome2_vfs_ref_pack_block_header32) + sizeof(rome2_vfs_pack_props_prefix32) == 0x50, "ref pack block size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_ref_pack_block_header32, vtable, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_ref_pack_block_header32, strong_ref, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_ref_pack_block_header32, weak_ref, 0x08);
+_Static_assert(sizeof(rome2_vfs_open_bucket_map32) == 0x18, "open bucket map size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_bucket_map32, sentinel_004, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_bucket_map32, bucket_count, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_bucket_map32, buckets, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_bucket_map32, element_count, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_bucket_map32, max_load_factor_bits, 0x14);
+_Static_assert(sizeof(rome2_vfs_open_bucket_slot32) == 0x0c, "open bucket slot size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_bucket_slot32, head, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_bucket_slot32, tail_or_sentinel, 0x04);
+_Static_assert(sizeof(rome2_vfs_thread_node32) == 0x0c, "thread node size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_thread_node32, next, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_thread_node32, thread_id, 0x08);
+_Static_assert(sizeof(rome2_vfs_post_scan_table32) == 0x10, "post-scan table size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_post_scan_table32, entries, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_post_scan_table32, entry_count, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_post_scan_table32, default_entry, 0x08);
+_Static_assert(sizeof(rome2_vfs_stream_wrap_a32) == 0x38, "stream wrap A size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_wrap_a32, flag_034, 0x34);
+_Static_assert(sizeof(rome2_vfs_stream_wrap_b32) == 0x3c, "stream wrap B size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_wrap_b32, zero_038, 0x38);
 
 #undef ROME2_LAYOUT_ASSERT
 #endif

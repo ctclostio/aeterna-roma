@@ -1,6 +1,6 @@
 {
   "schema": "rome2-type-recovery-verification-v1",
-  "scope": "Layer 16 records pack-entry vtable assignment site 0x112a9963 in 0x112a9560, base pack-entry vtable 0x11849278 concrete slots (+0x2c..+0x38), vtable 0x1189a454 (+0x00=0x112afca0), iostream wchar_t helpers (0x113492c0, 0x11347360), per-thread VFS quota tracker 0x112a45c0, stream slice/open helpers (0x112aa5d0, 0x112ba6c0), pack_props 28B wire header reader 0x112a9bc0, root archive scan/mount initializer 0x112b5730, RB sentinel singleton 0x112e3eb0, recursive RB node recycler 0x10cf4d20, and fresh 0x100d79c0 global-map probe with bounded C17 helpers. Earlier top-level/layer results and source hashes are historical snapshots; none declares whole-engine equivalence.",
+  "scope": "Layer 17 closes all remaining 11 unpinned direct VFS callees of Layers 12-16: root scan/mount callees (0x112d4160, 0x112d4c50, 0x112baf90, 0x112b5450, 0x112a4e10), per-thread quota map callees (0x112e3db0, 0x101f4f90, 0x112cbe10), stream wrapper constructors (0x112a7ae0, 0x112a94d0), and pack_props dependency loader (0x112bb790) with bounded C17 helpers. Earlier top-level/layer results and source hashes are historical snapshots; none declares whole-engine equivalence.",
   "python_focused": {
     "tests": 82,
     "failures": 0,
@@ -344,7 +344,7 @@
       "sha256": "5f38a41f1ad01d590c2ca13c5bfd7b1ce3eeabdf00d0369630d799da6dd07ae4"
     }
   ],
-  "updated_utc": "2026-11-13T19:27:28+00:00",
+  "updated_utc": "2026-11-13T19:51:12+00:00",
   "layer2": {
     "status": "complete for admitted tag copy domain and typed helper boundary",
     "tag_allocation_failure_positions": 11,
@@ -576,7 +576,7 @@
       "whole-engine class/vtable/allocator/threading recovery"
     ]
   },
-  "current_layer": "layer16",
+  "current_layer": "layer17",
   "layer5": {
     "status": "direct XML-node native setup verified; original XML ABI, resource-manager precedence and loader failure behavior remain open",
     "node_setup": {
@@ -5315,6 +5315,468 @@
     "remaining": [
       "mutating 0x112cfc10 registration orchestration (red-black rebalancing writes, recursive dependency execution, open-pack/archive-tree mutation, CreateFileA/SetFilePointer stream execution)",
       "0x112e32b0 hash table insertion helpers (0x100f1bb0, 0x100f1aa0, 0x100f1cc0), 0x112d4160 / 0x112d4c50 root scan callees, and high-fanout CRT thunks",
+      "full normalization, parser equivalence, remaining XML/VFS ABI, historical CRT/locale/FP equivalence and whole-engine recovery"
+    ]
+  },
+  "layer17": {
+    "status": "all 11 unpinned direct VFS callees of Layers 12-16 (0x112d4160, 0x112d4c50, 0x112baf90, 0x112b5450, 0x112a4e10, 0x112e3db0, 0x101f4f90, 0x112cbe10, 0x112a7ae0, 0x112a94d0, 0x112bb790) verified with bounded C17 helpers; vtable method bodies of 0x1189a424/0x118977ec/0x11897790 and mutating 0x112cfc10 / stream execution remain open",
+    "original_image_contracts": {
+      "schema": "rome2-recovered-types-v1",
+      "verified": true,
+      "functions": 175,
+      "globals": 101,
+      "vtables": 20,
+      "instruction_witnesses": 204,
+      "scope": "static original-image evidence; native behavior requires separate tests"
+    },
+    "python_focused_contract_tests": 52,
+    "native_tests": {
+      "analyze": {
+        "suites": 74,
+        "failed": 0,
+        "local_ctest_log": "out/vfs-layer17-20261113/analyze/Testing/Temporary/LastTest.log",
+        "log_sha256": "79eb8a1bd81ab32f7b3d81b80ede67373c392d512df4660655b0e11ced99291f",
+        "junit_sha256": "194ee57a5ffccf91612b7626dc0e73c43bf7c7bb26dc2b68356152da05bbc7d4"
+      },
+      "asan": {
+        "suites": 74,
+        "failed": 0,
+        "local_ctest_log": "out/vfs-layer17-20261113/asan/Testing/Temporary/LastTest.log",
+        "log_sha256": "1368b691e5742cffd59c153792af0a5ea0e37bc399fa1a23b21f4dce41a3e9a4",
+        "junit_sha256": "408c5f6f3d43212ea5b5d1fc35934c4f34509fea6171b2aeaad72356dcea8dab"
+      },
+      "installed_asset_oracle_included": true,
+      "assertions_enabled": true,
+      "public_asset_free_suites": 73
+    },
+    "scan_mount_tests": {
+      "active_checks": 32,
+      "cases": [
+        "rome2_vfs_thread_bucket_hash32 and rome2_vfs_thread_bucket_lookup32 matching 0x101f4f90 (thread_id ^ 0x4a545eed) % bucket_count with sentinel termination and cycle rejection",
+        "rome2_vfs_bucket_map_should_rehash32 computing float load-factor rehash predicate and overflow-checked 2*n+1 bucket growth matching 0x112cbe10",
+        "rome2_vfs_decode_ref_pack_block32 verifying 0x50-byte block (12B header vtable=0x1189a424 + 0x44B embedded pack_props at +0x0c) matching 0x112d4160",
+        "rome2_vfs_scan_post_mount_mismatches32 scanning 8-byte slots in 0x120329c8 post-scan table matching 0x112baf90 / 0x112b5450",
+        "rome2_vfs_validate_stream_wrap_a32 (0x38B, 0x118977ec) and rome2_vfs_validate_stream_wrap_b32 (0x3cB, 0x11897790) matching 0x112a7ae0 / 0x112a94d0"
+      ]
+    },
+    "original_observations": [
+      "0x112d4160 (226B) allocates 0x50B ref-counted control block {vtable=0x1189a424, strong=1, weak=1} with 0x44B embedded pack_props at +0x0c (0x0c + 0x44 == 0x50); 0x112d4c50 (100B) lazily allocates 0x180B DAT_119e11e8 under TLS guard 0x12032a14",
+      "0x112baf90 (180B, gap 3B) initializes 0x3cb x 8B slots at 0x120329c8; 0x112b5450 (68B) sweeps mismatches to default; 0x112a4e10 (397B) dispatches callback 0x112a50b0 via 0x100fec00",
+      "0x112e3db0 (230B, gap 13B) initializes 4-partition thread map 0x119e120c; 0x101f4f90 (123B) and 0x112cbe10 (476B) share 0x18B bucket map / 0x0cB bucket layout; 0x112a7ae0 (115B) and 0x112a94d0 (119B) install vtables 0x118977ec and 0x11897790"
+    ],
+    "native_adaptations": [
+      "Locked 7 fixed-width guest32 structs in guest32_layouts.h with _Static_assert size and offset verification including 0x0c + 0x44 == 0x50",
+      "All bucket traversal, float load-factor growth, ref-pack decode, and post-scan table scan helpers enforce strict step/overflow/NaN guards and preserve caller outputs on non-OK return"
+    ],
+    "public_python_clean": {
+      "checkout": "tracked public files plus Layer 17 changes, no original image/canonical exports",
+      "runs": [
+        {
+          "version": "3.14",
+          "tests": 880,
+          "skipped": 280,
+          "failures": 0,
+          "errors": 0,
+          "local_log": "out/vfs-layer17-20261113/public-clean-python314.log",
+          "log_sha256": "b7c0ad5c4c1c9d925bc8c3d75366a0738819fec312335ae1c5f8b8cd5d8b2e69"
+        },
+        {
+          "version": "3.15",
+          "tests": 880,
+          "skipped": 280,
+          "failures": 0,
+          "errors": 0,
+          "local_log": "out/vfs-layer17-20261113/public-clean-python315.log",
+          "log_sha256": "cfa46544a349f4c473b91017cc4c91d55fa025273e5431f55bdf3412adc062ed"
+        }
+      ]
+    },
+    "corpus_tree_full_suite": "not rerun; earlier corpus-tree issues remain recorded and frozen locks unchanged",
+    "installed_assets": {
+      "record": "port/recovered_types/fauna_assets.json",
+      "archives": 2,
+      "entrypoints": [
+        "rome2_owned_unit_card_create_from_packs",
+        "rome2_owned_unit_card_setup_from_packs"
+      ],
+      "explicit_precedence_orders": 2,
+      "original_game_execution": false,
+      "record_sha256": "590b4383acd1ba59047ffb9744313edd629036ad7156b3e0140b37ff7563dbe3"
+    },
+    "rea": {
+      "new_function_records": 11,
+      "resolve_containing_procedure_checks": 0,
+      "new_data_records": 2,
+      "new_xref_records": 0,
+      "new_total_bundle_records": 13,
+      "reused_layer16_records": 195,
+      "extra_evidence_views_count": 0,
+      "validated_bundle_records": 208,
+      "session_closed": true,
+      "original_game_execution": false,
+      "closed_snapshot_local_path": "out/vfs-layer17-20261113/session.rea.json",
+      "closed_snapshot_sha256": "854a2b335abe49d35baecec5c3801fe91f18e244be47288c449f46a447050e33",
+      "validated_bundle_local_path": "out/vfs-layer17-20261113/validated-evidence-bundle.json",
+      "validated_bundle_sha256": "a07563722df79f5dbb70fcc87f74533c4a2117e34ac498517c19258a6fd033d4",
+      "shared_ghidra_and_canonical_exports_changed": false
+    },
+    "local_logs": "out/vfs-layer17-20261113/",
+    "source_hash_scope": "UTF-8 with CRLF/CR normalized to LF; current resource/XML/VFS recovery, tests and docs",
+    "sources": [
+      {
+        "path": "README.md",
+        "bytes": 25360,
+        "sha256": "fb10c50e06ce31e0f984fd49621b0d9a6c70ee2e1b2225570e6c215647b4555e"
+      },
+      {
+        "path": "docs/unitcard_resource_recovery.md",
+        "bytes": 10039,
+        "sha256": "97c4517c260f05bfbd3e91a588b8deb0e397d2f99368457fb44922b27078966d"
+      },
+      {
+        "path": "docs/vfs_recovery.md",
+        "bytes": 58661,
+        "sha256": "d9f80924e42ce38de58d87308efc75b1eddadafe53d300c368a5eaf1c952b773"
+      },
+      {
+        "path": "docs/xml_loader_recovery.md",
+        "bytes": 10853,
+        "sha256": "cd1c54709149a8d93fb65fb0201b7b1466b40408ac8f409554355f90ab485433"
+      },
+      {
+        "path": "port/recovered_types/CMakeLists.txt",
+        "bytes": 5028,
+        "sha256": "1c75fdb79da4405b1063e7b5afa49c7e2b50f601b92f72d15ac035a1071bad2f"
+      },
+      {
+        "path": "port/recovered_types/contracts.json",
+        "bytes": 303793,
+        "sha256": "288714b56e20d0abb9df1d3379db61f2008f3e349c25dbb48d1a34e11c1affa7"
+      },
+      {
+        "path": "port/recovered_types/fauna_asset_probe.c",
+        "bytes": 3051,
+        "sha256": "486d4306fbbee7bd0b3b286a6db5b1df508b0cfceff196ff569bf7a149179644"
+      },
+      {
+        "path": "port/recovered_types/fauna_config.c",
+        "bytes": 12023,
+        "sha256": "f7c154d03514f6e99ce90054cf13a1da8005aec2dda187972ebbb9d5e9abf29d"
+      },
+      {
+        "path": "port/recovered_types/fauna_config.h",
+        "bytes": 3054,
+        "sha256": "9313687f26b6d65a3da40b141f9a4535ea5040ad3740c402df9eb9c3f8509c5f"
+      },
+      {
+        "path": "port/recovered_types/guest32_layouts.h",
+        "bytes": 43115,
+        "sha256": "5752875d822213166eb38a0865054742433da2577f392610a82bbbd74e17ca7d"
+      },
+      {
+        "path": "port/recovered_types/native_xml.c",
+        "bytes": 11832,
+        "sha256": "0e16d0bc50e48d4a3290e000be974e65a1593208d9df7f18a1f9191761061cbc"
+      },
+      {
+        "path": "port/recovered_types/native_xml.h",
+        "bytes": 2555,
+        "sha256": "70bd1f4fe5aae18aaceb479f487e9ace232bcf62fb0d44204ae6633ff0fa915e"
+      },
+      {
+        "path": "port/recovered_types/owned_fauna.c",
+        "bytes": 9394,
+        "sha256": "f879f67256c4676eb5e251045135a3478c940f8ba08a3209a5d20d8ecb478e82"
+      },
+      {
+        "path": "port/recovered_types/owned_fauna.h",
+        "bytes": 3821,
+        "sha256": "9813242e118f4ff2e2a221850768d2f481a8d8544b50bbeffd3855658ae04304"
+      },
+      {
+        "path": "port/recovered_types/owned_unit_card.c",
+        "bytes": 16055,
+        "sha256": "7299a2d87abbf8f2f178c16fe18b31960c531bae7f4d89f0f9f50f6e6f1c28fa"
+      },
+      {
+        "path": "port/recovered_types/owned_unit_card.h",
+        "bytes": 6921,
+        "sha256": "8d3d0766d4a6826d8937819f65563b409d587c4ef5f76e16d6c6ddd1ed273cc6"
+      },
+      {
+        "path": "port/recovered_types/pack_resource.c",
+        "bytes": 12117,
+        "sha256": "13e9b43193dc1309a3d64e109dd6d30185ef38538f6a0a44d072492c2c197053"
+      },
+      {
+        "path": "port/recovered_types/pack_resource.h",
+        "bytes": 1944,
+        "sha256": "c85b2002cd2d6ad0d4eb966b4595c2f15b32b83b4359c7cc55792ad30c6e8407"
+      },
+      {
+        "path": "port/recovered_types/test_fauna_config.c",
+        "bytes": 9339,
+        "sha256": "122f89ba8ba541cb2696b9a7c8fcc65155ec69d64ec2af7ce6840688c7043df4"
+      },
+      {
+        "path": "port/recovered_types/test_native_xml.c",
+        "bytes": 9363,
+        "sha256": "fd68911474707bad7e136ce863c3f95bb1d04f8747f941b2eaff9634b18f22ab"
+      },
+      {
+        "path": "port/recovered_types/test_pack_resource.c",
+        "bytes": 36226,
+        "sha256": "b3e2fda413ecdd78fa269566e65d11dcd7600dabaa21433379d3c27d1d4ecd56"
+      },
+      {
+        "path": "port/recovered_types/test_resource_support.h",
+        "bytes": 2422,
+        "sha256": "4f750e041cf8af2ffbfa7ffd29e429d390dd2b4d0bcdc71abda7b4dd69877269"
+      },
+      {
+        "path": "port/recovered_types/test_unit_card_resource.c",
+        "bytes": 22761,
+        "sha256": "cf9eb4fb19c3983b4a5200c3c465f012b6f36a87c0fa7e3bacb09f7394391e18"
+      },
+      {
+        "path": "port/recovered_types/test_unit_card_xml_node.c",
+        "bytes": 12462,
+        "sha256": "6161d19a143df36df9c2444d72818e916c02c787c25c4adbaa97b292b65add60"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_archive_mount_step.c",
+        "bytes": 13942,
+        "sha256": "c6f6cdaef4d2380dc15fd39226d85d28d31336ddb9dff5ffc808b4bcab3820d8"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_archive_register.c",
+        "bytes": 23992,
+        "sha256": "048e76feb3d8cfaab6bc36f446cc6b4946a3242a7f5ce2d74e16a8e4014e6d98"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_archive_tree.c",
+        "bytes": 20909,
+        "sha256": "fbb12603753f2c0a15e3381196b94e4e7ac421d199ba2696ec4658332473d694"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_dependency_graph.c",
+        "bytes": 24526,
+        "sha256": "bb5f8f419b579200b2c7129f07cd00b352bf6db923affa6e1a2400aa39eac87f"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_dispatch.c",
+        "bytes": 7136,
+        "sha256": "ec0838a860e24f3697ea69799b059b18d48cc664e3659203c928c9fd97fb6f39"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_name.c",
+        "bytes": 11026,
+        "sha256": "9c73a25796bf2e9f552bcf15a2e53e6d3aab2f40f36687d799457bd418c787c5"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_name_assign.c",
+        "bytes": 12834,
+        "sha256": "d78fb3dedda4c0e43d61b0ca73ea3bf7316df070f2623abfe1d690f64b7ef514"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_pack_entry.c",
+        "bytes": 7864,
+        "sha256": "b43f5fae469fa35a00e53de58581efe4903d149959a41a788b040579ff658b3e"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_pack_stream.c",
+        "bytes": 7125,
+        "sha256": "4d94e806cc1facefed7d5f394b22e28472168feab057891125ea674e0fc9bf5f"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_pool_slab.c",
+        "bytes": 10898,
+        "sha256": "216983fd3b6485ecefef099cc535df79795e84774dde0b161429006d9e163b75"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_quota_map.c",
+        "bytes": 8872,
+        "sha256": "d1f1584b8515b603231f82e21a0bc247b67c5c6e328cadc2c19e979679d5d9db"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_scan_mount.c",
+        "bytes": 8198,
+        "sha256": "ef2384fd2c610f285307ce9050b342087539368244711c395c9bd1bbb2a05ca2"
+      },
+      {
+        "path": "port/recovered_types/test_xml_loader_policy.c",
+        "bytes": 9012,
+        "sha256": "92e9dd7be968306792b395484606849e88f16a114e943029457e44dbf2891b17"
+      },
+      {
+        "path": "port/recovered_types/unit_card_resource.c",
+        "bytes": 7384,
+        "sha256": "2ea6d1e9f301824556604bf21113ec5dffe3ab5b99e9b50180cbffa9df539feb"
+      },
+      {
+        "path": "port/recovered_types/unit_card_resource.h",
+        "bytes": 4644,
+        "sha256": "476989c945bb7e50dfecc176a10ce89239d493588019f2fe9363f67cce23ea8b"
+      },
+      {
+        "path": "port/recovered_types/vfs_archive_mount_step.c",
+        "bytes": 11868,
+        "sha256": "b3f3d04d93f95f4105a18f58453b033500d250f062469cd0530749dfca35fd12"
+      },
+      {
+        "path": "port/recovered_types/vfs_archive_mount_step.h",
+        "bytes": 3975,
+        "sha256": "c86f0d54d7e63260163f41a01bba546c8c31e4b5721a177172750eff97e7f2f4"
+      },
+      {
+        "path": "port/recovered_types/vfs_archive_register.c",
+        "bytes": 21157,
+        "sha256": "6d9797b15514c61147ff8076016cec268294fbda46b003fa445f72d2e8d90b62"
+      },
+      {
+        "path": "port/recovered_types/vfs_archive_register.h",
+        "bytes": 5488,
+        "sha256": "103e820f58ffeac5fcf4532cffbea5facd3929857daf35db0a549e9ead4ae2fd"
+      },
+      {
+        "path": "port/recovered_types/vfs_archive_tree.c",
+        "bytes": 8551,
+        "sha256": "e42b64b148db05054a7005ab389ab2f9a8459583a35dcfc6073fc21e9fe01d19"
+      },
+      {
+        "path": "port/recovered_types/vfs_archive_tree.h",
+        "bytes": 3748,
+        "sha256": "2176ca486eb6243d5249920f263ef6d78faae6d7c5282d8e7f78b5877e675af1"
+      },
+      {
+        "path": "port/recovered_types/vfs_dependency_graph.c",
+        "bytes": 19874,
+        "sha256": "9b805922430460c9825bdacad8ad46705bde3a5e91ca9ab3708762fbd0dd28bb"
+      },
+      {
+        "path": "port/recovered_types/vfs_dependency_graph.h",
+        "bytes": 5095,
+        "sha256": "15fc93c466959647faec4368f3462897f2a67bd9ff51f262d32fef8154f863c6"
+      },
+      {
+        "path": "port/recovered_types/vfs_dispatch.c",
+        "bytes": 1176,
+        "sha256": "72ca65a5e769f0deadcded43312bc53b86644be444c3f8c6862d7c1a0eb2b26b"
+      },
+      {
+        "path": "port/recovered_types/vfs_dispatch.h",
+        "bytes": 1617,
+        "sha256": "40a65225effaeb2b44831ee5e15924f6d1ff18fbe604fb1162e35cbeae5cb381"
+      },
+      {
+        "path": "port/recovered_types/vfs_name.c",
+        "bytes": 2836,
+        "sha256": "ea5d733e037883f76e26fc6b40a0ebd31a4da76ecf4a2a648319b3b70cf3c21d"
+      },
+      {
+        "path": "port/recovered_types/vfs_name.h",
+        "bytes": 2615,
+        "sha256": "c7028847bf344131fa3a497d5145434002bcb4129c1ca62cacb1e79d127f6fc6"
+      },
+      {
+        "path": "port/recovered_types/vfs_name_assign.c",
+        "bytes": 3127,
+        "sha256": "b0077f660afe2be7a8439f9be8021ce15b56f0e0be11201417e54949f5a4552a"
+      },
+      {
+        "path": "port/recovered_types/vfs_name_assign.h",
+        "bytes": 2575,
+        "sha256": "875f3ccbfa9aca543ac2bdaa56a0f06bf73df4b73dc0758b2279ff1f3e46cdc7"
+      },
+      {
+        "path": "port/recovered_types/vfs_pack_entry.c",
+        "bytes": 7195,
+        "sha256": "153413f93a3e541353131cce8911e4f2d10a9682033acb3a01064bc831564206"
+      },
+      {
+        "path": "port/recovered_types/vfs_pack_entry.h",
+        "bytes": 3366,
+        "sha256": "171cd1c82f923b67da03d694d4cd0b619c1bfe6fd4b383b0578cffa3a5859fb3"
+      },
+      {
+        "path": "port/recovered_types/vfs_pack_stream.c",
+        "bytes": 5256,
+        "sha256": "a7f04553831bd38662d9db8ccb41f71cc0804bd69a1b9dbe81f68209ab28c2ca"
+      },
+      {
+        "path": "port/recovered_types/vfs_pack_stream.h",
+        "bytes": 3809,
+        "sha256": "d804baeccb8be048579d26ee34019282b73c6e3a8b064294a3d7cac7b58b8f52"
+      },
+      {
+        "path": "port/recovered_types/vfs_pool_slab.c",
+        "bytes": 12759,
+        "sha256": "73bb82613b01698d18488fb5b53b88d71b6c8fe5dd289c8d0be7be9f5d5e676a"
+      },
+      {
+        "path": "port/recovered_types/vfs_pool_slab.h",
+        "bytes": 4662,
+        "sha256": "49730f35b1eaf975c2e3f7d075652b42d5d27fa525176331713942f9c4fcaee7"
+      },
+      {
+        "path": "port/recovered_types/vfs_quota_map.c",
+        "bytes": 11637,
+        "sha256": "e5e0462f04053a12a81ccd31315f6b803799f3b38ed44bb16e5c9b58dccd5fdc"
+      },
+      {
+        "path": "port/recovered_types/vfs_quota_map.h",
+        "bytes": 2829,
+        "sha256": "b4e636da07bb875222b2e73d6acf078cf9ae7adae944d22c93b4fd033d1e5ccb"
+      },
+      {
+        "path": "port/recovered_types/vfs_scan_mount.c",
+        "bytes": 10247,
+        "sha256": "9efa2701ee2b385584057e7d74b8ec4a6996219159274dd31a2ab81298baf33c"
+      },
+      {
+        "path": "port/recovered_types/vfs_scan_mount.h",
+        "bytes": 3372,
+        "sha256": "8282ff9ba8601c432679c4d557023ff9a9e54557c4f571ae9d1da1c9e90a4fb3"
+      },
+      {
+        "path": "port/recovered_types/xml_loader_policy.c",
+        "bytes": 2257,
+        "sha256": "e7b8bb303f944bd66dd40658f505aea74858e6cc31da0e218738876cb28057df"
+      },
+      {
+        "path": "port/recovered_types/xml_loader_policy.h",
+        "bytes": 2966,
+        "sha256": "42b9f8355ae302d3737eb844bd109fcc9ada27b294338431aa315619476638a1"
+      },
+      {
+        "path": "progress.md",
+        "bytes": 41600,
+        "sha256": "2631e056ca2f4aa5613888e2e04723a8f0ac477d0214933b10cbcffe38cd6b5c"
+      },
+      {
+        "path": "scripts/test_type_recovery_contracts.py",
+        "bytes": 41606,
+        "sha256": "a9788320955d615434d9851b8253d5a419cb2a7e5e4118b5fd25c38c06861363"
+      },
+      {
+        "path": "scripts/type_recovery_contracts.py",
+        "bytes": 9226,
+        "sha256": "148a6cbc2cbfdff19c2f30ed9fe4e85219a3602ac36a71e6397e7059f058b153"
+      },
+      {
+        "path": "scripts/verify_fauna_resources.py",
+        "bytes": 6911,
+        "sha256": "2bcb22d882509671d6a5c2c590ca87cac2fb774099ed75884b16b415ed9e108c"
+      },
+      {
+        "path": "tests/native/CMakeLists.txt",
+        "bytes": 6960,
+        "sha256": "37a9225e989bd6925e2285d8929a8052acacea0af43f9ad13434f7ff5c691fc3"
+      }
+    ],
+    "remaining": [
+      "virtual method bodies of newly identified vtables (0x1189a424, 0x118977ec, 0x11897790), rehash helper 0x112d9e20, and dependency sub-callees of 0x112bb790 (0x112a4b60, 0x112e3ae0, 0x112d57f0)",
+      "mutating 0x112cfc10 registration orchestration, CreateFileA/SetFilePointer stream execution, and non-VFS worker slots",
       "full normalization, parser equivalence, remaining XML/VFS ABI, historical CRT/locale/FP equivalence and whole-engine recovery"
     ]
   }
