@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 175)
-        self.assertEqual(result["globals"], 101)
+        self.assertEqual(result["functions"], 188)
+        self.assertEqual(result["globals"], 106)
         self.assertEqual(result["vtables"], 20)
-        self.assertEqual(result["instruction_witnesses"], 204)
+        self.assertEqual(result["instruction_witnesses"], 216)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -540,6 +540,31 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual(v["1189a424"]["first_slot_code_identity"], "112afce0")
         self.assertEqual(v["118977ec"]["first_slot_code_identity"], "112acde0")
         self.assertEqual(v["11897790"]["first_slot_code_identity"], "112ad0f0")
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_dep_rb_rehash_and_stream_dtor_contracts(self):
+        w = {w["address"]: bytes.fromhex(w["hex"]) for w in self.registry["instruction_witnesses"]}
+        g = {item["address"]: item for item in self.registry["globals"]}
+        ev = self.registry["rea_layer18_evidence"]
+        self.assertEqual(ev["closed_evidence_records"], 231)
+        self.assertEqual(ev["new_evidence_records"], 23)
+        self.assertEqual(ev["reused_layer17_evidence_records"], 208)
+        self.assertEqual(len(ev["records"]), 23)
+        self.assertEqual(w["112acd50"][10:12], bytes.fromhex("6a50"))
+        self.assertEqual(w["112ace05"][:2], bytes.fromhex("6a38"))
+        self.assertEqual(struct.unpack_from("<I", w["112ad107"], 3)[0], 0x1172F24C)
+        self.assertEqual(struct.unpack_from("<I", w["112d9e84"], 1)[0], 0x800)
+        self.assertEqual(struct.unpack_from("<H", w["112a7728"], 7)[0], 0x0101)
+        self.assertEqual(w["112be330"][:2], bytes.fromhex("6a28"))
+        self.assertEqual(w["112ddb65"], bytes.fromhex("8d3c80c1e702"))
+        self.assertEqual(struct.unpack_from("<H", w["112e3b04"], 7)[0], 0x0101)
+        self.assertEqual(struct.unpack_from("<I", w["112af2a8"], 1)[0], 0x11897BC8)
+        self.assertEqual(struct.unpack_from("<I", w["112af2a8"], 6)[0], 0x12032960)
+        self.assertEqual(bytes.fromhex(g["11897bc8"]["initial_hex_le"]), b"<root>\x00")
+        self.assertEqual(bytes.fromhex(g["11897c70"]["initial_hex_le"]), b"normals\\normal_\x00")
+        self.assertEqual(g["1172f24c"]["storage"], "file")
+        for z in ("12032964", "12125644"):
+            self.assertEqual(g[z]["storage"], "zero_fill")
         self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
 
     def test_disjoint_original_bodies_exclude_reported_gaps(self):

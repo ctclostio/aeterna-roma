@@ -2586,6 +2586,207 @@
         "112bb8b8"
       ],
       "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112acde0",
+      "bytes": 54,
+      "sha256": "327ebd2c5f82f80b1810322f1a08becea944ff5344aebb73fb2b61a227987cea",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX this (restored to base vtable 0x11849278)",
+      "scope": "scalar deleting destructor of 0x38-byte stream_wrap_a releasing +0x30 handle via 0x112ac430 and freeing 0x38 bytes via 0x116835d7 when delete flag bit 0 is set",
+      "return_instruction_addresses": [
+        "112ace13"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112ad0f0",
+      "bytes": 80,
+      "sha256": "ac491413d239c204a15d184502087ca89e538ce47d85dc26553902ae111c1b78",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX this (restored to base vtable 0x11849278)",
+      "scope": "scalar deleting destructor of 0x3c-byte stream_wrap_b calling UnmapViewOfFile ([0x1172f24c]) on *this[8], freeing 8-byte view box, and freeing 0x3c bytes via 0x116835d7 when bit 0 is set",
+      "return_instruction_addresses": [
+        "112ad13d"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112d9e20",
+      "bytes": 547,
+      "sha256": "ba85d974a6b9fe1bd2d24b05e9ea307e2c3ce061ca731558e5088aea8b254c30",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void / undefined (rehashes open-bucket map to >= ceil(count / max_load_factor))",
+      "scope": "computes ceil(element_count / max_load_factor) using x87 RC=0x800 rounding, resizes bucket array via 0x112dbe10, and re-links live entries by vtable[+0x2c]() % new_bucket_count",
+      "return_instruction_addresses": [
+        "112da040"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112a2760",
+      "bytes": 92,
+      "sha256": "645f3a74a1fa26b2f8cd4cde93a044c377105989890a881ddddf18b5f41a0589",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void / undefined (frees 0x28-byte dependency RB subtree)",
+      "scope": "recursively tears down right subtree and iteratively walks left chain of 0x28-byte dependency RB nodes stopping at [node+0x0d] is_nil != 0",
+      "return_instruction_addresses": [
+        "112a27b9"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112a4090",
+      "bytes": 411,
+      "sha256": "67cff085226aa1d2d814801eee7baa38fd874486b7ef84de56dce5868a3bb5b7",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 16,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX param_1 (5-byte pair {node_ptr, inserted_bool} at +0x00/+0x04)",
+      "scope": "searches or inserts {name_a @ +0x10, name_b @ +0x1c} pair in 0x28-byte dependency RB tree using 0x100f2fe0 strict weak ordering and 0x112a3320 node allocator",
+      "return_instruction_addresses": [
+        "112a41ff",
+        "112a4228"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112a4b60",
+      "bytes": 148,
+      "sha256": "3b3a38e36789872f4001c373ac5a82ed28f2a79939507dd855879b8829844fb5",
+      "receiver_register": "none",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX matching RB node or param_2 end iterator",
+      "scope": "linearly scans [first, last) RB dependency iterator range comparing (node+0x10, node+0x1c) pair against search key via 0x100f2fe0",
+      "return_instruction_addresses": [
+        "112a4bea",
+        "112a4bf3"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112a59c0",
+      "bytes": 45,
+      "sha256": "2ec92910ee25316c62d3c9309a0bdff2c90fa67d3b5e7f9684af3d85cf004ea4",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX param_1 ({node_ptr, inserted_bool} output pointer)",
+      "scope": "thin wrapper forwarding dependency key insert request to 0x112a4090 and copying 5-byte result to caller output buffer",
+      "return_instruction_addresses": [
+        "112a59ea"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112a7700",
+      "bytes": 163,
+      "sha256": "572ce4cce760df3e31413329ac28fb591353f28a692822bd021fbca21931e487",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX this (copied 0x28-byte-node dependency RB tree)",
+      "scope": "allocates 0x28-byte nil sentinel (0x0101 at +0x0c) via 0x100d12b0 and deep-copies dependency RB tree from source param_1 when non-empty",
+      "return_instruction_addresses": [
+        "112a7792",
+        "112a77a0"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112af270",
+      "bytes": 86,
+      "sha256": "b2dff2895c440f70bbf17d59eb623d1cc094fce686a29199605342054e59294d",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX 0x12032960 (&DAT_12032960 static \"<root>\" descriptor)",
+      "scope": "thread-safe TLS-guarded static singleton (DAT_12032964) initializing DAT_12032960 with literal \"<root>\" (0x11897bc8) via 0x1011fe40",
+      "return_instruction_addresses": [
+        "112af291"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112be300",
+      "bytes": 75,
+      "sha256": "f2ebfab73e941542453add168d047a8864ab692354a33d60681edc4a220fb735",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX param_1 (receives successor node iterator)",
+      "scope": "advances iterator via 0x112ac2d0, unlinks dependency RB node via 0x112afd50, destroys pair fields, and frees 0x28 bytes via 0x116835d7",
+      "return_instruction_addresses": [
+        "112be348"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112d57f0",
+      "bytes": 501,
+      "sha256": "59381cb915375604b9684da2389ae1b426cb04860d6059ba693c9b34d7bd41b9",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "AL 1 on candidate erase/mount state update",
+      "scope": "locates dependency tree entry matching param_1 via 0x112a4b60, constructs temporary archive/stream descriptors, updates mount tree/vector links, and returns 1",
+      "return_instruction_addresses": [
+        "112d5896",
+        "112d590f",
+        "112d59e2"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112ddb30",
+      "bytes": 568,
+      "sha256": "e2d5f5d1e1811330295c86814745dcc1b4593545209df5f6426533a8ceb200cc",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX pointer to 8-byte mapped {ref, ctrl} payload at slot+0x0c",
+      "scope": "linear-probes 0x14-byte-strided open-pack hash table via (uVar11 * 0x14) across two wrap passes, rehashing to 2*n+1 when full and storing ref-counted payload",
+      "return_instruction_addresses": [
+        "112ddd15",
+        "112ddd65"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "112e3ae0",
+      "bytes": 369,
+      "sha256": "d8855bf91647565ed153983f1130124d1661f122aa0e60ef3c2dccbeba79b8bf",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "AL boolean validation status from 0x112cd780",
+      "scope": "allocates two 0x1c-byte RB sentinels (0x0101 at +0x0c), collects sorted nodes via 0x112a4230, runs merge check 0x112a5ce0, and cleans up temporary RB sets",
+      "return_instruction_addresses": [
+        "112e3c4e"
+      ],
+      "abi_authority": "Root inference from fresh decoded assembly/callers; x86 register/stack shape only, not an original source declaration or callable x64 address"
     }
   ],
   "globals": [
@@ -3347,6 +3548,46 @@
       "address": "12032af4",
       "width": 4,
       "kind": "TLS once-init guard for thread-quota map 0x119e120c checked by 0x112e3db0",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial image snapshot; not live process state"
+    },
+    {
+      "address": "11897bc8",
+      "width": 7,
+      "kind": "Static ASCII \"<root>\" root-mount literal initialized into DAT_12032960 by 0x112af270",
+      "initial_hex_le": "3c726f6f743e00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11897c70",
+      "width": 16,
+      "kind": "Static ASCII \"normals\\\\normal_\" open prefix referenced by 0x112d8d30 and 0x112d8e20",
+      "initial_hex_le": "6e6f726d616c735c6e6f726d616c5f00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1172f24c",
+      "width": 4,
+      "kind": "IAT slot in .rdata (KERNEL32!UnmapViewOfFile) called indirectly by 0x112ad0f0",
+      "initial_hex_le": "240b9301",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "12032964",
+      "width": 4,
+      "kind": "TLS once-init guard for root label DAT_12032960 checked by 0x112af270",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial image snapshot; not live process state"
+    },
+    {
+      "address": "12125644",
+      "width": 4,
+      "kind": "PE module _tls_index cell read by TLS guard check in 0x112af270",
       "initial_hex_le": "00000000",
       "storage": "zero_fill",
       "scope": "initial image snapshot; not live process state"
@@ -4474,6 +4715,66 @@
       "address": "112b5462",
       "hex": "8d1cf500000000",
       "purpose": "0x112b5450 indexes 8-byte post-scan slots via LEA EBX, [ESI*8]"
+    },
+    {
+      "address": "112afce0",
+      "hex": "568d710c8d4e34e8941fe4fe8d4e08e85c26e4fe8bce5ee97424e4fe",
+      "purpose": "0x1189a424 slot +0x00 tail-jump thunk (0x112afce0..0x112afcfb) destroying embedded pack_props fields and jumping to 0x100f2170"
+    },
+    {
+      "address": "112acd50",
+      "hex": "f644240401568bf1740b6a5056e875683d0083c4088bc65ec20400",
+      "purpose": "0x1189a424 slot +0x08 scalar deleting destructor freeing 0x50-byte ref_pack_block (`PUSH 0x50`) when bit 0 is set"
+    },
+    {
+      "address": "112d8d30",
+      "hex": "51568b74240c578bf9837f2c0074348b46043b472475078b063b4720742568707c89118d4f08e8959be2fe8bc8e8de8ce2fe50e8f8acb3ff83c40884c0740433",
+      "purpose": "0x118977ec (`stream_wrap_a`) slot +0x04 open_checked entry prefix validating wrapper state and pushing \"normals\\\\normal_\" (`0x11897c70`)"
+    },
+    {
+      "address": "112d8e20",
+      "hex": "51538b5c240c568bf1837e3800743e8b43043b462c75078b033b4628742568707c89118d4e08e8a59ae2fe8bc8e8ee8be2fe50e808acb3ff83c40884c0740433",
+      "purpose": "0x11897790 (`stream_wrap_b`) slot +0x04 open_checked entry prefix validating wrapper state and pushing \"normals\\\\normal_\" (`0x11897c70`)"
+    },
+    {
+      "address": "112ace05",
+      "hex": "6a3856e8ca673d00",
+      "purpose": "0x112acde0 deletes 0x38-byte stream_wrap_a (`PUSH 0x38; PUSH ESI; CALL 0x116835d7`)"
+    },
+    {
+      "address": "112ad107",
+      "hex": "50ff154cf27211",
+      "purpose": "0x112ad0f0 unmaps mapped view handle via KERNEL32!UnmapViewOfFile IAT `[0x1172f24c]`"
+    },
+    {
+      "address": "112d9e84",
+      "hex": "0d000800008944241cd96c241cdb5c2420",
+      "purpose": "0x112d9e20 sets x87 rounding mode RC=0x800 (ceil toward +inf) via FLDCW/FISTP for float load target"
+    },
+    {
+      "address": "112a7728",
+      "hex": "89400866c7400c0101",
+      "purpose": "0x112a7700 initializes 0x28-byte dependency RB sentinel node header (`0x0101` at `+0x0c`)"
+    },
+    {
+      "address": "112be330",
+      "hex": "6a2857e89f523c00",
+      "purpose": "0x112be300 frees unlinked 0x28-byte dependency RB node (`PUSH 0x28; PUSH EDI; CALL 0x116835d7`)"
+    },
+    {
+      "address": "112ddb65",
+      "hex": "8d3c80c1e702",
+      "purpose": "0x112ddb30 computes 0x14-byte-strided open-pack hash table byte offset via `(i + i*4) << 2`"
+    },
+    {
+      "address": "112e3b04",
+      "hex": "89400866c7400c0101",
+      "purpose": "0x112e3ae0 initializes 0x1c-byte RB cycle sentinel node (`0x0101` at `+0x0c`)"
+    },
+    {
+      "address": "112af2a8",
+      "hex": "68c87b8911b960290312e8890be7fe",
+      "purpose": "0x112af270 constructs static \"<root>\" handle at `0x12032960` from `0x11897bc8`"
     }
   ],
   "ownership": {
@@ -6601,6 +6902,185 @@
       "0x12032a14, 0x120329c8, 0x120329d8, and 0x12032af4 reside in the .data zero-fill tail and are pinned as zero_fill initial snapshots",
       "0x112baf90 (gap 3B) and 0x112e3db0 (gap 13B) have 2-range non-contiguous function bodies; return instructions lie strictly inside range 1",
       "Virtual method implementations of 0x1189a424, 0x118977ec, and 0x11897790 beyond first-slot identities and non-VFS worker callees of 0x10f9f6e0 remain deferred"
+    ]
+  },
+  "rea_layer18_evidence": {
+    "scope": "Vtables 0x1189a424, 0x118977ec, 0x11897790 slots (+0x00/+0x04/+0x08), open-bucket rehash 0x112d9e20, and 0x112bb790 dependency RB / open-pack sub-callees (0x112a2760, 0x112a4090, 0x112a4b60, 0x112a59c0, 0x112a7700, 0x112af270, 0x112be300, 0x112d57f0, 0x112ddb30, 0x112e3ae0)",
+    "records": [
+      {
+        "evidence_id": "ev_aaaecae7dad318c6c997e38ddd6d61aa5888bc6ba253687124b5872189202835",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer18-20261113/fn-112acde0.json",
+        "retained_record_sha256": "9caa37bf747aeb582849ed55b9a49ae1b4a2c972b4286d8fbd34abe7ec37844f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_b6af9f90638384a55ba12ce52dfdfe98e7528baf9abad239f6c48ac06bd82ee4",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer18-20261113/fn-112ad0f0.json",
+        "retained_record_sha256": "10d06b29b080c9814dc069751a862c0a120af36169bb5fa62912070cb5db999a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_a7f4b1fd1e265fada8965d14d90ffa5da299d1e970049afcbf6488f2e5e3055e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer18-20261113/fn-112d9e20.json",
+        "retained_record_sha256": "e5e36c97c1d013894b0bd167a23684da48f9be548f4fc2695056f08f98cd9883",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_97431c43f18ce8ef20b2bc099dac2dd05ff5ce1e6cbe348f136e51a05a66e7c4",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer18-20261113/fn-112a2760.json",
+        "retained_record_sha256": "c72235bcaedf5003fd3a858d335d66cb64558d83a34d344cab1f779d85509671",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_eb3e765adb44aa5f31843017943358ce5ccad770eee25726e561514cd06bf884",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer18-20261113/fn-112a4090.json",
+        "retained_record_sha256": "1e5a4cf53e9680a768c9ac5e0eaf7393a0ebb13bf47c977be838433a8c88dff7",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_8e03bec79809bd4cac77f91d4ca0e6f07b022dd45c52c3b4dc45982bb46c4dfa",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer18-20261113/fn-112a4b60.json",
+        "retained_record_sha256": "954d1d6a2acac4e8589757949608245d8c6262cfacbc99fd0b85bb0104a1afe2",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_a500138ffc38ff3873d9f9625acead37d01c19e9f8d34db0fc2a67dd12297f66",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer18-20261113/fn-112a59c0.json",
+        "retained_record_sha256": "7d707f85732b41ba79759a65b6f1587387e261df825fad5e9797157ec41e70bf",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_ab57e716e01b87769c12f12337e3f02ebe3fc1d46f41d56f1c9bbf8436b0e5be",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer18-20261113/fn-112a7700.json",
+        "retained_record_sha256": "b7562bfb26c144a98bf6d1c23d0d9be521eb26534a6e8257db23ce13fd451281",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_00a67946f3c3b2c4b07ea33d4b4de94748fa5113084944216b715e2d885dd90f",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer18-20261113/fn-112af270.json",
+        "retained_record_sha256": "a6c2b9e3c9955678974fbc883b844eefd9e97743ba202885f5df95acb8f1c7ef",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c5abf9c29ad73aeaa9eafc2111cc3ce138c72fc9f8ff6ad7541a025058ff3bb9",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer18-20261113/fn-112be300.json",
+        "retained_record_sha256": "dd9fa5b0bf5922f5f9cae910b3a4a77edb090f82aa6d51891e06856edcdd0f42",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7b2c4f5c4b6a7b0a9fec61a62b5db6c1b7acd19a7bd0641882481074eb3590d6",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer18-20261113/fn-112d57f0.json",
+        "retained_record_sha256": "42b9ac184444c88fefd89ab8db8cd88160cc715e4e959e1355d4d8589199792b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_0447897541722f8753f943c1cde897ffb16ce6dc69989ba048e7ca4d71df75a2",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer18-20261113/fn-112ddb30.json",
+        "retained_record_sha256": "7b816dd745a64373db4579082cb727b9251536310dcc4541a71a35712929aac4",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_9db2c1d50a9427193897b0eff9cc2b14aa5cc8611e2dcea34ceac812112704c0",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer18-20261113/fn-112e3ae0.json",
+        "retained_record_sha256": "83d5045e98aae96f0e0ddaaf5e27bf3e31f908924de5f3915b7cd99675fa8487",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_1700b666fbc9607a9520f5e43f810169bf090ae2a3e3ef504fcef117b0d9421c",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer18-20261113/fn-112afce0.json",
+        "retained_record_sha256": "f5c4f63c3dbad26af564e50641e30e2e3ef8e0f18b2741d504bdad832776a4e4",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_ba4ed6f83ae04d31defaf432479bf05d8322a7a7e7f9f0ba2f5c5a93106e0e15",
+        "operation": "resolve_containing_procedure",
+        "retained_local_path": "out/vfs-layer18-20261113/resolve-112acd50.json",
+        "retained_record_sha256": "53902fe3055af4a294c83b760579cdf467e9b2122815b224884d7fd912f7578b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_4955110d5483002036b0105690e029abaa01d90d349efe5b421872fb9be64d98",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer18-20261113/data-112acd50.json",
+        "retained_record_sha256": "a13b3220ac3ab3e2fe1009df837b609f6add0c2d63562370c4e1872ac6e1534c",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_0ee3c6407993235f35193d254cb37b68bf07a0a923525f4df29682c90ea44b6c",
+        "operation": "resolve_containing_procedure",
+        "retained_local_path": "out/vfs-layer18-20261113/resolve-112d8d30.json",
+        "retained_record_sha256": "0270876e241916a46266611becaff7d7f8890782eb74183d6f178e32415a6011",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7057d89b125e2a2639137c5d37b27a81e9d9cbae6864a84954e78f2ac86e5ec8",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer18-20261113/data-112d8d30.json",
+        "retained_record_sha256": "6fb3af8e318068cc136e80056ba118ba51433cf462be530087d93d28d7561fcd",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_57e2266eee6de6ca2f75413c5f333c6af4d4da72255b0cf4b6f62b40dfc38737",
+        "operation": "resolve_containing_procedure",
+        "retained_local_path": "out/vfs-layer18-20261113/resolve-112d8e20.json",
+        "retained_record_sha256": "a7319670a8323587251883b114e8d3a0a9f5c1437ee2d87f9026a4590edf5226",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_9a19f15a20ab1f5638c7db531e4edfd3f940bcae3e0773eeb9f741385525da31",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer18-20261113/data-112d8e20.json",
+        "retained_record_sha256": "c31a6d9efe768edc561e744a4b2d28eb4c90d71943e6acf52e99a8ab9a06b36c",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_9f3d4b5cf355d81238b62aa8747a2be49b0e15ea90828814adcdae7f92bdd9ca",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer18-20261113/data-1189a424.json",
+        "retained_record_sha256": "a356129d92b504c228688c8271ee0af5045aea82ce207e4013b3f137e021af24",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_81e5d68394fd5cacc442737db1f2360acb7afc21d83dcdae29066f99304a95df",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer18-20261113/data-118977ec.json",
+        "retained_record_sha256": "8dbf31335e6e054fba1a3a8ccf0b81f8a9b1ffd0d6720c81ae758ec2f9fc2137",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_d7ed47becc72e2beb48f501f1fe297ebeb4644073df22c99cef2d86980bd418b",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer18-20261113/data-11897790.json",
+        "retained_record_sha256": "0dc6e8b519dcc9038dcc33f4c323d03cce4fdf5c6f43b5dd13426be60e26d0e6",
+        "retained_record_format": "original MCP result envelope"
+      }
+    ],
+    "closed_snapshot_local_path": "out/vfs-layer18-20261113/session.rea.json",
+    "closed_snapshot_sha256": "f27c4a82e5a58da9d0bdfd146f5431bd94a624c94e1a74ac6142890915e67fd1",
+    "closed_evidence_records": 231,
+    "new_evidence_records": 23,
+    "reused_layer17_evidence_records": 208,
+    "extra_evidence_views_count": 0,
+    "validated_bundle_local_path": "out/vfs-layer18-20261113/validated-evidence-bundle.json",
+    "validated_bundle_sha256": "8957ad5bdd92954e7e0af05e8fb8e8d4d34ea62f05150ecfc5d24d14e28ece2e",
+    "limitations": [
+      "0x112afce0 ends with a tail jump (`JMP 0x100f2170`) rather than RET/RET N, and 0x112acd50/0x112d8d30/0x112d8e20 are non-function-start vtable handlers; all four are pinned via verified instruction witnesses rather than functions[]",
+      "0x12032964 and 0x12125644 (alongside already-pinned 0x12032960) reside in the PE zero-fill tail and are pinned as zero_fill initial snapshots",
+      "Further deep sub-callees beyond Layer 18 (e.g., 0x112dbe10, 0x112a3320, 0x112a5ce0, 0x112cd780, and remaining slots +0x10..+0x1c of stream_wrap_a/b) remain deferred to subsequent layers"
     ]
   }
 }

@@ -372,6 +372,52 @@ typedef struct rome2_vfs_stream_wrap_b32 {
     uint32_t zero_038;                           /* 38 */
 } rome2_vfs_stream_wrap_b32;
 
+/* 40-byte dependency RB-tree node allocated by 0x112a7700, freed by
+ * 0x112a2760/0x112be300, and searched by {name_a @ +0x10, name_b @ +0x1c} in
+ * 0x112a4090 and 0x112a4b60. */
+typedef struct rome2_vfs_dep_rb_node32 {
+    rome2_data_address32 left;                   /* 00 */
+    rome2_data_address32 parent;                 /* 04 */
+    rome2_data_address32 right;                  /* 08 */
+    uint8_t color;                               /* 0c */
+    uint8_t is_nil;                              /* 0d */
+    uint8_t unobserved_00e[2];                   /* 0e */
+    uint32_t name_a[3];                          /* 10..1b */
+    uint32_t name_b[3];                          /* 1c..27 */
+} rome2_vfs_dep_rb_node32;
+
+/* 28-byte RB-tree sentinel/node allocated by 0x112e3ae0 (`PUSH 0x1c`,
+ * color/is_nil 0x0101 at +0x0c). */
+typedef struct rome2_vfs_cycle_rb_sentinel32 {
+    rome2_data_address32 left;                   /* 00 */
+    rome2_data_address32 parent;                 /* 04 */
+    rome2_data_address32 right;                  /* 08 */
+    uint8_t color;                               /* 0c */
+    uint8_t is_nil;                              /* 0d */
+    uint8_t unobserved_00e[2];                   /* 0e */
+    uint32_t payload_010[3];                     /* 10..1b */
+} rome2_vfs_cycle_rb_sentinel32;
+
+/* 16-byte 4-slot vtable 0x1189a424 for 0x50-byte ref_pack_block. */
+typedef struct rome2_vfs_ref_block_vtable32 {
+    rome2_code_address32 destroy_embedded;       /* 00: 0x112afce0 */
+    rome2_code_address32 get_deleter;            /* 04: 0x1090bb10 */
+    rome2_code_address32 scalar_deleting_dtor;   /* 08: 0x112acd50 */
+    rome2_code_address32 noop_release;           /* 0c: 0x10128c50 */
+} rome2_vfs_ref_block_vtable32;
+
+/* 32-byte 8-slot vtable prefix shared by 0x118977ec and 0x11897790. */
+typedef struct rome2_vfs_stream_wrap_vtable_prefix32 {
+    rome2_code_address32 scalar_deleting_dtor;   /* 00: 0x112acde0 / 0x112ad0f0 */
+    rome2_code_address32 open_checked;           /* 04: 0x112d8d30 / 0x112d8e20 */
+    rome2_code_address32 slot_008;               /* 08 */
+    rome2_code_address32 slot_00c;               /* 0c */
+    rome2_code_address32 slot_010;               /* 10 */
+    rome2_code_address32 slot_014;               /* 14 */
+    rome2_code_address32 slot_018;               /* 18 */
+    rome2_code_address32 slot_01c;               /* 1c */
+} rome2_vfs_stream_wrap_vtable_prefix32;
+
 /* FUN_100e2460's handler vector: capacity precedes count. */
 typedef struct rome2_handler_vector_layout32 {
     uint32_t unobserved_00;
@@ -873,6 +919,20 @@ _Static_assert(sizeof(rome2_vfs_stream_wrap_a32) == 0x38, "stream wrap A size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_stream_wrap_a32, flag_034, 0x34);
 _Static_assert(sizeof(rome2_vfs_stream_wrap_b32) == 0x3c, "stream wrap B size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_stream_wrap_b32, zero_038, 0x38);
+_Static_assert(sizeof(rome2_vfs_dep_rb_node32) == 0x28, "dep RB node size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_dep_rb_node32, is_nil, 0x0d);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dep_rb_node32, name_a, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dep_rb_node32, name_b, 0x1c);
+_Static_assert(sizeof(rome2_vfs_cycle_rb_sentinel32) == 0x1c, "cycle RB sentinel size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_cycle_rb_sentinel32, is_nil, 0x0d);
+ROME2_LAYOUT_ASSERT(rome2_vfs_cycle_rb_sentinel32, payload_010, 0x10);
+_Static_assert(sizeof(rome2_vfs_ref_block_vtable32) == 0x10, "ref block vtable size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_ref_block_vtable32, destroy_embedded, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_ref_block_vtable32, scalar_deleting_dtor, 0x08);
+_Static_assert(sizeof(rome2_vfs_stream_wrap_vtable_prefix32) == 0x20, "stream wrap vtable prefix size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_wrap_vtable_prefix32, scalar_deleting_dtor, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_wrap_vtable_prefix32, open_checked, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_wrap_vtable_prefix32, slot_01c, 0x1c);
 
 #undef ROME2_LAYOUT_ASSERT
 #endif

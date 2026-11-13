@@ -598,6 +598,29 @@ validate bounded C17 helpers.
   `scripts/test_type_recovery_contracts.py` (**52** contract tests OK on Python 3.14 & 3.15),
   clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
 
+### Completed: Layer 18 (`0x1189a424` / Stream Wrapper Vtable Slots, Bucket Rehash `0x112d9e20` & `0x112bb790` Dependency Sub-Callees)
+
+- [x] **REA Evidence Extraction (`out/vfs-layer18-20261113/`)**: Recovered
+  `0x1189a424` slots (`0x112afce0` tail-jump, `0x112acd50` `0x50`B scalar dtor),
+  `0x118977ec`/`0x11897790` leading slots (`0x112acde0`, `0x112d8d30`,
+  `0x112ad0f0`, `0x112d8e20`), bucket-map rehash helper (`0x112d9e20`), and all
+  10 remaining Layer 17 non-CRT callees (`0x112a2760`, `0x112a4090`, `0x112a4b60`,
+  `0x112a59c0`, `0x112a7700`, `0x112af270`, `0x112be300`, `0x112d57f0`,
+  `0x112ddb30`, `0x112e3ae0`) plus vtable reads (`0x1189a424`, `0x118977ec`,
+  `0x11897790`) on top of `out/vfs-layer17-20261113/session.rea.json` (**231**
+  validated records in closed `out/vfs-layer18-20261113/session.rea.json`: `208`
+  reused Layer 17 + `23` new).
+- [x] **Layouts & Native C17 Helpers**: Locked `rome2_vfs_dep_rb_node32` (`40`B),
+  `rome2_vfs_cycle_rb_sentinel32` (`28`B), `rome2_vfs_ref_block_vtable32` (`16`B),
+  and `rome2_vfs_stream_wrap_vtable_prefix32` (`32`B) in `guest32_layouts.h`,
+  implemented checked C17 helpers in `port/recovered_types/vfs_dep_rehash.h/.c`,
+  and verified `test_vfs_dep_rehash.c` (**23 checks** passed) across **75/75**
+  native suites under `/W4 /WX /sdl /GS /guard:cf /analyze` and ASan.
+- [x] **Contracts, Docs & Public-Clean Parity**: Extended `port/recovered_types/contracts.json`
+  (**188** functions, **106** globals, **20** vtables, **216** instruction witnesses),
+  `scripts/test_type_recovery_contracts.py` (**53** contract tests OK on Python 3.14 & 3.15),
+  clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
+
 ### Remaining work
 
 1. Extend the verified resource-backed domain toward full archive registration
