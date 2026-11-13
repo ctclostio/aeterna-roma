@@ -13,9 +13,10 @@ original game or private analysis exports. This remains a work in progress.
 
 The current recovery checklist is [progress.md](progress.md). Its latest milestone
 extends [VFS dispatch, filename-table and candidate-policy recovery](docs/vfs_recovery.md)
-with checked archive dependency-graph traversal, candidate priority comparison
-and registration-callee recovery, building on archive-name red-black tree search,
-narrow string8 comparator ordering, fixed-capacity name-table assignment,
+with checked archive registration precondition gates, candidate-set insertion
+policy, dependency-graph traversal, candidate priority comparison and
+remaining registration-callee recovery, building on archive-name red-black tree
+search, narrow string8 comparator ordering, fixed-capacity name-table assignment,
 duplicate-suppression, dispatch observation, hashing and probing. Earlier
 [XML loader policy](docs/xml_loader_recovery.md) and
 [resource setup](docs/unitcard_resource_recovery.md) include byte preparation,

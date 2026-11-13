@@ -143,6 +143,20 @@ typedef struct rome2_vfs_archive_candidate_prefix32 {
     rome2_string8_layout32 archive_name;
 } rome2_vfs_archive_candidate_prefix32;
 
+/* Open-pack 20-byte hash slot and 20-byte table at 0x120329e0 (probed by
+ * FUN_112c13f0 and iterated by FUN_112c0b20; +0x0c is the returned payload). */
+typedef struct rome2_vfs_open_pack_slot_layout32 {
+    rome2_string8_layout32 name;
+    uint32_t unobserved_00c;
+    uint32_t unobserved_010;
+} rome2_vfs_open_pack_slot_layout32;
+
+typedef struct rome2_vfs_open_pack_table_layout32 {
+    rome2_data_address32 items;
+    uint32_t bucket_count;
+    rome2_string8_layout32 empty_key;
+} rome2_vfs_open_pack_table_layout32;
+
 /* FUN_100e2460's handler vector: capacity precedes count. */
 typedef struct rome2_handler_vector_layout32 {
     uint32_t unobserved_00;
@@ -545,6 +559,13 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_dep_edge_node_prefix32, target_name, 0x10);
 _Static_assert(sizeof(rome2_vfs_archive_candidate_prefix32) == 0x20, "archive candidate prefix size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_archive_candidate_prefix32, pack_props, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_archive_candidate_prefix32, archive_name, 0x14);
+_Static_assert(sizeof(rome2_vfs_open_pack_slot_layout32) == 0x14, "open pack slot size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_pack_slot_layout32, name, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_pack_slot_layout32, unobserved_00c, 0x0c);
+_Static_assert(sizeof(rome2_vfs_open_pack_table_layout32) == 0x14, "open pack table size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_pack_table_layout32, items, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_pack_table_layout32, bucket_count, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_pack_table_layout32, empty_key, 0x08);
 
 #undef ROME2_LAYOUT_ASSERT
 #endif

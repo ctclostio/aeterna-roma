@@ -407,13 +407,62 @@ Completed and verified:
   suites on Python 3.14 & Python 3.15 (`873` tests run, `273` skipped, `OK`), and
   updated `docs/vfs_recovery.md`, `progress.md`, `README.md`, and `verification.json`.
 
+### Layer 11 — archive registration (`0x112cfc10`) orchestration, precondition gates, and candidate-set insertion policy (2026-11-12)
+
+Target: recover the remaining callees of `0x112cfc10` and `0x112bb620`/`0x112a4320`
+(`0x112a37b0`, `0x112a3c90`, `0x112a4230`, `0x112a27c0`, `0x112c0b20`,
+`0x112a20b0`, `0x112a4470`, `0x112a5840`, `0x112c0bb0`, `0x101028f0`,
+`0x10121690`, `0x112c9ad0` containing `0x112ca9d0`), lock the exact `0x112cfc10`
+registration precondition and error-code semantics (`0` eligible/registered, `1`
+already mounted in `0x12032a1c`, `2` blacklisted in `0x12032a40+0x10`, `3`
+absent from open-pack hash table `0x120329e0`, `8` new-key insert rejected when
+`param_2 != 0`), and build a bounded native C17 adaptation of the registration
+precondition and candidate-set insertion/winner selection policy.
+
+Completed and verified:
+- [x] Opened a private REA session reusing the closed Layer 10 snapshot
+  (`out/vfs-layer11-20261112/session.rea.json`) and recovered all 12 target
+  procedures (`0x101028f0` and internal anchor `0x112ca9d0` -> `0x112c9ad0`
+  via `inspect_analysis_view` and validated bundle records after direct MCP
+  `resource_constraint`) plus 3 global reads (`0x120329e0`, `0x12032a1c`,
+  `0x12032a8c`), validating the **91-record** evidence bundle (`70` reused Layer 10
+  + `15` new primary + `6` extra views).
+- [x] Inspected exact assembly and call sites confirming RB-tree allocation,
+  hint-insert, unique-insert, and post-order deletion (`0x112a37b0`, `0x112a3c90`,
+  `0x112a4230`, `0x112a4470`, `0x112a27c0`), open-pack & name-table slice
+  iterators (`0x112c0b20`, `0x112c0bb0`), `FxName` accessors (`0x101028f0`,
+  `0x10121690`), archive-name tree constructor (`0x112a20b0`), keyed lookup
+  dispatcher (`0x112a5840`), `FUN_112c9ad0` (`0x112ca9d0`), and `0x112cfc10`'s
+  `1 -> 2 -> 3 -> 0` precondition gates + `cStack_48`/`param_2` (`8`) + leftmost
+  winner displacement checks.
+- [x] Locked `rome2_vfs_open_pack_slot_layout32` (`0x14` bytes) and
+  `rome2_vfs_open_pack_table_layout32` (`0x14` bytes) in
+  `port/recovered_types/guest32_layouts.h` and implemented bounded C17 helpers
+  `rome2_vfs_open_pack_find32` (`0x112c13f0`), `rome2_vfs_blacklist_contains32`
+  (`0x112a4c00`), `rome2_vfs_check_registration_preconditions32` (`1/2/3/0`), and
+  `rome2_vfs_probe_candidate_insert32` (`0x112cfc10` + `0x112a30b0` + `0x112e1500`
+  + code `8` + `head->left` winner displacement) in
+  `port/recovered_types/vfs_archive_register.h/.c`.
+- [x] Verified `test_vfs_archive_register.c` (`119 checks` passed covering
+  single-wrap open-pack collision probing, `STEP_LIMIT`, `INVALID_STATE` /
+  `RANGE_ERROR` output preservation, strict `1 -> 2 -> 3 -> 0` precondition
+  precedence, alignment residues 0–7, empty/winner-displacing/middle/tied
+  candidate probing, and `only_update_existing` code `8`), passing **68/68**
+  native suites under `/W4 /WX /analyze` and ASan (`ROME2_TYPES_ASAN=ON`).
+- [x] Extended `port/recovered_types/contracts.json` (`112` functions, `77` globals,
+  `14` vtables, `143` instruction witnesses, verified under original binary) and
+  `scripts/test_type_recovery_contracts.py` (`46` tests OK), ran clean
+  public-checkout suites on Python 3.14 & Python 3.15, and updated
+  `docs/vfs_recovery.md`, `progress.md`, `README.md`, and `verification.json`.
+
 ### Remaining work
 
 1. Extend the verified resource-backed domain toward full archive registration
-   (`0x112cfc10`) orchestration and its remaining tree/closure callees
-   (`0x112a37b0`, `0x112a3c90`, `0x112a4230`, `0x112ca9d0`), complete
-   missing-entry release/unwind behavior, full normalization rules, exact
-   partial parser/exception outcomes, and the rest of the original XML object ABI.
+   (`0x112cfc10`) mutation/orchestration (red-black rebalancing writes,
+   recursive dependency registration loop `0/1` tolerance, open-pack/archive-tree
+   mutation, virtual winner notification `+0x34`), complete missing-entry
+   release/unwind behavior, full normalization rules, exact partial
+   parser/exception outcomes, and the rest of the original XML object ABI.
    Historic CRT/locale behavior and full resource-backed constructor equivalence
    remain open.
 2. Recover the remaining unit-card methods and meanings of opaque 32-bit
