@@ -487,6 +487,27 @@ validate bounded C17 helpers.
   clean-public Python 3.14 & Python 3.15 suites, and updated
   `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
 
+### Layer 13 — completed, 2026-11-12 (Pack Entry Vtable `0x118976c0`, Winner Notification `+0x34` & `0x112a9560` Stream/Pool Callees)
+
+- [x] **REA Evidence Extraction (`out/vfs-layer13-20261112/`)**: Inspected
+  `0x118976c0` (64B pack-entry vtable including non-procedure slots `+0x04`
+  `0x112d3270` and `+0x34` `0x112d2900` confirmed via `resolve_containing_procedure`
+  + `read_bytes`) and `0x1189a434` (32B archive-name entry vtable), and recovered
+  `0x100d12b0`, `0x100f16b0`, `0x100f1bb0`, `0x101155a0`, `0x10115530`,
+  `0x101146c0`, `0x101157c0`, `0x101048f0`, `0x10106120`, `0x103282b0`, and
+  `0x112e1560` (**131** validated records in closed `out/vfs-layer13-20261112/session.rea.json`).
+- [x] **Layouts & Native C17 Helpers**: Locked `rome2_vfs_pack_props_prefix32`
+  (`0x44` bytes) and `rome2_vfs_pack_entry_layout32` (`0x28` bytes) in
+  `port/recovered_types/guest32_layouts.h`, implemented `rome2_vfs_decode_pack_index_record`,
+  `rome2_vfs_pack_props_read_prefix32`, `rome2_vfs_entry_read32`, and
+  `rome2_vfs_entry_notify_winner32` in `port/recovered_types/vfs_pack_entry.h/.c`,
+  and verified `test_vfs_pack_entry.c` (**61 checks** passed) across **70/70**
+  native suites under `/W4 /WX /sdl /GS /guard:cf /analyze` and ASan.
+- [x] **Contracts, Docs & Public-Clean Parity**: Extended `port/recovered_types/contracts.json`
+  (**133** functions, **79** globals, **15** vtables, **168** instruction witnesses),
+  `scripts/test_type_recovery_contracts.py` (**48** contract tests OK on Python 3.14 & 3.15),
+  clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
+
 ### Remaining work
 
 1. Extend the verified resource-backed domain toward full archive registration

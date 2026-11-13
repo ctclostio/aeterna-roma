@@ -155,6 +155,42 @@ typedef struct rome2_vfs_pending_entry_vec_layout32 {
     rome2_data_address32 items;
 } rome2_vfs_pending_entry_vec_layout32;
 
+/* Observed prefix of open-pack payload / properties struct passed to
+ * FUN_112a9560, FUN_101146c0, FUN_101157c0, and FUN_101048f0 (+0x00 handle,
+ * +0x04 last_error, +0x1c flags, +0x24 header_base, +0x28 entry_count,
+ * +0x2c index_bytes, +0x30 default_meta, +0x34 pack_path, +0x40 open_ok). */
+typedef struct rome2_vfs_pack_props_prefix32 {
+    uint32_t file_handle;
+    uint32_t last_error;
+    uint32_t unobserved_008[5];
+    uint32_t flags;
+    uint32_t unobserved_020;
+    uint32_t header_base;
+    uint32_t entry_count;
+    uint32_t index_bytes;
+    uint32_t default_entry_meta;
+    rome2_string8_layout32 pack_path;
+    uint8_t flag_040;
+    uint8_t unobserved_041[3];
+} rome2_vfs_pack_props_prefix32;
+
+/* 40-byte (0x28) pack-entry object initialized in FUN_112a9560 with vtable
+ * 0x118976c0 from pool 0x10106120 (0x103282b0 stride 0x28). Slot +0x04
+ * (0x112d3270) reads +0x04 name_id; slot +0x34 (0x112d2900) sets +0x24 = 1. */
+typedef struct rome2_vfs_pack_entry_layout32 {
+    rome2_vtable_address32 vtable;
+    uint32_t name_id;
+    uint32_t byte_size;
+    uint32_t unobserved_00c;
+    uint32_t data_offset_lo;
+    uint32_t data_offset_hi;
+    uint32_t entry_meta;
+    rome2_data_address32 carrier;
+    uint32_t unobserved_020;
+    uint8_t winner_notified;
+    uint8_t unobserved_025[3];
+} rome2_vfs_pack_entry_layout32;
+
 /* Open-pack 20-byte hash slot and 20-byte table at 0x120329e0 (probed by
  * FUN_112c13f0 and iterated by FUN_112c0b20; +0x0c is the returned payload). */
 typedef struct rome2_vfs_open_pack_slot_layout32 {
@@ -576,6 +612,25 @@ _Static_assert(sizeof(rome2_vfs_pending_entry_vec_layout32) == 12, "pending entr
 ROME2_LAYOUT_ASSERT(rome2_vfs_pending_entry_vec_layout32, capacity, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_pending_entry_vec_layout32, count, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_pending_entry_vec_layout32, items, 0x08);
+_Static_assert(sizeof(rome2_vfs_pack_props_prefix32) == 0x44, "pack props prefix size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_props_prefix32, file_handle, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_props_prefix32, last_error, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_props_prefix32, flags, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_props_prefix32, header_base, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_props_prefix32, entry_count, 0x28);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_props_prefix32, index_bytes, 0x2c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_props_prefix32, default_entry_meta, 0x30);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_props_prefix32, pack_path, 0x34);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_props_prefix32, flag_040, 0x40);
+_Static_assert(sizeof(rome2_vfs_pack_entry_layout32) == 0x28, "pack entry object size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_entry_layout32, vtable, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_entry_layout32, name_id, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_entry_layout32, byte_size, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_entry_layout32, data_offset_lo, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_entry_layout32, data_offset_hi, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_entry_layout32, entry_meta, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_entry_layout32, carrier, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_entry_layout32, winner_notified, 0x24);
 _Static_assert(sizeof(rome2_vfs_open_pack_slot_layout32) == 0x14, "open pack slot size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_open_pack_slot_layout32, name, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_open_pack_slot_layout32, unobserved_00c, 0x0c);
