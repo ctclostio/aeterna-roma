@@ -42,7 +42,7 @@ typedef struct rome2_vfs_pack_entry_info32 {
     uint64_t data_offset;
     uint32_t entry_meta;
     rome2_data_address32 carrier;
-    uint32_t unobserved_020;
+    rome2_data_address32 stream_state;
     uint8_t winner_notified;
 } rome2_vfs_pack_entry_info32;
 

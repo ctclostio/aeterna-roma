@@ -508,6 +508,27 @@ validate bounded C17 helpers.
   `scripts/test_type_recovery_contracts.py` (**48** contract tests OK on Python 3.14 & 3.15),
   clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
 
+### Layer 14 — completed, 2026-11-12 (Remaining `0x112a9560` Non-CRT Callees & Full `0x118976c0` Pack-Entry Vtable Slots)
+
+- [x] **REA Evidence Extraction (`out/vfs-layer14-20261112/`)**: Recovered the remaining
+  non-CRT `0x112a9560` callees (`0x100f3880` IAT `GetLastError` thunk, `0x10102f50`
+  aligned heap buffer wrapper) and all remaining 13 virtual dispatch slots of `0x118976c0`
+  (`+0x00`, `+0x08..+0x0c`, `+0x14..+0x30`, `+0x38..+0x3c`) on top of
+  `out/vfs-layer13-20261112/session.rea.json` (**152** validated records in closed
+  `out/vfs-layer14-20261112/session.rea.json`; high-fanout CRT heap/SEH thunks
+  `0x100fcc50`/`0x100fcc80`/`0x11683*` deferred from cumulative bundle export).
+- [x] **Layouts & Native C17 Helpers**: Promoted `+0x20` (`stream_state`) in
+  `rome2_vfs_pack_entry_layout32` (`guest32_layouts.h` & `vfs_pack_entry.h/.c`),
+  implemented `rome2_vfs_plan_aligned_alloc`, `rome2_vfs_entry_clamp_slice32`,
+  `rome2_vfs_entry_has_per_entry_meta32`, and `rome2_vfs_entry_read_stream_info32` in
+  `port/recovered_types/vfs_pack_stream.h/.c`, and verified `test_vfs_pack_stream.c`
+  (**155 checks** passed; `test_vfs_pack_entry.c` **61 checks** passed) across **71/71**
+  native suites under `/W4 /WX /sdl /GS /guard:cf /analyze` and ASan.
+- [x] **Contracts, Docs & Public-Clean Parity**: Extended `port/recovered_types/contracts.json`
+  (**141** functions, **79** globals, **15** vtables, **180** instruction witnesses),
+  `scripts/test_type_recovery_contracts.py` (**49** contract tests OK on Python 3.14 & 3.15),
+  clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
+
 ### Remaining work
 
 1. Extend the verified resource-backed domain toward full archive registration

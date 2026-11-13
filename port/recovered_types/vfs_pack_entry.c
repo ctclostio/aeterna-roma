@@ -197,7 +197,7 @@ rome2_vfs_reg_status rome2_vfs_entry_read32(
     parsed.data_offset = ((uint64_t)hi << 32) | (uint64_t)lo;
     parsed.entry_meta = load_le_u32(raw + 0x18u);
     parsed.carrier = (rome2_data_address32)load_le_u32(raw + 0x1cu);
-    parsed.unobserved_020 = load_le_u32(raw + 0x20u);
+    parsed.stream_state = (rome2_data_address32)load_le_u32(raw + 0x20u);
     parsed.winner_notified = raw[0x24u];
 
     *output = parsed;

@@ -186,7 +186,7 @@ typedef struct rome2_vfs_pack_entry_layout32 {
     uint32_t data_offset_hi;
     uint32_t entry_meta;
     rome2_data_address32 carrier;
-    uint32_t unobserved_020;
+    rome2_data_address32 stream_state;
     uint8_t winner_notified;
     uint8_t unobserved_025[3];
 } rome2_vfs_pack_entry_layout32;
@@ -630,6 +630,7 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_pack_entry_layout32, data_offset_lo, 0x10);
 ROME2_LAYOUT_ASSERT(rome2_vfs_pack_entry_layout32, data_offset_hi, 0x14);
 ROME2_LAYOUT_ASSERT(rome2_vfs_pack_entry_layout32, entry_meta, 0x18);
 ROME2_LAYOUT_ASSERT(rome2_vfs_pack_entry_layout32, carrier, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_entry_layout32, stream_state, 0x20);
 ROME2_LAYOUT_ASSERT(rome2_vfs_pack_entry_layout32, winner_notified, 0x24);
 _Static_assert(sizeof(rome2_vfs_open_pack_slot_layout32) == 0x14, "open pack slot size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_open_pack_slot_layout32, name, 0x00);

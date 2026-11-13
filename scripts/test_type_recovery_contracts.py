@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 133)
+        self.assertEqual(result["functions"], 141)
         self.assertEqual(result["globals"], 79)
         self.assertEqual(result["vtables"], 15)
-        self.assertEqual(result["instruction_witnesses"], 168)
+        self.assertEqual(result["instruction_witnesses"], 180)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -460,6 +460,23 @@ class TypeContractProvenanceTests(unittest.TestCase):
         vtables_ = {v["address"]: v for v in self.registry["vtables"]}
         self.assertEqual(vtables_["118976c0"]["first_slot_code_identity"], "112ad1b0")
         self.assertEqual(vtables_["1189a434"]["first_slot_code_identity"], "112afd00")
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_pack_entry_stream_and_full_vtable(self):
+        w = {w["address"]: bytes.fromhex(w["hex"]) for w in self.registry["instruction_witnesses"]}
+        self.assertEqual(w["100f3880"][:2], bytes.fromhex("ff25"))
+        self.assertEqual(struct.unpack_from("<I", w["100f3880"], 2)[0], 0x1172F1D8)
+        self.assertEqual(w["10102f5a"][:5], bytes.fromhex("bf04000000"))
+        self.assertEqual(w["10171400"], bytes.fromhex("8b4118c3"))
+        self.assertEqual(w["10269610"], bytes.fromhex("8b4120c3"))
+        self.assertEqual(w["112c9540"], bytes.fromhex("8b411c8b008b401cc1e8062401c3"))
+        self.assertEqual(w["112baf20"], bytes.fromhex("8b49208b01ff601c"))
+        self.assertEqual(0x112E0D8B + 5 + struct.unpack_from("<i", w["112e0d80"], 12)[0], 0x1011FDD0)
+        self.assertEqual(w["112d0d90"][-3:], bytes.fromhex("0f43c7"))
+        self.assertEqual(w["112c0dd3"][-3:], bytes.fromhex("3b4608"))
+        self.assertEqual(w["112d9890"][-4:], bytes.fromhex("0f95c0c3"))
+        self.assertEqual(w["112d0bd0"][:5], bytes.fromhex("8b492085c9"))
+        self.assertEqual(struct.unpack_from("<I", w["112ad1b0"], 10)[0], 0x11849278)
         self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
 
     def test_disjoint_original_bodies_exclude_reported_gaps(self):

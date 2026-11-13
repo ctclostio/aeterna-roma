@@ -161,7 +161,7 @@ static void test_pack_props_and_entry_vtable(void)
     CHECK(einfo.data_offset == UINT64_C(0x0000000200001000));
     CHECK(einfo.entry_meta == 0x99u);
     CHECK(einfo.carrier == 0x41000000u);
-    CHECK(einfo.unobserved_020 == 0u);
+    CHECK(einfo.stream_state == 0u);
     CHECK(einfo.winner_notified == 0u);
 
     CHECK(rome2_vfs_entry_notify_winner32(&entry_wview,
