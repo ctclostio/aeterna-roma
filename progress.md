@@ -455,6 +455,38 @@ Completed and verified:
   public-checkout suites on Python 3.14 & Python 3.15, and updated
   `docs/vfs_recovery.md`, `progress.md`, `README.md`, and `verification.json`.
 
+### Layer 12 — `0x112cfc10` archive carrier (`0x112a9560`), path normalization & remaining RB-tree callees (2026-11-12)
+
+Target: recover the next batch of `0x112cfc10` callees (`0x112a9560`,
+`0x101206e0`, `0x1011fdd0`, `0x1011fe40`, `0x101141f0`, `0x10113c10`,
+`0x100f2610`, `0x10cb8f10`, `0x112a24f0`, `0x112a2e80`, `0x112a3570`,
+`0x112a3a50`) and globals (`0x12032a34`, `0x12032a7c`, `0x117df544`), lock
+`0x112cfc10`'s `0x20`-byte archive-carrier layout, name-table iteration, path
+normalization (`"\\"`), and recursive dependency-closure `0/1` gate, and
+validate bounded C17 helpers.
+
+- [x] **REA Evidence Extraction (`out/vfs-layer12-20261112/`)**: Reused closed
+  Layer 11 snapshot (`out/vfs-layer11-20261112/session.rea.json`) and closed
+  `out/vfs-layer12-20261112/session.rea.json` with **105** validated evidence
+  records (`91` reused + `14` new across all 12 procedures and 4 data reads
+  including UTF-16LE `L"vfs_log_level"` at `0x117df544`).
+- [x] **Layouts & Native C17 Helpers**: Refined
+  `rome2_vfs_archive_candidate_prefix32` (`+0x00 pack_props`, `+0x04 name_table`,
+  `+0x14 archive_name`) and added `rome2_vfs_pending_entry_vec_layout32` (`12`
+  bytes at `0x12032a7c..0x12032a84`) in `port/recovered_types/guest32_layouts.h`,
+  and implemented `rome2_vfs_archive_leaf_name`, `rome2_vfs_entry_dir_prefix`,
+  `rome2_vfs_carrier_pack_props_gate32`, `rome2_vfs_carrier_next_nonempty_slot32`,
+  `rome2_vfs_collect_pending_deps32`, and `rome2_vfs_dep_status_acceptable` in
+  `port/recovered_types/vfs_archive_mount_step.h/.c`.
+- [x] Verified `test_vfs_archive_mount_step.c` (`63 checks` passed with
+  output-preservation invariants on overflow/limit errors), passing **69/69**
+  native suites on `/W4 /WX /sdl /GS /guard:cf /analyze` and ASan.
+- [x] Extended `port/recovered_types/contracts.json` (**122** functions, **78**
+  globals, **14** vtables, **157** instruction witnesses) and
+  `scripts/test_type_recovery_contracts.py` (**47** contract tests OK),
+  clean-public Python 3.14 & Python 3.15 suites, and updated
+  `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
+
 ### Remaining work
 
 1. Extend the verified resource-backed domain toward full archive registration

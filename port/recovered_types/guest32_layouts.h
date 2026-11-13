@@ -136,12 +136,24 @@ typedef struct rome2_vfs_dep_edge_node_prefix32 {
 } rome2_vfs_dep_edge_node_prefix32;
 
 /* FUN_112e1500 reads +0x00 pack_props (checking low nibble of byte +0x1c) and
- * passes +0x14 archive_name (string8) to FUN_112d59f0. */
+ * passes +0x14 archive_name (string8) to FUN_112d59f0. FUN_112a9560 fills +0x00
+ * with open_pack_payload, +0x04..+0x0f with an 8-byte-slot VFS name table
+ * (initial capacity 8, empty_key from FUN_112e3690), and +0x14 with the leaf
+ * pack name after the final '\\'; FUN_112c0bb0 iterates +0x04. */
 typedef struct rome2_vfs_archive_candidate_prefix32 {
     rome2_data_address32 pack_props;
-    uint32_t unobserved_004[4];
+    rome2_vfs_name_table_layout32 name_table;
+    uint32_t unobserved_010;
     rome2_string8_layout32 archive_name;
 } rome2_vfs_archive_candidate_prefix32;
+
+/* Global pending archive-entry observer vector at 0x12032a7c..0x12032a84,
+ * appended in FUN_112a9560 and drained/reset in FUN_112cfc10. */
+typedef struct rome2_vfs_pending_entry_vec_layout32 {
+    uint32_t capacity;
+    uint32_t count;
+    rome2_data_address32 items;
+} rome2_vfs_pending_entry_vec_layout32;
 
 /* Open-pack 20-byte hash slot and 20-byte table at 0x120329e0 (probed by
  * FUN_112c13f0 and iterated by FUN_112c0b20; +0x0c is the returned payload). */
@@ -558,7 +570,12 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_dep_edge_node_prefix32, is_nil, 0x0d);
 ROME2_LAYOUT_ASSERT(rome2_vfs_dep_edge_node_prefix32, target_name, 0x10);
 _Static_assert(sizeof(rome2_vfs_archive_candidate_prefix32) == 0x20, "archive candidate prefix size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_archive_candidate_prefix32, pack_props, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_archive_candidate_prefix32, name_table, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_archive_candidate_prefix32, archive_name, 0x14);
+_Static_assert(sizeof(rome2_vfs_pending_entry_vec_layout32) == 12, "pending entry vector size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_pending_entry_vec_layout32, capacity, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pending_entry_vec_layout32, count, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pending_entry_vec_layout32, items, 0x08);
 _Static_assert(sizeof(rome2_vfs_open_pack_slot_layout32) == 0x14, "open pack slot size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_open_pack_slot_layout32, name, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_open_pack_slot_layout32, unobserved_00c, 0x0c);
