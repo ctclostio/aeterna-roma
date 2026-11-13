@@ -418,6 +418,23 @@ typedef struct rome2_vfs_stream_wrap_vtable_prefix32 {
     rome2_code_address32 slot_01c;               /* 1c */
 } rome2_vfs_stream_wrap_vtable_prefix32;
 
+/* 20-byte ref-counted stream handle box released/freed (`PUSH 0x14`) by
+ * 0x112ac430 (`stream_wrap_a` +0x30 handle). */
+typedef struct rome2_vfs_stream_handle_box32 {
+    uint32_t unobserved_000[2];                  /* 00..07 */
+    rome2_data_address32 secondary_ctrl;         /* 08 */
+    rome2_data_address32 sentinel_or_state;      /* 0c */
+    rome2_data_address32 primary_ctrl;           /* 10 */
+} rome2_vfs_stream_handle_box32;
+
+/* 12-byte bucket-array vector header managing 0x0c-byte open-bucket slots
+ * in 0x112d8550, 0x112dbe10, and 0x112ab310 (used inside 0x112d9e20). */
+typedef struct rome2_vfs_bucket_vec_header32 {
+    uint32_t capacity;                           /* 00 */
+    uint32_t count;                              /* 04 */
+    rome2_data_address32 slots;                  /* 08 */
+} rome2_vfs_bucket_vec_header32;
+
 /* FUN_100e2460's handler vector: capacity precedes count. */
 typedef struct rome2_handler_vector_layout32 {
     uint32_t unobserved_00;
@@ -933,6 +950,14 @@ _Static_assert(sizeof(rome2_vfs_stream_wrap_vtable_prefix32) == 0x20, "stream wr
 ROME2_LAYOUT_ASSERT(rome2_vfs_stream_wrap_vtable_prefix32, scalar_deleting_dtor, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_stream_wrap_vtable_prefix32, open_checked, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_stream_wrap_vtable_prefix32, slot_01c, 0x1c);
+_Static_assert(sizeof(rome2_vfs_stream_handle_box32) == 0x14, "stream handle box size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_handle_box32, secondary_ctrl, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_handle_box32, sentinel_or_state, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_handle_box32, primary_ctrl, 0x10);
+_Static_assert(sizeof(rome2_vfs_bucket_vec_header32) == 0x0c, "bucket vec header size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_bucket_vec_header32, capacity, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_bucket_vec_header32, count, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_bucket_vec_header32, slots, 0x08);
 
 #undef ROME2_LAYOUT_ASSERT
 #endif

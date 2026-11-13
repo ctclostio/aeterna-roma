@@ -53,6 +53,7 @@ add_library(rome2_recovered_types STATIC
   vfs_quota_map.c vfs_quota_map.h
   vfs_scan_mount.c vfs_scan_mount.h
   vfs_dep_rehash.c vfs_dep_rehash.h
+  vfs_rb_bucket_ops.c vfs_rb_bucket_ops.h
   ../x64_runtime/guest32.c
   ../x64_ported/ported_10cbe350_entity.c
   ../x64_ported/ported_10145c70_unitcard.c
@@ -67,7 +68,7 @@ target_link_libraries(rome2_recovered_types PUBLIC xmllite shlwapi uuid)
 configure_type_target(rome2_recovered_types)
 
 if(BUILD_TESTING)
-  foreach(test IN ITEMS layout_bridge owned_string owned_entity free_list_pool owned_tag owned_attachment scalar_vectors owned_fauna unit_card_observer owned_unit_card pack_resource native_xml fauna_config unit_card_resource unit_card_xml_node xml_loader_policy vfs_dispatch vfs_name vfs_name_assign vfs_archive_tree vfs_dependency_graph vfs_archive_register vfs_archive_mount_step vfs_pack_entry vfs_pack_stream vfs_pool_slab vfs_quota_map vfs_scan_mount vfs_dep_rehash)
+  foreach(test IN ITEMS layout_bridge owned_string owned_entity free_list_pool owned_tag owned_attachment scalar_vectors owned_fauna unit_card_observer owned_unit_card pack_resource native_xml fauna_config unit_card_resource unit_card_xml_node xml_loader_policy vfs_dispatch vfs_name vfs_name_assign vfs_archive_tree vfs_dependency_graph vfs_archive_register vfs_archive_mount_step vfs_pack_entry vfs_pack_stream vfs_pool_slab vfs_quota_map vfs_scan_mount vfs_dep_rehash vfs_rb_bucket_ops)
     add_executable(rome2_${test}_tests test_${test}.c)
     target_link_libraries(rome2_${test}_tests PRIVATE rome2_recovered_types)
     configure_type_target(rome2_${test}_tests)

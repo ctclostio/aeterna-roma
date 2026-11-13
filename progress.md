@@ -621,6 +621,26 @@ validate bounded C17 helpers.
   `scripts/test_type_recovery_contracts.py` (**53** contract tests OK on Python 3.14 & 3.15),
   clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
 
+### Completed: Layer 19 (Deep VFS Leaf/Mutation Sub-Callees of Layer 18)
+
+- [x] **REA Evidence Extraction (`out/vfs-layer19-20261113/`)**: Recovered all 15
+  remaining unpinned `0x112...` sub-callees of Layer 18 (`0x112a21f0`, `0x112a25b0`,
+  `0x112a2810`, `0x112a3320`, `0x112a5ce0`, `0x112ab310`, `0x112ab420`,
+  `0x112ac430`, `0x112afc10`, `0x112afd50`, `0x112b0070`, `0x112b41a0`,
+  `0x112cd780`, `0x112d8550`, `0x112dbe10`) plus globals `0x11745c98`, `0x1177ddbc`,
+  `0x1172f1f0`, `0x1172f1f4` on top of `out/vfs-layer18-20261113/session.rea.json`
+  (**246** validated records in closed `out/vfs-layer19-20261113/session.rea.json`:
+  `231` reused Layer 18 + `15` new).
+- [x] **Layouts & Native C17 Helpers**: Locked `rome2_vfs_stream_handle_box32` (`20`B)
+  and `rome2_vfs_bucket_vec_header32` (`12`B) in `guest32_layouts.h`, implemented
+  checked C17 helpers in `port/recovered_types/vfs_rb_bucket_ops.h/.c`, and verified
+  `test_vfs_rb_bucket_ops.c` (**21 checks** passed) across **76/76** native suites
+  under `/W4 /WX /sdl /GS /guard:cf /analyze` and ASan.
+- [x] **Contracts, Docs & Public-Clean Parity**: Extended `port/recovered_types/contracts.json`
+  (**203** functions, **110** globals, **20** vtables, **224** instruction witnesses),
+  `scripts/test_type_recovery_contracts.py` (**54** contract tests OK on Python 3.14 & 3.15),
+  clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
+
 ### Remaining work
 
 1. Extend the verified resource-backed domain toward full archive registration
