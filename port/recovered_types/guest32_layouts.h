@@ -205,6 +205,57 @@ typedef struct rome2_vfs_open_pack_table_layout32 {
     rome2_string8_layout32 empty_key;
 } rome2_vfs_open_pack_table_layout32;
 
+/* 12-byte freelist pool headers at 0x119344f4, 0x11934500, 0x1193450c,
+ * and 0x11934518 returned by 0x10106000..0x10106120 (+0x00 is pushed/popped
+ * singly-linked node head). */
+typedef struct rome2_vfs_freelist_pool_header32 {
+    rome2_data_address32 freelist_head;
+    rome2_data_address32 slab_chain_head;
+    uint32_t reserved_008;
+} rome2_vfs_freelist_pool_header32;
+
+/* 8-byte slab descriptor initialized by 0x10328250(count, next_slab) over a
+ * contiguous array of 0x1c-byte (28-byte) singly-linked nodes. */
+typedef struct rome2_vfs_slab_descriptor32 {
+    rome2_data_address32 node_array;
+    rome2_data_address32 next_slab;
+} rome2_vfs_slab_descriptor32;
+
+/* 24-byte archive-name node disposer backed by vtable 0x1189a434
+ * (scalar deleting dtor 0x112acd70 frees 0x18 bytes; slot +0x00 0x112afd00
+ * destroys +0x10 owned_node and recycles it to pool 0x119344f4). */
+typedef struct rome2_vfs_archive_name_disposer32 {
+    rome2_vtable_address32 vtable;
+    uint32_t unobserved_004;
+    uint32_t unobserved_008;
+    uint32_t subobj_00c;
+    rome2_data_address32 owned_node;
+    uint32_t tail_014;
+} rome2_vfs_archive_name_disposer32;
+
+/* 28-byte VFS mutex wrapper at 0x12032b10 returned by 0x112bff80
+ * (+0x04 = 0x12032b14 is the Win32 x86 RTL_CRITICAL_SECTION). */
+typedef struct rome2_vfs_mutex_box32 {
+    rome2_vtable_address32 vtable_or_tag;
+    uint32_t cs_debug_info;
+    int32_t cs_lock_count;
+    int32_t cs_recursion_count;
+    rome2_data_address32 cs_owning_thread;
+    rome2_data_address32 cs_lock_semaphore;
+    uint32_t cs_spin_count;
+} rome2_vfs_mutex_box32;
+
+/* 36-byte global UTF-16LE hash table at 0x12032bf4 returned by 0x112e32b0
+ * (0x12032bf8 = 8 initial buckets * 16 bytes; 0x12032bfc "Removed_key",
+ * 0x12032c08 "Unused_key"; followed immediately by TLS guard 0x12032c18). */
+typedef struct rome2_vfs_global_map32 {
+    rome2_data_address32 buckets;
+    uint32_t bucket_count;
+    rome2_string16_layout32 removed_key;
+    rome2_string16_layout32 unused_key;
+    uint32_t reserved_020;
+} rome2_vfs_global_map32;
+
 /* FUN_100e2460's handler vector: capacity precedes count. */
 typedef struct rome2_handler_vector_layout32 {
     uint32_t unobserved_00;
@@ -639,6 +690,27 @@ _Static_assert(sizeof(rome2_vfs_open_pack_table_layout32) == 0x14, "open pack ta
 ROME2_LAYOUT_ASSERT(rome2_vfs_open_pack_table_layout32, items, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_open_pack_table_layout32, bucket_count, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_open_pack_table_layout32, empty_key, 0x08);
+_Static_assert(sizeof(rome2_vfs_freelist_pool_header32) == 0x0c, "freelist pool header size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_freelist_pool_header32, freelist_head, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_freelist_pool_header32, slab_chain_head, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_freelist_pool_header32, reserved_008, 0x08);
+_Static_assert(sizeof(rome2_vfs_slab_descriptor32) == 0x08, "slab descriptor size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_slab_descriptor32, node_array, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_slab_descriptor32, next_slab, 0x04);
+_Static_assert(sizeof(rome2_vfs_archive_name_disposer32) == 0x18, "archive name disposer size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_archive_name_disposer32, vtable, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_archive_name_disposer32, subobj_00c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_archive_name_disposer32, owned_node, 0x10);
+_Static_assert(sizeof(rome2_vfs_mutex_box32) == 0x1c, "VFS mutex box size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_mutex_box32, vtable_or_tag, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_mutex_box32, cs_debug_info, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_mutex_box32, cs_spin_count, 0x18);
+_Static_assert(sizeof(rome2_vfs_global_map32) == 0x24, "VFS global map size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_global_map32, buckets, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_global_map32, bucket_count, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_global_map32, removed_key, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_global_map32, unused_key, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_global_map32, reserved_020, 0x20);
 
 #undef ROME2_LAYOUT_ASSERT
 #endif

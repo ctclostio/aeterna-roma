@@ -529,6 +529,29 @@ validate bounded C17 helpers.
   `scripts/test_type_recovery_contracts.py` (**49** contract tests OK on Python 3.14 & 3.15),
   clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
 
+### Current target: Layer 15 (Completed — Archive-Name Disposer Vtable `0x1189a434`, Base Vtable `0x11849278`, VFS Mutex/Global Map `0x112bff80`/`0x112e32b0`, & Pool Slabs)
+
+- [x] **REA Evidence Extraction (`out/vfs-layer15-20261113/`)**: Read base pack-entry
+  vtable `0x11849278` (60B/15 slots + 12 xrefs) alongside `0x118976c0` (`0x112a9963`),
+  recovered the `0x1189a434`/`0x1189a444` handlers (`0x112afd00`, `0x112afbf0`,
+  `0x112acd70`, `0x10128c50`, `0x112afcd0`, `0x1090bb10`, `0x112acd30`, `0x112afd30`),
+  VFS mutex singleton (`0x112bff80` -> `0x12032b10`), global UTF-16LE registry table
+  (`0x112c02e0` / `0x112e32b0` -> `0x12032bf4`), virtual-base setting resolver
+  (`0x11346530`), freelist pool singletons (`0x10106000` / `0x10106060` / `0x101060c0`),
+  and `0x1c`-stride slab initializer `0x10328250` on top of
+  `out/vfs-layer14-20261112/session.rea.json` (**174** validated records in closed
+  `out/vfs-layer15-20261113/session.rea.json`: `152` reused Layer 14 + `22` new).
+- [x] **Layouts & Native C17 Helpers**: Locked `rome2_vfs_freelist_pool_header32`,
+  `rome2_vfs_slab_descriptor32`, `rome2_vfs_archive_name_disposer32`,
+  `rome2_vfs_mutex_box32`, and `rome2_vfs_global_map32` in `guest32_layouts.h`,
+  implemented bounded C17 helpers in `port/recovered_types/vfs_pool_slab.h/.c`, and
+  verified `test_vfs_pool_slab.c` (**45 checks** passed) across **72/72** native suites
+  under `/W4 /WX /sdl /GS /guard:cf /analyze` and ASan.
+- [x] **Contracts, Docs & Public-Clean Parity**: Extended `port/recovered_types/contracts.json`
+  (**154** functions, **87** globals, **16** vtables, **187** instruction witnesses),
+  `scripts/test_type_recovery_contracts.py` (**50** contract tests OK on Python 3.14 & 3.15),
+  clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
+
 ### Remaining work
 
 1. Extend the verified resource-backed domain toward full archive registration
