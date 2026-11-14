@@ -669,16 +669,24 @@ validate bounded C17 helpers.
 - [x] **Layouts & Native C17 Helpers**: Locked 4 fixed-width guest32 structs (`rome2_vfs_adj_hash_node32` 36B, `rome2_vfs_recursive_mutex_prefix32` 8B, `rome2_vfs_u32_ptr_vec32` 12B, `rome2_vfs_flag_chain_node32` 8B) in `port/recovered_types/guest32_layouts.h`, implemented 7 checked helpers (`rome2_vfs_adj_hash_can_allocate32`, `rome2_vfs_decode_adj_hash_node32`, `rome2_vfs_u32_vec_plan_push32`, `rome2_vfs_state_wait_plan32`, `rome2_vfs_stream_wrap_check_open_reentry32`, `rome2_vfs_clear_flag_chain_bounded`, `rome2_vfs_ref_block_delete_size32`) in `port/recovered_types/vfs_adj_open_ops.h/.c`, and verified **20 checks** in `test_vfs_adj_open_ops.c` plus **78/78** native suites on `/W4 /WX /sdl /GS /guard:cf /analyze` (`5.84s`) and ASan (`5.61s`) with zero warnings.
 - [x] **Contracts, Docs & Public-Clean Parity**: Pinned **231 functions, 113 globals, 20 vtables, and 241 instruction witnesses** in `port/recovered_types/contracts.json`, added `test_adj_hash_stream_open_and_ref_dtor_contracts` and `"112a2910": [1]` gap verification to `scripts/test_type_recovery_contracts.py` (**56** contract tests passing on Python 3.14 & 3.15), verified **884** public tests (`284` skipped) in clean checkout on Python 3.14 & 3.15, updated `docs/vfs_recovery.md` and `port/recovered_types/verification.json` (`layer21`, `82` source identities), and committed cleanly.
 
+### Layer 22 (Completed — Stream Handle-Box & View-Map Callees, Pack-Entry Vtable `0x118976c0` Completion & Ref-Block Destructors)
+
+- [x] **REA Evidence Extraction (`out/vfs-layer22-20261114/`)**: Recovered all 16 Layer 22 targets (`0x112afb90`, `0x101d9910`, `0x116835d7`, `0x112a7860`, `0x10102f90`, `0x112e1830`, `0x10e13a60`, `0x10115900`, `0x112ad1b0`, `0x112d3270`, `0x112e0d80`, `0x112c9540`, `0x112afd00`, `0x112accf0`, `0x112acd10`, `0x112acd30`) over `out/vfs-layer21-20261114/session.rea.json` (`302` closed/validated records = `281` reused Layer 21 + `18` primary new IDs [`7` direct `analyze_function`, `1` `fn-116835d7-bundle-record.json`, `8` `read_bytes(768)`, `2` new `resolve_containing_procedure`] + `3` `inspect_analysis_view` extras for `0x116835d7`, with `6` resolve IDs reused from Layer 18).
+- [x] **Layouts & Native C17 Helpers**: Locked `rome2_vfs_state_ref_block32` (`44`B), `rome2_vfs_pack_telemetry_mgr32` (`108`B), and `rome2_vfs_pack_vtable_76c0_prefix32` (`40`B) with `_Static_assert` checks in [guest32_layouts.h](port/recovered_types/guest32_layouts.h); implemented bounded helpers in [vfs_view_map_ops.h](port/recovered_types/vfs_view_map_ops.h) / [vfs_view_map_ops.c](port/recovered_types/vfs_view_map_ops.c) with **21 checks** passing in [test_vfs_view_map_ops.c](port/recovered_types/test_vfs_view_map_ops.c) and **79/79** CTest suites passing on `/W4 /WX /sdl /GS /guard:cf /analyze` and ASan.
+- [x] **Contracts, Docs & Public-Clean Parity**: Pinned **247 functions, 119 globals, 24 vtables, and 253 instruction witnesses** in [contracts.json](port/recovered_types/contracts.json) (`rea_layer22_evidence`), verified **57** contract tests on Python 3.14 and 3.15, updated [vfs_recovery.md](docs/vfs_recovery.md), verified **885** clean-public Python tests (`285` skipped) on Python 3.14 and 3.15, and locked **85** normalized source hashes in [verification.json](port/recovered_types/verification.json).
+
 ### Remaining work
 
 1. Extend the verified resource-backed domain toward full archive registration
    (`0x112cfc10`) mutation/orchestration (red-black rebalancing writes,
    recursive dependency registration loop `0/1` tolerance, open-pack/archive-tree
-   mutation, virtual winner notification `+0x34`), complete missing-entry
-   release/unwind behavior, full normalization rules, exact partial
-   parser/exception outcomes, and the rest of the original XML object ABI.
-   Historic CRT/locale behavior and full resource-backed constructor equivalence
-   remain open.
+   mutation, virtual winner notification `+0x34`), live Win32 `CreateFileA` /
+   `CreateFileMappingA` / `MapViewOfFile` execution (`0x116835d7` CRT free
+   wrapper, `0x10102f90`/`0x112a7860` mapping/handle-box planning, and
+   `0x118976c0` non-proc slots are now recovered/modeled read-only), full
+   normalization rules, exact partial parser/exception outcomes, and the rest
+   of the original XML object ABI. Historic CRT/locale behavior and full
+   resource-backed constructor equivalence remain open.
 2. Recover the remaining unit-card methods and meanings of opaque 32-bit
    words before widening any of them into native pointers or ownership links.
 3. Continue engine/FaceFX class recovery, complete vtable bounds and callable

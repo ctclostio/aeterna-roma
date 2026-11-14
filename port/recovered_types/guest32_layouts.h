@@ -490,6 +490,54 @@ typedef struct rome2_vfs_flag_chain_node32 {
     uint8_t unobserved_005[3];                   /* 05..07 */
 } rome2_vfs_flag_chain_node32;
 
+/* 44-byte (0x2cB) stream-state reference block (`0x1189a444`, freed `0x112acd30`)
+ * constructed in `0x112a7860` with inner vtable `0x118977bc`/`0x118977d4` at `+0x0c`. */
+typedef struct rome2_vfs_state_ref_block32 {
+    rome2_vtable_address32 vtable;               /* 00 */
+    uint32_t use_count;                          /* 04 */
+    uint32_t weak_count;                         /* 08 */
+    rome2_vtable_address32 inner_vtable;         /* 0c */
+    uint32_t state_word_010;                     /* 10 */
+    rome2_data_address32 view_box_ptr;           /* 14 */
+    uint8_t eof_or_closed_018;                   /* 18 (state +0x0c) */
+    uint8_t closed_019;                          /* 19 (state +0x0d) */
+    uint8_t unobserved_01a[2];                   /* 1a..1b */
+    rome2_data_address32 handle_ptr;             /* 1c */
+    uint32_t word_020;                           /* 20 */
+    uint32_t word_024;                           /* 24 */
+    uint8_t flag_028;                            /* 28 */
+    uint8_t unobserved_029[3];                   /* 29..2b */
+} rome2_vfs_state_ref_block32;
+
+/* 108-byte (0x6cB) pack-open telemetry singleton (`0x118976a4` at `0x12032e68`)
+ * lazily constructed by `0x112e1830` with 997 (`0x3e5`) 8-byte hash buckets. */
+typedef struct rome2_vfs_pack_telemetry_mgr32 {
+    rome2_vtable_address32 vtable;               /* 00 */
+    uint32_t unobserved_004;                     /* 04 */
+    uint16_t unobserved_008;                     /* 08 */
+    uint8_t flag_00a;                            /* 0a */
+    uint8_t unobserved_00b;                      /* 0b */
+    uint32_t process_id;                         /* 0c */
+    uint32_t zero_010;                           /* 10 */
+    uint32_t cs_014[6];                          /* 14..2b (24B CRITICAL_SECTION) */
+    uint32_t table_words_02c[6];                 /* 2c..43 */
+    uint32_t bucket_cap_044;                     /* 44 (0x3e5) */
+    uint32_t bucket_count_048;                   /* 48 (0x3e5) */
+    rome2_data_address32 buckets_04c;            /* 4c */
+    uint32_t zero_050;                           /* 50 */
+    uint32_t cs_054[6];                          /* 54..6b (24B CRITICAL_SECTION) */
+} rome2_vfs_pack_telemetry_mgr32;
+
+/* 40-byte (0x28B) pack-entry object (`0x118976c0`, deleted `0x112ad1b0`), exposing
+ * `name` at `+0x04` (`0x112d3270`) and `backing_01c` at `+0x1c` (`0x112e0d80`/`0x112c9540`). */
+typedef struct rome2_vfs_pack_vtable_76c0_prefix32 {
+    rome2_vtable_address32 vtable;               /* 00 */
+    rome2_string8_layout32 name;                 /* 04..0f */
+    uint32_t unobserved_010[3];                  /* 10..1b */
+    rome2_data_address32 backing_01c;            /* 1c */
+    uint32_t unobserved_020[2];                  /* 20..27 */
+} rome2_vfs_pack_vtable_76c0_prefix32;
+
 /* FUN_100e2460's handler vector: capacity precedes count. */
 typedef struct rome2_handler_vector_layout32 {
     uint32_t unobserved_00;
@@ -1039,6 +1087,21 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_u32_ptr_vec32, end, 0x08);
 _Static_assert(sizeof(rome2_vfs_flag_chain_node32) == 0x08, "flag chain node size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_flag_chain_node32, next, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_flag_chain_node32, flag_004, 0x04);
+_Static_assert(sizeof(rome2_vfs_state_ref_block32) == 0x2c, "state ref block size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_state_ref_block32, inner_vtable, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_state_ref_block32, view_box_ptr, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_state_ref_block32, eof_or_closed_018, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_vfs_state_ref_block32, handle_ptr, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_state_ref_block32, flag_028, 0x28);
+_Static_assert(sizeof(rome2_vfs_pack_telemetry_mgr32) == 0x6c, "pack telemetry mgr size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_telemetry_mgr32, process_id, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_telemetry_mgr32, cs_014, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_telemetry_mgr32, bucket_cap_044, 0x44);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_telemetry_mgr32, buckets_04c, 0x4c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_telemetry_mgr32, cs_054, 0x54);
+_Static_assert(sizeof(rome2_vfs_pack_vtable_76c0_prefix32) == 0x28, "pack vtable 76c0 prefix size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_76c0_prefix32, name, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_76c0_prefix32, backing_01c, 0x1c);
 
 #undef ROME2_LAYOUT_ASSERT
 #endif

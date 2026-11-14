@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 231)
-        self.assertEqual(result["globals"], 113)
-        self.assertEqual(result["vtables"], 20)
-        self.assertEqual(result["instruction_witnesses"], 241)
+        self.assertEqual(result["functions"], 247)
+        self.assertEqual(result["globals"], 119)
+        self.assertEqual(result["vtables"], 24)
+        self.assertEqual(result["instruction_witnesses"], 253)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -655,6 +655,73 @@ class TypeContractProvenanceTests(unittest.TestCase):
             ("112d8e20", 12),
         ]:
             self.assertEqual(fmap[addr]["calling_convention"], "thiscall")
+            self.assertEqual(fmap[addr]["callee_pop_bytes"], pop)
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_view_map_handle_ctor_and_76c0_vtable_contracts(self):
+        w = {w["address"]: bytes.fromhex(w["hex"]) for w in self.registry["instruction_witnesses"]}
+        fmap = {f["address"]: f for f in self.registry["functions"]}
+        g = {item["address"]: item for item in self.registry["globals"]}
+        v = {item["address"]: item["first_slot_code_identity"] for item in self.registry["vtables"]}
+        ev = self.registry["rea_layer22_evidence"]
+        self.assertEqual(ev["closed_evidence_records"], 302)
+        self.assertEqual(ev["new_evidence_records"], 18)
+        self.assertEqual(ev["reused_layer21_evidence_records"], 281)
+        self.assertEqual(ev["reused_layer18_resolve_records"], 6)
+        self.assertEqual(ev["extra_evidence_views_count"], 3)
+        self.assertEqual(len(ev["records"]), 24)
+        for zaddr in ("12032e68", "11af4268"):
+            self.assertEqual(g[zaddr]["storage"], "zero_fill")
+            self.assertEqual(g[zaddr]["initial_hex_le"], "00000000")
+        for iat_addr, iat_le in (
+            ("1172f23c", "dc0a9301"),
+            ("1172f184", "62079301"),
+            ("1172f244", "020b9301"),
+            ("1172f248", "120b9301"),
+        ):
+            self.assertEqual(g[iat_addr]["storage"], "file")
+            self.assertEqual(g[iat_addr]["initial_hex_le"], iat_le)
+        self.assertEqual(v["1189a444"], "112afcd0")
+        self.assertEqual(v["118976a4"], "112d36f0")
+        self.assertEqual(v["118977bc"], "112acd90")
+        self.assertEqual(v["118977d4"], "112ad140")
+        self.assertEqual(w["112afb9e"], bytes.fromhex("83e1fc81f900100000"))
+        self.assertEqual(w["101d991b"], bytes.fromhex("3dffffff3f760583c9ffeb08"))
+        self.assertEqual(w["112a7901"], bytes.fromhex("6a2c"))
+        self.assertEqual(w["112a794d"], bytes.fromhex("c7450044a48911"))
+        self.assertEqual(w["1010301e"], bytes.fromhex("4b8bebf7d58d041f23c5"))
+        self.assertEqual(w["112e183e"], bytes.fromhex("6a6c"))
+        self.assertEqual(w["112e1894"], bytes.fromhex("c74744e5030000"))
+        self.assertEqual(w["10e13a80"], bytes.fromhex("8a0c06403aca750c8a1084d275f2"))
+        self.assertEqual(w["10115920"], bytes.fromhex("0fb60203f703c803d73bf372f3"))
+        self.assertEqual(w["116835d7"], bytes.fromhex("558becff7508e8dedca4fe595dc3"))
+        self.assertEqual(w["112accf0"], bytes.fromhex("f644240401568bf1740b6a2056e8d5683d0083c4088bc65ec20400"))
+        self.assertEqual(w["112acd10"], bytes.fromhex("f644240401568bf1740b6a1c56e8b5683d0083c4088bc65ec20400"))
+        self.assertEqual(w["112acd30"], bytes.fromhex("f644240401568bf1740b6a2c56e895683d0083c4088bc65ec20400"))
+        self.assertEqual(w["112ad1b0"][:14], bytes.fromhex("f644240401568bf1c70678928411"))
+        self.assertEqual(w["112d3270"], bytes.fromhex("8d41048b4c240450e8b3cbe4fe8b442404c20400"))
+        self.assertEqual(w["112e0d80"], bytes.fromhex("8b411c8b4c240483c01450e840f0e3fe8b442404c20400"))
+        self.assertEqual(w["112c9540"], bytes.fromhex("8b411c8b008b401cc1e8062401c3"))
+        self.assertEqual(w["112afd00"], bytes.fromhex("8b4110568d71108bceff700456e80e50a4ff8b36e8e762e5fe8b08890e89305ec3"))
+        for addr, cc, pop in [
+            ("112afb90", "thiscall", 12),
+            ("101d9910", "stdcall", 4),
+            ("116835d7", "cdecl", 0),
+            ("112a7860", "thiscall", 36),
+            ("10102f90", "thiscall", 16),
+            ("112e1830", "cdecl", 0),
+            ("10e13a60", "cdecl", 0),
+            ("10115900", "cdecl", 0),
+            ("112ad1b0", "thiscall", 4),
+            ("112d3270", "thiscall", 4),
+            ("112e0d80", "thiscall", 4),
+            ("112c9540", "thiscall", 0),
+            ("112afd00", "thiscall", 0),
+            ("112accf0", "thiscall", 4),
+            ("112acd10", "thiscall", 4),
+            ("112acd30", "thiscall", 4),
+        ]:
+            self.assertEqual(fmap[addr]["calling_convention"], cc)
             self.assertEqual(fmap[addr]["callee_pop_bytes"], pop)
         self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
 
