@@ -459,6 +459,37 @@ typedef struct rome2_vfs_rb_tree_head32 {
     uint32_t size;                               /* 04 */
 } rome2_vfs_rb_tree_head32;
 
+/* 36-byte (0x24B) adjacency hash-list node allocated (`PUSH 0x24`) and torn
+ * down by 0x112ac1a0, bounded (`max_size = 0x071c71c7`) by 0x112a2910. */
+typedef struct rome2_vfs_adj_hash_node32 {
+    rome2_data_address32 next;                   /* 00 */
+    rome2_data_address32 prev;                   /* 04 */
+    uint32_t key_name[3];                        /* 08..13 */
+    rome2_vfs_rb_tree_head32 sub_tree_a;         /* 14..1b */
+    rome2_vfs_rb_tree_head32 sub_tree_b;         /* 1c..23 */
+} rome2_vfs_adj_hash_node32;
+
+/* 8-byte recursive VFS mutex prefix returned by 0x112bff80 and unwound/restored
+ * by 0x112c0c60 (`recursion_depth` at +0x00, `CRITICAL_SECTION` prefix at +0x04). */
+typedef struct rome2_vfs_recursive_mutex_prefix32 {
+    uint32_t recursion_depth;                    /* 00 */
+    uint32_t cs_prefix_004;                      /* 04 */
+} rome2_vfs_recursive_mutex_prefix32;
+
+/* 12-byte pointer-triple vector `{ first, last, end }` used by `0x112d8c50`. */
+typedef struct rome2_vfs_u32_ptr_vec32 {
+    rome2_data_address32 first;                  /* 00 */
+    rome2_data_address32 last;                   /* 04 */
+    rome2_data_address32 end;                    /* 08 */
+} rome2_vfs_u32_ptr_vec32;
+
+/* 8-byte singly-linked flag-clear node traversed recursively by `0x112cd4c0`. */
+typedef struct rome2_vfs_flag_chain_node32 {
+    rome2_data_address32 next;                   /* 00 */
+    uint8_t flag_004;                            /* 04 */
+    uint8_t unobserved_005[3];                   /* 05..07 */
+} rome2_vfs_flag_chain_node32;
+
 /* FUN_100e2460's handler vector: capacity precedes count. */
 typedef struct rome2_handler_vector_layout32 {
     uint32_t unobserved_00;
@@ -992,6 +1023,22 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_stream_state_prefix32, closed_00d, 0x0d);
 _Static_assert(sizeof(rome2_vfs_rb_tree_head32) == 0x08, "RB tree head size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_rb_tree_head32, sentinel, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_rb_tree_head32, size, 0x04);
+_Static_assert(sizeof(rome2_vfs_adj_hash_node32) == 0x24, "adj hash node size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_adj_hash_node32, next, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_adj_hash_node32, prev, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_adj_hash_node32, key_name, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_adj_hash_node32, sub_tree_a, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_adj_hash_node32, sub_tree_b, 0x1c);
+_Static_assert(sizeof(rome2_vfs_recursive_mutex_prefix32) == 0x08, "recursive mutex prefix size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_recursive_mutex_prefix32, recursion_depth, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_recursive_mutex_prefix32, cs_prefix_004, 0x04);
+_Static_assert(sizeof(rome2_vfs_u32_ptr_vec32) == 0x0c, "u32 ptr vec size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_u32_ptr_vec32, first, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_u32_ptr_vec32, last, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_u32_ptr_vec32, end, 0x08);
+_Static_assert(sizeof(rome2_vfs_flag_chain_node32) == 0x08, "flag chain node size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_flag_chain_node32, next, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_flag_chain_node32, flag_004, 0x04);
 
 #undef ROME2_LAYOUT_ASSERT
 #endif

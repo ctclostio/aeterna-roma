@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 218)
-        self.assertEqual(result["globals"], 110)
+        self.assertEqual(result["functions"], 231)
+        self.assertEqual(result["globals"], 113)
         self.assertEqual(result["vtables"], 20)
-        self.assertEqual(result["instruction_witnesses"], 233)
+        self.assertEqual(result["instruction_witnesses"], 241)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -615,14 +615,58 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual(fmap["112b07a0"]["callee_pop_bytes"], 4)
         self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
 
+    def test_adj_hash_stream_open_and_ref_dtor_contracts(self):
+        w = {w["address"]: bytes.fromhex(w["hex"]) for w in self.registry["instruction_witnesses"]}
+        fmap = {f["address"]: f for f in self.registry["functions"]}
+        g = {item["address"]: item for item in self.registry["globals"]}
+        ev = self.registry["rea_layer21_evidence"]
+        self.assertEqual(ev["closed_evidence_records"], 281)
+        self.assertEqual(ev["new_evidence_records"], 14)
+        self.assertEqual(ev["reused_layer20_evidence_records"], 267)
+        self.assertEqual(len(ev["records"]), 18)
+        self.assertEqual(bytes.fromhex(g["11745c7c"]["initial_hex_le"]), b"unordered_map/set too long\x00")
+        self.assertEqual(g["1172f670"]["storage"], "file")
+        self.assertEqual(g["1172f670"]["initial_hex_le"], "b8149301")
+        self.assertEqual(g["12031a8a"]["storage"], "zero_fill")
+        self.assertEqual(g["12031a8a"]["initial_hex_le"], "00")
+        self.assertEqual(w["112accd0"][:6], bytes.fromhex("f64424040156"))
+        self.assertEqual(struct.unpack_from("<I", w["112a2954"], 2)[0], 0x071C71C7)
+        self.assertEqual(w["112a2b95"][0], 0x68)
+        self.assertEqual(struct.unpack_from("<I", w["112a2b95"], 1)[0], 0x11745C7C)
+        self.assertEqual(w["112ac1c5"], bytes.fromhex("6a24"))
+        self.assertEqual(w["112c0cb0"], bytes.fromhex("807f0d00750790807f0c0074f3"))
+        self.assertEqual(w["112cd4c0"], bytes.fromhex("568bf18b0e85c97405e8f2ffffffc64604005ec3"))
+        self.assertEqual(struct.unpack_from("<I", w["112d8c7f"], 2)[0], 0x3FFFFFFF)
+        self.assertEqual(w["112d8e6d"][:2], bytes.fromhex("803d"))
+        self.assertEqual(struct.unpack_from("<I", w["112d8e6d"], 2)[0], 0x12031A8A)
+        for addr, pop in [
+            ("112a2660", 12),
+            ("112a2910", 12),
+            ("112a3ee0", 12),
+            ("112ac1a0", 4),
+            ("112accd0", 4),
+            ("112acd50", 4),
+            ("112acd70", 4),
+            ("112be350", 4),
+            ("112c0c60", 0),
+            ("112cd4c0", 0),
+            ("112d8c50", 4),
+            ("112d8d30", 12),
+            ("112d8e20", 12),
+        ]:
+            self.assertEqual(fmap[addr]["calling_convention"], "thiscall")
+            self.assertEqual(fmap[addr]["callee_pop_bytes"], pop)
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
     def test_disjoint_original_bodies_exclude_reported_gaps(self):
         helpers = {f["address"]: f for f in self.registry["functions"] if "body_ranges" in f}
         self.assertEqual(
             set(helpers),
-            {"112a8ff0", "112b5730", "112baf90", "112bbd10", "112d4cc0", "112d4de0", "112e32b0", "112e3db0"},
+            {"112a2910", "112a8ff0", "112b5730", "112baf90", "112bbd10", "112d4cc0", "112d4de0", "112e32b0", "112e3db0"},
         )
         base, sections = contracts.parse_pe32(self.image)
         expected_gaps = {
+            "112a2910": [1],
             "112a8ff0": [9],
             "112b5730": [10, 21, 30],
             "112baf90": [3],

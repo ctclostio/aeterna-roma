@@ -663,6 +663,12 @@ validate bounded C17 helpers.
   `scripts/test_type_recovery_contracts.py` (**55** contract tests OK on Python 3.14 & 3.15),
   clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
 
+### Completed: Layer 21 (Deferred VFS Sub-Callees, Stream-Wrapper Open Slots & Ref-Block Destructors)
+
+- [x] **REA Evidence Extraction (`out/vfs-layer21-20261114/`)**: Recovered all 13 Layer 21 VFS procedures and virtual slots (`0x112a2660`, `0x112a2910`, `0x112a3ee0`, `0x112ac1a0`, `0x112accd0`, `0x112acd50`, `0x112acd70`, `0x112be350`, `0x112c0c60`, `0x112cd4c0`, `0x112d8c50`, `0x112d8d30`, `0x112d8e20`) on top of `out/vfs-layer20-20261113/session.rea.json`, closing `out/vfs-layer21-20261114/session.rea.json` (`281` validated evidence records = `267` Layer 20 + `14` net new unique evidence IDs across `18` retained envelopes: `8` `analyze_function` + `5` `resolve_containing_procedure` + `5` `read_bytes` length=320). Verified `0x112a2910` has a `1`B `0x90` NOP gap at `0x112a2a1f`.
+- [x] **Layouts & Native C17 Helpers**: Locked 4 fixed-width guest32 structs (`rome2_vfs_adj_hash_node32` 36B, `rome2_vfs_recursive_mutex_prefix32` 8B, `rome2_vfs_u32_ptr_vec32` 12B, `rome2_vfs_flag_chain_node32` 8B) in `port/recovered_types/guest32_layouts.h`, implemented 7 checked helpers (`rome2_vfs_adj_hash_can_allocate32`, `rome2_vfs_decode_adj_hash_node32`, `rome2_vfs_u32_vec_plan_push32`, `rome2_vfs_state_wait_plan32`, `rome2_vfs_stream_wrap_check_open_reentry32`, `rome2_vfs_clear_flag_chain_bounded`, `rome2_vfs_ref_block_delete_size32`) in `port/recovered_types/vfs_adj_open_ops.h/.c`, and verified **20 checks** in `test_vfs_adj_open_ops.c` plus **78/78** native suites on `/W4 /WX /sdl /GS /guard:cf /analyze` (`5.84s`) and ASan (`5.61s`) with zero warnings.
+- [x] **Contracts, Docs & Public-Clean Parity**: Pinned **231 functions, 113 globals, 20 vtables, and 241 instruction witnesses** in `port/recovered_types/contracts.json`, added `test_adj_hash_stream_open_and_ref_dtor_contracts` and `"112a2910": [1]` gap verification to `scripts/test_type_recovery_contracts.py` (**56** contract tests passing on Python 3.14 & 3.15), verified **884** public tests (`284` skipped) in clean checkout on Python 3.14 & 3.15, updated `docs/vfs_recovery.md` and `port/recovered_types/verification.json` (`layer21`, `82` source identities), and committed cleanly.
+
 ### Remaining work
 
 1. Extend the verified resource-backed domain toward full archive registration
