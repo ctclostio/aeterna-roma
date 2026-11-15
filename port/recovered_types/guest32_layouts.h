@@ -1443,5 +1443,101 @@ _Static_assert(sizeof(rome2_vfs_substream_vtable_7c24_8slot32) == 0x20, "substre
 ROME2_LAYOUT_ASSERT(rome2_vfs_substream_vtable_7c24_8slot32, slot_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_substream_vtable_7c24_8slot32, slot_1c, 0x1c);
 
+/* 16-byte (0x10B) dual-slot async/mapped backing view slot entry (`0x112a2090` / `0x112ab500`). */
+typedef struct rome2_vfs_dual_slot_entry32 {
+    uint32_t task_ptr_00;                        /* 00 (active 0x14B async task ptr or 0) */
+    uint32_t window_len_04;                      /* 04 (mapped byte length) */
+    uint32_t window_off_08;                      /* 08 (mapped start file offset) */
+    uint8_t flags_0c;                            /* 0c (slot state/flags byte) */
+    uint8_t pad_0d[3];                           /* 0d (tail padding) */
+} rome2_vfs_dual_slot_entry32;
+_Static_assert(sizeof(rome2_vfs_dual_slot_entry32) == 0x10, "dual slot entry 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_dual_slot_entry32, task_ptr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dual_slot_entry32, window_len_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dual_slot_entry32, window_off_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dual_slot_entry32, flags_0c, 0x0c);
+
+/* 84-byte (0x54B) dual-slot async/mapped backing view (`0x11897818` vtable; `0x112ba840` / `0x112ad210`). */
+typedef struct rome2_vfs_dual_slot_view32 {
+    rome2_vtable_address32 vtable;               /* 00 (0x11897818, reset to 0x11849278) */
+    uint32_t ref_or_reserved_04;                 /* 04 (reserved/zero word) */
+    uint32_t name_str_08;                        /* 08 (copied stream name word) */
+    uint32_t path_str_0c;                        /* 0c (copied file path word) */
+    uint32_t total_size_10;                      /* 10 (total stream size in bytes) */
+    uint32_t file_handle_14;                     /* 14 (primary Win32 file handle) */
+    uint32_t aux_handle_18;                      /* 18 (secondary Win32 file handle) */
+    uint32_t chunk_cap_1c;                       /* 1c (maximum window chunk bytes) */
+    uint32_t cipher_flags_20;                    /* 20 (XOR decipher flags forwarded to task) */
+    uint32_t active_ref_count_24;                /* 24 (outstanding active map reference count) */
+    rome2_vfs_dual_slot_entry32 slot0_28;        /* 28 (slot 0 window entry) */
+    rome2_vfs_dual_slot_entry32 slot1_38;        /* 38 (slot 1 window entry) */
+    uint32_t slot0_rel_off_48;                   /* 48 (cursor offset within slot 0 buffer) */
+    uint32_t slot1_rel_off_4c;                   /* 4c (cursor offset within slot 1 buffer) */
+    uint8_t active_slot_idx_50;                  /* 50 (0 or 1 active slot selector) */
+    uint8_t pad_51[3];                           /* 51 (tail padding) */
+} rome2_vfs_dual_slot_view32;
+_Static_assert(sizeof(rome2_vfs_dual_slot_view32) == 0x54, "dual slot view 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_dual_slot_view32, vtable, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dual_slot_view32, chunk_cap_1c, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dual_slot_view32, active_ref_count_24, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dual_slot_view32, slot0_28, 0x28);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dual_slot_view32, slot1_38, 0x38);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dual_slot_view32, slot0_rel_off_48, 0x48);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dual_slot_view32, slot1_rel_off_4c, 0x4c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dual_slot_view32, active_slot_idx_50, 0x50);
+
+/* 32-byte (0x20B) async in-memory/cipher backing view (`0x11897844` vtable; `0x112dc8db` / `0x112ace20`). */
+typedef struct rome2_vfs_cipher_mem_view32 {
+    rome2_vtable_address32 vtable;               /* 00 (0x11897844, reset to 0x11849278) */
+    uint32_t ref_or_reserved_04;                 /* 04 (reserved/zero word) */
+    uint32_t name_str_08;                        /* 08 (copied stream name word) */
+    uint32_t cipher_flags_0c;                    /* 0c (bit 0 triggers XOR decipher 0x100fcfd0) */
+    uint8_t valid_flag_10;                       /* 10 (1 initially, cleared on NULL install) */
+    uint8_t ready_flag_11;                       /* 11 (0 pending, 1 once buffer installed/failed) */
+    uint8_t pad_12[2];                           /* 12 (alignment padding) */
+    uint32_t buffer_ptr_14;                      /* 14 (installed buffer address) */
+    uint32_t buffer_size_18;                     /* 18 (installed buffer byte length) */
+    uint32_t active_ref_count_1c;                /* 1c (saturating decrement active ref count) */
+} rome2_vfs_cipher_mem_view32;
+_Static_assert(sizeof(rome2_vfs_cipher_mem_view32) == 0x20, "cipher mem view 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_cipher_mem_view32, vtable, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_cipher_mem_view32, cipher_flags_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_cipher_mem_view32, valid_flag_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_cipher_mem_view32, ready_flag_11, 0x11);
+ROME2_LAYOUT_ASSERT(rome2_vfs_cipher_mem_view32, buffer_ptr_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_cipher_mem_view32, buffer_size_18, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_vfs_cipher_mem_view32, active_ref_count_1c, 0x1c);
+
+/* 20-byte (0x14B) delegating stream adapter (`0x11897c90` vtable; `0x112c6b10` / `0x112ad1e0`). */
+typedef struct rome2_vfs_stream_delegate_adapter32 {
+    rome2_vtable_address32 vtable;               /* 00 (0x11897c90, reset to 0x1173db9c) */
+    uint32_t inner_stream_04;                    /* 04 (wrapped inner stream pointer) */
+    uint32_t wide_path_len_08;                   /* 08 (UTF-16 string length in units) */
+    uint32_t wide_path_cap_0c;                   /* 0c (UTF-16 string capacity in units) */
+    uint32_t wide_path_buf_10;                   /* 10 (UTF-16 string data address) */
+} rome2_vfs_stream_delegate_adapter32;
+_Static_assert(sizeof(rome2_vfs_stream_delegate_adapter32) == 0x14, "stream delegate adapter 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_delegate_adapter32, vtable, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_delegate_adapter32, inner_stream_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_delegate_adapter32, wide_path_len_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_delegate_adapter32, wide_path_buf_10, 0x10);
+
+/* 16-byte (0x10B) stat64i32 output populated by `0x101153f0` and `0x101154a0`. */
+typedef struct rome2_vfs_file_stat32 {
+    uint32_t mtime_lo_00;                        /* 00 (low 32 bits of st_mtime) */
+    uint32_t mtime_hi_04;                        /* 04 (high 32 bits of st_mtime) */
+    uint32_t file_size_08;                       /* 08 (32-bit st_size) */
+    uint8_t is_readable_0c;                      /* 0c ((st_mode >> 8) & 1) */
+    uint8_t is_writable_0d;                      /* 0d ((st_mode >> 7) & 1) */
+    uint8_t is_dir_0e;                           /* 0e ((st_mode >> 14) & 1) */
+    uint8_t pad_0f;                              /* 0f (unmodified padding) */
+} rome2_vfs_file_stat32;
+_Static_assert(sizeof(rome2_vfs_file_stat32) == 0x10, "file stat 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_file_stat32, mtime_lo_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_file_stat32, file_size_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_file_stat32, is_readable_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_file_stat32, is_writable_0d, 0x0d);
+ROME2_LAYOUT_ASSERT(rome2_vfs_file_stat32, is_dir_0e, 0x0e);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif
