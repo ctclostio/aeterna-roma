@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 290)
-        self.assertEqual(result["globals"], 145)
-        self.assertEqual(result["vtables"], 29)
-        self.assertEqual(result["instruction_witnesses"], 286)
+        self.assertEqual(result["functions"], 314)
+        self.assertEqual(result["globals"], 155)
+        self.assertEqual(result["vtables"], 31)
+        self.assertEqual(result["instruction_witnesses"], 302)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -973,6 +973,109 @@ class TypeContractProvenanceTests(unittest.TestCase):
             "105cd140": (8, "thiscall", "ECX", 0, 0, ["105cd147"]),
             "112b30b0": (35, "thiscall", "ECX", 4, 4, ["112b30cb", "112b30d0"]),
             "1090b600": (27, "thiscall", "ECX", 4, 4, ["1090b618"]),
+        }
+        for addr, (size, cc, rx, stack, pop, rets) in expected_fns.items():
+            fn = by_fn[addr]
+            self.assertEqual(fn["bytes"], size)
+            self.assertEqual(fn["calling_convention"], cc)
+            self.assertEqual(fn["receiver_register"], rx)
+            self.assertEqual(fn["stack_argument_bytes"], stack)
+            self.assertEqual(fn["callee_pop_bytes"], pop)
+            self.assertEqual(fn["return_instruction_addresses"], rets)
+
+    def test_layer25_handle_lifecycle_and_pack_vtable_contracts(self):
+        evidence = self.registry["rea_layer25_evidence"]
+        self.assertEqual(evidence["closed_evidence_records"], 48)
+        self.assertEqual(evidence["new_evidence_records"], 48)
+        self.assertEqual(evidence["reused_layer24_evidence_records"], 0)
+        self.assertEqual(evidence["extra_evidence_views_count"], 9)
+        self.assertEqual(evidence["cumulative_validated_bundle_records"], 415)
+        self.assertEqual(len(evidence["records"]), 39)
+        self.assertEqual(
+            evidence["closed_snapshot_sha256"],
+            "5fd35cd44f3b6d550c7f1899ba247e844f365ae336470ea80580893c779fe404",
+        )
+        self.assertEqual(
+            evidence["validated_bundle_sha256"],
+            "5898b5658a7431b6171b1d16f11dfa9ee80bb9c385fc0816e34fe0a57bd71e1a",
+        )
+        self.assertEqual(
+            evidence["cumulative_validated_bundle_sha256"],
+            "9dd4c99ac96626498c41c5f4777742a83b40e87092f8d9879c67eef29c65c9be",
+        )
+
+        by_vt = {entry["address"]: entry for entry in self.registry["vtables"]}
+        self.assertEqual(by_vt["11741d78"]["first_slot_code_identity"], "100f3820")
+        self.assertEqual(by_vt["11897c44"]["first_slot_code_identity"], "112ad6d0")
+
+        by_global = {entry["address"]: entry for entry in self.registry["globals"]}
+        expected_globals = {
+            "1172f1fc": (4, "file", "ae099301"),
+            "1172f278": (4, "file", "ea0b9301"),
+            "1172f178": (4, "file", "34079301"),
+            "1172f1d8": (4, "file", "e0089301"),
+            "1172f19c": (4, "file", "d8079301"),
+            "1172f1b8": (4, "file", "50089301"),
+            "1172f240": (4, "file", "ec0a9301"),
+            "1172fa00": (4, "file", "60650d10"),
+            "12126348": (4, "zero_fill", "00000000"),
+            "11741d84": (15, "file", "62616420616c6c6f636174696f6e00"),
+        }
+        for addr, (width, storage, hex_le) in expected_globals.items():
+            g = by_global[addr]
+            self.assertEqual(g["width"], width)
+            self.assertEqual(g["storage"], storage)
+            self.assertEqual(g["initial_hex_le"], hex_le)
+
+        witnesses = {w["address"]: bytes.fromhex(w["hex"])
+                     for w in self.registry["instruction_witnesses"]}
+        expected_witnesses = {
+            "112afcc0": "83c110e98826e4fe",
+            "116bd8af": "568b354863121285f6740a8bceff1500fa7211ffd6e874e0fdff",
+            "11724990": "b930129e11e9b669b8ff",
+            "100d12c0": "e98bb90200",
+            "11724950": "568b35082b031285f674255783cfff8bc7f00fc14604",
+            "112acf80": "f644240401568bf1c70678928411740b6a0c56e83f663d0083c4088bc65ec20400",
+            "112daae0": "8b410883c0ff89410875088b016a01ff1033c0c3",
+            "112ad6d0": "f644240401568bf1c7069c8c8411740b6a2856e8ef5e3d0083c4088bc65ec20400",
+            "112c8c60": "83791400740b8b411c3b41207303b001c332c0c3",
+            "112c0d90": "8b44240485c0740801411c8bc1c20400c7411c000000008bc1c20400",
+            "112dc250": "8b44240485c0740829411c8bc1c20400c7411c000000008bc1c20400",
+            "112d32b0": "8d41188b4c240450e873cbe4fe8b442404c20400",
+            "100f12df": "3db7000000750eff36ff1578f17211c70600000000",
+            "10104bd8": "85c07506c7060300000033c033d25ec20400",
+            "100fcb6b": "834e040233c08b54240803c75f83d2005e59c3",
+            "112ab36e": "83c8fff00fc1460475178b068bceff10",
+        }
+        for addr, hex_bytes in expected_witnesses.items():
+            self.assertEqual(witnesses[addr], bytes.fromhex(hex_bytes))
+
+        by_fn = {entry["address"]: entry for entry in self.registry["functions"]}
+        expected_fns = {
+            "100f2230": (14, "thiscall", "ECX", 0, 0, ["100f223d"]),
+            "100f12c0": (58, "thiscall", "ECX", 12, 12, ["100f12f7"]),
+            "100f2170": (42, "thiscall", "ECX", 0, 0, ["100f2199"]),
+            "100f1080": (16, "thiscall", "ECX", 0, 0, ["100f108f"]),
+            "100f2350": (69, "thiscall", "ECX", 0, 0, ["100f2394"]),
+            "100f1a30": (24, "thiscall", "ECX", 0, 0, ["100f1a47"]),
+            "10104b60": (153, "thiscall", "ECX", 4, 4, ["10104be7", "10104bf6"]),
+            "100fcb00": (126, "thiscall", "ECX", 0, 0, ["100fcb6a", "100fcb7d"]),
+            "112ab350": (97, "thiscall", "ECX", 0, 0, ["112ab3b0"]),
+            "100f1c50": (16, "thiscall", "ECX", 0, 0, ["100f1c5f"]),
+            "100d6770": (3, "thiscall", "ECX", 0, 0, ["100d6772"]),
+            "100d6900": (3, "thiscall", "ECX", 0, 0, ["100d6902"]),
+            "100f3d00": (3, "thiscall", "ECX", 4, 4, ["100f3d00"]),
+            "100d6560": (1, "thiscall", "ECX", 0, 0, ["100d6560"]),
+            "112ad6a0": (47, "thiscall", "ECX", 4, 4, ["112ad6cc"]),
+            "101e48d0": (5, "thiscall", "ECX", 8, 8, ["101e48d2"]),
+            "11724950": (50, "cdecl", "none", 0, 0, ["11724981"]),
+            "112acf80": (33, "thiscall", "ECX", 4, 4, ["112acf9e"]),
+            "112daae0": (20, "thiscall", "ECX", 0, 0, ["112daaf3"]),
+            "112ad6d0": (33, "thiscall", "ECX", 4, 4, ["112ad6ee"]),
+            "112c8c60": (20, "thiscall", "ECX", 0, 0, ["112c8c70", "112c8c73"]),
+            "112c0d90": (28, "thiscall", "ECX", 4, 4, ["112c0d9d", "112c0da9"]),
+            "112dc250": (28, "thiscall", "ECX", 4, 4, ["112dc25d", "112dc269"]),
+            "112d32b0": (20, "thiscall", "ECX", 4, 4, ["112d32c1"]),
         }
         for addr, (size, cc, rx, stack, pop, rets) in expected_fns.items():
             fn = by_fn[addr]
