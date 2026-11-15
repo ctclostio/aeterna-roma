@@ -1327,5 +1327,121 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_7c44_8slot32, slot_000_ad6d0, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_7c44_8slot32, slot_014_d32b0, 0x14);
 ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_7c44_8slot32, slot_01c_d6560, 0x1c);
 
+/* 32-byte (0x20B) loose-file VFS entry (`0x11897710` vtable; `0x112acf40` frees `0x20`B). */
+typedef struct rome2_vfs_loose_file_entry32 {
+    rome2_vtable_address32 vtable_00;            /* 00 (0x11897710) */
+    uint32_t dir_str_04;                         /* 04 (parent directory string word) */
+    uint32_t rel_path_str_08;                    /* 08 (relative path string word) */
+    uint32_t file_handle_0c;                     /* 0c (Win32 HANDLE or -1) */
+    uint32_t aux_handle_10;                      /* 10 (secondary handle/meta or -1) */
+    uint32_t file_size_14;                       /* 14 (loose file byte length) */
+    uint32_t mtime_or_meta_18;                   /* 18 (mtime/metadata word) */
+    uint32_t backing_view_1c;                    /* 1c (cached backing stream/view ptr) */
+} rome2_vfs_loose_file_entry32;
+_Static_assert(sizeof(rome2_vfs_loose_file_entry32) == 0x20, "loose file entry 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_loose_file_entry32, vtable_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_loose_file_entry32, file_handle_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_loose_file_entry32, file_size_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_loose_file_entry32, backing_view_1c, 0x1c);
+
+/* 40-byte (0x28B) buffered parent-releasing substream (`0x11897c24` vtable). */
+typedef struct rome2_vfs_buffered_substream40_32 {
+    rome2_vtable_address32 vtable_00;            /* 00 (0x11897c24) */
+    uint32_t window_base_04;                     /* 04 (mapped parent window ptr) */
+    uint32_t window_size_08;                     /* 08 (mapped parent window bytes) */
+    uint32_t window_offset_0c;                   /* 0c (cursor within current window) */
+    uint32_t stream_pos_10;                      /* 10 (logical stream byte position) */
+    uint32_t parent_entry_14;                    /* 14 (parent stream/entry ptr) */
+    uint32_t reset_req_0_or_str_18;              /* 18 (zero-arg reset descriptor / str) */
+    uint32_t initial_pos_or_cursor_1c;           /* 1c (base/reset stream offset) */
+    uint32_t limit_or_flags_20;                  /* 20 (reserved/limit word) */
+    uint8_t eof_flag_24;                         /* 24 (1 when stream_pos >= parent_size) */
+    uint8_t error_flag_25;                       /* 25 (1 on parent/read failure) */
+    uint8_t pad_26[2];                           /* 26 (tail padding) */
+} rome2_vfs_buffered_substream40_32;
+_Static_assert(sizeof(rome2_vfs_buffered_substream40_32) == 0x28, "buffered substream 40 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_buffered_substream40_32, vtable_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_buffered_substream40_32, window_offset_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_buffered_substream40_32, stream_pos_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_buffered_substream40_32, parent_entry_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_buffered_substream40_32, eof_flag_24, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_vfs_buffered_substream40_32, error_flag_25, 0x25);
+
+/* 20-byte (0x14B) file stat output initialized by `0x1011fda0` and populated by `0x101153f0`. */
+typedef struct rome2_vfs_file_stat20_32 {
+    uint32_t file_size_low_00;                   /* 00 */
+    uint32_t file_size_high_04;                  /* 04 */
+    uint32_t mtime_low_08;                       /* 08 */
+    uint32_t mtime_high_0c;                      /* 0c */
+    uint8_t attr_flags_10;                       /* 10 */
+    uint8_t pad_11[3];                           /* 11 */
+} rome2_vfs_file_stat20_32;
+_Static_assert(sizeof(rome2_vfs_file_stat20_32) == 0x14, "file stat 20 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_file_stat20_32, file_size_low_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_file_stat20_32, mtime_low_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_file_stat20_32, attr_flags_10, 0x10);
+
+/* 80-byte (0x50B) complete 20-slot loose-file entry vtable `0x11897710`. */
+typedef struct rome2_vfs_loose_vtable_7710_20slot32 {
+    rome2_code_address32 slot_00;                /* 00 (0x112acf40) */
+    rome2_code_address32 slot_04;                /* 04 (0x112d3270) */
+    rome2_code_address32 slot_08;                /* 08 (0x10a34b40) */
+    rome2_code_address32 slot_0c;                /* 0c (0x10171400) */
+    rome2_code_address32 slot_10;                /* 10 (0x101d9800) */
+    rome2_code_address32 slot_14;                /* 14 (0x112c8b90) */
+    rome2_code_address32 slot_18;                /* 18 (0x100d6900) */
+    rome2_code_address32 slot_1c;                /* 1c (0x112d0bf0) */
+    rome2_code_address32 slot_20;                /* 20 (0x112d0d20) */
+    rome2_code_address32 slot_24;                /* 24 (0x112daa40) */
+    rome2_code_address32 slot_28;                /* 28 (0x101d97f0) */
+    rome2_code_address32 slot_2c;                /* 2c (0x112baeb0) */
+    rome2_code_address32 slot_30;                /* 30 (0x112d9880) */
+    rome2_code_address32 slot_34;                /* 34 (0x100d6560) */
+    rome2_code_address32 slot_38;                /* 38 (0x112d0bb0) */
+    rome2_code_address32 slot_3c;                /* 3c (0x112c0db0) */
+    rome2_code_address32 slot_40;                /* 40 (0x112dd2e0) */
+    rome2_code_address32 slot_44;                /* 44 (0x112d3270) */
+    rome2_code_address32 slot_48;                /* 48 (0x112bffe0) */
+    rome2_code_address32 slot_4c;                /* 4c (0x100dbc00) */
+} rome2_vfs_loose_vtable_7710_20slot32;
+_Static_assert(sizeof(rome2_vfs_loose_vtable_7710_20slot32) == 0x50, "loose vtable 7710 20slot size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_loose_vtable_7710_20slot32, slot_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_loose_vtable_7710_20slot32, slot_24, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_vfs_loose_vtable_7710_20slot32, slot_4c, 0x4c);
+
+/* 48-byte (0x30B) complete 12-slot pack/stream wrapper vtable `0x11897760`. */
+typedef struct rome2_vfs_pack_wrap_vtable_7760_12slot32 {
+    rome2_code_address32 slot_00;                /* 00 (0x112ace20) */
+    rome2_code_address32 slot_04;                /* 04 (0x112d3270) */
+    rome2_code_address32 slot_08;                /* 08 (0x112d3270) */
+    rome2_code_address32 slot_0c;                /* 0c (0x101d9800) */
+    rome2_code_address32 slot_10;                /* 10 (0x101a0430) */
+    rome2_code_address32 slot_14;                /* 14 (0x10abbf90) */
+    rome2_code_address32 slot_18;                /* 18 (0x112c9520) */
+    rome2_code_address32 slot_1c;                /* 1c (0x100e22c0) */
+    rome2_code_address32 slot_20;                /* 20 (0x100f3d00) */
+    rome2_code_address32 slot_24;                /* 24 (0x100dbc00) */
+    rome2_code_address32 slot_28;                /* 28 (0x100dbc00) */
+    rome2_code_address32 slot_2c;                /* 2c (0x112c8c80) */
+} rome2_vfs_pack_wrap_vtable_7760_12slot32;
+_Static_assert(sizeof(rome2_vfs_pack_wrap_vtable_7760_12slot32) == 0x30, "pack wrap vtable 7760 12slot size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_wrap_vtable_7760_12slot32, slot_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_wrap_vtable_7760_12slot32, slot_2c, 0x2c);
+
+/* 32-byte (0x20B) complete 8-slot parent-releasing buffered substream vtable `0x11897c24`. */
+typedef struct rome2_vfs_substream_vtable_7c24_8slot32 {
+    rome2_code_address32 slot_00;                /* 00 (0x112ad6a0) */
+    rome2_code_address32 slot_04;                /* 04 (0x112c8c40) */
+    rome2_code_address32 slot_08;                /* 08 (0x112d98c0) */
+    rome2_code_address32 slot_0c;                /* 0c (0x112c0cf0) */
+    rome2_code_address32 slot_10;                /* 10 (0x112dc1a0) */
+    rome2_code_address32 slot_14;                /* 14 (0x112d3290) */
+    rome2_code_address32 slot_18;                /* 18 (0x112d5690) */
+    rome2_code_address32 slot_1c;                /* 1c (0x112d57d0) */
+} rome2_vfs_substream_vtable_7c24_8slot32;
+_Static_assert(sizeof(rome2_vfs_substream_vtable_7c24_8slot32) == 0x20, "substream vtable 7c24 8slot size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_substream_vtable_7c24_8slot32, slot_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_substream_vtable_7c24_8slot32, slot_1c, 0x1c);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif
