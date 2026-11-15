@@ -538,6 +538,55 @@ typedef struct rome2_vfs_pack_vtable_76c0_prefix32 {
     uint32_t unobserved_020[2];                  /* 20..27 */
 } rome2_vfs_pack_vtable_76c0_prefix32;
 
+/* 28-byte (0x1cB) async stream-state ref block (`0x1189a474`, inner vtable
+ * `0x118977bc -> 0x118977e0` at `+0x0c`) allocated by `0x112d91c0`. */
+typedef struct rome2_vfs_state_ref_block28_32 {
+    rome2_vtable_address32 vtable;               /* 00 */
+    uint32_t use_count;                          /* 04 */
+    uint32_t weak_count;                         /* 08 */
+    rome2_vtable_address32 inner_vtable;         /* 0c */
+    rome2_data_address32 view_box_ptr_010;       /* 10 */
+    uint32_t size_014;                           /* 14 */
+    uint8_t eof_or_closed_018;                   /* 18 */
+    uint8_t closed_019;                          /* 19 */
+    uint8_t unobserved_01a[2];                   /* 1a..1b */
+} rome2_vfs_state_ref_block28_32;
+
+/* 28-byte (0x1cB) inner stream-state object with listener chain (`0x118977c8`
+ * -> `0x118977bc`, destroyed by `0x112acfe0`). */
+typedef struct rome2_vfs_state_inner_listener28_32 {
+    rome2_vtable_address32 vtable;               /* 00 */
+    rome2_data_address32 view_box_ptr_004;       /* 04 */
+    uint32_t size_008;                           /* 08 */
+    uint8_t eof_or_closed_00c;                   /* 0c */
+    uint8_t closed_00d;                          /* 0d */
+    uint8_t unobserved_00e[2];                   /* 0e..0f */
+    rome2_data_address32 listener_head_010;      /* 10 */
+    rome2_data_address32 listener_sentinel_014;  /* 14 */
+    uint32_t unobserved_018;                     /* 18..1b */
+} rome2_vfs_state_inner_listener28_32;
+
+/* 36-byte (0x24B) Win32 SYSTEM_INFO block at `0x11af40e0` populated lazily
+ * by `0x10115730` when `[0x11af4104] == 0`. */
+typedef struct rome2_vfs_sys_info32 {
+    uint32_t oem_id_000;                         /* 00 */
+    uint32_t page_size_004;                      /* 04 */
+    uint32_t unobserved_008[5];                  /* 08..1b */
+    uint32_t allocation_granularity_01c;         /* 1c */
+    uint32_t unobserved_020;                     /* 20..23 */
+} rome2_vfs_sys_info32;
+
+/* 28-byte (7-slot) virtual dispatch table for pack telemetry manager `0x118976a4`. */
+typedef struct rome2_vfs_pack_vtable_76a4_32 {
+    rome2_code_address32 slot_000_d36f0;         /* 00 */
+    rome2_code_address32 slot_004_e80b0;         /* 04 */
+    rome2_code_address32 slot_008_badd0;         /* 08 */
+    rome2_code_address32 slot_00c_99640;         /* 0c */
+    rome2_code_address32 slot_010_97c50;         /* 10 */
+    rome2_code_address32 slot_014_e1780;         /* 14 */
+    rome2_code_address32 slot_018_e17e0;         /* 18 */
+} rome2_vfs_pack_vtable_76a4_32;
+
 /* FUN_100e2460's handler vector: capacity precedes count. */
 typedef struct rome2_handler_vector_layout32 {
     uint32_t unobserved_00;
@@ -1102,6 +1151,26 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_pack_telemetry_mgr32, cs_054, 0x54);
 _Static_assert(sizeof(rome2_vfs_pack_vtable_76c0_prefix32) == 0x28, "pack vtable 76c0 prefix size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_76c0_prefix32, name, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_76c0_prefix32, backing_01c, 0x1c);
+_Static_assert(sizeof(rome2_vfs_state_ref_block28_32) == 0x1c, "state ref block 28 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_state_ref_block28_32, inner_vtable, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_state_ref_block28_32, view_box_ptr_010, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_state_ref_block28_32, size_014, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_state_ref_block28_32, eof_or_closed_018, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_vfs_state_ref_block28_32, closed_019, 0x19);
+_Static_assert(sizeof(rome2_vfs_state_inner_listener28_32) == 0x1c, "state inner listener 28 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_state_inner_listener28_32, view_box_ptr_004, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_state_inner_listener28_32, size_008, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_state_inner_listener28_32, eof_or_closed_00c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_state_inner_listener28_32, listener_head_010, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_state_inner_listener28_32, listener_sentinel_014, 0x14);
+_Static_assert(sizeof(rome2_vfs_sys_info32) == 0x24, "sys info 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_sys_info32, page_size_004, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_sys_info32, allocation_granularity_01c, 0x1c);
+_Static_assert(sizeof(rome2_vfs_pack_vtable_76a4_32) == 0x1c, "pack vtable 76a4 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_76a4_32, slot_000_d36f0, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_76a4_32, slot_008_badd0, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_76a4_32, slot_014_e1780, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_76a4_32, slot_018_e17e0, 0x18);
 
 #undef ROME2_LAYOUT_ASSERT
 #endif

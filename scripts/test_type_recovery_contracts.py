@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 247)
-        self.assertEqual(result["globals"], 119)
-        self.assertEqual(result["vtables"], 24)
-        self.assertEqual(result["instruction_witnesses"], 253)
+        self.assertEqual(result["functions"], 268)
+        self.assertEqual(result["globals"], 131)
+        self.assertEqual(result["vtables"], 28)
+        self.assertEqual(result["instruction_witnesses"], 270)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -722,6 +722,89 @@ class TypeContractProvenanceTests(unittest.TestCase):
             ("112acd30", "thiscall", 4),
         ]:
             self.assertEqual(fmap[addr]["calling_convention"], cc)
+            self.assertEqual(fmap[addr]["callee_pop_bytes"], pop)
+        self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
+
+    def test_state_inner_vtables_async_view_and_telemetry_contracts(self):
+        witnesses = {w["address"]: bytes.fromhex(w["hex"])
+                     for w in self.registry["instruction_witnesses"]}
+        gmap = {g["address"]: g for g in self.registry["globals"]}
+        vmap = {v["address"]: v["first_slot_code_identity"] for v in self.registry["vtables"]}
+        fmap = {f["address"]: f for f in self.registry["functions"]}
+
+        for vaddr, slot0 in [
+            ("118977c8", "112acfe0"),
+            ("118977e0", "112acd90"),
+            ("1189a464", "112afcc0"),
+            ("1189a474", "112afcd0"),
+        ]:
+            self.assertEqual(vmap[vaddr], slot0)
+
+        for addr, width in [
+            ("11af4104", 1),
+            ("11af40e0", 36),
+            ("11af426c", 4),
+            ("12031ac0", 4),
+            ("12031ac4", 4),
+            ("12031ad0", 4),
+            ("12031ad4", 4),
+            ("119f3ed8", 4),
+            ("119f3edc", 4),
+        ]:
+            self.assertEqual(gmap[addr]["storage"], "zero_fill")
+            self.assertEqual(gmap[addr]["width"], width)
+            self.assertEqual(gmap[addr]["initial_hex_le"], "00" * width)
+
+        for iat, hex_le in [
+            ("1172f2c8", "6c0d9301"),
+            ("1172f2cc", "7a0d9301"),
+            ("1172f208", "e0099301"),
+        ]:
+            self.assertEqual(gmap[iat]["storage"], "file")
+            self.assertEqual(gmap[iat]["initial_hex_le"], hex_le)
+
+        self.assertEqual(witnesses["112bade0"], bytes.fromhex("8b41048b4004c3"))
+        self.assertEqual(witnesses["112d36f0"], bytes.fromhex("8b410440c3"))
+        self.assertEqual(witnesses["100e80b0"], bytes.fromhex("8b412cc3"))
+        self.assertEqual(witnesses["10299640"], bytes.fromhex("8d413cc3"))
+        self.assertEqual(witnesses["10497c50"], bytes.fromhex("8d4150c3"))
+        self.assertEqual(witnesses["112c03d9"], bytes.fromhex("6a20"))
+        self.assertEqual(witnesses["112d91fc"], bytes.fromhex("6a1c"))
+        d9640 = witnesses["112d9640"]
+        self.assertEqual(d9640[13], 0xE8)
+        self.assertEqual(0x112D964D + 5 + struct.unpack_from("<i", d9640, 14)[0], 0x10115940)
+        d97fc = witnesses["112d97fc"]
+        self.assertEqual(d97fc[:3], bytes.fromhex("f64614"))
+        self.assertEqual(d97fc[3], 0x01)
+        fcc59 = witnesses["100fcc59"]
+        self.assertEqual(fcc59[1], 0xE8)
+        self.assertEqual(0x100FCC5A + 5 + struct.unpack_from("<i", fcc59, 2)[0], 0x10124E50)
+
+        for addr, cc, stack, pop in [
+            ("112acd90", "thiscall", 4, 4),
+            ("112ad140", "thiscall", 4, 4),
+            ("112acfe0", "thiscall", 4, 4),
+            ("112bade0", "thiscall", 0, 0),
+            ("112baf00", "thiscall", 0, 0),
+            ("112d9640", "thiscall", 0, 0),
+            ("112d97f0", "thiscall", 0, 0),
+            ("112c0300", "cdecl", 16, 0),
+            ("112d91c0", "thiscall", 24, 24),
+            ("10115730", "cdecl", 0, 0),
+            ("10115940", "cdecl", 12, 0),
+            ("100fcc50", "cdecl", 4, 0),
+            ("112d36f0", "thiscall", 0, 0),
+            ("100e80b0", "thiscall", 0, 0),
+            ("112badd0", "thiscall", 0, 0),
+            ("10299640", "thiscall", 0, 0),
+            ("10497c50", "thiscall", 0, 0),
+            ("112e1780", "thiscall", 4, 4),
+            ("112e17e0", "thiscall", 4, 4),
+            ("112e1960", "cdecl", 0, 0),
+            ("112e19b0", "cdecl", 0, 0),
+        ]:
+            self.assertEqual(fmap[addr]["calling_convention"], cc)
+            self.assertEqual(fmap[addr]["stack_argument_bytes"], stack)
             self.assertEqual(fmap[addr]["callee_pop_bytes"], pop)
         self.assertTrue(contracts.validate_contracts(self.image, self.registry)["verified"])
 
