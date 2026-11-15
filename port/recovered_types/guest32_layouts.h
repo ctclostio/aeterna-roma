@@ -1172,5 +1172,87 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_76a4_32, slot_008_badd0, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_76a4_32, slot_014_e1780, 0x14);
 ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_76a4_32, slot_018_e17e0, 0x18);
 
+/* 16-byte (0x10B) open-stream cache entry suffix passed as `ECX = block + 0x10`
+ * to `0x100f19f0` / `0x100ff8c0` in `0x112c0300` (inside `0x20B` `0x1189a464` ref-block). */
+typedef struct rome2_vfs_open_cache_entry16_32 {
+    uint32_t unobserved_000;                     /* 00 (tail of 0x1011fe30 subobject) */
+    uint32_t zero_004;                           /* 04 (zeroed by 0x100f19f0) */
+    uint32_t token_lo_008;                       /* 08 (arg2 / 0x10104b60, copied by 0x100ff8c0) */
+    uint32_t token_hi_00c;                       /* 0c (arg3 / 0x100fcb00, copied by 0x100ff8c0) */
+} rome2_vfs_open_cache_entry16_32;
+_Static_assert(sizeof(rome2_vfs_open_cache_entry16_32) == 0x10, "open cache entry 16 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_cache_entry16_32, zero_004, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_cache_entry16_32, token_lo_008, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_cache_entry16_32, token_hi_00c, 0x0c);
+
+/* 56-byte (0x38B) async view-map worker ref-block (`0x1189a454`, allocated via
+ * `0x100d12b0(0x38)` in `0x112b2f40` and stored into `[0x12032b08]`/`[0x12032b04]`). */
+typedef struct rome2_vfs_async_worker_ref_block56_32 {
+    rome2_vtable_address32 vtable;               /* 00 (0x1189a454) */
+    uint32_t strong_refs_004;                    /* 04 */
+    uint32_t weak_refs_008;                      /* 08 */
+    rome2_data_address32 queue_head_00c;         /* 0c (worker obj start: block + 0x10) */
+    rome2_data_address32 queue_tail_010;         /* 10 */
+    uint32_t zero_014;                           /* 14 */
+    uint32_t active_count_018;                   /* 18 ([worker + 0x0c]) */
+    uint32_t cs_01c[6];                          /* 1c..33 (24B CRITICAL_SECTION at worker+0x10) */
+    uint32_t semaphore_034;                      /* 34 (4B semaphore at worker+0x28 via 0x100f12c0) */
+} rome2_vfs_async_worker_ref_block56_32;
+_Static_assert(sizeof(rome2_vfs_async_worker_ref_block56_32) == 0x38, "async worker ref block 56 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_async_worker_ref_block56_32, strong_refs_004, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_async_worker_ref_block56_32, queue_head_00c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_async_worker_ref_block56_32, active_count_018, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_vfs_async_worker_ref_block56_32, cs_01c, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_async_worker_ref_block56_32, semaphore_034, 0x34);
+
+/* 44-byte (0x2cB) complete 11-slot stream vtable shared by `0x11897790` and `0x118977ec`. */
+typedef struct rome2_vfs_stream_vtable_11slot32 {
+    rome2_code_address32 scalar_deleting_dtor_000; /* 00: 0x112ad0f0 / 0x112acde0 */
+    rome2_code_address32 open_checked_004;         /* 04: 0x112d8e20 / 0x112d8d30 */
+    rome2_code_address32 slot_008;                 /* 08: 0x10190580 */
+    rome2_code_address32 slot_00c;                 /* 0c: 0x100e22c0 */
+    rome2_code_address32 slot_010;                 /* 10: 0x112dab00 / 0x112da9f0 */
+    rome2_code_address32 slot_014;                 /* 14: 0x112c8bc0 / 0x112c8b80 */
+    rome2_code_address32 slot_018;                 /* 18: 0x10369160 / 0x112d9860 */
+    rome2_code_address32 slot_01c;                 /* 1c: 0x112baef0 / 0x112badf0 */
+    rome2_code_address32 get_field_020;            /* 20: 0x1018ad20 / 0x101a0430 */
+    rome2_code_address32 has_state_024;            /* 24: 0x108b2600 / 0x105cd140 */
+    rome2_code_address32 state_u64_ne_028;         /* 28: 0x112b3190 / 0x112b30b0 */
+} rome2_vfs_stream_vtable_11slot32;
+_Static_assert(sizeof(rome2_vfs_stream_vtable_11slot32) == 0x2c, "stream vtable 11slot size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_vtable_11slot32, get_field_020, 0x20);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_vtable_11slot32, has_state_024, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_vtable_11slot32, state_u64_ne_028, 0x28);
+
+/* 80-byte (0x50B) complete 20-slot pack-entry vtable `0x118976c0` (+0x00..+0x4c). */
+typedef struct rome2_vfs_pack_vtable_76c0_full32 {
+    rome2_code_address32 slot_000_ad1b0;           /* 00 */
+    rome2_code_address32 slot_004_d3270;           /* 04 */
+    rome2_code_address32 slot_008_e0d80;           /* 08 */
+    rome2_code_address32 slot_00c_71400;           /* 0c */
+    rome2_code_address32 slot_010_01a40;           /* 10 */
+    rome2_code_address32 slot_014_c8be0;           /* 14 */
+    rome2_code_address32 slot_018_c9540;           /* 18 */
+    rome2_code_address32 slot_01c_d0c90;           /* 1c */
+    rome2_code_address32 slot_020_d0d80;           /* 20 */
+    rome2_code_address32 slot_024_dab70;           /* 24 */
+    rome2_code_address32 slot_028_69610;           /* 28 */
+    rome2_code_address32 slot_02c_baf20;           /* 2c */
+    rome2_code_address32 slot_030_d9890;           /* 30 */
+    rome2_code_address32 slot_034_d2900;           /* 34 */
+    rome2_code_address32 slot_038_d0bd0;           /* 38 */
+    rome2_code_address32 slot_03c_c0dd0;           /* 3c */
+    rome2_code_address32 slot_040_dd2f0;           /* 40 */
+    rome2_code_address32 slot_044_e0d80;           /* 44 */
+    rome2_code_address32 slot_048_c0090;           /* 48 */
+    rome2_code_address32 slot_04c_c0c40;           /* 4c */
+} rome2_vfs_pack_vtable_76c0_full32;
+_Static_assert(sizeof(rome2_vfs_pack_vtable_76c0_full32) == 0x50, "pack vtable 76c0 full size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_76c0_full32, slot_000_ad1b0, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_76c0_full32, slot_02c_baf20, 0x2c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_76c0_full32, slot_030_d9890, 0x30);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_76c0_full32, slot_048_c0090, 0x48);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_vtable_76c0_full32, slot_04c_c0c40, 0x4c);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

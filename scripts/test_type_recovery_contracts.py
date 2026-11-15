@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 268)
-        self.assertEqual(result["globals"], 131)
-        self.assertEqual(result["vtables"], 28)
-        self.assertEqual(result["instruction_witnesses"], 270)
+        self.assertEqual(result["functions"], 290)
+        self.assertEqual(result["globals"], 145)
+        self.assertEqual(result["vtables"], 29)
+        self.assertEqual(result["instruction_witnesses"], 286)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -885,6 +885,103 @@ class TypeContractProvenanceTests(unittest.TestCase):
         registry["vtables"][0]["first_slot_code_identity"] = "00000000"
         with self.assertRaisesRegex(ValueError, "vtable identity"):
             contracts.validate_contracts(self.image, registry)
+
+    def test_stream_completion_cache_crt_math_and_vtables(self):
+        evidence = self.registry["rea_layer24_evidence"]
+        self.assertEqual(evidence["closed_evidence_records"], 367)
+        self.assertEqual(evidence["new_evidence_records"], 31)
+        self.assertEqual(evidence["reused_layer23_evidence_records"], 336)
+        self.assertEqual(evidence["reused_prior_resolve_records"], 3)
+        self.assertEqual(evidence["extra_evidence_views_count"], 3)
+        self.assertEqual(len(evidence["records"]), 31)
+        self.assertEqual(
+            evidence["closed_snapshot_sha256"],
+            "bea46f1d05869d5e02e02e21df781e1c9a62a4e904aaf1849924f797a32c62db",
+        )
+        self.assertEqual(
+            evidence["validated_bundle_sha256"],
+            "475ab7199d42e3cb2a866a007302f7868344303e3bfda6f975c2e19ae2040a0e",
+        )
+
+        by_vt = {entry["address"]: entry for entry in self.registry["vtables"]}
+        self.assertEqual(by_vt["1189a414"]["first_slot_code_identity"], "112afcd0")
+
+        by_global = {entry["address"]: entry for entry in self.registry["globals"]}
+        expected_globals = {
+            "12032b38": (4, "zero_fill", "00000000"),
+            "119e1230": (28, "file", "34129e11000000000000000000000000000000000000000000000000"),
+            "12032b0c": (4, "zero_fill", "00000000"),
+            "12032b04": (4, "zero_fill", "00000000"),
+            "12032b08": (4, "zero_fill", "00000000"),
+            "119e1010": (4, "file", "ffffff7f"),
+            "1172f1ec": (4, "file", "3a099301"),
+            "119f3eb4": (4, "zero_fill", "00000000"),
+            "119f3f68": (4, "zero_fill", "00000000"),
+            "11af4288": (4, "zero_fill", "00000000"),
+            "11af4284": (4, "zero_fill", "00000000"),
+            "11af4285": (1, "zero_fill", "00"),
+            "119f3f57": (1, "zero_fill", "00"),
+            "11934484": (4, "file", "ca000000"),
+        }
+        for addr, (width, storage, initial_hex) in expected_globals.items():
+            self.assertEqual(by_global[addr]["width"], width)
+            self.assertEqual(by_global[addr]["storage"], storage)
+            self.assertEqual(by_global[addr]["initial_hex_le"], initial_hex)
+
+        by_iw = {w["address"]: w["hex"] for w in self.registry["instruction_witnesses"]}
+        for addr in (
+            "112dd2f0",
+            "112c0090",
+            "112c0c40",
+            "112b3190",
+            "112b30b0",
+            "1090b600",
+            "100fa6f1",
+            "100fd020",
+            "100f19fb",
+            "100ff8c0",
+            "112b328c",
+            "112b2fa4",
+            "100fccd9",
+            "11684210",
+            "1168427a",
+            "108b2600",
+        ):
+            self.assertIn(addr, by_iw)
+
+        by_fn = {entry["address"]: entry for entry in self.registry["functions"]}
+        expected_fns = {
+            "100fa6d0": (88, "cdecl", "none", 16, 0, ["100fa727"]),
+            "100fcfd0": (158, "cdecl", "none", 16, 0, ["100fd06d"]),
+            "100f19f0": (57, "thiscall", "ECX", 12, 12, ["100f1a26"]),
+            "100ff8c0": (18, "thiscall", "ECX", 4, 4, ["100ff8cf"]),
+            "112b3270": (81, "cdecl", "none", 0, 0, ["112b3291"]),
+            "112b2f40": (242, "cdecl", "none", 4, 0, ["112b2f8c"]),
+            "100fcc80": (380, "cdecl", "none", 8, 0, ["100fccfe"]),
+            "11684200": (52, "stdcall", "none", 16, 16, ["11684216", "11684231"]),
+            "11684270": (104, "stdcall", "none", 16, 16, ["116842d5"]),
+            "112d9890": (16, "thiscall", "ECX", 0, 0, ["112d989f"]),
+            "112d2900": (5, "thiscall", "ECX", 0, 0, ["112d2904"]),
+            "112d0bd0": (24, "thiscall", "ECX", 0, 0, ["112d0be4", "112d0be7"]),
+            "112dd2f0": (15, "thiscall", "ECX", 0, 0, ["112dd2fe"]),
+            "112c0090": (24, "thiscall", "ECX", 4, 4, ["112c00a5"]),
+            "112c0c40": (28, "thiscall", "ECX", 0, 0, ["112c0c5b"]),
+            "1018ad20": (4, "thiscall", "ECX", 0, 0, ["1018ad23"]),
+            "108b2600": (8, "thiscall", "ECX", 0, 0, ["108b2607"]),
+            "112b3190": (35, "thiscall", "ECX", 4, 4, ["112b31ab", "112b31b0"]),
+            "101a0430": (4, "thiscall", "ECX", 0, 0, ["101a0433"]),
+            "105cd140": (8, "thiscall", "ECX", 0, 0, ["105cd147"]),
+            "112b30b0": (35, "thiscall", "ECX", 4, 4, ["112b30cb", "112b30d0"]),
+            "1090b600": (27, "thiscall", "ECX", 4, 4, ["1090b618"]),
+        }
+        for addr, (size, cc, rx, stack, pop, rets) in expected_fns.items():
+            fn = by_fn[addr]
+            self.assertEqual(fn["bytes"], size)
+            self.assertEqual(fn["calling_convention"], cc)
+            self.assertEqual(fn["receiver_register"], rx)
+            self.assertEqual(fn["stack_argument_bytes"], stack)
+            self.assertEqual(fn["callee_pop_bytes"], pop)
+            self.assertEqual(fn["return_instruction_addresses"], rets)
 
     def test_dropped_registry_category_rejected(self):
         registry = copy.deepcopy(self.registry)
