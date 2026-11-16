@@ -2138,5 +2138,57 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_channel_slot_hdr24_32, port_or_tag_04, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_channel_slot_hdr24_32, sock_fd_10, 0x10);
 ROME2_LAYOUT_ASSERT(rome2_vfs_channel_slot_hdr24_32, active_flag_14, 0x14);
 
+typedef struct rome2_vfs_wstringbuf60_32 {
+    uint32_t vftable_00;                         /* 00 (0x1173dadc base) */
+    uint32_t g_first_val_04;                     /* 04 */
+    uint32_t p_first_val_08;                     /* 08 */
+    uint32_t g_first_ptr_0c;                     /* 0c (&g_first_val_04) */
+    uint32_t p_first_ptr_10;                     /* 10 (&p_first_val_08) */
+    uint32_t g_next_val_14;                      /* 14 */
+    uint32_t p_next_val_18;                      /* 18 */
+    uint32_t g_next_ptr_1c;                      /* 1c (&g_next_val_14) */
+    uint32_t p_next_ptr_20;                      /* 20 (&p_next_val_18) */
+    uint32_t g_count_val_24;                     /* 24 */
+    uint32_t p_count_val_28;                     /* 28 */
+    uint32_t g_count_ptr_2c;                     /* 2c (&g_count_val_24) */
+    uint32_t p_count_ptr_30;                     /* 30 (&p_count_val_28) */
+    uint32_t seek_high_34;                       /* 34 */
+    uint32_t mystate_38;                         /* 38 (_Allocated=1, _Nocreate=2, _Noread=4, _Append=8, _Atend=0x10) */
+} rome2_vfs_wstringbuf60_32;
+_Static_assert(sizeof(rome2_vfs_wstringbuf60_32) == 0x3c, "wstringbuf60 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_wstringbuf60_32, g_first_ptr_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_wstringbuf60_32, p_first_ptr_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_wstringbuf60_32, g_next_ptr_1c, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_wstringbuf60_32, p_next_ptr_20, 0x20);
+ROME2_LAYOUT_ASSERT(rome2_vfs_wstringbuf60_32, g_count_ptr_2c, 0x2c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_wstringbuf60_32, p_count_ptr_30, 0x30);
+ROME2_LAYOUT_ASSERT(rome2_vfs_wstringbuf60_32, seek_high_34, 0x34);
+ROME2_LAYOUT_ASSERT(rome2_vfs_wstringbuf60_32, mystate_38, 0x38);
+
+typedef struct rome2_vfs_channel_queue24_32 {
+    uint32_t list_ptr_or_self_00;                /* 00 (&head_04) */
+    uint32_t head_04;                            /* 04 */
+    uint32_t tail_08;                            /* 08 */
+    uint32_t owner_or_arg_0c;                    /* 0c */
+    uint32_t count_or_size_10;                   /* 10 */
+    uint32_t payload_or_flags_14;                /* 14 */
+} rome2_vfs_channel_queue24_32;
+_Static_assert(sizeof(rome2_vfs_channel_queue24_32) == 0x18, "channel queue24 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_channel_queue24_32, head_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_channel_queue24_32, owner_or_arg_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_channel_queue24_32, count_or_size_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_channel_queue24_32, payload_or_flags_14, 0x14);
+
+typedef struct rome2_vfs_sock_endpoint12_32 {
+    uint32_t flags_or_tag_00;                    /* 00 */
+    uint16_t sin_family_04;                      /* 04 (AF_INET = 2) */
+    uint16_t sin_port_be_06;                     /* 06 (htons(port)) */
+    uint32_t sin_addr_08;                        /* 08 */
+} rome2_vfs_sock_endpoint12_32;
+_Static_assert(sizeof(rome2_vfs_sock_endpoint12_32) == 0x0c, "sock endpoint12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_sock_endpoint12_32, sin_family_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_sock_endpoint12_32, sin_port_be_06, 0x06);
+ROME2_LAYOUT_ASSERT(rome2_vfs_sock_endpoint12_32, sin_addr_08, 0x08);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

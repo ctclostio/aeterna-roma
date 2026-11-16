@@ -1037,3 +1037,33 @@ callees.
   Ghidra project or canonical exports; **25** newly uncovered Layer 38 clean
   callees plus non-clean/multi-part callees and live runtime execution remain
   open.
+
+### Layer 38 `std::basic_stringbuf<wchar_t>`, `%l`/`float32` formatters, socket/Steam helpers, `dlmalloc` top/segments & SWAR bit-range codec (2026-11-16)
+- Added 3 fixed-width guest32 wstringbuf/queue/endpoint layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  and bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_engine_codec_ops.h](port/recovered_types/vfs_fs_engine_codec_ops.h),
+  [port/recovered_types/vfs_fs_engine_codec_ops.c](port/recovered_types/vfs_fs_engine_codec_ops.c),
+  and [port/recovered_types/test_vfs_fs_engine_codec_ops.c](port/recovered_types/test_vfs_fs_engine_codec_ops.c)
+  (**55** checks) closing all **25** newly uncovered clean single-part RET-bearing
+  direct callees across the 669-function graph (`0x100d26e0`/`0x113490a0`/
+  `0x11349180`/`0x1134a060` `basic_stringbuf<wchar_t>`, `0x100de0d0` sentinel VA,
+  `0x100f2af0`/`0x100f2b00` UTF-16 indexers, `0x100de340`/`0x101056d0`/
+  `0x10105850`/`0x100f5860` `%l` & `float32` formatting, `0x10114f00`/
+  `0x10114f60`/`0x10fd7df0`/`0x10fe4780` endpoint/`FIONBIO`/`MSG_PEEK`/Steam P2P
+  close, `0x1011fcf0`/`0x101236f0`/`0x10123dd0`/`0x101e3c50`/`0x10f5f5c0`/
+  `0x10fd6850` freelist4/`dlmalloc` `init_top`/`segment_holding`/list/queue/
+  adapter, `0x1055bff0` SSE stream reader, `0x10f71eb0` SWAR ranged bit encoder,
+  and `0x10f78290`/`0x10f80f40` channel slot reset/search).
+- Advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  to **694 functions**, **335 globals**, **40 vtables**, and **621 instruction
+  witnesses**, backed by **32** retained Layer 38 REA operation records (**624**
+  closed Layer 38 records, **991** cumulative validated bundle records, zero
+  non-proc or resource-constrained slots).
+- Verified **95/95** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **73** contract tests on Python 3.14 and 3.15, and **901** clean-public Python
+  tests (**301** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; **24** Layer 39 engine/channel/allocator/
+  format callees (`16` single-part + `8` multi-part), CRT runtime helpers, and
+  live runtime execution remain open.
