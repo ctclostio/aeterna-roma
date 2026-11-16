@@ -1652,5 +1652,71 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_fs_secondary_hdr32, secondary_vtable_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_fs_secondary_hdr32, active_ops_04, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_fs_secondary_hdr32, lock_cs_08, 0x08);
 
+/* Layer 29: Active FileSystem primary object (0x11897870), mount vectors, and archive hash headers. */
+
+/* 40-byte (0x28B) active FileSystem object allocated by `0x112c00b0` (`0x112a8ff0` ctor / `0x112ad070` dtor). */
+typedef struct rome2_vfs_active_fs_obj32 {
+    uint32_t primary_vtable_00;                  /* 00 (0x11897870) */
+    uint32_t secondary_vtable_04;                /* 04 (0x118978e8) */
+    uint32_t active_ops_08;                      /* 08 (re-entrancy / lock hold counter) */
+    uint8_t lock_cs_0c[24];                      /* 0c (Win32 CRITICAL_SECTION initialized at 0x112a9012) */
+    uint8_t mode_flag_24;                        /* 24 (returned by 0x100ead40; set in 0x112c0118) */
+    uint8_t pad_25[3];                           /* 25..27 */
+} rome2_vfs_active_fs_obj32;
+_Static_assert(sizeof(rome2_vfs_active_fs_obj32) == 0x28, "active fs obj 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_active_fs_obj32, primary_vtable_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_active_fs_obj32, secondary_vtable_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_active_fs_obj32, active_ops_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_active_fs_obj32, lock_cs_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_active_fs_obj32, mode_flag_24, 0x24);
+
+/* 12-byte mount-entry vector header (`0x119e11b8` active, `0x119e11c4` pending) manipulated by `0x100eb330`. */
+typedef struct rome2_vfs_mount_vec_header12_32 {
+    uint32_t capacity_00;                        /* 00 (initial 0x10; doubles on push_back growth) */
+    uint32_t count_04;                           /* 04 (element count) */
+    uint32_t data_ptr_08;                        /* 08 (`0xc0`-byte initial allocation for 12B elements) */
+} rome2_vfs_mount_vec_header12_32;
+_Static_assert(sizeof(rome2_vfs_mount_vec_header12_32) == 0x0c, "mount vec header12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_mount_vec_header12_32, capacity_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_mount_vec_header12_32, count_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_mount_vec_header12_32, data_ptr_08, 0x08);
+
+/* 20-byte root archive descriptor (`0x119e11e8..0x119e11fb`) queried by `0x112d4c50` and `0x112e36f0`. */
+typedef struct rome2_vfs_root_archive_header20_32 {
+    uint32_t table_ptr_00;                       /* 00 (0x119e11e8 -> 0x180B table via 0x10102f50(0x180,4,0)) */
+    uint32_t count_04;                           /* 04 (0x119e11ec, reset to 0) */
+    uint32_t capacity_08;                        /* 08 (0x119e11f0, reset to 0x20) */
+    uint32_t aux_0c;                             /* 0c (0x119e11f4, reset to 0) */
+    uint32_t extra_10;                           /* 10 (0x119e11f8, reset to 0) */
+} rome2_vfs_root_archive_header20_32;
+_Static_assert(sizeof(rome2_vfs_root_archive_header20_32) == 0x14, "root archive header20 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_root_archive_header20_32, table_ptr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_root_archive_header20_32, count_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_root_archive_header20_32, capacity_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_root_archive_header20_32, aux_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_root_archive_header20_32, extra_10, 0x10);
+
+/* 12-byte loose/mod hash header (`0x119e11d0`) initialized by `0x112bbca0` (`0x3cb` * 4B = `0xf2c` bytes). */
+typedef struct rome2_vfs_loose_table12_32 {
+    uint32_t bucket_count_00;                    /* 00 (initial 0x3cb) */
+    uint32_t count_04;                           /* 04 (initial 0) */
+    uint32_t table_ptr_08;                       /* 08 (0xf2c-byte allocation at 0x119e11d8) */
+} rome2_vfs_loose_table12_32;
+_Static_assert(sizeof(rome2_vfs_loose_table12_32) == 0x0c, "loose table12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_loose_table12_32, bucket_count_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_loose_table12_32, count_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_loose_table12_32, table_ptr_08, 0x08);
+
+/* 16-byte hash-map header (`0x12032920..0x1203292f`) initialized by `0x112e3c60` (`0x23b1b` * 8B slots). */
+typedef struct rome2_vfs_large_hash16_32 {
+    uint32_t table_ptr_00;                       /* 00 (0x12032920 -> 0x23b1b * 8B allocation) */
+    uint32_t bucket_count_04;                    /* 04 (0x12032924 = 0x23b1b) */
+    uint32_t default_pair_08[2];                 /* 08..0f (0x12032928 default 8B entry copied per bucket) */
+} rome2_vfs_large_hash16_32;
+_Static_assert(sizeof(rome2_vfs_large_hash16_32) == 0x10, "large hash16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_large_hash16_32, table_ptr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_large_hash16_32, bucket_count_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_large_hash16_32, default_pair_08, 0x08);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

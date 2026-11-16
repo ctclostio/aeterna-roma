@@ -770,3 +770,39 @@ validate bounded C17 helpers.
   tests (**291** skipped) on Python 3.14 and 3.15 without touching the shared
   Ghidra project or canonical exports; active primary FileSystem interface
   `0x11897870` (`28` slots) and live runtime threading remain open.
+
+### Layer 29 — completed, 2026-11-15
+
+Target: active VFS FileSystem primary interface (`0x11897870`, all `30/30` slots)
+and directly coupled TLS singleton / vector helpers.
+
+- Extended the closed Layer 28 REA session (`216` reused records) to `279`
+  validated session records (`63` new: `12` direct `analyze_function`
+  procedures, `20` `invalid_request` targets backed by `20`
+  `resolve_containing_procedure` + `20` `read_bytes(length=320)`, and `11`
+  extra `read_bytes` records) and merged canonically via `import_evidence_bundle`
+  and `rea evidence-export` into the **646-record** cumulative validated bundle
+  retained outside Git.
+- Pinned **32** functions, **17** globals, **1** vtable (`0x11897870` ->
+  `0x112beac0`), and **23** instruction witnesses in
+  [contracts.json](port/recovered_types/contracts.json) under
+  `rea_layer29_evidence`, raising totals to **436** functions, **203** globals,
+  **40** vtables, and **383** instruction witnesses; closed all `30/30` slots
+  of `0x11897870` (`26` new RET-bearing slots, `2` prior contracts
+  `0x100f3d00`/`0x112c9550`, and `2` tail-jump thunks `0x112beac0`/`0x112b0870`)
+  plus `6` TLS singleton / vector helpers (`0x112beb10`, `0x100eb330`,
+  `0x112d30c0`, `0x112bcf00`, `0x112bbca0`, `0x112e3c60`).
+- Locked `5` fixed-width `guest32` structs in
+  [guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  (`rome2_vfs_active_fs_obj32` `40`B, `rome2_vfs_mount_vec_header12_32` `12`B,
+  `rome2_vfs_root_archive_header20_32` `20`B, `rome2_vfs_loose_table12_32` `12`B,
+  `rome2_vfs_large_hash16_32` `16`B) and added checked C17 helpers and `65`
+  checks in [vfs_fs_primary_ops.h](port/recovered_types/vfs_fs_primary_ops.h),
+  [vfs_fs_primary_ops.c](port/recovered_types/vfs_fs_primary_ops.c), and
+  [test_vfs_fs_primary_ops.c](port/recovered_types/test_vfs_fs_primary_ops.c).
+- Verified **86/86** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **64** contract tests on Python 3.14 and 3.15, and **892** clean-public Python
+  tests (**292** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; remaining sweep/cleanup helpers
+  (`0x112d5cc0`, `0x112e1a00`, `0x112d4de0`, `0x112cfc10`, `0x112da500`) and
+  live runtime threading remain open.

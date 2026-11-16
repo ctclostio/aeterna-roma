@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 404)
-        self.assertEqual(result["globals"], 186)
-        self.assertEqual(result["vtables"], 39)
-        self.assertEqual(result["instruction_witnesses"], 360)
+        self.assertEqual(result["functions"], 436)
+        self.assertEqual(result["globals"], 203)
+        self.assertEqual(result["vtables"], 40)
+        self.assertEqual(result["instruction_witnesses"], 383)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -812,7 +812,11 @@ class TypeContractProvenanceTests(unittest.TestCase):
         helpers = {f["address"]: f for f in self.registry["functions"] if "body_ranges" in f}
         self.assertEqual(
             set(helpers),
-            {"112a2910", "112a8ff0", "112b5730", "112baf90", "112bbd10", "112d4cc0", "112d4de0", "112e32b0", "112e3db0"},
+            {
+                "112a2910", "112a8ff0", "112b5730", "112baf90", "112bbd10",
+                "112cf920", "112d0720", "112d4cc0", "112d4de0", "112e32b0",
+                "112e3c60", "112e3db0",
+            },
         )
         base, sections = contracts.parse_pe32(self.image)
         expected_gaps = {
@@ -821,9 +825,12 @@ class TypeContractProvenanceTests(unittest.TestCase):
             "112b5730": [10, 21, 30],
             "112baf90": [3],
             "112bbd10": [3],
+            "112cf920": [18],
+            "112d0720": [10],
             "112d4cc0": [4],
             "112d4de0": [7],
             "112e32b0": [4],
+            "112e3c60": [3],
             "112e3db0": [13],
         }
         for address, gaps in expected_gaps.items():
@@ -1491,6 +1498,141 @@ class TypeContractProvenanceTests(unittest.TestCase):
             self.assertEqual(fn["stack_argument_bytes"], stack)
             self.assertEqual(fn["callee_pop_bytes"], pop)
             self.assertEqual(fn["return_instruction_addresses"], rets)
+
+    def test_layer29_active_fs_primary_interface_contracts(self):
+        ev = self.registry["rea_layer29_evidence"]
+        self.assertEqual(ev["closed_evidence_records"], 279)
+        self.assertEqual(ev["new_evidence_records"], 63)
+        self.assertEqual(ev["retained_operation_envelopes"], 63)
+        self.assertEqual(ev["reused_layer28_evidence_records"], 216)
+        self.assertEqual(ev["extra_evidence_views_count"], 0)
+        self.assertEqual(ev["cumulative_validated_bundle_records"], 646)
+        self.assertEqual(len(ev["records"]), 63)
+        self.assertEqual(len(ev["non_proc_slots"]), 20)
+        self.assertEqual(ev["resource_constrained_slots"], [])
+
+        vtables = {v["address"]: v["first_slot_code_identity"]
+                   for v in self.registry["vtables"]}
+        self.assertEqual(vtables["11897870"], "112beac0")
+
+        by_global = {entry["address"]: entry for entry in self.registry["globals"]}
+        expected_globals = {
+            "11897870": (
+                120,
+                "file",
+                "c0ea2b11f0362e1120072d1140f02d11003d0f1020f92c1130322b1170082b11"
+                "b0142e1150bb2b1110db2b1100402e1110bb2b11f05b2d1190ba2b11a0ba2b11"
+                "004f2d11d04b2d1140ad0e1070f22d1160342e11d02c2e11b08b2c11d0dd2c11"
+                "50952c11a0952c1130942c1150e32d11b0002c1170d02a11",
+            ),
+            "119e0fe8": (4, "file", "01000080"),
+            "119e11b8": (12, "file", "100000000000000000000000"),
+            "119e11c4": (12, "file", "100000000000000000000000"),
+            "119e11d0": (12, "file", "cb0300000000000000000000"),
+            "119e11ec": (16, "file", "00000000200000000000000000000000"),
+            "12031ad8": (4, "zero_fill", "00000000"),
+            "12031ae0": (4, "zero_fill", "00000000"),
+            "12031ae7": (1, "zero_fill", "00"),
+            "12032080": (1, "zero_fill", "00"),
+            "12032435": (1, "zero_fill", "00"),
+            "12032438": (12, "zero_fill", "000000000000000000000000"),
+            "1203291c": (4, "zero_fill", "00000000"),
+            "12032920": (16, "zero_fill", "00000000000000000000000000000000"),
+            "12032930": (4, "zero_fill", "00000000"),
+            "120329b0": (4, "zero_fill", "00000000"),
+            "120329dc": (4, "zero_fill", "00000000"),
+        }
+        for addr, (width, storage, hex_le) in expected_globals.items():
+            g = by_global[addr]
+            self.assertEqual(g["width"], width)
+            self.assertEqual(g["storage"], storage)
+            self.assertEqual(g["initial_hex_le"], hex_le)
+
+        witnesses = {w["address"]: bytes.fromhex(w["hex"])
+                     for w in self.registry["instruction_witnesses"]}
+        expected_witnesses = {
+            "112beac0": "e84b0000008bc8e964c8e2fe",
+            "112b0870": "e94b280200",
+            "112bbc57": "68203f2e11",
+            "112df043": "e87840ffff",
+            "112ad073": "c70670788911",
+            "112ad079": "c74604e8788911",
+            "112ad088": "c705101f031200000000",
+            "112e39eb": "a3e8119e11",
+            "112e3468": "ff5074",
+            "112e346b": "c705101f031200000000",
+            "112c00ff": "e8ec8efeff",
+            "112c0108": "a3101f0312",
+            "112c0118": "884124",
+            "112c01cb": "ff05e80f9e11",
+            "112c94cf": "a3e80f9e11",
+            "112d4c1e": "f0ff4604",
+            "112e14be": "e83dbafdff",
+            "112beb4a": "68c0000000",
+            "112beb54": "68b04a7211",
+            "112d3104": "68e04b7211",
+            "112bbce4": "68104a7211",
+            "112e3cf9": "68c04e7211",
+            "112e3ca1": "c705242903121b3b0200",
+        }
+        for addr, hex_bytes in expected_witnesses.items():
+            self.assertEqual(witnesses[addr], bytes.fromhex(hex_bytes))
+
+        by_fn = {entry["address"]: entry for entry in self.registry["functions"]}
+        expected_fns = {
+            "112e36f0": (882, "thiscall", "ECX", 4, 4, ["112e3993"]),
+            "112d0720": (1151, "thiscall", "ECX", 0, 0, ["112d0a7c"]),
+            "112df040": (246, "thiscall", "ECX", 4, 4, ["112df133"]),
+            "112cf920": (723, "thiscall", "ECX", 0, 0, ["112cfad9"]),
+            "112b3230": (56, "thiscall", "ECX", 4, 4, ["112b3243", "112b3265"]),
+            "112e14b0": (80, "thiscall", "ECX", 4, 4, ["112e14c6", "112e14fd"]),
+            "112bbb50": (326, "thiscall", "ECX", 20, 20, ["112bbc93"]),
+            "112bdb10": (239, "thiscall", "ECX", 20, 20, ["112bdbfc"]),
+            "112e4000": (77, "thiscall", "ECX", 8, 8, ["112e4038", "112e404a"]),
+            "112bbb10": (63, "thiscall", "ECX", 8, 8, ["112bbb27", "112bbb4c"]),
+            "112d5bf0": (99, "thiscall", "ECX", 8, 8, ["112d5c13", "112d5c50"]),
+            "112bba90": (9, "thiscall", "ECX", 0, 0, ["112bba98"]),
+            "112bbaa0": (68, "thiscall", "ECX", 4, 4, ["112bbadb", "112bbae1"]),
+            "112d4f00": (37, "thiscall", "ECX", 4, 4, ["112d4f1c", "112d4f22"]),
+            "112d4bd0": (119, "thiscall", "ECX", 8, 8, ["112d4c2f", "112d4c44"]),
+            "100ead40": (4, "thiscall", "ECX", 0, 0, ["100ead43"]),
+            "112df270": (24, "thiscall", "ECX", 4, 4, ["112df285"]),
+            "112e3460": (22, "thiscall", "ECX", 0, 0, ["112e3475"]),
+            "112e2cd0": (12, "thiscall", "ECX", 4, 4, ["112e2cd9"]),
+            "112c8bb0": (6, "thiscall", "ECX", 0, 0, ["112c8bb5"]),
+            "112cddd0": (6, "thiscall", "ECX", 0, 0, ["112cddd5"]),
+            "112c95a0": (635, "thiscall", "ECX", 8, 8, ["112c9600", "112c9715", "112c97bc", "112c9818"]),
+            "112c9430": (225, "thiscall", "ECX", 4, 4, ["112c9442", "112c94e2", "112c94fa", "112c950e"]),
+            "112de350": (12, "thiscall", "ECX", 4, 4, ["112de359"]),
+            "112c00b0": (313, "thiscall", "ECX", 8, 8, ["112c014c", "112c01a1", "112c01e6"]),
+            "112ad070": (65, "thiscall", "ECX", 4, 4, ["112ad0ae"]),
+            "112beb10": (98, "cdecl", "none", 0, 0, ["112beb31"]),
+            "100eb330": (290, "thiscall", "ECX", 4, 4, ["100eb352", "100eb383", "100eb44f"]),
+            "112d30c0": (98, "cdecl", "none", 0, 0, ["112d30e1"]),
+            "112bcf00": (81, "cdecl", "none", 0, 0, ["112bcf21"]),
+            "112bbca0": (98, "cdecl", "none", 0, 0, ["112bbcc1"]),
+            "112e3c60": (180, "cdecl", "none", 0, 0, ["112e3c81"]),
+        }
+        for addr, (size, cc, rx, stack, pop, rets) in expected_fns.items():
+            fn = by_fn[addr]
+            self.assertEqual(fn["bytes"], size)
+            self.assertEqual(fn["calling_convention"], cc)
+            self.assertEqual(fn["receiver_register"], rx)
+            self.assertEqual(fn["stack_argument_bytes"], stack)
+            self.assertEqual(fn["callee_pop_bytes"], pop)
+            self.assertEqual(fn["return_instruction_addresses"], rets)
+        self.assertEqual(by_fn["112d0720"]["body_ranges"], [
+            {"start": "112d0720", "end": "112d0a7d"},
+            {"start": "112d0a88", "end": "112d0ba8"},
+        ])
+        self.assertEqual(by_fn["112cf920"]["body_ranges"], [
+            {"start": "112cf920", "end": "112cfada"},
+            {"start": "112cfaed", "end": "112cfc04"},
+        ])
+        self.assertEqual(by_fn["112e3c60"]["body_ranges"], [
+            {"start": "112e3c60", "end": "112e3cdc"},
+            {"start": "112e3ce0", "end": "112e3d16"},
+        ])
 
     def test_dropped_registry_category_rejected(self):
         registry = copy.deepcopy(self.registry)
