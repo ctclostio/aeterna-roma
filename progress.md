@@ -951,3 +951,32 @@ callees.
   Ghidra project or canonical exports; remaining unrecovered `0x100d..0x1018` /
   `0x112a..0x112e` internal callees (Layer 35) and live runtime execution
   remain open.
+
+### Layer 35 UTF-16/ASCII formatters, math `vector`/`euler` codecs, telemetry & tuple/hash vector ops (2026-11-16)
+- Added 3 fixed-width guest32 memory/vector layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  and bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_codec_vec_ops.h](port/recovered_types/vfs_fs_codec_vec_ops.h),
+  [port/recovered_types/vfs_fs_codec_vec_ops.c](port/recovered_types/vfs_fs_codec_vec_ops.c),
+  and [port/recovered_types/test_vfs_fs_codec_vec_ops.c](port/recovered_types/test_vfs_fs_codec_vec_ops.c)
+  (**30** checks) closing **24** remaining RET-bearing `0x100ef..0x1017ff`
+  internal callees plus **12** clean `0x112a..0x112e` math/vector/hash/tuple
+  helpers (`0x112bed30..0x112e49b0` `euler`/`vector` formatters, `0x112d8ae0`
+  36B 3-string tuple vector & `0x1017ff40` 44B descriptor cleanup, `0x100fcb80`
+  worker thread launcher/LUT `0x1174108c`, `0x10103220`/`0x101015c0`/`0x101034b0`
+  `GlobalMemoryStatusEx`/`GetModuleFileNameW`/`OutputDebugStringW` telemetry,
+  `0x10100620`/`0x101007b0` u32 & `_ecvt_s` decimal formatters, `0x101207a0`/
+  `0x112da050` hash rehash, `0x10122b50` two-pass dot normalizer, and UTF-16/ASCII
+  format scanner/fill helpers).
+- Advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  to **613 functions**, **311 globals**, **40 vtables**, and **540 instruction
+  witnesses**, backed by **46** retained Layer 35 REA operation records (**527**
+  closed Layer 35 records, **894** cumulative validated bundle records, zero
+  non-proc or resource-constrained slots).
+- Verified **92/92** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **70** contract tests on Python 3.14 and 3.15, and **898** clean-public Python
+  tests (**298** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; remaining unrecovered `0x100d..0x1013` /
+  `0x112b..0x1136` internal callees (Layer 36+) and live runtime execution
+  remain open.

@@ -2029,5 +2029,42 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_dlmalloc_mstate448_32, treebins_130, 0x130);
 ROME2_LAYOUT_ASSERT(rome2_vfs_dlmalloc_mstate448_32, footprint_1b0, 0x1b0);
 ROME2_LAYOUT_ASSERT(rome2_vfs_dlmalloc_mstate448_32, mflags_1bc, 0x1bc);
 
+/* 64B Win32 MEMORYSTATUSEX record at 0x11af4098 populated by 0x10103220. */
+typedef struct rome2_vfs_mem_status_ex64_32 {
+    uint32_t dw_length_00;                       /* 00 (0x40) */
+    uint32_t dw_memory_load_04;                  /* 04 */
+    uint64_t ull_total_phys_08;                  /* 08..0f */
+    uint64_t ull_avail_phys_10;                  /* 10..17 */
+    uint64_t ull_total_pagefile_18;              /* 18..1f */
+    uint64_t ull_avail_pagefile_20;              /* 20..27 */
+    uint64_t ull_total_virtual_28;               /* 28..2f */
+    uint64_t ull_avail_virtual_30;               /* 30..37 */
+    uint64_t ull_avail_ext_virtual_38;           /* 38..3f */
+} rome2_vfs_mem_status_ex64_32;
+_Static_assert(sizeof(rome2_vfs_mem_status_ex64_32) == 0x40, "mem status ex64 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_mem_status_ex64_32, ull_total_phys_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_mem_status_ex64_32, ull_total_virtual_28, 0x28);
+ROME2_LAYOUT_ASSERT(rome2_vfs_mem_status_ex64_32, ull_avail_ext_virtual_38, 0x38);
+
+/* 36B 3-string entry element appended and grown by 0x112d8ae0. */
+typedef struct rome2_vfs_tuple36_entry32 {
+    uint32_t first_str_00[3];                    /* 00..0b */
+    uint32_t second_str_0c[3];                   /* 0c..17 */
+    uint32_t third_str_18[3];                    /* 18..23 */
+} rome2_vfs_tuple36_entry32;
+_Static_assert(sizeof(rome2_vfs_tuple36_entry32) == 0x24, "tuple36 entry 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_tuple36_entry32, second_str_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_tuple36_entry32, third_str_18, 0x18);
+
+/* 44B descriptor record whose trailing string vector is torn down by 0x1017ff40. */
+typedef struct rome2_vfs_str_array44_32 {
+    uint32_t head_words_00[9];                   /* 00..23 */
+    uint32_t str_count_24;                       /* 24 */
+    uint32_t str_data_ptr_28;                    /* 28 */
+} rome2_vfs_str_array44_32;
+_Static_assert(sizeof(rome2_vfs_str_array44_32) == 0x2c, "str array44 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_str_array44_32, str_count_24, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_vfs_str_array44_32, str_data_ptr_28, 0x28);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif
