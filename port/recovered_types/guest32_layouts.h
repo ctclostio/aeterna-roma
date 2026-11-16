@@ -1798,5 +1798,73 @@ _Static_assert(sizeof(rome2_vfs_mount_entry48_32) == 0x30, "mount entry48 32 siz
 ROME2_LAYOUT_ASSERT(rome2_vfs_mount_entry48_32, name_str_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_mount_entry48_32, child_vec_24, 0x24);
 
+/* Pack-entry singleton 28-byte record at 0x10122cb0 / 0x10122640 (`0x11afa694`, `0x11afa690`). */
+typedef struct rome2_vfs_pack_index_singleton28_32 {
+    uint32_t reserved_00;
+    uint32_t tag_words_04[3];
+    uint32_t entries_ptr_10;
+    uint32_t count_14;
+    uint32_t capacity_18;
+} rome2_vfs_pack_index_singleton28_32;
+_Static_assert(sizeof(rome2_vfs_pack_index_singleton28_32) == 0x1c, "pack index singleton28 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_index_singleton28_32, tag_words_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_index_singleton28_32, entries_ptr_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_index_singleton28_32, count_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_index_singleton28_32, capacity_18, 0x18);
+
+/* Decoded Win32 find entry metadata block ([ebp+0x34..0x43]) passed to 0x100fec00 callback. */
+typedef struct rome2_vfs_win32_find_info_32 {
+    uint32_t file_size_00;
+    uint32_t reserved_04;
+    uint32_t mtime_unix_08;
+    uint8_t valid_0c;
+    uint8_t writable_0d;
+    uint8_t is_dir_0e;
+    uint8_t hidden_0f;
+} rome2_vfs_win32_find_info_32;
+_Static_assert(sizeof(rome2_vfs_win32_find_info_32) == 0x10, "win32 find info 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_win32_find_info_32, file_size_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_win32_find_info_32, mtime_unix_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_win32_find_info_32, writable_0d, 0x0d);
+ROME2_LAYOUT_ASSERT(rome2_vfs_win32_find_info_32, is_dir_0e, 0x0e);
+ROME2_LAYOUT_ASSERT(rome2_vfs_win32_find_info_32, hidden_0f, 0x0f);
+
+/* Inner 12-byte bucket pointer vector at offset +0x0c in 0x112b03b0 (`unordered_map::_Rehash`). */
+typedef struct rome2_vfs_bucket_pair8_vec12_32 {
+    uint32_t begin_00;
+    uint32_t end_04;
+    uint32_t cap_end_08;
+} rome2_vfs_bucket_pair8_vec12_32;
+_Static_assert(sizeof(rome2_vfs_bucket_pair8_vec12_32) == 0x0c, "bucket pair8 vec12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_bucket_pair8_vec12_32, end_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_bucket_pair8_vec12_32, cap_end_08, 0x08);
+
+/* Ref-counted RB-tree node header torn down by 0x112a26f0 and 0x11724b00 (`0x12032a34`). */
+typedef struct rome2_vfs_rb_ref_node28_32 {
+    uint32_t left_00;
+    uint32_t parent_04;
+    uint32_t right_08;
+    uint8_t color_0c;
+    uint8_t is_nil_0d;
+    uint8_t pad_0e[2];
+    uint32_t payload_10[2];
+    uint32_t shared_ctrl_18;
+} rome2_vfs_rb_ref_node28_32;
+_Static_assert(sizeof(rome2_vfs_rb_ref_node28_32) == 0x1c, "rb ref node28 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_rb_ref_node28_32, right_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_rb_ref_node28_32, is_nil_0d, 0x0d);
+ROME2_LAYOUT_ASSERT(rome2_vfs_rb_ref_node28_32, shared_ctrl_18, 0x18);
+
+/* Chunked 12-byte string array node cleared by 0x112b5420. */
+typedef struct rome2_vfs_chunked_str_node16_32 {
+    uint32_t items_ptr_00;
+    uint32_t count_04;
+    uint32_t reserved_08;
+    uint32_t next_0c;
+} rome2_vfs_chunked_str_node16_32;
+_Static_assert(sizeof(rome2_vfs_chunked_str_node16_32) == 0x10, "chunked str node16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_chunked_str_node16_32, count_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_chunked_str_node16_32, next_0c, 0x0c);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

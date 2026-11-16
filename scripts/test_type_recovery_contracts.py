@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 466)
-        self.assertEqual(result["globals"], 225)
+        self.assertEqual(result["functions"], 497)
+        self.assertEqual(result["globals"], 240)
         self.assertEqual(result["vtables"], 40)
-        self.assertEqual(result["instruction_witnesses"], 407)
+        self.assertEqual(result["instruction_witnesses"], 434)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -1754,6 +1754,53 @@ class TypeContractProvenanceTests(unittest.TestCase):
             {"start": "112d2e80", "end": "112d2efc"},
             {"start": "112d2f00", "end": "112d2f36"},
         ])
+
+    def test_layer31_vfs_index_traverse_rehash_and_atexit_evidence(self):
+        ev31 = self.registry["rea_layer31_evidence"]
+        self.assertEqual(len(ev31["records"]), 50)
+        self.assertEqual(ev31["closed_evidence_records"], 376)
+        self.assertEqual(ev31["new_evidence_records"], 52)
+        self.assertEqual(ev31["reused_layer30_evidence_records"], 324)
+        self.assertEqual(ev31["extra_evidence_views_count"], 3)
+        self.assertEqual(ev31["cumulative_validated_bundle_records"], 743)
+        self.assertEqual(ev31["resource_constrained_slots"], ["100eaf40"])
+        self.assertEqual(ev31["non_proc_slots"], [
+            "11724a10", "11724a80", "11724ab0", "11724b00", "11724b30",
+            "11724b70", "11724b90", "11724be0", "11724e30", "11724e50",
+        ])
+
+        by_fn = {fn["address"]: fn for fn in self.registry["functions"]}
+        expected = [
+            ("10122cb0", "cdecl", "none", 0, 0, ["10122cf7"]),
+            ("10122640", "cdecl", "none", 0, 0, ["10122689"]),
+            ("101217e0", "thiscall", "ECX", 4, 4, ["10121863", "10121907", "10121921"]),
+            ("10121c40", "thiscall", "ECX", 8, 8, ["10121c91", "10121d4f", "10121d7d"]),
+            ("10122260", "thiscall", "ECX", 8, 8, ["10122364"]),
+            ("10122380", "cdecl", "none", 8, 0, ["10122396"]),
+            ("10122d70", "cdecl", "none", 8, 0, ["10122db9"]),
+            ("10121d80", "cdecl", "none", 8, 0, ["10121e6d", "10121e92"]),
+            ("10121250", "cdecl", "none", 12, 0, ["10121320"]),
+            ("100fec00", "cdecl", "none", 20, 0, ["100feeea"]),
+            ("112ab1f0", "thiscall", "ECX", 0, 0, ["112ab230"]),
+            ("112a26f0", "thiscall", "ECX", 8, 8, ["112a274f"]),
+            ("112a28a0", "cdecl", "none", 8, 0, ["112a290a"]),
+            ("112b03b0", "thiscall", "ECX", 4, 4, ["112b06c0"]),
+            ("112b5420", "thiscall", "ECX", 0, 0, ["112b5445"]),
+            ("112d7b40", "thiscall", "ECX", 4, 4, ["112d7b68", "112d7b9c", "112d7c4b"]),
+            ("100eaf40", "thiscall", "ECX", 4, 4, ["100eaf5e", "100eaf8a", "100eb014"]),
+            ("112c2370", "cdecl", "none", 0, 0, ["112c2391"]),
+            ("112a5530", "cdecl", "none", 4, 0, ["112a5557", "112a555b"]),
+            ("112a56d0", "cdecl", "none", 12, 0, ["112a57f3", "112a57fc"]),
+            ("112f0b90", "cdecl", "none", 12, 0, ["112f0c9e"]),
+            ("11724e50", "cdecl", "none", 0, 0, ["11724e60"]),
+        ]
+        for addr, cc, rx, stack, pop, rets in expected:
+            fn = by_fn[addr]
+            self.assertEqual(fn["calling_convention"], cc, addr)
+            self.assertEqual(fn["receiver_register"], rx, addr)
+            self.assertEqual(fn["stack_argument_bytes"], stack, addr)
+            self.assertEqual(fn["callee_pop_bytes"], pop, addr)
+            self.assertEqual(fn["return_instruction_addresses"], rets, addr)
 
     def test_dropped_registry_category_rejected(self):
         registry = copy.deepcopy(self.registry)

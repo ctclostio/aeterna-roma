@@ -839,3 +839,32 @@ callees.
   Ghidra project or canonical exports; VFS pack-index singleton (`0x10122cb0`),
   `0x100fec00` directory traversal, atexit destructors, and live runtime
   threading remain open.
+
+### Layer 31 VFS pack-entry index, Win32 traversal, container/rehash ops, diagnostics & 10 atexit destructors
+- Closed **31 additional VFS functions, 15 globals, and 27 instruction
+  witnesses** (`rea_layer31_evidence` -> **497 functions, 240 globals,
+  40 vtables, 434 instruction witnesses**; **376** closed Layer 31 session
+  records / **743** canonical cumulative validated bundle records) covering:
+  - Pack-entry index singletons & prefix resolution (`0x10122cb0`, `0x10122640`,
+    `0x101217e0`, `0x10121c40`, `0x10122260`, `0x10122380`, `0x10122d70`,
+    `0x10121d80` wildcard matcher, `0x10121250`).
+  - Win32 recursive `FindFirstFileA`/`FindNextFileA`/`FindClose` traversal
+    (`0x100fec00`) with exact `FILETIME` `+0x49ef7d10` (`3600`s offset) conversion
+    and writable/dir/hidden attribute decoding.
+  - Container destructors, `unordered_map::_Rehash` (`0x112b03b0`, `0x3fffffff`
+    ceiling), self-aliased vector `push_back` (`0x112d7b40`, `0x100eaf40`),
+    interface/bitmask diagnostics (`0x112c2370`, `0x112a5530`, `0x112a56d0`,
+    `0x112f0b90`), and all 10 RET-bearing VFS singleton atexit destructors
+    (`0x11724a10`..`0x11724e50`).
+- Locked **5** fixed-width `guest32` structs in
+  [guest32_layouts.h](port/recovered_types/guest32_layouts.h) and added checked
+  C17 helpers and **50** tests in
+  [vfs_fs_index_atexit_ops.h](port/recovered_types/vfs_fs_index_atexit_ops.h),
+  [vfs_fs_index_atexit_ops.c](port/recovered_types/vfs_fs_index_atexit_ops.c),
+  and [test_vfs_fs_index_atexit_ops.c](port/recovered_types/test_vfs_fs_index_atexit_ops.c).
+- Verified **88/88** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **66** contract tests on Python 3.14 and 3.15, and **894** clean-public Python
+  tests (**294** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; Layer 32 (`0x1011fef0` pack-index ctor,
+  `0x10120b30`/`0x10120c10` locked entry builders, remaining `0x112a..0x1130`
+  VFS callees) and live runtime threading remain open.
