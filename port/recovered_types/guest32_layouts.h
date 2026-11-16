@@ -1975,5 +1975,59 @@ _Static_assert(sizeof(rome2_vfs_pool_slab20_32) == 0x14, "pool slab20 32 size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_pool_slab20_32, next_slot_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_pool_slab20_32, payload_04, 0x04);
 
+/* 36B Win32 stream/file handle state initialized by 0x100f11b0 and closed by 0x100f21c0. */
+typedef struct rome2_vfs_stream_handle36_32 {
+    uint32_t state_tag_00;                       /* 00 (3 on init/destroy) */
+    uint32_t owned_flags_04;                     /* 04 (bit 0 primary, bit 1 secondary) */
+    uint32_t primary_handle_08;                  /* 08 (INVALID_HANDLE_VALUE -1) */
+    uint32_t secondary_handle_0c;                /* 0c (INVALID_HANDLE_VALUE -1) */
+    uint32_t state_words_10[3];                  /* 10..1b */
+    uint8_t byte_flag_1c;                        /* 1c */
+    uint8_t pad_1d[3];                           /* 1d..1f */
+    uint32_t mapped_view_ptr_20;                 /* 20 -> 8B UnmapViewOfFile holder */
+} rome2_vfs_stream_handle36_32;
+_Static_assert(sizeof(rome2_vfs_stream_handle36_32) == 0x24, "stream handle36 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_handle36_32, owned_flags_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_handle36_32, primary_handle_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_handle36_32, secondary_handle_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_handle36_32, byte_flag_1c, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_stream_handle36_32, mapped_view_ptr_20, 0x20);
+
+/* 8B Win32 GetFileSize probe state updated by 0x101153c0. */
+typedef struct rome2_vfs_file_size_state8_32 {
+    uint32_t file_handle_00;                     /* 00 */
+    uint32_t last_error_04;                      /* 04 */
+} rome2_vfs_file_size_state8_32;
+_Static_assert(sizeof(rome2_vfs_file_size_state8_32) == 0x08, "file size state8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_file_size_state8_32, last_error_04, 0x04);
+
+/* 448B dlmalloc mstate block at 0x11afa700 managed by 0x10124e50 and 0x101254a0. */
+typedef struct rome2_vfs_dlmalloc_mstate448_32 {
+    uint32_t smallmap_00;                        /* 00 (32 smallbin bits) */
+    uint32_t treemap_04;                         /* 04 (32 treebin bits) */
+    uint32_t dvsize_08;                          /* 08 */
+    uint32_t topsize_0c;                         /* 0c */
+    uint32_t least_addr_10;                      /* 10 */
+    uint32_t dv_ptr_14;                          /* 14 */
+    uint32_t top_ptr_18;                         /* 18 */
+    uint32_t trim_check_1c;                      /* 1c */
+    uint32_t release_checks_20;                  /* 20 */
+    uint32_t reserved_24;                        /* 24 */
+    uint32_t smallbins_28[66];                   /* 28..12f */
+    uint32_t treebins_130[32];                   /* 130..1af */
+    uint32_t footprint_1b0;                      /* 1b0 */
+    uint32_t max_footprint_1b4;                  /* 1b4 */
+    uint32_t footprint_limit_1b8;                /* 1b8 */
+    uint32_t mflags_1bc;                         /* 1bc */
+} rome2_vfs_dlmalloc_mstate448_32;
+_Static_assert(sizeof(rome2_vfs_dlmalloc_mstate448_32) == 0x1c0, "dlmalloc mstate448 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_dlmalloc_mstate448_32, treemap_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dlmalloc_mstate448_32, dvsize_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dlmalloc_mstate448_32, topsize_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dlmalloc_mstate448_32, smallbins_28, 0x28);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dlmalloc_mstate448_32, treebins_130, 0x130);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dlmalloc_mstate448_32, footprint_1b0, 0x1b0);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dlmalloc_mstate448_32, mflags_1bc, 0x1bc);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

@@ -924,3 +924,30 @@ callees.
   tests (**296** skipped) on Python 3.14 and 3.15 without touching the shared
   Ghidra project or canonical exports; the remaining **20** RET-bearing
   `0x100f..0x1012` leaves and live runtime execution remain open.
+
+### Layer 34 Final `0x100f..0x1012` leaves, error switches & `dlmalloc` reconstruction (2026-11-16)
+- Added 3 fixed-width guest32 handle/dlmalloc layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  and bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_leaf_codec_ops.h](port/recovered_types/vfs_fs_leaf_codec_ops.h),
+  [port/recovered_types/vfs_fs_leaf_codec_ops.c](port/recovered_types/vfs_fs_leaf_codec_ops.c),
+  and [port/recovered_types/test_vfs_fs_leaf_codec_ops.c](port/recovered_types/test_vfs_fs_leaf_codec_ops.c)
+  (**31** checks) closing 100% of the remaining **20** RET-bearing
+  `0x100f..0x1012` leaves (`0x10124e50` `dlfree` & `0x101254a0` `dlmalloc` on
+  `0x11afa700`, `0x101021b0` & `0x101030d0` Win32 error LUT switches,
+  `0x101145e0` slash/case canonicalizer, `0x10115050` `SetFilePointerEx`,
+  `0x101153c0` `GetFileSize`, `0x100f11b0`/`0x100f21c0` stream handle36
+  lifecycle, `0x10114420` wait/event guard, `0x10102310` 64-bit budget check,
+  `0x10103450` UTF-8 bridge, and UTF-16/ASCII string helpers).
+- Advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  to **577 functions**, **295 globals**, **40 vtables**, and **504 instruction
+  witnesses**, backed by **26** retained Layer 34 REA operation records (**481**
+  closed Layer 34 records, **848** cumulative validated bundle records, zero
+  non-proc or resource-constrained slots).
+- Verified **91/91** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **69** contract tests on Python 3.14 and 3.15, and **897** clean-public Python
+  tests (**297** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; remaining unrecovered `0x100d..0x1018` /
+  `0x112a..0x112e` internal callees (Layer 35) and live runtime execution
+  remain open.
