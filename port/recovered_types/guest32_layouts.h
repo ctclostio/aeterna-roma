@@ -1931,5 +1931,49 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_mount_singleton28_32, name_str_04, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_mount_singleton28_32, qword_pair_08, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_vfs_mount_singleton28_32, tail_words_10, 0x10);
 
+/* 48B 4-part split path carrier initialized by 0x100f0a80 (`[0x11afa69c]`). */
+typedef struct rome2_vfs_path_parts48_32 {
+    uint32_t drive_str_00[3];                    /* 00..0b */
+    uint32_t dir_str_0c[3];                      /* 0c..17 */
+    uint32_t file_str_18[3];                     /* 18..23 */
+    uint32_t ext_str_24[3];                      /* 24..2f */
+} rome2_vfs_path_parts48_32;
+_Static_assert(sizeof(rome2_vfs_path_parts48_32) == 0x30, "path parts48 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_path_parts48_32, dir_str_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_path_parts48_32, file_str_18, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_vfs_path_parts48_32, ext_str_24, 0x24);
+
+/* 24B (key, value) string pair element torn down by 0x10126f60 and grown by 0x10127900. */
+typedef struct rome2_vfs_pair_entry24_32 {
+    uint32_t key_str_00[3];                      /* 00..0b */
+    uint32_t val_str_0c[3];                      /* 0c..17 */
+} rome2_vfs_pair_entry24_32;
+_Static_assert(sizeof(rome2_vfs_pair_entry24_32) == 0x18, "pair entry24 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_pair_entry24_32, key_str_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pair_entry24_32, val_str_0c, 0x0c);
+
+/* 60B recursive folder-index entry torn down by 0x10126fa0 and copied by 0x10126e50. */
+typedef struct rome2_vfs_folder_entry60_32 {
+    uint32_t name_str_00[3];                     /* 00..0b */
+    uint32_t pairs_vec_0c[3];                    /* 0c..17 (vec<rome2_vfs_pair_entry24_32>) */
+    uint32_t root_str_18[3];                     /* 18..23 */
+    uint32_t children_vec_24[3];                 /* 24..2f (vec<rome2_vfs_folder_entry60_32>) */
+    uint32_t tag_str_30[3];                      /* 30..3b */
+} rome2_vfs_folder_entry60_32;
+_Static_assert(sizeof(rome2_vfs_folder_entry60_32) == 0x3c, "folder entry60 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_folder_entry60_32, pairs_vec_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_folder_entry60_32, root_str_18, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_vfs_folder_entry60_32, children_vec_24, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_vfs_folder_entry60_32, tag_str_30, 0x30);
+
+/* 20B linked pool slab slot initialized by 0x1011fd40. */
+typedef struct rome2_vfs_pool_slab20_32 {
+    uint32_t next_slot_00;                       /* 00 */
+    uint32_t payload_04[4];                      /* 04..13 */
+} rome2_vfs_pool_slab20_32;
+_Static_assert(sizeof(rome2_vfs_pool_slab20_32) == 0x14, "pool slab20 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_pool_slab20_32, next_slot_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pool_slab20_32, payload_04, 0x04);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

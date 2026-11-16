@@ -898,3 +898,29 @@ callees.
   Ghidra project or canonical exports; Layer 33 (`0x10126e50..0x10127c00` 60B
   folder-entry tree & `0x112aa800..0x112e4050` VFS helpers) and live runtime
   execution remain open.
+
+### Layer 33 VFS folder-tree, path-normalization & unit-switch reconstruction (2026-11-16)
+- Added 4 fixed-width guest32 folder-tree/path/slab layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  and bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_folder_tree_ops.h](port/recovered_types/vfs_fs_folder_tree_ops.h),
+  [port/recovered_types/vfs_fs_folder_tree_ops.c](port/recovered_types/vfs_fs_folder_tree_ops.c),
+  and [port/recovered_types/test_vfs_fs_folder_tree_ops.c](port/recovered_types/test_vfs_fs_folder_tree_ops.c)
+  (**33** checks) closing 6 remaining `0x112a..0x112e` VFS helpers (`0x112aa800`,
+  `0x112cbff0`, `0x112d6a10`, `0x112da2d0`, `0x112dc5e0`, `0x112e4050` unit tag
+  switch `1..0xd` via `0x112e4188`), `0x10126e50..0x10127c00` recursive 60B
+  folder tree & tab/newline KV parser, `0x10120e10`/`0x10122760`/`0x10122830`
+  path normalizers, `0x1011f7c0`/`0x1011fd40`/`0x1011fea0`/`0x1011f6e0` slab &
+  unordered_map limit helpers, `0x10103ec0`/`0x100f26b0`/`0x100f2750` UTF-8/UTF-16
+  codecs, `0x100fce00` (`GetCurrentDirectoryA`), and `0x100f0a80` (split_path48).
+- Advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  to **557 functions**, **281 globals**, **40 vtables**, and **482 instruction
+  witnesses**, backed by **32** retained Layer 33 REA operation records (**455**
+  closed Layer 33 records, **822** cumulative validated bundle records, zero
+  non-proc or resource-constrained slots).
+- Verified **90/90** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **68** contract tests on Python 3.14 and 3.15, and **896** clean-public Python
+  tests (**296** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; the remaining **20** RET-bearing
+  `0x100f..0x1012` leaves and live runtime execution remain open.
