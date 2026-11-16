@@ -2066,5 +2066,41 @@ _Static_assert(sizeof(rome2_vfs_str_array44_32) == 0x2c, "str array44 32 size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_str_array44_32, str_count_24, 0x24);
 ROME2_LAYOUT_ASSERT(rome2_vfs_str_array44_32, str_data_ptr_28, 0x28);
 
+/* 28B dlmalloc global mparams block at 0x11afa6e0..0x11afa6fc initialized by 0x10123640. */
+typedef struct rome2_vfs_dlmalloc_mparams28_32 {
+    uint32_t spinlock_00;                        /* 00 (0x11afa6e0) */
+    uint32_t magic_04;                           /* 04 (0x11afa6e4) */
+    uint32_t page_size_08;                       /* 08 (0x11afa6e8) */
+    uint32_t granularity_0c;                     /* 0c (0x11afa6ec) */
+    uint32_t mmap_threshold_10;                  /* 10 (0x11afa6f0 = 0x40000) */
+    uint32_t trim_threshold_14;                  /* 14 (0x11afa6f4 = 0x200000) */
+    uint32_t default_mflags_18;                  /* 18 (0x11afa6f8 = 7) */
+} rome2_vfs_dlmalloc_mparams28_32;
+_Static_assert(sizeof(rome2_vfs_dlmalloc_mparams28_32) == 0x1c, "dlmalloc mparams28 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_dlmalloc_mparams28_32, magic_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dlmalloc_mparams28_32, page_size_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_dlmalloc_mparams28_32, default_mflags_18, 0x18);
+
+/* 12B unordered-bucket list-pair header managed by 0x100e3950, 0x100eb8a0, and 0x112d87a0. */
+typedef struct rome2_vfs_bucket_slot12_32 {
+    uint32_t begin_00;                           /* 00 */
+    uint32_t end_or_self_04;                     /* 04 */
+    uint32_t tail_ptr_08;                        /* 08 */
+} rome2_vfs_bucket_slot12_32;
+_Static_assert(sizeof(rome2_vfs_bucket_slot12_32) == 0x0c, "bucket slot12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_bucket_slot12_32, end_or_self_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_bucket_slot12_32, tail_ptr_08, 0x08);
+
+/* 8B MSVC std::istreambuf_iterator<wchar_t> cursor used by 0x11347190/0x11348d50/0x11349790. */
+typedef struct rome2_vfs_wstreambuf_iter8_32 {
+    uint32_t streambuf_ptr_00;                   /* 00 */
+    uint8_t got_flag_04;                         /* 04 */
+    uint8_t pad_05;                              /* 05 */
+    uint16_t val_06;                             /* 06 */
+} rome2_vfs_wstreambuf_iter8_32;
+_Static_assert(sizeof(rome2_vfs_wstreambuf_iter8_32) == 0x08, "wstreambuf iter8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_wstreambuf_iter8_32, got_flag_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_wstreambuf_iter8_32, val_06, 0x06);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

@@ -980,3 +980,32 @@ callees.
   Ghidra project or canonical exports; remaining unrecovered `0x100d..0x1013` /
   `0x112b..0x1136` internal callees (Layer 36+) and live runtime execution
   remain open.
+
+### Layer 36 `dlmalloc` internals, `12B` bucket vectors, `wstringstream`/`num_get`, and stream/hash leaves (2026-11-16)
+- Added 3 fixed-width guest32 allocator/bucket/iterator layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  and bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_dlmalloc_stream_ops.h](port/recovered_types/vfs_fs_dlmalloc_stream_ops.h),
+  [port/recovered_types/vfs_fs_dlmalloc_stream_ops.c](port/recovered_types/vfs_fs_dlmalloc_stream_ops.c),
+  and [port/recovered_types/test_vfs_fs_dlmalloc_stream_ops.c](port/recovered_types/test_vfs_fs_dlmalloc_stream_ops.c)
+  (**36** checks) closing all **24** remaining clean `0x100d..0x1012` &
+  `dlmalloc` internal helpers plus **10** `0x112b..0x1136` hash-bucket/wostream/
+  `num_get`/handle-table helpers (`0x10123640..0x101246f0` `mparams28`,
+  `sys_trim`, `tmalloc_large`/`tmalloc_small`, `release_unused_segments`, and
+  `SleepEx` spin backoff; `0x100d2740`/`0x100d3790`/`0x11346070..0x11349f00`
+  `wstringstream`/`wostream` & wchar `_Getifld` parser; `0x100e3950..0x100ec450`
+  & `0x112d87a0..0x112dbf20` `12B` bucket vector ops; `0x100db960`/`0x100e10c0`/
+  `0x113682d0` hashes; `0x100f6f30` `VFileStream::close`; and `0x100d1790`/
+  `0x100f3150`/`0x100ffbb0`/`0x10105fa0`).
+- Advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  to **647 functions**, **324 globals**, **40 vtables**, and **574 instruction
+  witnesses**, backed by **39** retained Layer 36 REA operation records + **3**
+  view facets for `0x100e10c0` (**569** closed Layer 36 records, **936**
+  cumulative validated bundle records, `non_proc_slots=[]`,
+  `resource_constrained_slots=["100e10c0"]`).
+- Verified **93/93** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **71** contract tests on Python 3.14 and 3.15, and **899** clean-public Python
+  tests (**299** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; remaining **22** clean `0x1023..0x1103`
+  engine callees (Layer 37) and live runtime execution remain open.
