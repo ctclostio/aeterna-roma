@@ -1,6 +1,6 @@
 {
   "schema": "rome2-type-recovery-verification-v1",
-  "scope": "Layer 27 completes the dual-slot async/mapped backing view (0x11897818, 11/11 slots), async in-memory/cipher backing view (0x11897844, 9/9 slots), delegating stream adapter (0x11897c90, 15/15 slots) + base 0x1173db9c init (0x112a9550), and loose-file stat/path-join/narrow-string helpers across 30 RET-bearing functions, 6 globals, 3 vtables, and 20 instruction witnesses via bounded C17 helpers and a 156-record REA partition / 523-record canonical cumulative bundle. Earlier top-level/layer results and source hashes are historical snapshots; none declares whole-engine equivalence.",
+  "scope": "Layer 28 completes the base/static VFS FileSystem vtables (0x1189791c, 30/30 slots; 0x11897994, 13/13 slots + static initializer 0x117240b0), std::tr1::_Ref_count_base shared-pointer control block vtable (0x1189a520, 4/4 slots), and active VFS FileSystem secondary interface (0x118978e8, 13/13 slots) across 30 functions, 17 globals, 2 vtables, and 22 instruction witnesses via bounded C17 helpers and a 216-record REA session / 583-record canonical cumulative bundle. Earlier top-level/layer results and source hashes are historical snapshots; none declares whole-engine equivalence.",
   "python_focused": {
     "tests": 82,
     "failures": 0,
@@ -576,7 +576,7 @@
       "whole-engine class/vtable/allocator/threading recovery"
     ]
   },
-  "current_layer": "layer27",
+  "current_layer": "layer28",
   "layer5": {
     "status": "direct XML-node native setup verified; original XML ABI, resource-manager precedence and loader failure behavior remain open",
     "node_setup": {
@@ -11252,6 +11252,637 @@
     ],
     "remaining": [
       "live Win32 _stat64i32/_wstat64i32 syscalls, async worker thread scheduling, and indirect COM stream I/O",
+      "full normalization, parser equivalence, remaining XML/VFS ABI, historical CRT/locale/FP equivalence and whole-engine recovery"
+    ]
+  },
+  "layer28": {
+    "status": "all 30 Layer 28 base/static FileSystem, shared_ptr control block, and active secondary FileSystem interface procedures verified with bounded C17 helpers and fixed-width guest32 memory views; active FileSystem primary interface 0x11897870, live Win32 critical-section contention, and whole-engine runtime execution remain open",
+    "original_image_contracts": {
+      "schema": "rome2-recovered-types-v1",
+      "verified": true,
+      "functions": 404,
+      "globals": 186,
+      "vtables": 39,
+      "instruction_witnesses": 360,
+      "scope": "static original-image evidence; native behavior requires separate tests"
+    },
+    "python_focused_contract_tests": 63,
+    "native_tests": {
+      "analyze": {
+        "suites": 85,
+        "failed": 0,
+        "local_ctest_log": "out/vfs-layer28-20261115/analyze/Testing/Temporary/LastTest.log",
+        "log_sha256": "1bb5d38e2663ae740aad3746375206be9bb7d2d7e14cc1d0d44706f00f68982b",
+        "junit_sha256": "3a6367ab7f6c4131a4344d75e20d71f700ced2b5481100a0ad6cb31e6d0ece69"
+      },
+      "asan": {
+        "suites": 85,
+        "failed": 0,
+        "local_ctest_log": "out/vfs-layer28-20261115/asan/Testing/Temporary/LastTest.log",
+        "log_sha256": "9bccc9c2545fcd78b325b237eaddf0c61523e49411dba42010be42e469c1f3db",
+        "junit_sha256": "7985a9d9a889187f49b32a1ab89e0153c45d22be22c89f9daf90a8bcb2810a8c"
+      },
+      "installed_asset_oracle_included": true,
+      "assertions_enabled": true,
+      "public_asset_free_suites": 84
+    },
+    "fs_secondary_ops_tests": {
+      "suites": 3,
+      "active_checks": 78,
+      "cases": [
+        "test_base_fs_and_singleton_layouts covering BASE_FILESYSTEM static init (0x1189791c/0x11897994), deleting dtor, u64 pair zero, 32B entry_info -1/-1 defaults, checked vec12 end ptr, and 28B pack-wrap singleton init/atexit reset",
+        "test_shared_ptr_ctrl_block_lifecycle covering 16B std::tr1::_Ref_count_base (0x1189a520) init, strong retain assignment, strong/weak decrement to payload destroy + ctrl delete, and zero-use invalid state guard",
+        "test_secondary_handle_read_quota_and_unlink covering pack (< pack_count) vs loose (0x80000001..[0x119e1000]) handle classification, mounted/encrypted whole-file read + XOR decipher roundtrip, quota gating, platform gate + 0x12031a88 check, and 0x112e3480 doubly-linked node unlink"
+      ]
+    },
+    "original_observations": [
+      "0x117240b0, 0x112acfb0, and 11 new BASE_FILESYSTEM slots (0x1018bd90, 0x112b0810, 0x112e14a0, 0x102fcc90, 0x112bbaf0, 0x112d5bd0, 0x1108d3b0, 0x11002ca0, 0x112c9550, 0x10457110, plus 0x112e0ed0, 0x112ce3b0, 0x112d2980, 0x112d2a70, 0x10180300) complete 0x1189791c (30/30) and 0x11897994 (13/13)",
+      "0x112afc90 (+0x00) and 0x112accb0 (+0x08) alongside 0x1090bb10 and 0x10128c50 complete 4-slot std::tr1::_Ref_count_base vtable 0x1189a520",
+      "0x112bd130, 0x112cdde0, 0x112e10e0, 0x112e0f30, 0x112ce410, 0x112d2b60, 0x112d2bb0, 0x112d9660, 0x112b30e0, 0x112cf6c0, and 0x112e3480 complete all 13/13 slots of active VFS FileSystem secondary interface 0x118978e8"
+    ],
+    "native_adaptations": [
+      "Locked 10 fixed-width guest32 structs in guest32_layouts.h with _Static_assert size and offset verification (rome2_vfs_base_fs_obj32 8B, rome2_vfs_base_fs_vtable_30slot32 120B, rome2_vfs_fs_secondary_vtable_13slot32 52B, rome2_vfs_u64_pair32 8B, rome2_vfs_entry_info32 32B, rome2_vfs_sp_ctrl_block32 16B, rome2_vfs_sp_ctrl_vtable_4slot32 16B, rome2_vfs_sp_pair32 8B, rome2_vfs_pack_wrap_singleton28_32 28B, rome2_vfs_fs_secondary_hdr32 32B)",
+      "Implemented 15 bounded C17 helpers in vfs_fs_secondary_ops.h/.c reusing rome2_vfs_stream_xor_deobfuscate_blocks32 for encrypted whole-file reads"
+    ],
+    "public_python_clean": {
+      "checkout": "tracked public files plus Layer 28 changes, no original image/canonical exports",
+      "runs": [
+        {
+          "version": "3.14",
+          "tests": 891,
+          "skipped": 291,
+          "failures": 0,
+          "errors": 0,
+          "local_log": "out/vfs-layer28-20261115/public-clean-3.14.log",
+          "log_sha256": "2345088ed2ae4c9b97e2bb0531752a2ce49aa11d301cd5a8a009787b65d84601"
+        },
+        {
+          "version": "3.15",
+          "tests": 891,
+          "skipped": 291,
+          "failures": 0,
+          "errors": 0,
+          "local_log": "out/vfs-layer28-20261115/public-clean-3.15.log",
+          "log_sha256": "0e43d7446a9fed501f05f9f4d51e955d3538799a95c3ef41099c89a7cc45192d"
+        }
+      ]
+    },
+    "corpus_tree_full_suite": "not rerun; earlier corpus-tree issues remain recorded and frozen locks unchanged",
+    "installed_assets": {
+      "record": "port/recovered_types/fauna_assets.json",
+      "archives": 2,
+      "entrypoints": [
+        "rome2_owned_unit_card_create_from_packs",
+        "rome2_owned_unit_card_setup_from_packs"
+      ],
+      "explicit_precedence_orders": 2,
+      "original_game_execution": false,
+      "record_sha256": "590b4383acd1ba59047ffb9744313edd629036ad7156b3e0140b37ff7563dbe3"
+    },
+    "rea": {
+      "new_function_records": 16,
+      "resolve_containing_procedure_checks": 14,
+      "new_data_records": 27,
+      "new_xref_records": 0,
+      "new_total_bundle_records": 60,
+      "retained_operation_envelopes": 57,
+      "retained_view_envelopes": 3,
+      "reused_layer27_records": 156,
+      "extra_evidence_views_count": 3,
+      "validated_bundle_records": 216,
+      "cumulative_validated_bundle_records": 583,
+      "session_closed": true,
+      "original_game_execution": false,
+      "closed_snapshot_local_path": "out/vfs-layer28-20261115/session.rea.json",
+      "closed_snapshot_sha256": "38c25a0a2d796f04e27d1add099437139877e08895a19b120b4026fe14ce0f05",
+      "validated_bundle_local_path": "out/vfs-layer28-20261115/validated-evidence-bundle.json",
+      "validated_bundle_sha256": "2d20c9d7c2382baa31de2e88587d8edb69a7c6a6d49fee98575a50031b75ebbf",
+      "cumulative_validated_bundle_local_path": "out/vfs-layer28-20261115/cumulative-validated-evidence-bundle.json",
+      "cumulative_validated_bundle_sha256": "08d3033b10f71c791ac6715b59718addbfca0c9ff2fca5c470fb4bf6e4737861",
+      "shared_ghidra_and_canonical_exports_changed": false
+    },
+    "local_logs": "out/vfs-layer28-20261115/",
+    "source_hash_scope": "UTF-8 with CRLF/CR normalized to LF; current resource/XML/VFS recovery, tests and docs",
+    "sources": [
+      {
+        "path": "README.md",
+        "bytes": 25360,
+        "sha256": "fb10c50e06ce31e0f984fd49621b0d9a6c70ee2e1b2225570e6c215647b4555e"
+      },
+      {
+        "path": "docs/unitcard_resource_recovery.md",
+        "bytes": 10039,
+        "sha256": "97c4517c260f05bfbd3e91a588b8deb0e397d2f99368457fb44922b27078966d"
+      },
+      {
+        "path": "docs/vfs_recovery.md",
+        "bytes": 93896,
+        "sha256": "76e5e3cd551c62923287df5322d31806311ec7e7489b3a03f6ecf1efff315712"
+      },
+      {
+        "path": "docs/xml_loader_recovery.md",
+        "bytes": 10853,
+        "sha256": "cd1c54709149a8d93fb65fb0201b7b1466b40408ac8f409554355f90ab485433"
+      },
+      {
+        "path": "port/recovered_types/CMakeLists.txt",
+        "bytes": 5790,
+        "sha256": "71a7d4828d3aa482f7b3fe303ab2f157a0d96215046db5e3fa45980683d52472"
+      },
+      {
+        "path": "port/recovered_types/contracts.json",
+        "bytes": 706248,
+        "sha256": "e177800fd4512b41460cb8e4e119726a4d6b77e6072903be46484808fb63755d"
+      },
+      {
+        "path": "port/recovered_types/fauna_asset_probe.c",
+        "bytes": 3051,
+        "sha256": "486d4306fbbee7bd0b3b286a6db5b1df508b0cfceff196ff569bf7a149179644"
+      },
+      {
+        "path": "port/recovered_types/fauna_config.c",
+        "bytes": 12023,
+        "sha256": "f7c154d03514f6e99ce90054cf13a1da8005aec2dda187972ebbb9d5e9abf29d"
+      },
+      {
+        "path": "port/recovered_types/fauna_config.h",
+        "bytes": 3054,
+        "sha256": "9313687f26b6d65a3da40b141f9a4535ea5040ad3740c402df9eb9c3f8509c5f"
+      },
+      {
+        "path": "port/recovered_types/guest32_layouts.h",
+        "bytes": 93476,
+        "sha256": "1363a579982b5ec068e52f62e233735fb178fe2fa1ffa36bac4c9c7c60a7c8be"
+      },
+      {
+        "path": "port/recovered_types/native_xml.c",
+        "bytes": 11832,
+        "sha256": "0e16d0bc50e48d4a3290e000be974e65a1593208d9df7f18a1f9191761061cbc"
+      },
+      {
+        "path": "port/recovered_types/native_xml.h",
+        "bytes": 2555,
+        "sha256": "70bd1f4fe5aae18aaceb479f487e9ace232bcf62fb0d44204ae6633ff0fa915e"
+      },
+      {
+        "path": "port/recovered_types/owned_fauna.c",
+        "bytes": 9394,
+        "sha256": "f879f67256c4676eb5e251045135a3478c940f8ba08a3209a5d20d8ecb478e82"
+      },
+      {
+        "path": "port/recovered_types/owned_fauna.h",
+        "bytes": 3821,
+        "sha256": "9813242e118f4ff2e2a221850768d2f481a8d8544b50bbeffd3855658ae04304"
+      },
+      {
+        "path": "port/recovered_types/owned_unit_card.c",
+        "bytes": 16055,
+        "sha256": "7299a2d87abbf8f2f178c16fe18b31960c531bae7f4d89f0f9f50f6e6f1c28fa"
+      },
+      {
+        "path": "port/recovered_types/owned_unit_card.h",
+        "bytes": 6921,
+        "sha256": "8d3d0766d4a6826d8937819f65563b409d587c4ef5f76e16d6c6ddd1ed273cc6"
+      },
+      {
+        "path": "port/recovered_types/pack_resource.c",
+        "bytes": 12117,
+        "sha256": "13e9b43193dc1309a3d64e109dd6d30185ef38538f6a0a44d072492c2c197053"
+      },
+      {
+        "path": "port/recovered_types/pack_resource.h",
+        "bytes": 1944,
+        "sha256": "c85b2002cd2d6ad0d4eb966b4595c2f15b32b83b4359c7cc55792ad30c6e8407"
+      },
+      {
+        "path": "port/recovered_types/test_fauna_config.c",
+        "bytes": 9339,
+        "sha256": "122f89ba8ba541cb2696b9a7c8fcc65155ec69d64ec2af7ce6840688c7043df4"
+      },
+      {
+        "path": "port/recovered_types/test_native_xml.c",
+        "bytes": 9363,
+        "sha256": "fd68911474707bad7e136ce863c3f95bb1d04f8747f941b2eaff9634b18f22ab"
+      },
+      {
+        "path": "port/recovered_types/test_pack_resource.c",
+        "bytes": 36226,
+        "sha256": "b3e2fda413ecdd78fa269566e65d11dcd7600dabaa21433379d3c27d1d4ecd56"
+      },
+      {
+        "path": "port/recovered_types/test_resource_support.h",
+        "bytes": 2422,
+        "sha256": "4f750e041cf8af2ffbfa7ffd29e429d390dd2b4d0bcdc71abda7b4dd69877269"
+      },
+      {
+        "path": "port/recovered_types/test_unit_card_resource.c",
+        "bytes": 22761,
+        "sha256": "cf9eb4fb19c3983b4a5200c3c465f012b6f36a87c0fa7e3bacb09f7394391e18"
+      },
+      {
+        "path": "port/recovered_types/test_unit_card_xml_node.c",
+        "bytes": 12462,
+        "sha256": "6161d19a143df36df9c2444d72818e916c02c787c25c4adbaa97b292b65add60"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_adj_open_ops.c",
+        "bytes": 7273,
+        "sha256": "e37af893aa63773c752f742b78f7e46e376eed468cccc284aed3ee0c56560aa9"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_archive_mount_step.c",
+        "bytes": 13942,
+        "sha256": "c6f6cdaef4d2380dc15fd39226d85d28d31336ddb9dff5ffc808b4bcab3820d8"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_archive_register.c",
+        "bytes": 23992,
+        "sha256": "048e76feb3d8cfaab6bc36f446cc6b4946a3242a7f5ce2d74e16a8e4014e6d98"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_archive_tree.c",
+        "bytes": 20909,
+        "sha256": "fbb12603753f2c0a15e3381196b94e4e7ac421d199ba2696ec4658332473d694"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_dep_rehash.c",
+        "bytes": 8521,
+        "sha256": "79707c61f7cf92ffdc84f6a098cfc655960529d735bdb80496b18292fa9843f8"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_dependency_graph.c",
+        "bytes": 24526,
+        "sha256": "bb5f8f419b579200b2c7129f07cd00b352bf6db923affa6e1a2400aa39eac87f"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_dispatch.c",
+        "bytes": 7136,
+        "sha256": "ec0838a860e24f3697ea69799b059b18d48cc664e3659203c928c9fd97fb6f39"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_fs_secondary_ops.c",
+        "bytes": 9124,
+        "sha256": "db725ec349f9a030c4f1f8d492993052e9098a171602b3a482878339a40d7dcf"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_handle_lifecycle_ops.c",
+        "bytes": 12828,
+        "sha256": "faeb0a37dc61f245dd7f5b645b28628f8dc58ba4e1a461712fb2b9e26c933e51"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_name.c",
+        "bytes": 11026,
+        "sha256": "9c73a25796bf2e9f552bcf15a2e53e6d3aab2f40f36687d799457bd418c787c5"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_name_assign.c",
+        "bytes": 12834,
+        "sha256": "d78fb3dedda4c0e43d61b0ca73ea3bf7316df070f2623abfe1d690f64b7ef514"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_pack_entry.c",
+        "bytes": 7864,
+        "sha256": "b43f5fae469fa35a00e53de58581efe4903d149959a41a788b040579ff658b3e"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_pack_stream.c",
+        "bytes": 7125,
+        "sha256": "4d94e806cc1facefed7d5f394b22e28472168feab057891125ea674e0fc9bf5f"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_pool_slab.c",
+        "bytes": 10898,
+        "sha256": "216983fd3b6485ecefef099cc535df79795e84774dde0b161429006d9e163b75"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_quota_map.c",
+        "bytes": 8872,
+        "sha256": "d1f1584b8515b603231f82e21a0bc247b67c5c6e328cadc2c19e979679d5d9db"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_rb_bucket_ops.c",
+        "bytes": 6106,
+        "sha256": "42d63883e7ac8d1ffb6c422a197ba4531f22433c099777019732d5d38266396f"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_scan_mount.c",
+        "bytes": 8198,
+        "sha256": "ef2384fd2c610f285307ce9050b342087539368244711c395c9bd1bbb2a05ca2"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_state_telemetry_ops.c",
+        "bytes": 15622,
+        "sha256": "34249c19e885e24923b06d22ea1c443c5622b276d4f520cb6c1c35af3313babd"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_stream_completion_ops.c",
+        "bytes": 10186,
+        "sha256": "5fdd4e20696b331e726a9424416045ee970d8137ae21d5931275c101d7172f28"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_stream_mux_async_ops.c",
+        "bytes": 11802,
+        "sha256": "873712c361d44697e43d2a2e01fa9ed5d9579b48f0237756d738b258152814a1"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_stream_wrap_ops.c",
+        "bytes": 8822,
+        "sha256": "2cd63fabb20752277f62977e6a73cf7f78b5caca961afc08389600cb81529a43"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_substream_loose_ops.c",
+        "bytes": 14527,
+        "sha256": "78a03f05e0ef8c46e34eadbc1a46fdf4cf9127220ffae2324d720ef65661fca4"
+      },
+      {
+        "path": "port/recovered_types/test_vfs_view_map_ops.c",
+        "bytes": 10004,
+        "sha256": "813b11adc5b20001d5618019395c0c5310807a7d76646637f9c330a40aee5f93"
+      },
+      {
+        "path": "port/recovered_types/test_xml_loader_policy.c",
+        "bytes": 9012,
+        "sha256": "92e9dd7be968306792b395484606849e88f16a114e943029457e44dbf2891b17"
+      },
+      {
+        "path": "port/recovered_types/unit_card_resource.c",
+        "bytes": 7384,
+        "sha256": "2ea6d1e9f301824556604bf21113ec5dffe3ab5b99e9b50180cbffa9df539feb"
+      },
+      {
+        "path": "port/recovered_types/unit_card_resource.h",
+        "bytes": 4644,
+        "sha256": "476989c945bb7e50dfecc176a10ce89239d493588019f2fe9363f67cce23ea8b"
+      },
+      {
+        "path": "port/recovered_types/vfs_adj_open_ops.c",
+        "bytes": 7112,
+        "sha256": "50d67ed9385920a749cccda0e772d3a53aa341cf574869bcfedb8fd0cdc291bf"
+      },
+      {
+        "path": "port/recovered_types/vfs_adj_open_ops.h",
+        "bytes": 4531,
+        "sha256": "f7bc1fdbaf795f93c596e36e99a078c0e7d450ed861fedbd98b64e7be0ae6c01"
+      },
+      {
+        "path": "port/recovered_types/vfs_archive_mount_step.c",
+        "bytes": 11868,
+        "sha256": "b3f3d04d93f95f4105a18f58453b033500d250f062469cd0530749dfca35fd12"
+      },
+      {
+        "path": "port/recovered_types/vfs_archive_mount_step.h",
+        "bytes": 3975,
+        "sha256": "c86f0d54d7e63260163f41a01bba546c8c31e4b5721a177172750eff97e7f2f4"
+      },
+      {
+        "path": "port/recovered_types/vfs_archive_register.c",
+        "bytes": 21157,
+        "sha256": "6d9797b15514c61147ff8076016cec268294fbda46b003fa445f72d2e8d90b62"
+      },
+      {
+        "path": "port/recovered_types/vfs_archive_register.h",
+        "bytes": 5488,
+        "sha256": "103e820f58ffeac5fcf4532cffbea5facd3929857daf35db0a549e9ead4ae2fd"
+      },
+      {
+        "path": "port/recovered_types/vfs_archive_tree.c",
+        "bytes": 8551,
+        "sha256": "e42b64b148db05054a7005ab389ab2f9a8459583a35dcfc6073fc21e9fe01d19"
+      },
+      {
+        "path": "port/recovered_types/vfs_archive_tree.h",
+        "bytes": 3748,
+        "sha256": "2176ca486eb6243d5249920f263ef6d78faae6d7c5282d8e7f78b5877e675af1"
+      },
+      {
+        "path": "port/recovered_types/vfs_dep_rehash.c",
+        "bytes": 10478,
+        "sha256": "0a804fc5737889866c1648a4485aa7fedacbc6895a89c22a3d7aa21ef495a119"
+      },
+      {
+        "path": "port/recovered_types/vfs_dep_rehash.h",
+        "bytes": 4079,
+        "sha256": "abcd1a5da7e86586e175e63bea4a4ecc47bf372e92569556210299664f603274"
+      },
+      {
+        "path": "port/recovered_types/vfs_dependency_graph.c",
+        "bytes": 19874,
+        "sha256": "9b805922430460c9825bdacad8ad46705bde3a5e91ca9ab3708762fbd0dd28bb"
+      },
+      {
+        "path": "port/recovered_types/vfs_dependency_graph.h",
+        "bytes": 5095,
+        "sha256": "15fc93c466959647faec4368f3462897f2a67bd9ff51f262d32fef8154f863c6"
+      },
+      {
+        "path": "port/recovered_types/vfs_dispatch.c",
+        "bytes": 1176,
+        "sha256": "72ca65a5e769f0deadcded43312bc53b86644be444c3f8c6862d7c1a0eb2b26b"
+      },
+      {
+        "path": "port/recovered_types/vfs_dispatch.h",
+        "bytes": 1617,
+        "sha256": "40a65225effaeb2b44831ee5e15924f6d1ff18fbe604fb1162e35cbeae5cb381"
+      },
+      {
+        "path": "port/recovered_types/vfs_fs_secondary_ops.c",
+        "bytes": 10464,
+        "sha256": "866f211fa4317b0a34c6b4372e6047ff8f6bd80b123e7a4169a04b174d0c209f"
+      },
+      {
+        "path": "port/recovered_types/vfs_fs_secondary_ops.h",
+        "bytes": 6218,
+        "sha256": "f46215a2ad51ffd3817b2089981193f7e38f65ecf1256f391fa119dcf07efa79"
+      },
+      {
+        "path": "port/recovered_types/vfs_handle_lifecycle_ops.c",
+        "bytes": 11419,
+        "sha256": "86a0d1be5f3b2489c3cc3eafa5a87697c7552cdd0620e28b42f2e22a8a15bde9"
+      },
+      {
+        "path": "port/recovered_types/vfs_handle_lifecycle_ops.h",
+        "bytes": 7554,
+        "sha256": "ea8e0bc9bfb178af2b670e6726a0156ebbe7a4bea0ff46ce2e05a6371abf925c"
+      },
+      {
+        "path": "port/recovered_types/vfs_name.c",
+        "bytes": 2836,
+        "sha256": "ea5d733e037883f76e26fc6b40a0ebd31a4da76ecf4a2a648319b3b70cf3c21d"
+      },
+      {
+        "path": "port/recovered_types/vfs_name.h",
+        "bytes": 2615,
+        "sha256": "c7028847bf344131fa3a497d5145434002bcb4129c1ca62cacb1e79d127f6fc6"
+      },
+      {
+        "path": "port/recovered_types/vfs_name_assign.c",
+        "bytes": 3127,
+        "sha256": "b0077f660afe2be7a8439f9be8021ce15b56f0e0be11201417e54949f5a4552a"
+      },
+      {
+        "path": "port/recovered_types/vfs_name_assign.h",
+        "bytes": 2575,
+        "sha256": "875f3ccbfa9aca543ac2bdaa56a0f06bf73df4b73dc0758b2279ff1f3e46cdc7"
+      },
+      {
+        "path": "port/recovered_types/vfs_pack_entry.c",
+        "bytes": 7195,
+        "sha256": "153413f93a3e541353131cce8911e4f2d10a9682033acb3a01064bc831564206"
+      },
+      {
+        "path": "port/recovered_types/vfs_pack_entry.h",
+        "bytes": 3366,
+        "sha256": "171cd1c82f923b67da03d694d4cd0b619c1bfe6fd4b383b0578cffa3a5859fb3"
+      },
+      {
+        "path": "port/recovered_types/vfs_pack_stream.c",
+        "bytes": 5256,
+        "sha256": "a7f04553831bd38662d9db8ccb41f71cc0804bd69a1b9dbe81f68209ab28c2ca"
+      },
+      {
+        "path": "port/recovered_types/vfs_pack_stream.h",
+        "bytes": 3809,
+        "sha256": "d804baeccb8be048579d26ee34019282b73c6e3a8b064294a3d7cac7b58b8f52"
+      },
+      {
+        "path": "port/recovered_types/vfs_pool_slab.c",
+        "bytes": 12759,
+        "sha256": "73bb82613b01698d18488fb5b53b88d71b6c8fe5dd289c8d0be7be9f5d5e676a"
+      },
+      {
+        "path": "port/recovered_types/vfs_pool_slab.h",
+        "bytes": 4662,
+        "sha256": "49730f35b1eaf975c2e3f7d075652b42d5d27fa525176331713942f9c4fcaee7"
+      },
+      {
+        "path": "port/recovered_types/vfs_quota_map.c",
+        "bytes": 11637,
+        "sha256": "e5e0462f04053a12a81ccd31315f6b803799f3b38ed44bb16e5c9b58dccd5fdc"
+      },
+      {
+        "path": "port/recovered_types/vfs_quota_map.h",
+        "bytes": 2829,
+        "sha256": "b4e636da07bb875222b2e73d6acf078cf9ae7adae944d22c93b4fd033d1e5ccb"
+      },
+      {
+        "path": "port/recovered_types/vfs_rb_bucket_ops.c",
+        "bytes": 7695,
+        "sha256": "e993fb2bbc04b22be8ca35d9a6820fdd847da44612678f9eb351535b46cb5be8"
+      },
+      {
+        "path": "port/recovered_types/vfs_rb_bucket_ops.h",
+        "bytes": 3796,
+        "sha256": "2761dbb47814cdda272cc0c6c65a02ca64288018915798fb93128b9f87a0c3ab"
+      },
+      {
+        "path": "port/recovered_types/vfs_scan_mount.c",
+        "bytes": 10247,
+        "sha256": "9efa2701ee2b385584057e7d74b8ec4a6996219159274dd31a2ab81298baf33c"
+      },
+      {
+        "path": "port/recovered_types/vfs_scan_mount.h",
+        "bytes": 3372,
+        "sha256": "8282ff9ba8601c432679c4d557023ff9a9e54557c4f571ae9d1da1c9e90a4fb3"
+      },
+      {
+        "path": "port/recovered_types/vfs_state_telemetry_ops.c",
+        "bytes": 12270,
+        "sha256": "62f640e30fd2ea34cc52597fafa421254ec5eeb55132722e653b2556732d14a1"
+      },
+      {
+        "path": "port/recovered_types/vfs_state_telemetry_ops.h",
+        "bytes": 5807,
+        "sha256": "1ec390398990a7b7601871f7b249b25670b02eabcb60681925bc7bea57f5ed0c"
+      },
+      {
+        "path": "port/recovered_types/vfs_stream_completion_ops.c",
+        "bytes": 15599,
+        "sha256": "76b87065430508af1bde75f6ffc1f4f660fc687e851ad472b2e9917765074b91"
+      },
+      {
+        "path": "port/recovered_types/vfs_stream_completion_ops.h",
+        "bytes": 5485,
+        "sha256": "ffa5ba3a4bf88bf3e913dc353f9247a4545e3452175262611e71d9b2aea2bbb4"
+      },
+      {
+        "path": "port/recovered_types/vfs_stream_mux_async_ops.c",
+        "bytes": 18260,
+        "sha256": "9865a2d17bff73d00b5dcf4829bc10361abfa997109e230b1f6b9f57eaeb301a"
+      },
+      {
+        "path": "port/recovered_types/vfs_stream_mux_async_ops.h",
+        "bytes": 9328,
+        "sha256": "ff593b583bb86538bf8d1d60d1310314b23d036a46fa0f94b246306f038702ae"
+      },
+      {
+        "path": "port/recovered_types/vfs_stream_wrap_ops.c",
+        "bytes": 13782,
+        "sha256": "c4d17b97c89d0d022dcf814ab2b3a00f310521f8ddf1ba62ff48a5d922f69169"
+      },
+      {
+        "path": "port/recovered_types/vfs_stream_wrap_ops.h",
+        "bytes": 5007,
+        "sha256": "ee37df6973e761281dc10005911852cdbd9d4e00d0efc18f3b8db115f5e70ea3"
+      },
+      {
+        "path": "port/recovered_types/vfs_substream_loose_ops.c",
+        "bytes": 11359,
+        "sha256": "d3d0ed1c9a4849fc3044ed2715e76c665b272b023bd24a4bb401be87ad16cc4f"
+      },
+      {
+        "path": "port/recovered_types/vfs_substream_loose_ops.h",
+        "bytes": 6315,
+        "sha256": "70ba6ecff2111783c7ae29d47971a41faf1ade95f1bbb37861b590cc9ebab245"
+      },
+      {
+        "path": "port/recovered_types/vfs_view_map_ops.c",
+        "bytes": 13452,
+        "sha256": "569f0b031748e682af6bffdd91ce6ee2f0540e9ee9b7b48316082daf556d745b"
+      },
+      {
+        "path": "port/recovered_types/vfs_view_map_ops.h",
+        "bytes": 6050,
+        "sha256": "c66c547ac2b9e74b57ef203a96cf361e6401ca067a48fa5556eb47497c8b5ee5"
+      },
+      {
+        "path": "port/recovered_types/xml_loader_policy.c",
+        "bytes": 2257,
+        "sha256": "e7b8bb303f944bd66dd40658f505aea74858e6cc31da0e218738876cb28057df"
+      },
+      {
+        "path": "port/recovered_types/xml_loader_policy.h",
+        "bytes": 2966,
+        "sha256": "42b9f8355ae302d3737eb844bd109fcc9ada27b294338431aa315619476638a1"
+      },
+      {
+        "path": "progress.md",
+        "bytes": 63742,
+        "sha256": "404459d86e4d14c6665fa12dc1be04404e7e84d29043ec06d5b1d8dda20de01d"
+      },
+      {
+        "path": "scripts/test_type_recovery_contracts.py",
+        "bytes": 89561,
+        "sha256": "44f8b4e0c2caa2f8342c9a0eaf0ca4b791824b268311966ca8edd920855611b9"
+      },
+      {
+        "path": "scripts/type_recovery_contracts.py",
+        "bytes": 9226,
+        "sha256": "148a6cbc2cbfdff19c2f30ed9fe4e85219a3602ac36a71e6397e7059f058b153"
+      },
+      {
+        "path": "scripts/verify_fauna_resources.py",
+        "bytes": 6911,
+        "sha256": "2bcb22d882509671d6a5c2c590ca87cac2fb774099ed75884b16b415ed9e108c"
+      },
+      {
+        "path": "tests/native/CMakeLists.txt",
+        "bytes": 6960,
+        "sha256": "37a9225e989bd6925e2285d8929a8052acacea0af43f9ad13434f7ff5c691fc3"
+      }
+    ],
+    "remaining": [
+      "active VFS FileSystem primary interface 0x11897870 (28 unrecovered slots)",
+      "live Win32 critical-section contention, async worker thread scheduling, and whole-engine runtime execution",
       "full normalization, parser equivalence, remaining XML/VFS ABI, historical CRT/locale/FP equivalence and whole-engine recovery"
     ]
   }

@@ -1539,5 +1539,118 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_file_stat32, is_readable_0c, 0x0c);
 ROME2_LAYOUT_ASSERT(rome2_vfs_file_stat32, is_writable_0d, 0x0d);
 ROME2_LAYOUT_ASSERT(rome2_vfs_file_stat32, is_dir_0e, 0x0e);
 
+/* Layer 28: Base/static FileSystem (0x119e1004), _Ref_count_base (0x1189a520), and active FileSystem secondary interface (0x118978e8). */
+
+/* 8-byte dual-vptr base FileSystem object at 0x119e1004 (`0x117240b0` & `0x112acfb0`). */
+typedef struct rome2_vfs_base_fs_obj32 {
+    uint32_t primary_vptr_00;                    /* 00 (0x1189791c) */
+    uint32_t secondary_vptr_04;                  /* 04 (0x11897994) */
+} rome2_vfs_base_fs_obj32;
+_Static_assert(sizeof(rome2_vfs_base_fs_obj32) == 0x08, "base fs obj 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_base_fs_obj32, primary_vptr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_base_fs_obj32, secondary_vptr_04, 0x04);
+
+/* 120-byte (30-slot) primary FileSystem vtable (`0x1189791c` / active `0x11897870`). */
+typedef struct rome2_vfs_base_fs_vtable_30slot32 {
+    uint32_t slots[30];                          /* 00..74 */
+} rome2_vfs_base_fs_vtable_30slot32;
+_Static_assert(sizeof(rome2_vfs_base_fs_vtable_30slot32) == 0x78, "base fs primary vtable 30slot 32 size");
+
+/* 52-byte (13-slot) secondary FileSystem vtable (`0x11897994` & `0x118978e8`). */
+typedef struct rome2_vfs_fs_secondary_vtable_13slot32 {
+    uint32_t slots[13];                          /* 00..30 */
+} rome2_vfs_fs_secondary_vtable_13slot32;
+_Static_assert(sizeof(rome2_vfs_fs_secondary_vtable_13slot32) == 0x34, "fs secondary vtable 13slot 32 size");
+
+/* 16-byte `std::tr1::_Ref_count`-style shared-pointer control block (`0x1189a520`). */
+typedef struct rome2_vfs_sp_ctrl_block32 {
+    uint32_t vtable_00;                          /* 00 (0x1189a520) */
+    uint32_t uses_04;                            /* 04 (strong refcount) */
+    uint32_t weaks_08;                           /* 08 (weak/ctrl refcount) */
+    uint32_t payload_ptr_0c;                     /* 0c (managed object pointer or 0) */
+} rome2_vfs_sp_ctrl_block32;
+_Static_assert(sizeof(rome2_vfs_sp_ctrl_block32) == 0x10, "sp ctrl block 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_sp_ctrl_block32, vtable_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_sp_ctrl_block32, uses_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_sp_ctrl_block32, weaks_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_sp_ctrl_block32, payload_ptr_0c, 0x0c);
+
+/* 16-byte (4-slot) `_Ref_count_base` vtable at `0x1189a520`. */
+typedef struct rome2_vfs_sp_ctrl_vtable_4slot32 {
+    uint32_t destroy_00;                         /* 00 (0x112afc90) */
+    uint32_t delete_this_04;                     /* 04 (0x1090bb10) */
+    uint32_t deleting_dtor_08;                   /* 08 (0x112accb0) */
+    uint32_t get_deleter_0c;                     /* 0c (0x10128c50) */
+} rome2_vfs_sp_ctrl_vtable_4slot32;
+_Static_assert(sizeof(rome2_vfs_sp_ctrl_vtable_4slot32) == 0x10, "sp ctrl vtable 4slot 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_sp_ctrl_vtable_4slot32, destroy_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_sp_ctrl_vtable_4slot32, delete_this_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_sp_ctrl_vtable_4slot32, deleting_dtor_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_sp_ctrl_vtable_4slot32, get_deleter_0c, 0x0c);
+
+/* 8-byte `std::shared_ptr` representation `{ptr, rep}` populated by `0x112e0ed0`/`0x112ce3b0`/`0x112e10e0`/`0x112e0f30`/`0x112ce410`. */
+typedef struct rome2_vfs_sp_pair32 {
+    uint32_t ptr_00;                             /* 00 (pointee) */
+    uint32_t rep_04;                             /* 04 (`rome2_vfs_sp_ctrl_block32 *`) */
+} rome2_vfs_sp_pair32;
+_Static_assert(sizeof(rome2_vfs_sp_pair32) == 0x08, "sp pair 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_sp_pair32, ptr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_sp_pair32, rep_04, 0x04);
+
+/* 8-byte zeroed 64-bit pair written by `0x11002ca0`. */
+typedef struct rome2_vfs_u64_pair32 {
+    uint32_t low_00;                             /* 00 */
+    uint32_t high_04;                            /* 04 */
+} rome2_vfs_u64_pair32;
+_Static_assert(sizeof(rome2_vfs_u64_pair32) == 0x08, "u64 pair 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_u64_pair32, low_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_u64_pair32, high_04, 0x04);
+
+/* 32-byte entry metadata descriptor populated by `0x112c9550`. */
+typedef struct rome2_vfs_entry_info32 {
+    uint32_t size_lo_00;                         /* 00 (0xffffffff) */
+    uint32_t size_hi_04;                         /* 04 (0xffffffff) */
+    uint32_t name_str_08;                        /* 08 (interned empty string handle) */
+    uint32_t pad_0c;                             /* 0c (untouched by 0x112c9550) */
+    uint32_t zero_10;                            /* 10 */
+    uint32_t zero_14;                            /* 14 */
+    uint32_t zero_18;                            /* 18 */
+    uint8_t flag_1c;                             /* 1c */
+    uint8_t pad_1d[3];                           /* 1d..1f */
+} rome2_vfs_entry_info32;
+_Static_assert(sizeof(rome2_vfs_entry_info32) == 0x20, "entry info 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_entry_info32, size_lo_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_entry_info32, size_hi_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_entry_info32, name_str_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_entry_info32, zero_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_entry_info32, flag_1c, 0x1c);
+
+/* 28-byte lazy `0x11897760` pack-wrap singleton initialized in `0x112d2980` (`0x120328c8`) and `0x112d2a70` (`0x120328a0`). */
+typedef struct rome2_vfs_pack_wrap_singleton28_32 {
+    uint32_t vtable_00;                          /* 00 (0x11897760, reset to 0x11849278 on atexit) */
+    uint32_t name_str_04;                        /* 04 (`<empty file>`) */
+    uint32_t zero_08;                            /* 08 */
+    uint32_t zero_0c;                            /* 0c */
+    uint32_t zero_10;                            /* 10 */
+    uint32_t zero_14;                            /* 14 */
+    uint32_t zero_18;                            /* 18 */
+} rome2_vfs_pack_wrap_singleton28_32;
+_Static_assert(sizeof(rome2_vfs_pack_wrap_singleton28_32) == 0x1c, "pack wrap singleton28 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_wrap_singleton28_32, vtable_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_wrap_singleton28_32, name_str_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_wrap_singleton28_32, zero_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_pack_wrap_singleton28_32, zero_18, 0x18);
+
+/* 32-byte active FileSystem secondary-interface header (`this = primary_fs + 4`) observed across `0x118978e8`. */
+typedef struct rome2_vfs_fs_secondary_hdr32 {
+    uint32_t secondary_vtable_00;                /* 00 (0x118978e8) */
+    uint32_t active_ops_04;                      /* 04 (in-flight lock counter) */
+    uint8_t lock_cs_08[24];                      /* 08 (Win32 CRITICAL_SECTION @ primary+0x0c) */
+} rome2_vfs_fs_secondary_hdr32;
+_Static_assert(sizeof(rome2_vfs_fs_secondary_hdr32) == 0x20, "fs secondary hdr 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_fs_secondary_hdr32, secondary_vtable_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_fs_secondary_hdr32, active_ops_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_fs_secondary_hdr32, lock_cs_08, 0x08);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

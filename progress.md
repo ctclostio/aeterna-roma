@@ -743,3 +743,30 @@ validate bounded C17 helpers.
 - Complete engine/FaceFX layouts, callable vtable method signatures, general
   allocator/threading behavior, and full unit-card constructor equivalence
   remain open.
+
+### Layer 28: Base VFS FileSystem, `_Ref_count_base` & Active Secondary Interface (`0x1189791c`, `0x11897994`, `0x1189a520`, `0x118978e8`)
+- Extended the closed Layer 27 REA session (`156` reused records) to `216`
+  validated records (`60` net new across `15` direct `analyze_function`
+  calls, `1` `resource_constraint` procedure `0x1018bd90` + `3`
+  `inspect_analysis_view` records, `14` `invalid_request` fallback pairs,
+  and `13` `read_bytes(length=128)` global/helper anchors) and merged via
+  `import_evidence_bundle` + `rea evidence-export` into the `583`-record
+  canonical cumulative bundle outside Git (`out/vfs-layer28-20261115/`).
+- Recorded **30** Layer 28 procedures, **17** globals, **2** vtables
+  (`0x1189791c` -> `0x100f3d00`, `0x1189a520` -> `0x112afc90`), and **22**
+  instruction witnesses in `port/recovered_types/contracts.json`, bringing
+  totals to **404 functions, 186 globals, 39 vtables, and 360 instruction
+  witnesses** (`rea_layer28_evidence`).
+- Locked 10 `_Static_assert`-verified guest32 layouts (`8B`–`120B`) in
+  `port/recovered_types/guest32_layouts.h` and implemented 15 checked C17
+  models in `port/recovered_types/vfs_fs_secondary_ops.h/.c` (including
+  `< pack_count` vs `0x80000001..[0x119e1000]` handle classification,
+  `_Ref_count_base` strong/weak release, encrypted whole-file XOR decipher,
+  quota telemetry accounting, platform gate, and `0x112e3480` doubly-linked
+  node unlink) tested by 78 `CHECK`s across 3 suites in
+  `port/recovered_types/test_vfs_fs_secondary_ops.c`.
+- Verified **85/85** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **63** contract tests on Python 3.14 and 3.15, and **891** clean-public Python
+  tests (**291** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; active primary FileSystem interface
+  `0x11897870` (`28` slots) and live runtime threading remain open.
