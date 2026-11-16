@@ -1866,5 +1866,70 @@ _Static_assert(sizeof(rome2_vfs_chunked_str_node16_32) == 0x10, "chunked str nod
 ROME2_LAYOUT_ASSERT(rome2_vfs_chunked_str_node16_32, count_04, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_chunked_str_node16_32, next_0c, 0x0c);
 
+/* String-interning hash table 32B singleton at 0x11afa698 initialized by 0x10121930. */
+typedef struct rome2_vfs_intern_table32_32 {
+    uint32_t max_load_factor_f32_00;             /* 00 (0x3f800000 = 1.0f) */
+    uint32_t list_head_04;                       /* 04 */
+    uint32_t list_size_08;                       /* 08 */
+    uint32_t bucket_begin_0c;                    /* 0c (0x40B array = 8 pair<head,tail>) */
+    uint32_t bucket_end_10;                      /* 10 */
+    uint32_t bucket_cap_14;                      /* 14 */
+    uint32_t mask_18;                            /* 18 (7) */
+    uint32_t buckets_1c;                         /* 1c (8) */
+} rome2_vfs_intern_table32_32;
+_Static_assert(sizeof(rome2_vfs_intern_table32_32) == 0x20, "intern table32 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_intern_table32_32, list_head_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_intern_table32_32, bucket_begin_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_intern_table32_32, mask_18, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_vfs_intern_table32_32, buckets_1c, 0x1c);
+
+/* 28B Win32 CRITICAL_SECTION lock wrapper at 0x11afa6a8 initialized by 0x10122dc0. */
+typedef struct rome2_vfs_lock_wrapper28_32 {
+    uint32_t depth_00;                           /* 00 */
+    uint32_t crit_sec_04[6];                     /* 04..1b (24B CRITICAL_SECTION, spin 0x2710) */
+} rome2_vfs_lock_wrapper28_32;
+_Static_assert(sizeof(rome2_vfs_lock_wrapper28_32) == 0x1c, "lock wrapper28 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_lock_wrapper28_32, depth_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_lock_wrapper28_32, crit_sec_04, 0x04);
+
+/* Small 12B observer record constructed by 0x112a85e0 (`vtable 0x11897be0`). */
+typedef struct rome2_vfs_observer_small12_32 {
+    uint32_t vptr_00;                            /* 00 (0x11897be0) */
+    uint32_t path_str_04;                        /* 04 */
+    uint32_t flags_08;                           /* 08 */
+} rome2_vfs_observer_small12_32;
+_Static_assert(sizeof(rome2_vfs_observer_small12_32) == 0x0c, "observer small12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_observer_small12_32, path_str_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_observer_small12_32, flags_08, 0x08);
+
+/* Full 40B observer/stream wrapper constructed by 0x112aa670 (`vtable 0x11897c24`). */
+typedef struct rome2_vfs_observer_full40_32 {
+    uint32_t vptr_00;                            /* 00 (0x11897c24) */
+    uint32_t fields_04[4];                       /* 04..13 */
+    uint32_t callback_obj_14;                    /* 14 */
+    uint32_t key_words_18[2];                    /* 18..1f */
+    uint8_t key_flag_20;                         /* 20 */
+    uint8_t pad_21[3];
+    uint16_t ready_flags_24;                     /* 24 */
+    uint16_t pad_26;
+} rome2_vfs_observer_full40_32;
+_Static_assert(sizeof(rome2_vfs_observer_full40_32) == 0x28, "observer full40 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_observer_full40_32, callback_obj_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_observer_full40_32, key_words_18, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_vfs_observer_full40_32, key_flag_20, 0x20);
+ROME2_LAYOUT_ASSERT(rome2_vfs_observer_full40_32, ready_flags_24, 0x24);
+
+/* 28B mount/provider singleton initialized by 0x112d3640 at 0x12032ad0 (`vtable 0x11897760`). */
+typedef struct rome2_vfs_mount_singleton28_32 {
+    uint32_t vptr_00;                            /* 00 (0x11897760) */
+    uint32_t name_str_04;                        /* 04 */
+    uint32_t qword_pair_08[2];                   /* 08..0f */
+    uint32_t tail_words_10[3];                   /* 10..1b */
+} rome2_vfs_mount_singleton28_32;
+_Static_assert(sizeof(rome2_vfs_mount_singleton28_32) == 0x1c, "mount singleton28 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_mount_singleton28_32, name_str_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_mount_singleton28_32, qword_pair_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_mount_singleton28_32, tail_words_10, 0x10);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

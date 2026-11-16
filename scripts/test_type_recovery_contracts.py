@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 497)
-        self.assertEqual(result["globals"], 240)
+        self.assertEqual(result["functions"], 529)
+        self.assertEqual(result["globals"], 262)
         self.assertEqual(result["vtables"], 40)
-        self.assertEqual(result["instruction_witnesses"], 434)
+        self.assertEqual(result["instruction_witnesses"], 458)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -1801,6 +1801,65 @@ class TypeContractProvenanceTests(unittest.TestCase):
             self.assertEqual(fn["stack_argument_bytes"], stack, addr)
             self.assertEqual(fn["callee_pop_bytes"], pop, addr)
             self.assertEqual(fn["return_instruction_addresses"], rets, addr)
+
+    def test_layer32_vfs_init_intern_xml_and_string_evidence(self):
+        ev32 = self.registry["rea_layer32_evidence"]
+        self.assertEqual(len(ev32["records"]), 44)
+        self.assertEqual(ev32["closed_evidence_records"], 423)
+        self.assertEqual(ev32["new_evidence_records"], 47)
+        self.assertEqual(ev32["reused_layer31_evidence_records"], 376)
+        self.assertEqual(ev32["extra_evidence_views_count"], 3)
+        self.assertEqual(ev32["cumulative_validated_bundle_records"], 790)
+        self.assertEqual(ev32["non_proc_slots"], [])
+        self.assertEqual(ev32["resource_constrained_slots"], ["100f2530"])
+
+        by_fn = {fn["address"]: fn for fn in self.registry["functions"]}
+        expected = [
+            ("112a4690", "cdecl", "none", 8, 0, ["112a4759"]),
+            ("112a85e0", "thiscall", "ECX", 4, 4, ["112a8600"]),
+            ("112aa610", "thiscall", "ECX", 16, 16, ["112aa63b"]),
+            ("112aa670", "thiscall", "ECX", 12, 12, ["112aa705"]),
+            ("112aa710", "thiscall", "ECX", 4, 4, ["112aa751", "112aa75e"]),
+            ("112acec0", "thiscall", "ECX", 4, 4, ["112acf36"]),
+            ("112b0880", "thiscall", "ECX", 8, 8, ["112b0945", "112b0971", "112b09fc"]),
+            ("112c2190", "cdecl", "none", 0, 0, ["112c21b1"]),
+            ("112c21f0", "cdecl", "none", 0, 0, ["112c2211"]),
+            ("112cc200", "thiscall", "ECX", 8, 8, ["112cc386", "112cc3ae"]),
+            ("112ce950", "thiscall", "ECX", 0, 0, ["112cee20"]),
+            ("112d3640", "cdecl", "none", 0, 0, ["112d3663"]),
+            ("11300140", "cdecl", "none", 4, 0, ["113001fb", "11300211"]),
+            ("100ff880", "cdecl", "none", 4, 0, ["100ff897", "100ff89a"]),
+            ("100ff8e0", "cdecl", "none", 4, 0, ["100ff8ef"]),
+            ("100ff8f0", "thiscall", "ECX", 8, 8, ["100ffa08"]),
+            ("1011fef0", "thiscall", "ECX", 0, 0, ["1011ffad", "101204d6"]),
+            ("10120b30", "cdecl", "none", 4, 0, ["10120b6b", "10120c0b"]),
+            ("10120c10", "cdecl", "none", 8, 0, ["10120c56", "10120d8c"]),
+            ("10121930", "cdecl", "none", 0, 0, ["10121977"]),
+            ("101225a0", "cdecl", "none", 0, 0, ["101225e9"]),
+            ("10122dc0", "cdecl", "none", 0, 0, ["10122de1"]),
+            ("100f1a50", "thiscall", "ECX", 4, 4, ["100f1a90"]),
+            ("100f2530", "thiscall", "ECX", 4, 4, ["100f255c"]),
+            ("100f2ad0", "thiscall", "ECX", 4, 4, ["100f2add", "100f2ae5"]),
+            ("100f2c40", "cdecl", "none", 12, 0, ["100f2cb9"]),
+            ("100f2de0", "cdecl", "none", 12, 0, ["100f2e5c"]),
+            ("100f6ea0", "thiscall", "ECX", 0, 0, ["100f6eb0"]),
+            ("100f6ee0", "thiscall", "ECX", 0, 0, ["100f6eed", "100f6f0a", "100f6f20"]),
+            ("100f70f0", "thiscall", "ECX", 12, 12, ["100f7142", "100f7175", "100f7195", "100f71a3"]),
+            ("1017fc90", "stdcall", "none", 12, 12, ["1017fcd9"]),
+        ]
+        for addr, cc, rx, stack, pop, rets in expected:
+            fn = by_fn[addr]
+            self.assertEqual(fn["calling_convention"], cc, addr)
+            self.assertEqual(fn["receiver_register"], rx, addr)
+            self.assertEqual(fn["stack_argument_bytes"], stack, addr)
+            self.assertEqual(fn["callee_pop_bytes"], pop, addr)
+            self.assertEqual(fn["return_instruction_addresses"], rets, addr)
+
+        fn_xml = by_fn["112c5460"]
+        self.assertEqual(fn_xml["bytes"], 5491)
+        self.assertEqual(len(fn_xml["return_instruction_addresses"]), 19)
+        self.assertIn("112c5807", fn_xml["return_instruction_addresses"])
+        self.assertIn("112c69d2", fn_xml["return_instruction_addresses"])
 
     def test_dropped_registry_category_rejected(self):
         registry = copy.deepcopy(self.registry)

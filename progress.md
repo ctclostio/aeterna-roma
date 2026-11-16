@@ -868,3 +868,33 @@ callees.
   Ghidra project or canonical exports; Layer 32 (`0x1011fef0` pack-index ctor,
   `0x10120b30`/`0x10120c10` locked entry builders, remaining `0x112a..0x1130`
   VFS callees) and live runtime threading remain open.
+
+### Layer 32 VFS bootstrap initialization, path interning, XML save dispatch & string/handle primitives
+- Closed **32 additional VFS functions, 22 globals, and 24 instruction
+  witnesses** (`rea_layer32_evidence` -> **529 functions, 262 globals,
+  40 vtables, 458 instruction witnesses**; **423** closed Layer 32 session
+  records / **790** canonical cumulative validated bundle records) covering:
+  - Pack-entry bootstrap (`0x1011fef0`) choosing retail `\data\` (`data\boot.pack`)
+    or 6 working-data paths, plus `CRITICAL_SECTION`-locked (`0x10122dc0`, spin
+    `0x2710`) 32B path-interning (`0x10121930`, `0x101225a0` `<empty_file_name>`,
+    `0x10120b30`, `0x10120c10`).
+  - All 14 remaining RET-bearing `0x112a..0x1130` VFS callees (`0x112a4690`
+    thread budget, `0x112a85e0`..`0x112aa710` observers, `0x112acec0`,
+    `0x112b0880`, `0x112c2190`/`c21f0`, `0x112c5460` 5491B XML save switch,
+    `0x112cc200`, `0x112ce950`, `0x112d3640`, `0x11300140` mod banner).
+  - Win32 file/handle and `CA_ASCIIString` primitives (`0x100ff880`,
+    `0x100ff8e0`, `0x100ff8f0`, `0x100f1a50`, `0x100f2530`, `0x100f2ad0`,
+    `0x100f2c40`, `0x100f2de0`, `0x100f6ea0`, `0x100f6ee0`, `0x100f70f0`,
+    `0x1017fc90`).
+- Locked **5** fixed-width `guest32` structs in
+  [guest32_layouts.h](port/recovered_types/guest32_layouts.h) and added checked
+  C17 helpers and **46** tests in
+  [vfs_fs_init_xml_pack_ops.h](port/recovered_types/vfs_fs_init_xml_pack_ops.h),
+  [vfs_fs_init_xml_pack_ops.c](port/recovered_types/vfs_fs_init_xml_pack_ops.c),
+  and [test_vfs_fs_init_xml_pack_ops.c](port/recovered_types/test_vfs_fs_init_xml_pack_ops.c).
+- Verified **89/89** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **67** contract tests on Python 3.14 and 3.15, and **895** clean-public Python
+  tests (**295** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; Layer 33 (`0x10126e50..0x10127c00` 60B
+  folder-entry tree & `0x112aa800..0x112e4050` VFS helpers) and live runtime
+  execution remain open.
