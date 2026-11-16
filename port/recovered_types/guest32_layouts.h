@@ -2102,5 +2102,41 @@ _Static_assert(sizeof(rome2_vfs_wstreambuf_iter8_32) == 0x08, "wstreambuf iter8 
 ROME2_LAYOUT_ASSERT(rome2_vfs_wstreambuf_iter8_32, got_flag_04, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_wstreambuf_iter8_32, val_06, 0x06);
 
+/* 12B MSVC std::_Ref_count_base decremented via lock xadd by 0x1039db80. */
+typedef struct rome2_vfs_refcount_ctrl12_32 {
+    uint32_t vptr_00;                            /* 00 */
+    int32_t uses_04;                             /* 04 */
+    int32_t weaks_08;                            /* 08 */
+} rome2_vfs_refcount_ctrl12_32;
+_Static_assert(sizeof(rome2_vfs_refcount_ctrl12_32) == 0x0c, "refcount ctrl12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_refcount_ctrl12_32, uses_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_refcount_ctrl12_32, weaks_08, 0x08);
+
+/* 12B channel bit-stream cursor consumed and normalized by 0x10fd77f0 and 0x10fd7b10. */
+typedef struct rome2_vfs_bit_cursor12_32 {
+    uint32_t words_ptr_00;                       /* 00 */
+    uint32_t byte_cap_04;                        /* 04 */
+    uint32_t bits_used_08;                       /* 08 */
+} rome2_vfs_bit_cursor12_32;
+_Static_assert(sizeof(rome2_vfs_bit_cursor12_32) == 0x0c, "bit cursor12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_bit_cursor12_32, byte_cap_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_bit_cursor12_32, bits_used_08, 0x08);
+
+/* 24B channel slot endpoint header copied/reset by 0x10fd74d0, 0x10fd7a70, and 0x10fd9660. */
+typedef struct rome2_vfs_channel_slot_hdr24_32 {
+    uint32_t addr_dword_00;                      /* 00 */
+    uint16_t port_or_tag_04;                     /* 04 */
+    uint16_t pad_06;                             /* 06 */
+    uint32_t id_lo_08;                           /* 08 */
+    uint32_t id_hi_0c;                           /* 0c */
+    uint32_t sock_fd_10;                         /* 10 (INVALID_SOCKET -1) */
+    uint8_t active_flag_14;                      /* 14 */
+    uint8_t pad_15[3];                           /* 15..17 */
+} rome2_vfs_channel_slot_hdr24_32;
+_Static_assert(sizeof(rome2_vfs_channel_slot_hdr24_32) == 0x18, "channel slot hdr24 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_channel_slot_hdr24_32, port_or_tag_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_channel_slot_hdr24_32, sock_fd_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_channel_slot_hdr24_32, active_flag_14, 0x14);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

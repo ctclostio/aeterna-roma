@@ -1009,3 +1009,31 @@ callees.
   tests (**299** skipped) on Python 3.14 and 3.15 without touching the shared
   Ghidra project or canonical exports; remaining **22** clean `0x1023..0x1103`
   engine callees (Layer 37) and live runtime execution remain open.
+
+### Layer 37 Engine container, allocator, UTF-16 stream & channel bit-stream ops (2026-11-16)
+- Added 3 fixed-width guest32 refcount/bit-cursor/channel layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  and bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_engine_channel_ops.h](port/recovered_types/vfs_fs_engine_channel_ops.h),
+  [port/recovered_types/vfs_fs_engine_channel_ops.c](port/recovered_types/vfs_fs_engine_channel_ops.c),
+  and [port/recovered_types/test_vfs_fs_engine_channel_ops.c](port/recovered_types/test_vfs_fs_engine_channel_ops.c)
+  (**31** checks) closing all **22** remaining clean single-part RET-bearing
+  direct callees across `0x1023..0x1103` (`0x10238c90` UTF-16 `%l` scanner,
+  `0x1036a710`/`0x10ca9010`/`0x10d82640` hash-table `emplace`, `0x1039db80`
+  `_Ref_count_base::_Decref`, `0x10524c30` STL `>=0x1000` aligned unalign,
+  `0x1075c5a0` `24B` slab links, `0x107c9080` RB-tree inorder successor,
+  `0x107e0650` string range find, `0x108bfc70`/`0x108c0510`/`0x1103d530`
+  `12B` bucket vector ops, `0x10cb03c0` `u16`-prefixed UTF-16LE reader, and
+  `0x10f78370..0x10fd9660` 20-slot channel & bit-stream encoder).
+- Advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  to **669 functions**, **325 globals**, **40 vtables**, and **596 instruction
+  witnesses**, backed by **23** retained Layer 37 REA operation records (**592**
+  closed Layer 37 records, **959** cumulative validated bundle records, zero
+  non-proc or resource-constrained slots).
+- Verified **94/94** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **72** contract tests on Python 3.14 and 3.15, and **900** clean-public Python
+  tests (**300** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; **25** newly uncovered Layer 38 clean
+  callees plus non-clean/multi-part callees and live runtime execution remain
+  open.
