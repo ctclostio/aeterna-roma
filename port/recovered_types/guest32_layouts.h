@@ -1718,5 +1718,85 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_large_hash16_32, table_ptr_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_large_hash16_32, bucket_count_04, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_large_hash16_32, default_pair_08, 0x08);
 
+/* Layer 30: Open-addressing hash containers, iterators, RB-tree copy, unordered_map, and 48B mount entry layouts. */
+
+/* 8-byte open-addressing hash slot {CAString key, uint32_t value} in 0x112de360 / 0x112dc030 / 0x112ddd70. */
+typedef struct rome2_vfs_hash_entry8_32 {
+    uint32_t key_str_00;                         /* 00 (interned CAString handle or sentinel) */
+    uint32_t value_04;                           /* 04 (mapped dword id / index / payload) */
+} rome2_vfs_hash_entry8_32;
+_Static_assert(sizeof(rome2_vfs_hash_entry8_32) == 0x08, "hash entry8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_hash_entry8_32, key_str_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_hash_entry8_32, value_04, 0x04);
+
+/* 16-byte open-addressing hash table header (0x120329fc with 0x199 buckets via 0x112d2e80; also 0x112de360 / 0x112dc030). */
+typedef struct rome2_vfs_open_hash16_32 {
+    uint32_t table_ptr_00;                       /* 00 (array of bucket_count_04 * 8B slots) */
+    uint32_t bucket_count_04;                    /* 04 (0x199 in 0x12032a00, rehashes to 2*n + 1) */
+    uint32_t sentinel_a_08;                      /* 08 (primary empty-key sentinel CAString) */
+    uint32_t sentinel_b_0c;                      /* 0c (secondary tombstone/alt sentinel CAString) */
+} rome2_vfs_open_hash16_32;
+_Static_assert(sizeof(rome2_vfs_open_hash16_32) == 0x10, "open hash16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_hash16_32, table_ptr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_hash16_32, bucket_count_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_hash16_32, sentinel_a_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_open_hash16_32, sentinel_b_0c, 0x0c);
+
+/* 20-byte forward hash iterator constructed by 0x112c0940 and stepped by 0x112ac3b0. */
+typedef struct rome2_vfs_hash_iter20_32 {
+    uint32_t cur_ptr_00;                         /* 00 (initialized to begin - 8, stepped by +8) */
+    uint32_t prev_ptr_04;                        /* 04 */
+    uint32_t end_ptr_08;                         /* 08 (begin + bucket_count * 8) */
+    uint32_t sentinel_a_0c;                      /* 0c */
+    uint32_t sentinel_b_10;                      /* 10 */
+} rome2_vfs_hash_iter20_32;
+_Static_assert(sizeof(rome2_vfs_hash_iter20_32) == 0x14, "hash iter20 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_hash_iter20_32, cur_ptr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_hash_iter20_32, end_ptr_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_hash_iter20_32, sentinel_a_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_hash_iter20_32, sentinel_b_10, 0x10);
+
+/* 32-byte MSVC std::unordered_map container layout (0x12032834..0x12032853; used by 0x112a2ba0 / 0x112c14b0 / 0x112e1a00). */
+typedef struct rome2_vfs_unordered_map32_32 {
+    uint32_t max_load_factor_f32_00;             /* 00 (float32 max load factor, e.g. 0x3f800000 = 1.0f) */
+    uint32_t list_head_04;                       /* 04 (0x12032838 doubly-linked sentinel list node) */
+    uint32_t list_size_08;                       /* 08 (0x1203283c active node count, max 0x5555555) */
+    uint32_t vec_begin_0c;                       /* 0c (0x12032840 bucket-pair vector begin) */
+    uint32_t vec_end_10;                         /* 10 (0x12032844 bucket-pair vector end) */
+    uint32_t vec_cap_14;                         /* 14 (0x12032848 bucket-pair vector end capacity) */
+    uint32_t mask_18;                            /* 18 (0x1203284c bitmask bucket_count - 1) */
+    uint32_t maxidx_1c;                          /* 1c (power-of-two bucket count) */
+} rome2_vfs_unordered_map32_32;
+_Static_assert(sizeof(rome2_vfs_unordered_map32_32) == 0x20, "unordered map32 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_unordered_map32_32, max_load_factor_f32_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_unordered_map32_32, list_head_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_unordered_map32_32, list_size_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_unordered_map32_32, vec_begin_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_unordered_map32_32, mask_18, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_vfs_unordered_map32_32, maxidx_1c, 0x1c);
+
+/* 12-byte MSVC std::_Tree header (copied by 0x112a75b0, lower/upper-bound queried by 0x112be150). */
+typedef struct rome2_vfs_rbtree_header12_32 {
+    uint32_t allocator_word_00;                  /* 00 */
+    uint32_t myhead_04;                          /* 04 (root = head->parent_04, min = head->left_00, max = head->right_08) */
+    uint32_t mysize_08;                          /* 08 */
+} rome2_vfs_rbtree_header12_32;
+_Static_assert(sizeof(rome2_vfs_rbtree_header12_32) == 0x0c, "rbtree header12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_rbtree_header12_32, allocator_word_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_rbtree_header12_32, myhead_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_rbtree_header12_32, mysize_08, 0x08);
+
+/* 48-byte (0x30B) mount-descriptor element stored in vec<0x30B> (0x112d7f50 / 0x112a7440 / 0x112b5670 / 0x112a8540). */
+typedef struct rome2_vfs_mount_entry48_32 {
+    uint32_t name_str_00;                        /* 00 */
+    uint32_t reserved_04;                        /* 04 */
+    uint32_t flags_or_root_08;                   /* 08 */
+    uint32_t aux_words_0c[6];                    /* 0c..23 */
+    rome2_vfs_mount_vec_header12_32 child_vec_24;/* 24..2f (`0x112a74d0` copies 4B string vec at +0x24) */
+} rome2_vfs_mount_entry48_32;
+_Static_assert(sizeof(rome2_vfs_mount_entry48_32) == 0x30, "mount entry48 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_mount_entry48_32, name_str_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_mount_entry48_32, child_vec_24, 0x24);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

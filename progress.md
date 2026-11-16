@@ -806,3 +806,36 @@ and directly coupled TLS singleton / vector helpers.
   Ghidra project or canonical exports; remaining sweep/cleanup helpers
   (`0x112d5cc0`, `0x112e1a00`, `0x112d4de0`, `0x112cfc10`, `0x112da500`) and
   live runtime threading remain open.
+
+### Layer 30 — completed, 2026-11-15
+
+Target: active VFS FileSystem mount-rebuild, flush, teardown (`WaitForSingleObject`),
+open-address hash container, vector push/copy, and command-line/capability probe
+callees.
+
+- Extended the closed Layer 29 REA session (`279` reused records) to `324`
+  validated session records (`45` new: `29` direct `analyze_function`
+  procedures, `1` `invalid_request` target `0x112e3f20` paired with
+  `resolve_containing_procedure` + `read_bytes(length=320)`, and `14` extra
+  `read_bytes(length=64)` records) and merged canonically via
+  `import_evidence_bundle` and `rea evidence-export` into the **691-record**
+  cumulative validated bundle retained outside Git.
+- Pinned **30** functions, **22** globals, and **24** instruction witnesses in
+  [contracts.json](port/recovered_types/contracts.json) under
+  `rea_layer30_evidence`, raising totals to **466** functions, **225** globals,
+  **40** vtables, and **407** instruction witnesses.
+- Locked `6` fixed-width `guest32` structs in
+  [guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  (`rome2_vfs_hash_entry8_32` `8`B, `rome2_vfs_open_hash16_32` `16`B,
+  `rome2_vfs_hash_iter20_32` `20`B, `rome2_vfs_unordered_map32_32` `32`B,
+  `rome2_vfs_rbtree_header12_32` `12`B, `rome2_vfs_mount_entry48_32` `48`B) and
+  added checked C17 helpers and `79` checks in
+  [vfs_fs_mount_ops.h](port/recovered_types/vfs_fs_mount_ops.h),
+  [vfs_fs_mount_ops.c](port/recovered_types/vfs_fs_mount_ops.c), and
+  [test_vfs_fs_mount_ops.c](port/recovered_types/test_vfs_fs_mount_ops.c).
+- Verified **87/87** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **65** contract tests on Python 3.14 and 3.15, and **893** clean-public Python
+  tests (**293** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; VFS pack-index singleton (`0x10122cb0`),
+  `0x100fec00` directory traversal, atexit destructors, and live runtime
+  threading remain open.
