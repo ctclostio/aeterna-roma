@@ -2281,5 +2281,45 @@ typedef struct rome2_vfs_channel_mgr564_32 {
 _Static_assert(sizeof(rome2_vfs_channel_mgr564_32) == 0x234, "channel mgr564 32 size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_channel_mgr564_32, slots_00, 0x00);
 
+/* 16B timestamped sample queue node allocated by 0x10f7c1a0 and retired by 0x10fba190. */
+typedef struct rome2_vfs_ts_node16_32 {
+    uint32_t next_00;                            /* 00 */
+    uint32_t prev_04;                            /* 04 */
+    uint32_t timestamp_ms_08;                    /* 08 */
+    uint32_t byte_len_0c;                        /* 0c */
+} rome2_vfs_ts_node16_32;
+_Static_assert(sizeof(rome2_vfs_ts_node16_32) == 0x10, "ts node16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_ts_node16_32, next_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_ts_node16_32, timestamp_ms_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_ts_node16_32, byte_len_0c, 0x0c);
+
+/* 24B sliding-window throughput queue updated by 0x10f7c1a0 and trimmed by 0x10fba190. */
+typedef struct rome2_vfs_ts_queue24_32 {
+    uint32_t head_00;                            /* 00 -> rome2_vfs_ts_node16_32 */
+    uint32_t sentinel_next_04;                   /* 04 */
+    uint32_t sentinel_prev_08;                   /* 08 */
+    uint32_t window_secs_0c;                     /* 0c (* 1000 ms in 0x10fba1aa) */
+    uint32_t count_10;                           /* 10 */
+    uint32_t byte_sum_14;                        /* 14 */
+} rome2_vfs_ts_queue24_32;
+_Static_assert(sizeof(rome2_vfs_ts_queue24_32) == 0x18, "ts queue24 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_ts_queue24_32, head_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_ts_queue24_32, window_secs_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_ts_queue24_32, count_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_ts_queue24_32, byte_sum_14, 0x14);
+
+/* 20B CRT thread startup parameter block allocated by 0x1169b5ed and released by 0x1169b55f. */
+typedef struct rome2_vfs_crt_thread_param20_32 {
+    uint32_t start_addr_00;                      /* 00 */
+    uint32_t arg_04;                             /* 04 */
+    uint32_t thread_handle_08;                   /* 08 (CloseHandle) */
+    uint32_t module_handle_0c;                   /* 0c (FreeLibrary) */
+    uint32_t reserved_10;                        /* 10 */
+} rome2_vfs_crt_thread_param20_32;
+_Static_assert(sizeof(rome2_vfs_crt_thread_param20_32) == 0x14, "crt thread param20 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_thread_param20_32, start_addr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_thread_param20_32, thread_handle_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_thread_param20_32, module_handle_0c, 0x0c);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

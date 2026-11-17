@@ -1126,3 +1126,33 @@ callees.
   Ghidra project or canonical exports; **26** Layer 41 clean non-overlapping
   callees (`7` engine + `13` CRT + `6` multi-part) plus remaining IAT/noret
   thunks and live runtime execution remain open.
+
+### Layer 41 ASCII/UTF-8 formatters, sliding timestamp trim, `EP2PSend` switch, `$I10_OUTPUT`, `_stat32i64`, `memcpy` & `memmove` (2026-11-16)
+- Added 3 fixed-width guest32 queue/thread-param layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  (`rome2_vfs_ts_node16_32`, `rome2_vfs_ts_queue24_32`,
+  `rome2_vfs_crt_thread_param20_32`) and bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_engine_crt_fmt_ops.h](port/recovered_types/vfs_fs_engine_crt_fmt_ops.h),
+  [port/recovered_types/vfs_fs_engine_crt_fmt_ops.c](port/recovered_types/vfs_fs_engine_crt_fmt_ops.c),
+  and [port/recovered_types/test_vfs_fs_engine_crt_fmt_ops.c](port/recovered_types/test_vfs_fs_engine_crt_fmt_ops.c)
+  (**39** checks) closing all **26** Layer 41 targets (`7` clean engine
+  format/queue helpers `0x100ee800`..`0x10fba190`, `13` single-part CRT
+  helpers `0x116838bd`..`0x116b85db`, plus `6` multi-part `0x10fdec30`,
+  `0x116839e8`, `0x11699af7`, `0x11699b02`, `0x116bd8d0`, `0x116bde50`).
+- Advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  (**770** functions, **402** globals, **40** vtables, **697** instruction
+  witnesses) and [port/recovered_types/verification.json](port/recovered_types/verification.json)
+  with **743** Partition 2 validated REA records (**48** new records across
+  **42** retained operation envelopes + **6** view envelopes, **695** reused
+  Layer 40 records; combined with Partition 1's **367** records for **1110**
+  disjoint validated records total after monolithic merge reached V8's `536.8M`
+  string ceiling; `non_proc_slots=[]`,
+  `resource_constrained_slots=["116839e8", "116bd8d0"]`).
+- Verified **98/98** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **76** contract tests on Python 3.14 and 3.15, and **904** clean-public Python
+  tests (**304** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; **25** Layer 42 clean single-part callees
+  (`1` remaining engine callee `0x100f17a0` + `24` CRT helpers, opened as clean
+  Partition 3 because Layer 41's closed snapshot reached `517.8 MB`) plus
+  remaining Layer 43+ CRT/thunk callees and live runtime execution remain open.

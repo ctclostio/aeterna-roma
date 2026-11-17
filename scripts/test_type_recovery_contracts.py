@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 744)
-        self.assertEqual(result["globals"], 372)
+        self.assertEqual(result["functions"], 770)
+        self.assertEqual(result["globals"], 402)
         self.assertEqual(result["vtables"], 40)
-        self.assertEqual(result["instruction_witnesses"], 671)
+        self.assertEqual(result["instruction_witnesses"], 697)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -816,7 +816,8 @@ class TypeContractProvenanceTests(unittest.TestCase):
                 "100f38b0", "10123e40", "10fb2fb0", "10fd6d80",
                 "112a2910", "112a8ff0", "112b5730", "112baf90", "112bbd10",
                 "112cf920", "112d0720", "112d2e80", "112d4cc0", "112d4de0",
-                "112e32b0", "112e3c60", "112e3db0", "1169b820",
+                "112e32b0", "112e3c60", "112e3db0", "116839e8", "11699af7",
+                "11699b02", "1169b820", "116bd8d0", "116bde50",
             },
         )
         base, sections = contracts.parse_pe32(self.image)
@@ -838,7 +839,12 @@ class TypeContractProvenanceTests(unittest.TestCase):
             "112e32b0": [4],
             "112e3c60": [3],
             "112e3db0": [13],
+            "116839e8": [82],
+            "11699af7": [1977],
+            "11699b02": [1766],
             "1169b820": [86042],
+            "116bd8d0": [24, 1, 1, 3, 1, 17, 1, 3, 1, 5, 9],
+            "116bde50": [24, 1, 1, 3, 1, 17, 1, 3, 1, 5, 9],
         }
         for address, gaps in expected_gaps.items():
             helper = helpers[address]
@@ -2209,6 +2215,46 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual((by_g["12125650"]["width"], by_g["12125650"]["storage"]), (4, "zero_fill"))
         self.assertEqual((by_g["12125f10"]["width"], by_g["12125f10"]["storage"]), (4, "zero_fill"))
         self.assertEqual((by_g["12126c3c"]["width"], by_g["12126c3c"]["storage"]), (4, "zero_fill"))
+
+    def test_layer41_engine_crt_fmt_contracts(self):
+        ev = self.registry["rea_layer41_evidence"]
+        self.assertEqual(ev["closed_evidence_records"], 743)
+        self.assertEqual(ev["new_evidence_records"], 48)
+        self.assertEqual(ev["retained_operation_envelopes"], 42)
+        self.assertEqual(ev["reused_layer40_evidence_records"], 695)
+        self.assertEqual(ev["extra_evidence_views_count"], 6)
+        self.assertEqual(ev["cumulative_validated_bundle_records"], 743)
+        self.assertEqual(ev["partition1_validated_bundle_records"], 367)
+        self.assertEqual(ev["cumulative_all_partitions_records"], 1110)
+        self.assertEqual(ev["non_proc_slots"], [])
+        self.assertEqual(ev["resource_constrained_slots"], ["116839e8", "116bd8d0"])
+        self.assertEqual(len(ev["records"]), 42)
+        self.assertEqual(sum(1 for r in ev["records"] if r["operation"] == "analyze_function"), 26)
+        self.assertEqual(sum(1 for r in ev["records"] if r["operation"] == "read_bytes"), 16)
+
+        by_fn = {f["address"]: f for f in self.registry["functions"]}
+        by_g = {g["address"]: g for g in self.registry["globals"]}
+        self.assertEqual(by_fn["100ee800"]["stack_argument_bytes"], 20)
+        self.assertEqual(by_fn["100f5d40"]["stack_argument_bytes"], 32)
+        self.assertEqual(by_fn["10fba190"]["calling_convention"], "thiscall")
+        self.assertEqual(by_fn["10fdec30"]["stack_argument_bytes"], 4)
+        self.assertEqual(len(by_fn["116839e8"]["body_ranges"]), 2)
+        self.assertEqual(by_fn["116880f7"]["callee_pop_bytes"], 12)
+        self.assertEqual(by_fn["1168e69c"]["stack_argument_bytes"], 24)
+        self.assertEqual(by_fn["1168f167"]["stack_argument_bytes"], 28)
+        self.assertEqual(by_fn["1169b55f"]["calling_convention"], "thiscall")
+        self.assertEqual(by_fn["116a8e6d"]["stack_argument_bytes"], 28)
+        self.assertEqual(len(by_fn["11699af7"]["body_ranges"]), 2)
+        self.assertEqual(len(by_fn["11699b02"]["body_ranges"]), 2)
+        self.assertEqual(len(by_fn["116bd8d0"]["body_ranges"]), 12)
+        self.assertEqual(len(by_fn["116bde50"]["body_ranges"]), 12)
+        self.assertEqual(by_g["117410d4"]["width"], 2)
+        self.assertEqual(by_g["11745168"]["width"], 43)
+        self.assertEqual(by_g["117452c0"]["width"], 12)
+        self.assertEqual(by_g["119152d8"]["width"], 6)
+        self.assertEqual(by_g["119ebe10"]["width"], 8)
+        self.assertEqual((by_g["12125604"]["width"], by_g["12125604"]["storage"]), (4, "zero_fill"))
+        self.assertEqual((by_g["12126c38"]["width"], by_g["12126c38"]["storage"]), (4, "zero_fill"))
 
     def test_dropped_registry_category_rejected(self):
         registry = copy.deepcopy(self.registry)
