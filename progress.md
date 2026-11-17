@@ -1156,3 +1156,29 @@ callees.
   (`1` remaining engine callee `0x100f17a0` + `24` CRT helpers, opened as clean
   Partition 3 because Layer 41's closed snapshot reached `517.8 MB`) plus
   remaining Layer 43+ CRT/thunk callees and live runtime execution remain open.
+
+### Layer 42 Partition 3 opening (`0x100f17a0` engine repeat-fill & 24 CRT SEH/`_LocaleUpdate`/`_stat64`/PTD/error helpers) (2026-11-16)
+- Added 4 fixed-width guest32 CRT/locale/stat/PTD layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  (`rome2_vfs_crt_locale_update16_32`, `rome2_vfs_crt_errentry8_32`,
+  `rome2_vfs_crt_stat56_32`, `rome2_vfs_crt_tiddata868_32`) and bounded C17
+  helpers/tests in
+  [port/recovered_types/vfs_fs_engine_crt_io_ops.h](port/recovered_types/vfs_fs_engine_crt_io_ops.h),
+  [port/recovered_types/vfs_fs_engine_crt_io_ops.c](port/recovered_types/vfs_fs_engine_crt_io_ops.c),
+  and [port/recovered_types/test_vfs_fs_engine_crt_io_ops.c](port/recovered_types/test_vfs_fs_engine_crt_io_ops.c)
+  (**46** checks) closing all **25** Layer 42 targets (`0x100f17a0` final clean
+  uncovered engine callee + `24` single-part CRT helpers `0x11684800`..`0x116a5967`).
+- Advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  (**795** functions, **417** globals, **40** vtables, **722** instruction
+  witnesses) and [port/recovered_types/verification.json](port/recovered_types/verification.json)
+  with **36** clean Partition 3 validated REA records (`fresh_partition_p3`,
+  **0** reused Layer 41 records, combined with Partition 1's **367** and
+  Partition 2's **743** records for **1146** disjoint validated records total;
+  `non_proc_slots=[]`, `resource_constrained_slots=[]`).
+- Verified **99/99** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **77** contract tests on Python 3.14 and 3.15, and **905** clean-public Python
+  tests (**305** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; **44** clean single-part CRT callees
+  (queued across Layers 43–44) plus remaining multi-part/thunk callees and live
+  runtime execution remain open.

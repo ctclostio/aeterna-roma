@@ -2321,5 +2321,69 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_crt_thread_param20_32, start_addr_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_thread_param20_32, thread_handle_08, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_thread_param20_32, module_handle_0c, 0x0c);
 
+/* 16B stack _LocaleUpdate guard constructed by 0x11688f63 in 0x116891b2 and 0x11698f1e. */
+typedef struct rome2_vfs_crt_locale_update16_32 {
+    uint32_t ptd_00;                             /* 00 (_ptiddata) */
+    uint32_t locinfo_04;                         /* 04 (pthreadlocinfo) */
+    uint32_t mbcinfo_08;                         /* 08 (pthreadmbcinfo) */
+    uint8_t updated_0c;                          /* 0c (1 if ownlocale bit 1 set by ctor) */
+    uint8_t pad_0d[3];                           /* 0d..0f */
+} rome2_vfs_crt_locale_update16_32;
+_Static_assert(sizeof(rome2_vfs_crt_locale_update16_32) == 0x10, "crt locale update16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_locale_update16_32, ptd_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_locale_update16_32, locinfo_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_locale_update16_32, mbcinfo_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_locale_update16_32, updated_0c, 0x0c);
+
+/* 8B Win32->errno table entry at 0x119108c8 (45 entries) searched by 0x11698a9d. */
+typedef struct rome2_vfs_crt_errentry8_32 {
+    uint32_t oserr_00;                           /* 00 */
+    int32_t errnocode_04;                        /* 04 */
+} rome2_vfs_crt_errentry8_32;
+_Static_assert(sizeof(rome2_vfs_crt_errentry8_32) == 0x08, "crt errentry8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_errentry8_32, oserr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_errentry8_32, errnocode_04, 0x04);
+
+/* 56B (0x38) CRT _stat32i64 buffer zeroed by 0x11699b02 and populated by 0x1169941c/0x116994a6. */
+typedef struct rome2_vfs_crt_stat56_32 {
+    uint32_t st_dev_00;                          /* 00 */
+    uint16_t st_ino_04;                          /* 04 */
+    uint16_t st_mode_06;                         /* 06 */
+    int16_t st_nlink_08;                         /* 08 */
+    int16_t st_uid_0a;                           /* 0a */
+    int16_t st_gid_0c;                           /* 0c */
+    uint16_t pad_0e;                             /* 0e */
+    uint32_t st_rdev_10;                         /* 10 */
+    uint32_t pad_14;                             /* 14 */
+    int64_t st_size_18;                          /* 18 */
+    int64_t st_atime_20;                         /* 20 */
+    int64_t st_mtime_28;                         /* 28 */
+    int64_t st_ctime_30;                         /* 30 */
+} rome2_vfs_crt_stat56_32;
+_Static_assert(sizeof(rome2_vfs_crt_stat56_32) == 0x38, "crt stat56 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stat56_32, st_mode_06, 0x06);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stat56_32, st_nlink_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stat56_32, st_rdev_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stat56_32, st_size_18, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stat56_32, st_mtime_28, 0x28);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stat56_32, st_ctime_30, 0x30);
+
+/* 868B (0x364) CRT _tiddata block allocated by 0x116a4789 with observed errno/locale/handler slots. */
+typedef struct rome2_vfs_crt_tiddata868_32 {
+    uint8_t prefix_00[0x10];                     /* 00..0f */
+    int32_t terrno_10;                           /* 10 (0x11698b16) */
+    uint32_t tdoserrno_14;                       /* 14 (0x11698b03) */
+    uint8_t middle_18[0x338];                    /* 18..34f */
+    uint32_t ownlocale_350;                      /* 350 (0x11688f63, 0x11698f1e) */
+    uint8_t mid2_354[8];                         /* 354..35b */
+    uint32_t invalid_parameter_handler_35c;      /* 35c (0x11687985) */
+    uint32_t tail_360;                           /* 360 */
+} rome2_vfs_crt_tiddata868_32;
+_Static_assert(sizeof(rome2_vfs_crt_tiddata868_32) == 0x364, "crt tiddata868 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tiddata868_32, terrno_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tiddata868_32, tdoserrno_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tiddata868_32, ownlocale_350, 0x350);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tiddata868_32, invalid_parameter_handler_35c, 0x35c);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif
