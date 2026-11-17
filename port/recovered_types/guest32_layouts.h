@@ -2239,5 +2239,47 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_channel_slot_meta36_32, aux_sock_10, 0x10);
 ROME2_LAYOUT_ASSERT(rome2_vfs_channel_slot_meta36_32, byte_flag_1c, 0x1c);
 ROME2_LAYOUT_ASSERT(rome2_vfs_channel_slot_meta36_32, tail_word_20, 0x20);
 
+/* 56B (0x38) MSVC CRT _FILEX slot in 0x119ebe18 (_iob[0..2]) indexed by 0x11699f33 and tested by 0x11687aa6. */
+typedef struct rome2_vfs_crt_filex56_32 {
+    uint32_t ptr_00;                             /* 00 */
+    uint32_t cnt_04;                             /* 04 */
+    uint32_t base_08;                            /* 08 */
+    uint32_t flag_0c;                            /* 0c (0x10=_IOEOF checked by 0x11687aa6) */
+    int32_t file_10;                             /* 10 (fd: 0=stdin, 1=stdout, 2=stderr) */
+    uint32_t charbuf_14;                         /* 14 */
+    uint32_t bufsiz_18;                          /* 18 */
+    uint32_t tmpfname_1c;                        /* 1c */
+    uint8_t lock_cs_20[24];                      /* 20..37 */
+} rome2_vfs_crt_filex56_32;
+_Static_assert(sizeof(rome2_vfs_crt_filex56_32) == 0x38, "crt filex56 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_filex56_32, ptr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_filex56_32, flag_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_filex56_32, file_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_filex56_32, lock_cs_20, 0x20);
+
+/* 32B MSVC _CxxThrowException stack template loaded from 0x1191fd50 by 0x116bebf1. */
+typedef struct rome2_vfs_cxx_throw_template32_32 {
+    uint32_t exception_code_00;                  /* 00 (0xe06d7363) */
+    uint32_t exception_flags_04;                 /* 04 (1 = EXCEPTION_NONCONTINUABLE) */
+    uint32_t exception_record_08;                /* 08 */
+    uint32_t exception_address_0c;               /* 0c */
+    uint32_t number_parameters_10;               /* 10 (3) */
+    uint32_t magic_number_14;                    /* 14 (0x19930520 or 0x01994000) */
+    uint32_t exception_object_18;                /* 18 */
+    uint32_t throw_info_1c;                      /* 1c */
+} rome2_vfs_cxx_throw_template32_32;
+_Static_assert(sizeof(rome2_vfs_cxx_throw_template32_32) == 0x20, "cxx throw template32 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_cxx_throw_template32_32, exception_code_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_cxx_throw_template32_32, number_parameters_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_cxx_throw_template32_32, magic_number_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_cxx_throw_template32_32, throw_info_1c, 0x1c);
+
+/* 564B (0x234 = 47 * 12B) channel manager singleton at 0x1201ae48..0x1201b07c initialized by 0x10fdad30. */
+typedef struct rome2_vfs_channel_mgr564_32 {
+    uint32_t slots_00[47][3];                    /* 00..233: 47 inline 12B list headers */
+} rome2_vfs_channel_mgr564_32;
+_Static_assert(sizeof(rome2_vfs_channel_mgr564_32) == 0x234, "channel mgr564 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_channel_mgr564_32, slots_00, 0x00);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

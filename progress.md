@@ -1098,3 +1098,31 @@ callees.
   tests (**302** skipped) on Python 3.14 and 3.15 without touching the shared
   Ghidra project or canonical exports; **26** Layer 40 callees (`11` clean
   engine + `15` CRT helpers) and live runtime execution remain open.
+
+### Layer 40 UTF-16 scanners, `WS2_32!send`, `dlmalloc` `add_segment`/`prepend_alloc`, `564B` channel manager, SteamID/P2P & 15 CRT runtime helpers (2026-11-16)
+- Added 3 fixed-width guest32 CRT/SEH/channel layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  (`rome2_vfs_crt_filex56_32`, `rome2_vfs_cxx_throw_template32_32`,
+  `rome2_vfs_channel_mgr564_32`) and bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_engine_crt_ops.h](port/recovered_types/vfs_fs_engine_crt_ops.h),
+  [port/recovered_types/vfs_fs_engine_crt_ops.c](port/recovered_types/vfs_fs_engine_crt_ops.c),
+  and [port/recovered_types/test_vfs_fs_engine_crt_ops.c](port/recovered_types/test_vfs_fs_engine_crt_ops.c)
+  (**49** checks) closing all **26** Layer 40 targets (`11` clean engine
+  helpers `0x100ee990`..`0x10fe4980` plus `15` CRT helpers `0x116838ea`,
+  `0x11683a32`, `0x11683b10`, `0x11687aa6`, `0x1168c02e`, `0x1168e713`,
+  `0x1169764e`, `0x11699f33`, `0x1169b63d`, `0x1169b820`, `0x116b856e`,
+  `0x116be510`, `0x116be975`, `0x116bebf1`, `0x116bec60`).
+- Advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  (**744** functions, **372** globals, **40** vtables, **671** instruction
+  witnesses) and [port/recovered_types/verification.json](port/recovered_types/verification.json)
+  with **695** closed session REA evidence records (**40** new records across
+  **34** retained operation envelopes + **6** view envelopes, **655** reused
+  Layer 39 records; **1062** cumulative validated bundle records;
+  `non_proc_slots=[]`, `resource_constrained_slots=["116838ea", "11683a32"]`).
+- Verified **97/97** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **75** contract tests on Python 3.14 and 3.15, and **903** clean-public Python
+  tests (**303** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; **26** Layer 41 clean non-overlapping
+  callees (`7` engine + `13` CRT + `6` multi-part) plus remaining IAT/noret
+  thunks and live runtime execution remain open.

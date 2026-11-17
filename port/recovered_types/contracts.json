@@ -11191,6 +11191,438 @@
         "10fd95ac"
       ],
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "100ee990",
+      "bytes": 433,
+      "sha256": "4ab40c74b329b48076c701fc612a571cf759dd784b2fee9b6477edc80d5bb249",
+      "receiver_register": "none",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "AL bool (1 if UTF-16 %c token or literal emitted, 0 on mismatch formatted via 0x100efa10 with 'char' 0x117452a4)",
+      "scope": "scans UTF-16 format text skipping %l modifiers, emits single UTF-16 character on %c or %% literal, else formats 'Unexpected format %%%c used with type char'",
+      "return_instruction_addresses": [
+        "100eea20",
+        "100eeb29",
+        "100eeb40"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "100eee00",
+      "bytes": 230,
+      "sha256": "c297c6d3669042e4c405c6abd01edc34ea4f9db080c5b0400f6ea979e26af30a",
+      "receiver_register": "none",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "AL bool (1 if UTF-16 scalar token formatted via 0x10105850/0x100f5d40)",
+      "scope": "scans UTF-16 format prefix/%% literals skipping %l, parses flags/width/precision with 0x10105850, and dispatches value formatter 0x100f5d40",
+      "return_instruction_addresses": [
+        "100eee90",
+        "100eeee5"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "100ef980",
+      "bytes": 136,
+      "sha256": "dfb7e2526947b837d407cec0b9b5ef73a2f2382522a430f86c917c377b066bf0",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX out_wstr12* populated with char slice or fallback copy",
+      "scope": "initializes temp buffer, attempts delimited extract via 0x100ee800, falling back to 0x100f60b0 copy and writing caller dst",
+      "return_instruction_addresses": [
+        "100ef9d6",
+        "100efa07"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "10114740",
+      "bytes": 61,
+      "sha256": "24e63ced011b76ccdd9d6fe3c44628dda85280908ca58f7d0301be82eb93ea02",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 12,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX bytes transmitted via WS2_32!send (0x116c80fb), throwing Winsock error via 0x100feef0/0x116bebf1 on -1",
+      "scope": "calls 0x116c80fb([this], buf, len, flags); on SOCKET_ERROR builds 0x100feef0(3) diagnostic string and raises 0x11923db4 via _CxxThrowException",
+      "return_instruction_addresses": [
+        "1011475e"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "10122e50",
+      "bytes": 580,
+      "sha256": "307cf3465e4535de56a0fbc3c69dce07d134628af4062862b1ca6cea6ab3bd7e",
+      "receiver_register": "none",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void carving old top/remainder free chunk after appending new dlmalloc mmap segment",
+      "scope": "locates holding segment in [ms+0x1c4], computes aligned old end & new top sizes/fenceposts 0x28/0x1b, and inserts remainder into smallbin or treebin",
+      "return_instruction_addresses": [
+        "10122f90",
+        "10122faa",
+        "10123012",
+        "1012307d",
+        "10123093"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "10123730",
+      "bytes": 863,
+      "sha256": "990a70719ac981452406bf26299bc71c9ce75ed88f2cd0a83f809a34b1286cc5",
+      "receiver_register": "none",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX aligned chunk user pointer (+8) prepended before existing top/dv/chunk in dlmalloc mstate",
+      "scope": "aligns [new_base, prev_base] to 8B, coalesces directly into top or dv when contiguous, else unlinks free successor and bins merged remainder",
+      "return_instruction_addresses": [
+        "10123798",
+        "101237bd",
+        "1012396d",
+        "1012398f",
+        "10123a00",
+        "10123a71",
+        "10123a8e"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "10f7c1a0",
+      "bytes": 94,
+      "sha256": "51150494c811c0d80f18224b369dd8234de2a47d27890062a86be2047f009f18",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void inserting 16B timestamped byte-count entry into queue & updating running totals",
+      "scope": "reads timeGetTime [0x1172f7c0], allocates 16B node via 0x100fcc80, links at queue head [+0x04], increments [+0x10], adds len to [+0x14], trims via 0x10fba190",
+      "return_instruction_addresses": [
+        "10f7c1fb"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "10fa7230",
+      "bytes": 134,
+      "sha256": "329184e812086b90be84a2fa148171bdbe6e517ceea7c0d52dab06291794aa8e",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 28,
+      "callee_pop_bytes": 28,
+      "calling_convention": "thiscall",
+      "ordinary_return": "AL bool (1 if reliable patch frame control header packed into bitstream)",
+      "scope": "packs 32b base sequence, 20b sender channel, 11b opcode 2, 32b total span, and 32b patch bit-length into target bitstream via 0x10fd77f0/0x10fd7b10",
+      "return_instruction_addresses": [
+        "10fa72ab",
+        "10fa72b3"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "10fdad30",
+      "bytes": 1112,
+      "sha256": "cafa022a6b4c732156dc516a705c409638ba0f40d8a759e32c083df2e09a2891",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX self (564B channel manager singleton initialized across 47 inline 12B slot headers)",
+      "scope": "initializes 47 contiguous 12-byte intrusive list slots [head=&slot+4, 0, 0] from +0x000..+0x233 inside singleton 0x1201ae48..0x1201b07c",
+      "return_instruction_addresses": [
+        "10fdb187"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "10fdebc0",
+      "bytes": 100,
+      "sha256": "9ddfb285e5951b5ef8bade2d97ea03a35603061522b8adaa08a8c7d45411698f",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "AL bool (1 if 64-bit CSteamID passes universe/account-type/instance constraints)",
+      "scope": "validates universe 1..4, account type 1..10, non-zero accountID + instance <= 4 for Individual, instance == 0 for Clan, and non-zero GameServer ID",
+      "return_instruction_addresses": [
+        "10fdec1f",
+        "10fdec23"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "10fe4980",
+      "bytes": 70,
+      "sha256": "ec31ee8641344c7b2ec62511928cc1fd766333e2d2160ffe1a98e3eb6586ecee",
+      "receiver_register": "none",
+      "stack_argument_bytes": 24,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "AL bool sending packet payload over Steamworks ISteamNetworking::SendP2PPacket vtable[0]",
+      "scope": "resolves Steam interface via SteamInternal_ContextInit [0x1172f94c](&0x119da098) [ctx+0x20], encodes EP2PSend via 0x10fdec30, and invokes vtable[0]",
+      "return_instruction_addresses": [
+        "10fe49c5"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116838ea",
+      "bytes": 21,
+      "sha256": "efae0e05a589276306c3c87f5a7eac21406f050c14251fdc660fa00f91ff430f",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX 0 if atexit callback registered via 0x116838bd, else -1",
+      "scope": "registers static C++ destructor callback with CRT onexit table returning 0 on success or -1 on allocation/table failure",
+      "return_instruction_addresses": [
+        "116838fe"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / inspect_analysis_view + read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "11683a32",
+      "bytes": 82,
+      "sha256": "5882a17f5113d1e745e27913dde6020bf89de331f760468cd7e36237f59e529b",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void MSVC thread-safe local static initialization header helper",
+      "scope": "acquires lock 0x12125624 via EnterCriticalSection, sets/polls *pOnce (-1 in-progress / epoch sync into tls_slot+4), and leaves CS",
+      "return_instruction_addresses": [
+        "11683a83"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / inspect_analysis_view + read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "11683b10",
+      "bytes": 54,
+      "sha256": "f102e599092a9455eefcc9556f2e2341f4530c169df4ae217b370f19a77b23f8",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX uint32 bitwise float->u32 conversion from XMM0 matching MSVC _ftoui3",
+      "scope": "shifts XMM0 exponent/mantissa (<2^31 via cvttss2si, [2^31..2^32) via mantissa<<7 | 0x80000000), returning 0 for (-1,0) and 0xffffffff for NaN/overflow",
+      "return_instruction_addresses": [
+        "11683b23",
+        "11683b32",
+        "11683b45"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "11687aa6",
+      "bytes": 44,
+      "sha256": "281797eacdf59536eb2a643bcc6edcb93453603108bec9318ce847392b7c9ad3",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX int (1 if FILE*->_flag bit 4 (_IOEOF) set, 0 + EINVAL invalid_parameter if stream NULL)",
+      "scope": "validates stream != NULL else errno=0x16 & _invalid_parameter, and returns ([stream+0xc] >> 4) & 1",
+      "return_instruction_addresses": [
+        "11687ac5",
+        "11687ad1"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "1168c02e",
+      "bytes": 131,
+      "sha256": "29da57589f27e6b4fb8c63cc9a062944eb2ed41c71fd47f2770e45be8e2c1ee9",
+      "receiver_register": "none",
+      "stack_argument_bytes": 24,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX formatted character count or -1 + EINVAL on NULL stream/format",
+      "scope": "validates FILE* & fmt arguments for _vfprintf_s_l path, invokes internal formatting worker 0x116880f7, or sets EINVAL returning -1",
+      "return_instruction_addresses": [
+        "1168c072",
+        "1168c0b0"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "1168e713",
+      "bytes": 196,
+      "sha256": "8b8f5a0eecf43c1d803b97c2b74724967854ee602774304a2dca4cccd0762307",
+      "receiver_register": "none",
+      "stack_argument_bytes": 28,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX errno_t (0 on success, 0x16 EINVAL on invalid buffer/size/decpt/sign pointers) for _ecvt_s",
+      "scope": "validates out buffer/size/ptrs under stack cookie 0x119ebda4, clears buf[0], extracts IEEE-754 decimal digits via 0x116a8e6d/0x1168e69c",
+      "return_instruction_addresses": [
+        "1168e7d6"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "1169764e",
+      "bytes": 36,
+      "sha256": "f629ab4a335c66cbdd3730ad25c2b69218d21e7d9ea3fd71ca380698c6cb2094",
+      "receiver_register": "none",
+      "stack_argument_bytes": 28,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX formatted count forwarded to internal 7-argument stdio formatter 0x1168f167",
+      "scope": "forwards 7 stack arguments [ebp+8..ebp+0x20] directly to CRT stdio formatter 0x1168f167",
+      "return_instruction_addresses": [
+        "11697671"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "11699f33",
+      "bytes": 16,
+      "sha256": "fba83ae1e7868c359f27574848db52773eece2d6acfae9f8e914b1eabda5629b",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX pointer to static _FILEX entry 0x119ebe18 + idx * 0x38",
+      "scope": "computes &(__iob_array[idx]) with exact 56-byte (_FILEX) stride starting at 0x119ebe18",
+      "return_instruction_addresses": [
+        "11699f42"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "1169b63d",
+      "bytes": 131,
+      "sha256": "4077ed12e6b01c3b52d734c1bc79b3fea171507a1a75f94417c44c82be3e5f75",
+      "receiver_register": "none",
+      "stack_argument_bytes": 24,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX Win32 thread handle or 0 on NULL start_addr / CreateThread failure",
+      "scope": "validates start address != 0, allocates CRT PTD block via 0x1169b5ed, invokes KERNEL32!CreateThread [0x1172f304], and optionally stores ThreadId",
+      "return_instruction_addresses": [
+        "1169b65d",
+        "1169b6ad"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "1169b820",
+      "bytes": 466,
+      "sha256": "c1a6cf9eacc815b646370f26f2be0332d4e0830f8565a8b3af4affe471ecc29c",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "ST0 float64 IEEE-754 floor(x) across scalar SSE2 bit masks 0x11910b10..0x11910b50",
+      "scope": "extracts double exponent/sign via SSE2 masks, rounds negative fractional inputs toward -inf, preserves +-0/NaN/large ints, returns on FPU ST0",
+      "return_instruction_addresses": [
+        "1169b8b2",
+        "1169b8e1",
+        "1169b919",
+        "1169b920",
+        "1169b93c",
+        "116b0a0b"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "body_ranges": [
+        {
+          "start": "1169b820",
+          "end": "1169b93c"
+        },
+        {
+          "start": "116b0957",
+          "end": "116b0a0b"
+        }
+      ]
+    },
+    {
+      "address": "116b856e",
+      "bytes": 109,
+      "sha256": "e373324a1be96332d9894d80012abb2ebd2a728f4ff84f5e150f1e99c248cb71",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX character count written or 0x7fffffff + EINVAL on NULL ptrs / size > INT_MAX",
+      "scope": "checks custom _invalid_parameter_handler 0x12125f10, validates dst/fmt/size <= 0x7fffffff, and tail-jumps to formatter 0x116bd810",
+      "return_instruction_addresses": [
+        "116b85da"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116be510",
+      "bytes": 346,
+      "sha256": "213e4a96e0f3e82c7e9aa9c5894a44cda78fdc31b279519650aa65338ed910ba",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX dst pointer after ERMSB / SSE2 128B-unrolled / aligned dword memset",
+      "scope": "replicates fill byte to xmm0, dispatches ERMSB [0x12125650] or SSE2 [0x119ebd90] 128-byte aligned loops, handles <=32B tails, returns dst",
+      "return_instruction_addresses": [
+        "116be554",
+        "116be614",
+        "116be669"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116be975",
+      "bytes": 636,
+      "sha256": "ae552f913bb507176a6c7b8d7c68c89d8413ffcf26f51c54aed7d21b71316a36",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX first UTF-16 occurrence pointer of needle in haystack or NULL",
+      "scope": "dispatches SSE4.2 PCMPESTRI/PCMPISTRI ([0x1212564c] > 1), SSE2 pcmpeqw (== 1), or scalar UTF-16 loop returning haystack when needle empty",
+      "return_instruction_addresses": [
+        "116bebf0"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116bebf1",
+      "bytes": 109,
+      "sha256": "ee8234e0abd2474b5ded468c67803c4c7e69bb321afd503c024e6dee23a0443d",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "stdcall",
+      "ordinary_return": "void (no return) raising MSVC C++ exception 0xe06d7363 via RaiseException 0x1172f190",
+      "scope": "copies 32B template 0x1191fd50 onto stack, patches magic 0x01994000 if WinRT flags & 8, stores obj & ThrowInfo, calls RaiseException",
+      "return_instruction_addresses": [
+        "116bec5b"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116bec60",
+      "bytes": 173,
+      "sha256": "4e96ec5152dff3c4648f00572c6ed10d221e170be7101db0a0a0d6fe9e7b503f",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX pointer to first matching byte within len bytes, or NULL",
+      "scope": "aligns pointer to 4-byte boundary then scans DWORD chunks using SWAR 0x7efefeff / 0x81010100 zero-byte detector",
+      "return_instruction_addresses": [
+        "116becbc",
+        "116becfa",
+        "116bed00",
+        "116bed06",
+        "116bed0c"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
     }
   ],
   "globals": [
@@ -13968,6 +14400,158 @@
       "address": "1201b07c",
       "width": 4,
       "kind": "4-byte zero-fill MSVC TLS init guard for 0x1201ae48 checked by 0x10fddba0",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1172f304",
+      "width": 4,
+      "kind": "IAT slot in .rdata (KERNEL32.dll!CreateThread) called by 0x1169b63d",
+      "initial_hex_le": "580e9301",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1172f7c0",
+      "width": 4,
+      "kind": "IAT slot in .rdata (WINMM.dll!timeGetTime) called by 0x10f7c1a0",
+      "initial_hex_le": "401b9301",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117452a4",
+      "width": 5,
+      "kind": "NUL-terminated ASCII type name 'char' in .rdata pushed by 0x100ee990 for mismatch diagnostic",
+      "initial_hex_le": "6368617200",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1190bb30",
+      "width": 4,
+      "kind": "4-byte float NaN/invalid sentinel (0xffffffff) in .rdata converted by 0x11683b10 (_ftoui3)",
+      "initial_hex_le": "ffffffff",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11910b10",
+      "width": 16,
+      "kind": "16-byte SSE2 constant {1.0, 1.0} in .rdata masked by 0x1169b820 (floor)",
+      "initial_hex_le": "000000000000f03f000000000000f03f",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11910b20",
+      "width": 16,
+      "kind": "16-byte SSE2 exponent bias constant {0x433, 0x433} in .rdata loaded by 0x1169b820 (floor)",
+      "initial_hex_le": "33040000000000003304000000000000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11910b30",
+      "width": 16,
+      "kind": "16-byte SSE2 zero vector {0.0, 0.0} in .rdata compared by 0x1169b820 (floor)",
+      "initial_hex_le": "00000000000000000000000000000000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11910b40",
+      "width": 16,
+      "kind": "16-byte SSE2 11-bit exponent mask {0x7ff, 0} in .rdata masked by 0x1169b820 (floor)",
+      "initial_hex_le": "ff070000000000000000000000000000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11910b50",
+      "width": 8,
+      "kind": "8-byte float64 negative-zero sentinel (-0.0) in .rdata loaded onto FPU ST0 by 0x1169b820 (floor)",
+      "initial_hex_le": "0000000000000080",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1191fd50",
+      "width": 32,
+      "kind": "32-byte MSVC C++ exception template [0xe06d7363, 1, 0, 0, 3, 0x19930520, 0, 0] copied by 0x116bebf1",
+      "initial_hex_le": "63736de001000000000000000000000003000000200593190000000000000000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "119ebd78",
+      "width": 4,
+      "kind": "4-byte CRT MSVC TLS initialization epoch (0x80000000) in .data read by 0x11683a32",
+      "initial_hex_le": "00000080",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "119ebd90",
+      "width": 4,
+      "kind": "4-byte CRT __isa_available CPU feature flags in .data tested by 0x116be510",
+      "initial_hex_le": "01000000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "119ebda4",
+      "width": 4,
+      "kind": "4-byte CRT __security_cookie default seed in .data loaded by 0x1168e713 (_ecvt_s)",
+      "initial_hex_le": "4ee640bb",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "119ebe18",
+      "width": 168,
+      "kind": "168-byte CRT _iob[0..2] static stdin/stdout/stderr array (3 x 0x38B _FILEX) in .data indexed by 0x11699f33",
+      "initial_hex_le": "000000000000000000000000012000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002200000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000224000002000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "12125624",
+      "width": 4,
+      "kind": "4-byte zero-fill CRT static init lock base word in .data used by 0x11683a32",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1212564c",
+      "width": 4,
+      "kind": "4-byte zero-fill CRT SSE4.2/SSE2 feature level flag in .data checked by 0x116be975 (wcsstr)",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "12125650",
+      "width": 4,
+      "kind": "4-byte zero-fill CRT ERMSB feature flags word in .data tested by 0x116be510 (memset)",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "12125f10",
+      "width": 4,
+      "kind": "4-byte zero-fill CRT custom invalid-parameter handler slot in .data tested by 0x116b856e",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "12126c3c",
+      "width": 4,
+      "kind": "4-byte zero-fill CRT SSE2 availability flag in .data tested by 0x1169b820 (floor)",
       "initial_hex_le": "00000000",
       "storage": "zero_fill",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -17400,6 +17984,136 @@
       "address": "10fd95e2",
       "hex": "3d00400000",
       "purpose": "0x10fd9500 enforces 0x4000-byte frame limit before u16-prefixed TCP transmit"
+    },
+    {
+      "address": "100eea92",
+      "hex": "68a4527411",
+      "purpose": "0x100ee990 pushes ASCII type string 'char' (0x117452a4) for format mismatch diagnostic"
+    },
+    {
+      "address": "100eeeb1",
+      "hex": "e89a690100",
+      "purpose": "0x100eee00 delegates format flag/width/precision extraction to 0x10105850 before scalar dispatch"
+    },
+    {
+      "address": "100ef9b0",
+      "hex": "e84beeffff",
+      "purpose": "0x100ef980 attempts substring parse via 0x100ee800 before fallback copy 0x100f60b0"
+    },
+    {
+      "address": "10114751",
+      "hex": "e8a5395b01",
+      "purpose": "0x10114740 forwards socket descriptor [ecx], buffer, len, flags to WS2_32!send thunk 0x116c80fb"
+    },
+    {
+      "address": "10122eea",
+      "hex": "0f1083c4010000",
+      "purpose": "0x10122e50 reads active msegment descriptor [mstate+0x1c4] into xmm0 when chaining new segment"
+    },
+    {
+      "address": "1012377e",
+      "hex": "016f0c",
+      "purpose": "0x10123730 coalesces prepended remainder directly into dlmalloc top size [mstate+0x0c]"
+    },
+    {
+      "address": "10f7c1a5",
+      "hex": "ff15c0f77211",
+      "purpose": "0x10f7c1a0 samples current millisecond timestamp via WINMM!timeGetTime IAT 0x1172f7c0"
+    },
+    {
+      "address": "10fa725f",
+      "hex": "e88c050300",
+      "purpose": "0x10fa7230 packs 32-bit reliable patch sequence header via 0x10fd77f0 bit encoder"
+    },
+    {
+      "address": "10fdad30",
+      "hex": "c7410400000000",
+      "purpose": "0x10fdad30 begins inline initialization of 47 12-byte intrusive slot headers inside 564B channel manager"
+    },
+    {
+      "address": "10fdebd8",
+      "hex": "c1f818",
+      "purpose": "0x10fdebc0 arithmetically shifts CSteamID upper dword >> 24 to validate Steam universe 1..4"
+    },
+    {
+      "address": "10fe4987",
+      "hex": "ff154cf97211",
+      "purpose": "0x10fe4980 resolves ISteamNetworking context via SteamInternal_ContextInit IAT 0x1172f94c"
+    },
+    {
+      "address": "116838f0",
+      "hex": "e8c8ffffff",
+      "purpose": "0x116838ea forwards atexit destructor slot registration to CRT onexit worker 0x116838bd"
+    },
+    {
+      "address": "11683a3d",
+      "hex": "ff15f0f17211",
+      "purpose": "0x11683a32 acquires static initialization lock 0x12125624 via EnterCriticalSection IAT 0x1172f1f0"
+    },
+    {
+      "address": "11683b3a",
+      "hex": "f30f2c0d30bb9011",
+      "purpose": "0x11683b10 triggers SSE overflow/NaN conversion using sentinel 0x1190bb30 returning 0xffffffff"
+    },
+    {
+      "address": "11687aca",
+      "hex": "c1e804",
+      "purpose": "0x11687aa6 extracts bit 4 (_IOEOF) of _FILEX->_flag ([stream+0x0c] >> 4) for feof"
+    },
+    {
+      "address": "1168c0aa",
+      "hex": "e848c0ffff",
+      "purpose": "0x1168c02e builds validated argument table on stack before calling internal stdio worker 0x116880f7"
+    },
+    {
+      "address": "1168e71e",
+      "hex": "a1a4bd9e11",
+      "purpose": "0x1168e713 guards 0x174-byte local _ecvt_s digit workspace with CRT __security_cookie 0x119ebda4"
+    },
+    {
+      "address": "11697668",
+      "hex": "e8fa7affff",
+      "purpose": "0x1169764e tail-forwards 7 stdio format arguments [ebp+8..ebp+0x20] to 0x1168f167"
+    },
+    {
+      "address": "11699f38",
+      "hex": "6b450838",
+      "purpose": "0x11699f33 scales _iob stream index by 0x38 (56B _FILEX) relative to 0x119ebe18"
+    },
+    {
+      "address": "1169b686",
+      "hex": "ff1504f37211",
+      "purpose": "0x1169b63d spawns CRT thread via KERNEL32!CreateThread IAT 0x1172f304"
+    },
+    {
+      "address": "1169b866",
+      "hex": "660f2815200b9111",
+      "purpose": "0x1169b820 loads SSE2 double exponent bias mask 0x11910b20 in floor() bit computation"
+    },
+    {
+      "address": "116b8573",
+      "hex": "833d105f121200",
+      "purpose": "0x116b856e branches on CRT invalid-parameter hook 0x12125f10 before bounded vsnprintf validation"
+    },
+    {
+      "address": "116be542",
+      "hex": "0fba255056121201",
+      "purpose": "0x116be510 tests ERMSB CPU capability flag 0x12125650 bit 1 for large memset fast path"
+    },
+    {
+      "address": "116be9a7",
+      "hex": "833d4c56121201",
+      "purpose": "0x116be975 tests CRT SIMD capability flag 0x1212564c > 1 before SSE4.2 PCMPESTRI wcsstr loop"
+    },
+    {
+      "address": "116bec00",
+      "hex": "be50fd9111",
+      "purpose": "0x116bebf1 copies 32-byte MSVC C++ exception template 0x1191fd50 via 8-dword rep movsd"
+    },
+    {
+      "address": "116becc6",
+      "hex": "bffffefe7e",
+      "purpose": "0x116bec60 uses SWAR magic constant 0x7efefeff for 4-byte chunk memchr match scan"
     }
   ],
   "ownership": {
@@ -25624,6 +26338,271 @@
       "Layer 39 extends the Layer 38 session snapshot (or cleanly merges via REA import_evidence_bundle) into the cumulative validated bundle",
       "RaiseException IAT 0x1172f190, Winsock & int32/card32/VirtualAlloc literals, SEH/ThrowInfo descriptors, and TLS guards are anchored by read_bytes and instruction_witnesses",
       "Any small leaf slot returning invalid_request from analyze_function is paired with resolve_containing_procedure + read_bytes(length=320)"
+    ]
+  },
+  "rea_layer40_evidence": {
+    "scope": "26 Layer 40 clean single-part callees (11 engine/format/dlmalloc/Steam/channel + 15 CRT runtime helpers: _atexit, _Init_thread_header, _ftoui3, feof, _vfprintf_s_l, _ecvt_s, __iob_func_slot, _beginthreadex, floor, _vsnprintf, memset, wcsstr, _CxxThrowException, memchr)",
+    "records": [
+      {
+        "evidence_id": "ev_2cd7acdf8a7c0e048b828067a9728b432ed6d8f0442649d0e8c0e57f1f9e0b9c",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-100ee990.json",
+        "retained_record_sha256": "c760eb18f5cfc0fee9692c413ed99a6f7ab52c7b60469338575daca3f7062dc0",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_f9c14b193a1ad4399af8d04643f08b1e2358119fd38d5c06b48754763677187b",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-100eee00.json",
+        "retained_record_sha256": "2729275fc444ea5203cd3aacb0d2b4273d696517b6ad5376fd9c53ba3e24faf2",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_8553b5d6517bce1f0700f48044cc023b5e8dd191693a6456687220929cc12be7",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-100ef980.json",
+        "retained_record_sha256": "9b48d156c03a319b34e00a17b9676d0bfa318d925eae6f9f9acf7f4ba3eedd04",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_694e97473d2cf2fba70590b8f6f17480ec0b7dbf2b5c2fa446b6dfa490c7c29d",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-10114740.json",
+        "retained_record_sha256": "793c6fba1e2796a82e12bd00e057ee7c3954b36c9baf4020c4d429823158d633",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_d61eb4a68d03957432f5883bb2d07185017787c2a5cd7a18c27feacbec185751",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-10122e50.json",
+        "retained_record_sha256": "a1d0a159831f1e1c93481caec4f33f25ed2fa9feb4168619965394e9228180c5",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_27eaf846f8d83d297f2ce50afcc6015eb1c9d2826e71c7b8f6172992281cbc08",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-10123730.json",
+        "retained_record_sha256": "3efde2e7e8ef304c48d212a675b9ea888ba046184c742fe70ff078e3cc97a00a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_10db9757e15877938f7dbf20f898c74b33dfa09fdfef8903f4b879d1e73db73e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-10f7c1a0.json",
+        "retained_record_sha256": "03ced9bd62d163962ac1c03dbfae88886314da60e330b4abe7064855685f5581",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_3dacffd8d8a71ec05572ac71f4c0959987477fbe5b19556963170091b879990e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-10fa7230.json",
+        "retained_record_sha256": "73c3404072e8693cb99ee1ba0f690a88cb61a37ea28eb978e96d307e012d7ead",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_452dd4abcb3efd831c45ac3d2ee11d62040716f5d4e9312c893b8e4d13ca61b6",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-10fdad30.json",
+        "retained_record_sha256": "fc8f1880e18a572a75bd7a961a19f79c54485ff14c518702adfd89a72124a8b0",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_1f22324586237d8ba59834bcf59e118c38db80a3e68a32f37c31ab855f056825",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-10fdebc0.json",
+        "retained_record_sha256": "d8ba4aed401bac7cba0b13bfc143b05a062850b92e3e501540d2fd9cdc557310",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_a7df54b13744e30fb69520007cf17ba07c7c200d193844206385e3a94c6773cd",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-10fe4980.json",
+        "retained_record_sha256": "b81b88dba7bd0304b717ad012ab0551fc829b2c24fd02aade3a3deb5b5a32d74",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5bef6af2dbe91c95ba0e9707dacaf9ba2c7429f6cfe51a27eafef9c323101491",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-116838ea-bundle-record.json",
+        "retained_record_sha256": "2b24ad85b90dcacdbc56f02cb12e91cf3ea5c64fa6b17f2c594c36449fd11253",
+        "retained_record_format": "validated bundle evidence record"
+      },
+      {
+        "evidence_id": "ev_172749f0c4b51a17814c875323499cfe784512dfb1985374d47ea4afb3cb4341",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-11683a32-bundle-record.json",
+        "retained_record_sha256": "921be198141d6cd72a9ab70b95431886d78e6705bbd126778aeb881a5afbf685",
+        "retained_record_format": "validated bundle evidence record"
+      },
+      {
+        "evidence_id": "ev_abe918053d70c384f0b5c04c543064bfbf0461d086ccf796a3b27ceb5710a785",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-11683b10.json",
+        "retained_record_sha256": "1ab33115d95450eb891f59dc125f4f0708d4d22826b6b64d48c40b94f327be03",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_f18e4d47ecc79dd8a6f30175517eeab49f984155b167e3a96c3e932a59c52216",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-11687aa6.json",
+        "retained_record_sha256": "fc72184a14588b31b422d763845dc139f13cf6ff8f8a2d3c3e8bdb395f3f1072",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_b5a94d3dad5e4d1a34991f61a229706a74dcb531128958945c5666ab40345962",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-1168c02e.json",
+        "retained_record_sha256": "c5f519bbb3085b743f4fed6776e2011a3a1e005537b581caacfc1de9bc32411e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_2281b51e4282dd5c4520de680f7b2f8b492916f02310d09db11f512a369634b8",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-1168e713.json",
+        "retained_record_sha256": "b2368fd86c6a04105d0b5b0b5e3d233ba9e3de9ed10b29ed71b44a37d9b5c9fb",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7305218e607251fc1cdfa2315fb48d3fa1609886212c25fe11b473bbee973e2e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-1169764e.json",
+        "retained_record_sha256": "e5b27bba908f39baf57530338d8c3c78f0493aa7e548806521131dc54475f7da",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_863b99f1963e48f33d067feda0fb2b6657dd114bf04134cc28c4e6fad4fdb527",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-11699f33.json",
+        "retained_record_sha256": "500c4d9c341381df899953d19411ea02d868f409c2197a93cb321ded73ed9d86",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_f1dc6f7f13c7d792b5bbf84488a0f19b6e826c6516ef10cc1c9fc73955ccc643",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-1169b63d.json",
+        "retained_record_sha256": "cab0d7575eb5076857c4800e920928691a978493c89ee89decc61cc696088bf6",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_768ce5bf552575894ec788c4e2481d11c7e5412d22467adf50600fd3cd9bf819",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-1169b820.json",
+        "retained_record_sha256": "5ed729c85570123df285642fb1af979826b80fd52e7cfae76e495e3ecb62dce2",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_937d04d2bbeb72c93b1d28b2ea6c72227bd62d2305f3fb568510365744e681a6",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-116b856e.json",
+        "retained_record_sha256": "a6d14f0bb2d3f2fa2d51acc93699003e33993dc9437feaba2af6dd0630c2a853",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_8676ce6854d228273b045a8a4f3fa12f451e317d8f3c91c50460f2eced4c06f8",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-116be510.json",
+        "retained_record_sha256": "6dd313c26aeecb9fcdc5de4fbb22772f5537bf65aaddfeb233f9c79d2b656cda",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_03275f9a769b9e97cd0ce9cdb9ad8d79aab9efe8b9b72fa3e02f5ead9781b0fa",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-116be975.json",
+        "retained_record_sha256": "301cb516e24b396378313a098760c3dd0c3d69c9d6730c23ae3bfc546f6f42f4",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_d1f22f0dd0a6d492b6a6d2ab7897e28d6fb65aa11adac762f394a04576eb5298",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-116bebf1.json",
+        "retained_record_sha256": "b34a1dafd92b408966d6caa6c4ae0e4e63f87141f8ac9949479ef2b8c8e8c32e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_6c3c9a1b6275ab3c0a0e99a1aa66eb4abc4d4d8340a485dd647a1bf595fc51e0",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer40-20261115/fn-116bec60.json",
+        "retained_record_sha256": "5063e51bee2d5ed2d61e7eb3393aeca056a95d3e6b62b317e41935433d4cb696",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_a741af00688004e3c1729d7cde134d83b37dfdf13dc52002244ed12e5c77ec0e",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer40-20261115/extra-1172f304.json",
+        "retained_record_sha256": "f0b097b07fa328a798737411c2ab5bad71cc5cdc4e1de120290d6c5674018be9",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_8041311d9ec7e8a8b3f9e6a81dc06a7b03c46b371d1545934d5e6fde859c5d16",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer40-20261115/extra-1172f7c0.json",
+        "retained_record_sha256": "f90e03d572f52c9c92a6273ee74942e609df1316fb0d857bf2118d104bdc6d25",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_1b68bb61064bd77b7580ea19198808066bc3f6a9c566da4a493579fdb94f9971",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer40-20261115/extra-117452a4.json",
+        "retained_record_sha256": "b5b5d2254bc30081c6f7b3a4268ed3ecd7c7dbeaa6cee92626c746c19fb8e796",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_8219773f9a361bd19dbc351fab28ac4e889354f61b5f39ec6b999ec1bfdf1b1d",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer40-20261115/extra-1190bb30.json",
+        "retained_record_sha256": "c541792d33d2d3b0a12fd47e8139235734fb3b1591df3f0364cd6898a3567878",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_ce96284b6c4dfb4f77d59cb4080bcb533c4be0c206cc5a9cf8a2aa80a4dd8132",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer40-20261115/extra-11910b10.json",
+        "retained_record_sha256": "bc54b7415ed1a03b49bfb0bc45d02c0a2444a87c2080c2d05bfefed7256b3904",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_3987c453cc65a64464d40fe967300661e0ead517f4804f4ef02493d5eba8cb38",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer40-20261115/extra-1191fd50.json",
+        "retained_record_sha256": "a1a05d7a9cbf5e400089af661ca4fa53e97f5b82dddd8653a71b44fb0d95bf98",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_518716b5f2aefefbdb024693313c59d9c14fc179046c6e974713088ae000bc75",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer40-20261115/extra-119ebd78.json",
+        "retained_record_sha256": "3d1d7bf4fab8fc585a2ac589598c4aee800cde55511fe23ad7b0951dcda441d1",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_3f81ad6735f4519fc0a5b8b0329bbdbcce91235a78ab345f80c801bd410f26d5",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer40-20261115/extra-119ebe18.json",
+        "retained_record_sha256": "5981ce42813a1034378f9a4814f490ec6ca15c25e4a26505f0506d6a239eefdd",
+        "retained_record_format": "original MCP result envelope"
+      }
+    ],
+    "closed_snapshot_local_path": "out/vfs-layer40-20261115/session.rea.json",
+    "closed_snapshot_sha256": "8145dc87a5ae6d6f1d353abaeb7b1139d7a221d2c691be330fd1b65b8799fc5e",
+    "closed_evidence_records": 695,
+    "new_evidence_records": 40,
+    "retained_operation_envelopes": 34,
+    "reused_layer39_evidence_records": 655,
+    "extra_evidence_views_count": 6,
+    "validated_bundle_local_path": "out/vfs-layer40-20261115/validated-evidence-bundle.json",
+    "validated_bundle_sha256": "258147b32cac84d74289c03e6209ea06ca3680fa6aa3c5fcad4008ba1611094d",
+    "cumulative_validated_bundle_local_path": "out/vfs-layer40-20261115/cumulative-validated-evidence-bundle.json",
+    "cumulative_validated_bundle_sha256": "273c690945f919349bd1d461a1a9c0e1f0282cfe36367869d269b691b79ed513",
+    "cumulative_validated_bundle_records": 1062,
+    "non_proc_slots": [],
+    "resource_constrained_slots": [
+      "116838ea",
+      "11683a32"
+    ],
+    "limitations": [
+      "Layer 40 extends the Layer 39 session snapshot (or cleanly merges via REA import_evidence_bundle) into the cumulative validated bundle",
+      "CreateThread/timeGetTime IATs, SSE2 floor constants, _iob[0..2] _FILEX array, C++ Throw template, and CRT .bss capability flags are anchored by read_bytes and instruction_witnesses",
+      "Any small slot returning invalid_request from analyze_function is paired with resolve_containing_procedure + read_bytes(length=320)"
     ]
   }
 }
