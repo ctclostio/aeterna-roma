@@ -2190,5 +2190,54 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_sock_endpoint12_32, sin_family_04, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_sock_endpoint12_32, sin_port_be_06, 0x06);
 ROME2_LAYOUT_ASSERT(rome2_vfs_sock_endpoint12_32, sin_addr_08, 0x08);
 
+typedef struct rome2_vfs_threadname_info16_32 {
+    uint32_t dw_type_00;                         /* 00 (0x1000) */
+    uint32_t sz_name_04;                         /* 04 */
+    uint32_t dw_thread_id_08;                    /* 08 */
+    uint32_t dw_flags_0c;                        /* 0c (0) */
+} rome2_vfs_threadname_info16_32;
+_Static_assert(sizeof(rome2_vfs_threadname_info16_32) == 0x10, "threadname info16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_threadname_info16_32, sz_name_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_threadname_info16_32, dw_thread_id_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_threadname_info16_32, dw_flags_0c, 0x0c);
+
+typedef struct rome2_vfs_seq_ack_ring36_32 {
+    uint32_t head_00;                            /* 00 */
+    uint32_t sentinel_04;                        /* 04 */
+    uint32_t reserved_08;                        /* 08 */
+    uint32_t base_seq_0c;                        /* 0c */
+    uint32_t ack_out_arr_10;                     /* 10 */
+    uint32_t bitmap_14;                          /* 14 */
+    uint32_t stride_18;                          /* 18 */
+    uint32_t cap_1c;                             /* 1c */
+    uint32_t ack_count_20;                       /* 20 */
+} rome2_vfs_seq_ack_ring36_32;
+_Static_assert(sizeof(rome2_vfs_seq_ack_ring36_32) == 0x24, "seq ack ring36 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_seq_ack_ring36_32, base_seq_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_seq_ack_ring36_32, bitmap_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_seq_ack_ring36_32, stride_18, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_vfs_seq_ack_ring36_32, cap_1c, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_seq_ack_ring36_32, ack_count_20, 0x20);
+
+typedef struct rome2_vfs_channel_slot_meta36_32 {
+    uint32_t ep_addr_00;                         /* +0x4030 */
+    uint16_t ep_port_04;                         /* +0x4034 */
+    uint16_t pad_06;                             /* +0x4036 */
+    uint32_t id_lo_08;                           /* +0x4038 */
+    uint32_t id_hi_0c;                           /* +0x403c */
+    uint32_t aux_sock_10;                        /* +0x4040 */
+    uint32_t reserved_14;                        /* +0x4044 */
+    uint32_t state_flag_word_18;                 /* +0x4048 */
+    uint8_t byte_flag_1c;                        /* +0x404c */
+    uint8_t pad_1d[3];                           /* +0x404d..4f */
+    uint32_t tail_word_20;                       /* +0x4050 */
+} rome2_vfs_channel_slot_meta36_32;
+_Static_assert(sizeof(rome2_vfs_channel_slot_meta36_32) == 0x24, "channel slot meta36 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_channel_slot_meta36_32, ep_port_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_channel_slot_meta36_32, id_lo_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_channel_slot_meta36_32, aux_sock_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_channel_slot_meta36_32, byte_flag_1c, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_channel_slot_meta36_32, tail_word_20, 0x20);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

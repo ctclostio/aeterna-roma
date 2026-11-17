@@ -1067,3 +1067,34 @@ callees.
   Ghidra project or canonical exports; **24** Layer 39 engine/channel/allocator/
   format callees (`16` single-part + `8` multi-part), CRT runtime helpers, and
   live runtime execution remain open.
+
+### Layer 39 TLS singletons, thread-name SEH, formatters, Winsock messages, `dlmalloc` `sys_alloc`, MSB bitcopy, ack ring & channel transport (2026-11-16)
+- Added 3 fixed-width guest32 thread-name, ack-ring, and channel slot layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  and bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_engine_net_sys_ops.h](port/recovered_types/vfs_fs_engine_net_sys_ops.h),
+  [port/recovered_types/vfs_fs_engine_net_sys_ops.c](port/recovered_types/vfs_fs_engine_net_sys_ops.c),
+  and [port/recovered_types/test_vfs_fs_engine_net_sys_ops.c](port/recovered_types/test_vfs_fs_engine_net_sys_ops.c)
+  (**46** checks) closing all **24** Layer 39 engine/channel/allocator/format
+  callees (`16` single-part + `8` multi-part/switch across `0x100e..0x10fd`:
+  `0x100e7ff0`/`0x10fddba0` TLS singletons, `0x100f38b0` `MS_VC_EXCEPTION`
+  thread-naming SEH helper, `0x100efa10`/`0x100f2f60`/`0x100f3f70`/`0x100f4240`/
+  `0x10104e10`/`0x10115640`/`0x10c93ed0` UTF-16 format/pad/slice & int32/card32
+  switch dispatchers, `0x100feef0` Winsock `WSAGetLastError` strings,
+  `0x10123e40` `dlmalloc` `sys_alloc`, `0x10f74830`/`0x10f79f60` MSB bit-width
+  & transfer, `0x10fa5d10` sequence ack ring pop, `0x10fdf080`/`0x10fe45f0`/
+  `0x10fe47b0` SteamID/Networking probes, and `0x10fb2fb0`/`0x10fd6d80`/
+  `0x10fd6ed0`/`0x10fd7410`/`0x10fd7500`/`0x10fd9500` TCP/Steam channel setup,
+  slot metadata move, and length-prefixed transport).
+- Advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  (**718** functions, **353** globals, **40** vtables, **645** instruction
+  witnesses) and [port/recovered_types/verification.json](port/recovered_types/verification.json)
+  with **655** closed session REA evidence records (**31** new operations,
+  **624** reused Layer 38 records; **1022** cumulative validated bundle records;
+  `non_proc_slots=[]`, `resource_constrained_slots=[]`).
+- Verified **96/96** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **74** contract tests on Python 3.14 and 3.15, and **902** clean-public Python
+  tests (**302** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; **26** Layer 40 callees (`11` clean
+  engine + `15` CRT helpers) and live runtime execution remain open.
