@@ -2373,7 +2373,9 @@ typedef struct rome2_vfs_crt_tiddata868_32 {
     uint8_t prefix_00[0x10];                     /* 00..0f */
     int32_t terrno_10;                           /* 10 (0x11698b16) */
     uint32_t tdoserrno_14;                       /* 14 (0x11698b03) */
-    uint8_t middle_18[0x338];                    /* 18..34f */
+    uint8_t middle_18[0x30];                     /* 18..47 */
+    uint32_t ptmbcinfo_48;                       /* 48 (0x116a42c8, 0x116a4434) */
+    uint8_t middle_4c[0x304];                    /* 4c..34f */
     uint32_t ownlocale_350;                      /* 350 (0x11688f63, 0x11698f1e) */
     uint8_t mid2_354[8];                         /* 354..35b */
     uint32_t invalid_parameter_handler_35c;      /* 35c (0x11687985) */
@@ -2382,6 +2384,7 @@ typedef struct rome2_vfs_crt_tiddata868_32 {
 _Static_assert(sizeof(rome2_vfs_crt_tiddata868_32) == 0x364, "crt tiddata868 32 size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tiddata868_32, terrno_10, 0x10);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tiddata868_32, tdoserrno_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tiddata868_32, ptmbcinfo_48, 0x48);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tiddata868_32, ownlocale_350, 0x350);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tiddata868_32, invalid_parameter_handler_35c, 0x35c);
 
@@ -2482,6 +2485,32 @@ typedef struct rome2_vfs_crt_fp_env8_32 {
 _Static_assert(sizeof(rome2_vfs_crt_fp_env8_32) == 0x08, "crt fp env8 32 size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_fp_env8_32, word0_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_fp_env8_32, word1_04, 0x04);
+
+/* 12B (0x0c) CRT __crt_onexit_table encoded vector bounds modified by 0x116a1825. */
+typedef struct rome2_vfs_crt_onexit_table12_32 {
+    uint32_t first_enc_00;                       /* 00 */
+    uint32_t last_enc_04;                        /* 04 */
+    uint32_t end_enc_08;                         /* 08 */
+} rome2_vfs_crt_onexit_table12_32;
+_Static_assert(sizeof(rome2_vfs_crt_onexit_table12_32) == 0x0c, "crt onexit table12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_onexit_table12_32, first_enc_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_onexit_table12_32, last_enc_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_onexit_table12_32, end_enc_08, 0x08);
+
+/* 24B (0x18) Win32 RTL_CRITICAL_SECTION slot in CRT __acrt_lock_table (0x12125da8) indexed by 0x116a24dd. */
+typedef struct rome2_vfs_win32_critsec24_32 {
+    uint32_t debug_info_00;                      /* 00 */
+    int32_t lock_count_04;                       /* 04 */
+    int32_t recursion_count_08;                  /* 08 */
+    uint32_t owning_thread_0c;                   /* 0c */
+    uint32_t lock_sem_10;                        /* 10 */
+    uint32_t spin_count_14;                      /* 14 */
+} rome2_vfs_win32_critsec24_32;
+_Static_assert(sizeof(rome2_vfs_win32_critsec24_32) == 0x18, "win32 critsec24 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_win32_critsec24_32, debug_info_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_win32_critsec24_32, lock_count_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_win32_critsec24_32, recursion_count_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_win32_critsec24_32, spin_count_14, 0x14);
 
 #undef ROME2_LAYOUT_ASSERT
 #endif

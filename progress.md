@@ -1233,3 +1233,28 @@ callees.
   tests (**307** skipped) on Python 3.14 and 3.15 without touching the shared
   Ghidra project or canonical exports; remaining Layer 45+ CRT/multi-part/thunk
   callees and live runtime execution remain open.
+
+### Layer 45 CRT stdio flush, parser scans, UNC/drive pathing, locks/onexit & `try_get_function` (2026-11-18)
+- Added 2 fixed-width guest32 onexit/lock layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  (`rome2_vfs_crt_onexit_table12_32`, `rome2_vfs_win32_critsec24_32`, plus
+  `ptmbcinfo_48` on `rome2_vfs_crt_tiddata868_32`) and bounded C17 helpers/tests
+  in [port/recovered_types/vfs_fs_engine_crt_env_ops.h](port/recovered_types/vfs_fs_engine_crt_env_ops.h),
+  [port/recovered_types/vfs_fs_engine_crt_env_ops.c](port/recovered_types/vfs_fs_engine_crt_env_ops.c),
+  and [port/recovered_types/test_vfs_fs_engine_crt_env_ops.c](port/recovered_types/test_vfs_fs_engine_crt_env_ops.c)
+  (**40** checks) closing **25** single-part CRT runtime helpers
+  (`0x11687d0f`..`0x116adc01`).
+- Advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  (**871** functions, **460** globals, **40** vtables, **798** instruction
+  witnesses) and [port/recovered_types/verification.json](port/recovered_types/verification.json)
+  with **134** Partition 3 validated REA records (**32** new records across
+  `25` `analyze_function` + `7` `read_bytes`, **102** reused Layer 44 records;
+  combined with Partition 1's **367** and Partition 2's **743** records for
+  **1244** disjoint validated records total; `non_proc_slots=[]`,
+  `resource_constrained_slots=[]`).
+- Verified **102/102** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **80** contract tests on Python 3.14 and 3.15, and **908** clean-public Python
+  tests (**308** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; remaining Layer 46+ CRT/multi-part/thunk
+  callees and live runtime execution remain open.
