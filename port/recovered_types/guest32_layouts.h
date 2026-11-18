@@ -2777,5 +2777,48 @@ typedef struct rome2_vfs_crt_unique_heap_ptr4_32 {
 _Static_assert(sizeof(rome2_vfs_crt_unique_heap_ptr4_32) == 0x04, "crt unique heap ptr4 32 size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_unique_heap_ptr4_32, ptr_00, 0x00);
 
+/* 56B (0x38) UCRT __crt_stdio_stream_data layout observed across 0x1169e514, 0x116a66a3, 0x1168bcc3, 0x116a5864, 0x116a586f. */
+typedef struct rome2_vfs_crt_stdio_stream56_32 {
+    uint32_t ptr_00;                             /* 00 */
+    uint32_t base_04;                            /* 04 */
+    int32_t cnt_08;                              /* 08 */
+    uint32_t flags_0c;                           /* 0c (_IOREAD=1, _IOWRITE=2, _IORW=4, _IOYOURBUF=8, _IOERR=0x10, _IOCOMMIT=0x400, _IOSTRG=0x1000) */
+    int32_t file_10;                             /* 10 */
+    int32_t bufsiz_14;                           /* 14 */
+    uint32_t charbuf_18;                         /* 18 */
+    uint32_t tmpfname_1c;                        /* 1c */
+    uint8_t lock_cs_20[24];                      /* 20..37 */
+} rome2_vfs_crt_stdio_stream56_32;
+_Static_assert(sizeof(rome2_vfs_crt_stdio_stream56_32) == 0x38, "crt stdio stream56 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stdio_stream56_32, ptr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stdio_stream56_32, base_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stdio_stream56_32, cnt_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stdio_stream56_32, flags_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stdio_stream56_32, file_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stdio_stream56_32, bufsiz_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stdio_stream56_32, lock_cs_20, 0x20);
+
+/* 8B (0x08) Win32 API module descriptor record (0x11914d60, sentinel 0x11914d68) passed by 0x116a83bd. */
+typedef struct rome2_vfs_crt_api_mod_desc8_32 {
+    uint32_t module_id_00;                       /* 00 */
+    uint32_t min_version_04;                     /* 04 */
+} rome2_vfs_crt_api_mod_desc8_32;
+_Static_assert(sizeof(rome2_vfs_crt_api_mod_desc8_32) == 0x08, "crt api mod desc8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_api_mod_desc8_32, module_id_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_api_mod_desc8_32, min_version_04, 0x04);
+
+/* 16B (0x10) MSVC SEH4 scope table header (e.g. 0x119256b0) pushed by 0x1169ecd8 (_getenv_s). */
+typedef struct rome2_vfs_crt_seh4_scope16_32 {
+    uint32_t gscookie_offset_00;                 /* 00 */
+    uint32_t gscookie_xor_offset_04;             /* 04 */
+    uint32_t ehcookie_offset_08;                 /* 08 */
+    uint32_t ehcookie_xor_offset_0c;             /* 0c */
+} rome2_vfs_crt_seh4_scope16_32;
+_Static_assert(sizeof(rome2_vfs_crt_seh4_scope16_32) == 0x10, "crt seh4 scope16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_seh4_scope16_32, gscookie_offset_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_seh4_scope16_32, gscookie_xor_offset_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_seh4_scope16_32, ehcookie_offset_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_seh4_scope16_32, ehcookie_xor_offset_0c, 0x0c);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

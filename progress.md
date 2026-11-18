@@ -1438,3 +1438,30 @@ callees.
   tests (**315** skipped) on Python 3.14 and 3.15 without touching the shared
   Ghidra project or canonical exports; remaining Layer 53+ CRT leaf/multi-part/overlapping/thunk
   callees and live runtime execution remain open.
+
+### Layer 53 CRT `_flsbuf`/`_flswbuf`, switch tables, `parse_integer`, `__wctomb_s_l` & `__alldvrm` helpers (2026-11-18)
+- Added 3 fixed-width guest32 stream/API-descriptor/SEH4 layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  (`rome2_vfs_crt_stdio_stream56_32`,
+  `rome2_vfs_crt_api_mod_desc8_32`, `rome2_vfs_crt_seh4_scope16_32`), and added
+  bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_engine_crt_fls_ops.h](port/recovered_types/vfs_fs_engine_crt_fls_ops.h),
+  [port/recovered_types/vfs_fs_engine_crt_fls_ops.c](port/recovered_types/vfs_fs_engine_crt_fls_ops.c),
+  and [port/recovered_types/test_vfs_fs_engine_crt_fls_ops.c](port/recovered_types/test_vfs_fs_engine_crt_fls_ops.c)
+  (**75** checks) closing all **19** remaining clean non-overlapping CRT runtime
+  callees (`13` single-part + `6` switch-table/two-part tail-jump helpers) across
+  the 1,059-function graph (`0x116847e0`..`0x116d7120`) to reach **1,078**
+  recovered functions.
+- Extended Partition 4 (**127** validated records) and advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  (**1078** functions, **550** globals, **40** vtables, **1005** instruction
+  witnesses) and [port/recovered_types/verification.json](port/recovered_types/verification.json)
+  (`extending_layer52`: `25` new records across `19` `analyze_function` + `6`
+  `read_bytes`, `102` reused Layer 52 records; combined with Partitions 1–3
+  `367 + 743 + 264 = 1374` for **1501** disjoint validated records total;
+  `non_proc_slots=[]`, `resource_constrained_slots=[]`, **35,667,118B** snapshot).
+- Verified **110/110** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **88** contract tests on Python 3.14 and 3.15, and **916** clean-public Python
+  tests (**316** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; remaining Layer 54+ CRT leaf/overlapping/thunk
+  callees and live runtime execution remain open.
