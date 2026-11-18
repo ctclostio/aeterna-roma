@@ -16243,6 +16243,438 @@
         "116bd8ae"
       ],
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116889a9",
+      "bytes": 25,
+      "sha256": "78c999026a026a286b75b4ea7e73f1d428763932b64f68ec7d70f490954bb601",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX uint32 quarter-buffer wchar_t output capacity of formatting_buffer (count<wchar_t>)",
+      "scope": "returns 0x100 inline when [ecx+0x404]==0 else allocated_bytes>>2 from [ecx+0x400]",
+      "return_instruction_addresses": [
+        "116889b7",
+        "116889c1"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "11689010",
+      "bytes": 36,
+      "sha256": "54f3b078fe9fcf4990d92f4732c45e7283dd88d85de01b5b5fb88422145da17f",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX void* __crt_unique_heap_ptr::operator= freeing old pointer via 0x116a5967 and transferring [rhs]",
+      "scope": "frees existing [ecx], moves ownership from *rhs to *this, zeroes *rhs, returns this",
+      "return_instruction_addresses": [
+        "11689031"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "1168d395",
+      "bytes": 49,
+      "sha256": "475558e7bebf697612028b0ebb2a1e8045b52bfe533ee632389a2594e14bbd78",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "AL bool __crt_strtox::is_overflow_condition<uint32>(flags, value)",
+      "scope": "returns 1 if flags&4 else if (flags&1) checks flags&2 ? value>0x80000000 : value>0x7fffffff",
+      "return_instruction_addresses": [
+        "1168d3b8",
+        "1168d3c5"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "1168e5d4",
+      "bytes": 46,
+      "sha256": "3c30e1c3feadf1f9261c2c022aa1a09281178cf2c67782b25738a249dfbe1379",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void c_string_character_source<wchar_t>::unget backing up pointer [this] by 2 bytes",
+      "scope": "decrements *this by 2 bytes and invokes _invalid_parameter when non-zero ch mismatches",
+      "return_instruction_addresses": [
+        "1168e5ff"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "1168e679",
+      "bytes": 35,
+      "sha256": "87c785ffdd6b65e090cdeee5714bf33ee26ef73f06dc90358c24bfab4790670f",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX int32 _atol/_atoi parsing narrow decimal string",
+      "scope": "constructs c_string_character_source<char> on stack and delegates to parse_integer<uint32> 0x1168d407(NULL, src, 10, 1)",
+      "return_instruction_addresses": [
+        "1168e69b"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "1169d38d",
+      "bytes": 44,
+      "sha256": "1a63af8e2798717adb4ba64b9a7df384b3188755c3afd50df6caf0883cd2c285",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX size_t bounded 1..4 byte UTF-8 lookahead length probe before NUL",
+      "scope": "returns 1 if s[0]==0, 2 if s[1]==0, 3 if s[2]==0, else 4",
+      "return_instruction_addresses": [
+        "1169d3b6"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "1169d3b9",
+      "bytes": 64,
+      "sha256": "d6c2233e36fbfafe7ffc9de68b1d29e4d3e385efdf10ace66195596623278b09",
+      "receiver_register": "none",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX size_t __mbrtowc_utf8 decoding UTF-8 via 0x116b15ac and mapping >0xffff to 0xfffd",
+      "scope": "decodes UTF-8 codepoint into temp uint32, substitutes replacement char U+FFFD if >0xffff, writes wchar_t",
+      "return_instruction_addresses": [
+        "1169d3f8"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "1169e514",
+      "bytes": 41,
+      "sha256": "c740ede83afea720d4baf8e349b8510485f2892659d5ad06cd8a026d759f3c64",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX int _fputc_nolock writing byte to stdio FILE* stream",
+      "scope": "decrements FILE->_cnt [+8]; stores unsigned byte at *_ptr or flushes via _flsbuf 0x116a5864",
+      "return_instruction_addresses": [
+        "1169e52e",
+        "1169e53c"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116a25d6",
+      "bytes": 37,
+      "sha256": "c09ef8fe811d39599da20822ba9df97b145c10cb4b1e14acd763b2957d538c98",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX uint32 ___lc_codepage_func returning current thread locale codepage",
+      "scope": "calls ___acrt_getptd 0x116a4632 and ___acrt_update_locale_info 0x116a5cc3, returns locinfo[+8]",
+      "return_instruction_addresses": [
+        "116a25fa"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116a5ca6",
+      "bytes": 29,
+      "sha256": "97fdc3299e82916c4101361b29abfff135739b99c9f087fd8291fe66945778e0",
+      "receiver_register": "none",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX errno_t _wctomb_s forwarding (pRetValue, mbchar, sizeInBytes, wchar, NULL) to _wctomb_s_l",
+      "scope": "forwards secure wchar-to-multibyte args with locale=NULL directly to 0x116a5b4b",
+      "return_instruction_addresses": [
+        "116a5cc2"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116a5d7f",
+      "bytes": 793,
+      "sha256": "109e7d465edbc43d825dee38f948820c9f7f3fcbf85e45ad71c764012d75688c",
+      "receiver_register": "none",
+      "stack_argument_bytes": 36,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX errno_t fp_format_a formatting IEEE-754 double as %a/%A hex float",
+      "scope": "validates buf size >= precision+11, inspects exponent bits 0x7ff, emits [+-]0x1.hhhhp[+-]d digits",
+      "return_instruction_addresses": [
+        "116a6097"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116a6098",
+      "bytes": 162,
+      "sha256": "bc02c2d6b9e9ee5424d505b28d123124e130b503af27827a75173443f51ee541",
+      "receiver_register": "none",
+      "stack_argument_bytes": 36,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX errno_t fp_format_e formatting scientific float (%e/%E)",
+      "scope": "calls _fltout 0x116a8e6d, adjusts precision/sign width, and delegates to fp_format_e_internal 0x116a613a",
+      "return_instruction_addresses": [
+        "116a6139"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116a6282",
+      "bytes": 139,
+      "sha256": "44d4a1fc24ff5fcdf6fba08ed1a0ab52d2426f2987bebaaf8406d155ec7e54a2",
+      "receiver_register": "none",
+      "stack_argument_bytes": 28,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX errno_t fp_format_f formatting fixed decimal float (%f/%F)",
+      "scope": "calls _fltout 0x116a8e6d, aligns decimal digit count with exponent, and delegates to fp_format_f_internal 0x116a630d",
+      "return_instruction_addresses": [
+        "116a630c"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116a63de",
+      "bytes": 193,
+      "sha256": "c92b560f646a54c5b020d3224d1825019473f52db2235fbc5f6f291e8a00b9e7",
+      "receiver_register": "none",
+      "stack_argument_bytes": 36,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX errno_t fp_format_g formatting general float (%g/%G)",
+      "scope": "calls _fltout 0x116a8e6d and chooses fp_format_f_internal vs fp_format_e_internal trimming trailing zeros",
+      "return_instruction_addresses": [
+        "116a649e"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116a649f",
+      "bytes": 148,
+      "sha256": "bcaede7ddc62406f0c1ac98572f83c7fa6c96693ef14a6b3820b18ca5f9a4313",
+      "receiver_register": "none",
+      "stack_argument_bytes": 20,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX errno_t __acrt_fp_format_nan_or_infinity formatting INF/NAN variants from 0x11914110",
+      "scope": "writes '-' if negative, looks up INF/NAN/NAN(SNAN)/NAN(IND) string LUT 0x11914110, copies safely to buf",
+      "return_instruction_addresses": [
+        "116a64bf",
+        "116a6526"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116a66a3",
+      "bytes": 48,
+      "sha256": "24c94868f6cdfba31eaf0168f4d4836de3b91334f116785da95bc032923ce145",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "AX wint_t fputwc_binary_nolock writing UTF-16LE wchar_t to binary FILE* stream",
+      "scope": "decrements FILE->_cnt [+8] by 2; stores 16-bit wchar_t at *_ptr or flushes via 0x116a586f",
+      "return_instruction_addresses": [
+        "116a66c1",
+        "116a66d2"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116a8a30",
+      "bytes": 93,
+      "sha256": "730ce21d0653366c807a1256ca582d7c8a0fcae43b79e6639156e512f8ce5df5",
+      "receiver_register": "none",
+      "stack_argument_bytes": 36,
+      "callee_pop_bytes": 36,
+      "calling_convention": "stdcall",
+      "ordinary_return": "EAX int ___acrt_LCMapStringEx@36 dispatching LCMapStringEx or KERNEL32!LCMapStringW [0x1172f344]",
+      "scope": "calls dynamic LCMapStringEx if resolved via 0x116a83bd else converts locale name 0x116a8a8d for LCMapStringW",
+      "return_instruction_addresses": [
+        "116a8a8a"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116a8c79",
+      "bytes": 105,
+      "sha256": "2cdfc18ef9a812676f0a56cea28fd71aa0010b044d5414e70e625ca612086a55",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX int _iswctype classifying wchar_t via _pwctype [0x119ebf34] or GetStringTypeW",
+      "scope": "returns 0 for WEOF; masks _pwctype[c] & mask for <0x100 else queries GetStringTypeW wrapper 0x116b8215",
+      "return_instruction_addresses": [
+        "116a8ce1"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116aea59",
+      "bytes": 106,
+      "sha256": "1ec3ada8e49b4ba8a6b526ffa1f66a9e8995e57cbe37aeb458aa0779bc653c4d",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX intptr_t _get_osfhandle mapping CRT fd to OS HANDLE",
+      "scope": "rejects fd<0, fd>=[0x12126118], or closed FOPEN bit in __pioinfo [0x12125f18] with EBADF=9",
+      "return_instruction_addresses": [
+        "116aeaa5",
+        "116aeac2"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116afb0a",
+      "bytes": 190,
+      "sha256": "100098cc014f4e9a00192f4a7ec9363a1564e423df526e6e49cbf4233b0e5e7b",
+      "receiver_register": "none",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX errno_t _strncpy_s tail-jumping into common_tcsncpy_s<char> 0x116afa57..0x116afb14",
+      "scope": "validates dst/src/count, copies up to count chars/truncate, clears/invokes _invalid_parameter on overflow",
+      "return_instruction_addresses": [
+        "116afa88"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "body_ranges": [
+        {
+          "start": "116afa57",
+          "end": "116afb14"
+        }
+      ]
+    },
+    {
+      "address": "116afb40",
+      "bytes": 6,
+      "sha256": "245d9ec6b2e6da4ce423bc4fc82e6143b7733f7d54e9bb0a38d002c0eceabd60",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX int32* ___timezone returning &_timezone (0x12126204)",
+      "scope": "returns pointer 0x12126204",
+      "return_instruction_addresses": [
+        "116afb45"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116afb46",
+      "bytes": 6,
+      "sha256": "b4107cf3bfdd6204d404c69dcad2d36865d93e347df3b219b56cb222d0e26d29",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX int32* ___dstbias returning &_dstbias (0x12126208)",
+      "scope": "returns pointer 0x12126208",
+      "return_instruction_addresses": [
+        "116afb4b"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116afb4c",
+      "bytes": 6,
+      "sha256": "cdd038389a373792885179035e3c3064c6d59c70dc59a5081f48ba4cdd67f493",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX int32* ___daylight returning &_daylight (0x12126200)",
+      "scope": "returns pointer 0x12126200",
+      "return_instruction_addresses": [
+        "116afb51"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116afb52",
+      "bytes": 6,
+      "sha256": "6db65d0a90dd1827a711c8d4b9189b1b1a2e41ce3cc91e7ce1b4ade2e90dacf2",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX char** __tzname loading CRT _tzname pointer array base from [0x1212620c]",
+      "scope": "loads and returns dword ptr [0x1212620c]",
+      "return_instruction_addresses": [
+        "116afb57"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116b1572",
+      "bytes": 58,
+      "sha256": "309052bd7ea23b3614522639239ffdc08580968bb3bd20689849b1bafd0c3bb1",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX int _isleadbyte_l checking _LEADBYTE (0x8000) under locale",
+      "scope": "enters _LocaleUpdate 0x11688f63 and tests ___acrt_locale_get_ctype_array_value 0x1168bf06(c, 0x8000)",
+      "return_instruction_addresses": [
+        "116b15ab"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116b15ac",
+      "bytes": 423,
+      "sha256": "19fe6c653081721ebff99d5964fa119fbbd9076590f1e1b353eb34f612dd7d5a",
+      "receiver_register": "none",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX size_t __mbrtoc32_utf8 stateful 1..4 byte UTF-8 decoder with fallback mbstate_t 0x121262ec",
+      "scope": "uses 0x121262ec if ps==NULL, tracks multibyte partial accumulator, validates codepoints & overlong bounds",
+      "return_instruction_addresses": [
+        "116b1752"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116bd4f2",
+      "bytes": 31,
+      "sha256": "24317e9d62987947b1dcdbedc2f5ab7fc7f13ca496c8b8d072f0deae5e80e81b",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "AL bool ___dcrt_lowio_ensure_console_output_initialized opening CONOUT$ lazily into [0x119ec730]",
+      "scope": "checks cached console handle [0x119ec730]!=-2, initializes via 0x116bd4d3, returns !=INVALID_HANDLE_VALUE",
+      "return_instruction_addresses": [
+        "116bd510"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
+    },
+    {
+      "address": "116bd528",
+      "bytes": 85,
+      "sha256": "4a057c86aa5e5475c748c84304ae7c3cadadc1f9123388f27d9630bbdc07a466",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX BOOL ___dcrt_write_console emitting wchar_t slice via WriteConsoleW [0x1172f114]",
+      "scope": "calls KERNEL32!WriteConsoleW [0x1172f114] on [0x119ec730] and reopens/retries once on ERROR_INVALID_HANDLE (6)",
+      "return_instruction_addresses": [
+        "116bd57c"
+      ],
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address"
     }
   ],
   "globals": [
@@ -20493,6 +20925,62 @@
       "width": 4,
       "kind": "4-byte zero-fill CRT tzinfo.DaylightBias in .data read by 0x116b0111 (_tzset_from_system_nolock)",
       "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1172f114",
+      "width": 4,
+      "kind": "IAT slot in .rdata (KERNEL32.dll!WriteConsoleW) called by 0x116bd528",
+      "initial_hex_le": "48209301",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1172f344",
+      "width": 4,
+      "kind": "IAT slot in .rdata (KERNEL32.dll!LCMapStringW) called by 0x116a8a30",
+      "initial_hex_le": "341d9301",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11914110",
+      "width": 64,
+      "kind": "64-byte 16-entry CRT NaN/Infinity string pointer LUT in .rdata indexed by 0x116a649f",
+      "initial_hex_le": "5041911150419111544191115441911158419111584191115c4191115c41911160419111584191116c4191115c4191117841911158419111844191115c419111",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "119ebf34",
+      "width": 4,
+      "kind": "4-byte CRT _pwctype table pointer in .data (init 0x11913ef2) loaded by 0x116a8c79 (_iswctype)",
+      "initial_hex_le": "f23e9111",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "119ec730",
+      "width": 4,
+      "kind": "4-byte CRT __dcrt_lowio_console_output_handle in .data (init -2) tested by 0x116bd4f2 and 0x116bd528",
+      "initial_hex_le": "feffffff",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1212620c",
+      "width": 4,
+      "kind": "4-byte zero-fill CRT _tzname array base pointer in .data read by 0x116afb52 (__tzname)",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "121262ec",
+      "width": 8,
+      "kind": "8-byte zero-fill CRT internal mbstate_t fallback in .data used when ps==NULL by 0x116b15ac",
+      "initial_hex_le": "0000000000000000",
       "storage": "zero_fill",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
     }
@@ -25489,6 +25977,146 @@
       "address": "116bd8a7",
       "hex": "e884b1feff",
       "purpose": "0x116bd871 forwards clamped length to __acrt_LCMapStringEx 0x116a8a30"
+    },
+    {
+      "address": "116889be",
+      "hex": "c1e802",
+      "purpose": "0x116889a9 shifts allocated formatting_buffer byte count right by 2 in count<wchar_t>"
+    },
+    {
+      "address": "1168901a",
+      "hex": "e848c90100",
+      "purpose": "0x11689010 frees replaced pointer via 0x116a5967 in __crt_unique_heap_ptr::operator="
+    },
+    {
+      "address": "1168d3ac",
+      "hex": "817d0c00000080",
+      "purpose": "0x1168d395 tests INT32_MIN magnitude bound 0x80000000 for negative signed overflow"
+    },
+    {
+      "address": "1168e5db",
+      "hex": "83c0fe",
+      "purpose": "0x1168e5d4 backs up wide string source pointer by 2 bytes in unget"
+    },
+    {
+      "address": "1168e692",
+      "hex": "e870edffff",
+      "purpose": "0x1168e679 (_atol) delegates signed base-10 narrow parsing to 0x1168d407"
+    },
+    {
+      "address": "1169d39f",
+      "hex": "80790100",
+      "purpose": "0x1169d38d probes second byte before NUL in UTF-8 bounded lookahead"
+    },
+    {
+      "address": "1169d3e6",
+      "hex": "b9fdff0000",
+      "purpose": "0x1169d3b9 (__mbrtowc_utf8) clamps >0xffff codepoints to U+FFFD (0xfffd)"
+    },
+    {
+      "address": "1169e51c",
+      "hex": "836a0801",
+      "purpose": "0x1169e514 (_fputc_nolock) decrements stdio FILE->_cnt [+8] by 1"
+    },
+    {
+      "address": "116a25ec",
+      "hex": "e8d2360000",
+      "purpose": "0x116a25d6 (___lc_codepage_func) refreshes thread locinfo via 0x116a5cc3"
+    },
+    {
+      "address": "116a5cb9",
+      "hex": "e88dfeffff",
+      "purpose": "0x116a5ca6 (_wctomb_s) forwards with locale=NULL to _wctomb_s_l 0x116a5b4b"
+    },
+    {
+      "address": "116a5dce",
+      "hex": "25ff070000",
+      "purpose": "0x116a5d7f (fp_format_a) extracts 11-bit IEEE-754 binary64 exponent mask 0x7ff"
+    },
+    {
+      "address": "116a60c4",
+      "hex": "e8a42d0000",
+      "purpose": "0x116a6098 (fp_format_e) decomposes double digits via _fltout 0x116a8e6d"
+    },
+    {
+      "address": "116a62aa",
+      "hex": "e8be2b0000",
+      "purpose": "0x116a6282 (fp_format_f) decomposes double digits via _fltout 0x116a8e6d"
+    },
+    {
+      "address": "116a6407",
+      "hex": "e8612a0000",
+      "purpose": "0x116a63de (fp_format_g) decomposes double digits via _fltout 0x116a8e6d"
+    },
+    {
+      "address": "116a64ed",
+      "hex": "8b348510419111",
+      "purpose": "0x116a649f indexes 16-entry INF/NAN string pointer LUT at 0x11914110"
+    },
+    {
+      "address": "116a66ab",
+      "hex": "834008fe",
+      "purpose": "0x116a66a3 (fputwc_binary_nolock) decrements FILE->_cnt [+8] by 2"
+    },
+    {
+      "address": "116a8a82",
+      "hex": "ff1544f37211",
+      "purpose": "0x116a8a30 (___acrt_LCMapStringEx) falls back to KERNEL32!LCMapStringW [0x1172f344]"
+    },
+    {
+      "address": "116a8ca3",
+      "hex": "a134bf9e11",
+      "purpose": "0x116a8c79 (_iswctype) reads _pwctype table pointer from 0x119ebf34"
+    },
+    {
+      "address": "116aea7f",
+      "hex": "3b0d18611212",
+      "purpose": "0x116aea59 (_get_osfhandle) bounds-checks fd against _nhandle [0x12126118]"
+    },
+    {
+      "address": "116afb10",
+      "hex": "e942ffffff",
+      "purpose": "0x116afb0a (_strncpy_s) tail-jumps backward into common_tcsncpy_s<char> 0x116afa57"
+    },
+    {
+      "address": "116afb40",
+      "hex": "b804621212",
+      "purpose": "0x116afb40 (___timezone) returns &_timezone address 0x12126204"
+    },
+    {
+      "address": "116afb46",
+      "hex": "b808621212",
+      "purpose": "0x116afb46 (___dstbias) returns &_dstbias address 0x12126208"
+    },
+    {
+      "address": "116afb4c",
+      "hex": "b800621212",
+      "purpose": "0x116afb4c (___daylight) returns &_daylight address 0x12126200"
+    },
+    {
+      "address": "116afb52",
+      "hex": "a10c621212",
+      "purpose": "0x116afb52 (__tzname) loads _tzname array base from [0x1212620c]"
+    },
+    {
+      "address": "116b1588",
+      "hex": "6800800000",
+      "purpose": "0x116b1572 (_isleadbyte_l) pushes _LEADBYTE bit 0x8000 to ctype array helper"
+    },
+    {
+      "address": "116b15d3",
+      "hex": "beec621212",
+      "purpose": "0x116b15ac (__mbrtoc32_utf8) falls back to static mbstate_t 0x121262ec when ps==NULL"
+    },
+    {
+      "address": "116bd4f2",
+      "hex": "8b0d30c79e11",
+      "purpose": "0x116bd4f2 checks cached console output handle at [0x119ec730]"
+    },
+    {
+      "address": "116bd53f",
+      "hex": "ff1514f17211",
+      "purpose": "0x116bd528 invokes KERNEL32!WriteConsoleW IAT [0x1172f114]"
     }
   ],
   "ownership": {
@@ -36970,6 +37598,273 @@
       "Layer 51 extends Partition 4 from Layer 50 alongside sealed Partition 1 (367), Partition 2 (743), and Partition 3 (264)",
       "KERNEL32 GetTimeZoneInformation/WideCharToMultiByte IAT slots, 56-byte _days/_lpdays leap table (0x119146e4), 56-byte __badioinfo fallback (0x119ec008), and .bss mbstate/__enable_percent_n/lastTZ/tzinfo fields are anchored by read_bytes and instruction_witnesses",
       "Any small slot returning invalid_request from analyze_function is paired with resolve_containing_procedure + read_bytes(length=320)"
+    ]
+  },
+  "rea_layer52_evidence": {
+    "scope": "28 Layer 52 clean single-part CRT runtime helpers (extending Partition 4 snapshot from Layer 51 alongside sealed Partitions 1-3: formatting_buffer::count<wchar_t>, __crt_unique_heap_ptr::operator=, is_overflow_condition<uint32>, strtox unget, _atol, UTF-8 probe/__mbrtowc_utf8/__mbrtoc32_utf8, _fputc_nolock/fputwc_binary_nolock, ___lc_codepage_func, _wctomb_s, fp_format_a/e/f/g/nan_inf, ___acrt_LCMapStringEx, _iswctype, _get_osfhandle, _strncpy_s, ___timezone/___dstbias/___daylight/__tzname, _isleadbyte_l, console init & WriteConsoleW)",
+    "snapshot_mode": "extending_layer51",
+    "records": [
+      {
+        "evidence_id": "ev_0f482102ac54158a4b25a94dcc52e094ecd8a760754647e81f831392a1b54997",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116889a9.json",
+        "retained_record_sha256": "368af8880f45c6ab31b73e86c463abe08b5e3db4149c44f792bc4943646907b4",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_60f7f635da8989fa29ac9a03fd1bface40ca1a9b6cbe33df961a0906fd31f972",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-11689010.json",
+        "retained_record_sha256": "ffb459b2baf24be98b362277de4d4e5af5a03fc9060719710ae5d625dbe9a6e4",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_6665297a5f5e4faecacd5f7bcc7a7ea2c83cda845826ec1e9e8dce1c4a24baef",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-1168d395.json",
+        "retained_record_sha256": "431512150c41ee4ec9e1b6bc10984aaee9ac9ea72857d3a2a1173359481230a2",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_267d3c5ac9cab2e253e19aa4506d4c3ee84c1bc8508354b7c7c644f7c8ad3dc2",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-1168e5d4.json",
+        "retained_record_sha256": "5e447eb0bbaba2e43bffb17df6f86154b56617d34ebb73ef000d0c8fd024b9c7",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7a5f50473902cfee8ebd32c8d70906c9e7a106b1f8fbd2ce012212ee286b9532",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-1168e679.json",
+        "retained_record_sha256": "293cbd40e43522eee6ce4e79634284ad09f820a9a8fbb238a94892d6c32bd5b7",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_224327d710011a9b4dec47a7a47d9a2dc67faa6d0a334ae029dad8d9855f0c08",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-1169d38d.json",
+        "retained_record_sha256": "de70dd71d4cd8eb0eb51f20ffb2ec7d65603273310d6a1927ade42e97d5c3e67",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_fe5c3e1080d3afd4afd51942e2fb7d4971db06fff45f87bdbc9a32c797b550c9",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-1169d3b9.json",
+        "retained_record_sha256": "644a08e2668f17dc9581d29c19ec48c9e7ca542cc982922362320413a5f40edf",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_3bf23f4e02db6f209e95479a8653128bdf10a5df901c20770bbfa7fad266e9a4",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-1169e514.json",
+        "retained_record_sha256": "ac8d4a4f6a3533d4bda245f1532005a67fdfd1ebbf1a75ef0d7e73e6c1bdc6f4",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_134d4c56378feed4d20302f78088f9ccf7a7f7bba71f06f31b84fd0fc46f901f",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116a25d6.json",
+        "retained_record_sha256": "81e063557b6635397694ed4c92930b4d400e8c7ce46e386740ca242b91059c91",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_62d959b8fb7a1410eea9008299cf9183ef7cecfdd59eb9f92700d49ef0eda80e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116a5ca6.json",
+        "retained_record_sha256": "bc31b048669374a71ac16854b2d6d10e6ad983af8a01a1731fe09341dec7be6d",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_3e9ffc7ec9f59712f3b1f9aafc82ccd69fdc17191e047189f1e55b50cb543e50",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116a5d7f.json",
+        "retained_record_sha256": "261b618da843db02c68112f3e5bfc52880cc50dd156a352c4720159afef987de",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5e1b5bda4f4ec46b509a362324d69d996abe9091c33844a1542a7dfd7d12e814",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116a6098.json",
+        "retained_record_sha256": "ccf7392a88a70c979e470b43ea9cd11a23c2e90e3cc0b2999f02a634ea2b763e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_1b315ae82e7f9f3380d0d3e326a4d06a707ba08f5aa971d69e800f34cea22d34",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116a6282.json",
+        "retained_record_sha256": "205e70ff5d71947aa66cefc92ace88b7e20968457329b804994d537a8734b1ed",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5169c33f0cbec5ad3b6cea613e2f340c0c9b9143223e9abb43942c3c0b950714",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116a63de.json",
+        "retained_record_sha256": "4533f65fb1e980f65e9db66465d74dc36fe30699b2e6174f7eaf4ef84784a45d",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_397712168e67223d81c4d70a894bc774d52131ca5b726cfa12f001791b5adcb5",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116a649f.json",
+        "retained_record_sha256": "7da63dc04c54336ea7c1ba010210af73974a4c5c275cb7e9b5464c16a944cab5",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_cb66ea4ac394d7b00a6128abba2621b62b2b1cfcced3835394f46795d66e848e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116a66a3.json",
+        "retained_record_sha256": "f87a44b7aaa018f030c869e1391d2ce1e2d7f14c32b11b1ae19ac2a51f216776",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_a93eb70b1ec3bfb79160cc06cb99dbaa820aceac8a92e584ededc823eacc57c6",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116a8a30.json",
+        "retained_record_sha256": "553c4734d4d015376c9f354207d418f7f92dd0d988bb55ea2d0b4a1e802ce70b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_bc1140af90c765f394457dbe963035177ce60d9ec0e23352298ed33a85d99515",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116a8c79.json",
+        "retained_record_sha256": "b20bdff03f34d5778dde858fefea247bf986524ba756ae1745e2d5f191d67d45",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_75bf29ae57d5897a7d6030a495227b0ae4ea7464d4d79dbf65342da4d724e63d",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116aea59.json",
+        "retained_record_sha256": "64558f5e7c3be4e4ef123196eb559d2c58a176ef0b4a76caa50a50665b1509ba",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_2b291d2a2076c8dc9c63d5417302207212aa0282dfee3318a4d6d23c3beea8c2",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116afb0a.json",
+        "retained_record_sha256": "930eba138e8871ec4371674f65e5b3550283e2354c96a1efa9e3584487a5148d",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_73677ecd375fb4804b32c3a39a4e343fb4f8bcc2ef1606682e53830da88830aa",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116afb40.json",
+        "retained_record_sha256": "394493fecd8de700f5c9d4d4f7a5fe750c7e72922f2de06ce47efaa7fff50b13",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_79f0debd823de6556f7f77b9496324f3401d94d409ef65eb18e8e295b7905335",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116afb46.json",
+        "retained_record_sha256": "d53e250dd25ceb2cbe4c0aa8db235c3db8fb10a7e212fe610088afff14ee7e05",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_97fb54bec85135f2c00e37bb6636789a89c72c3c7031f835d1e0b82fd3ddd15f",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116afb4c.json",
+        "retained_record_sha256": "d6d11b13049dbbed5d495d06696f8f279b9f418b6d78b8d30549c11e35c8d715",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5e4aedad882b4a33d94bb13d027bba1e0d0bf5df8de9e83b4b76e183f400f583",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116afb52.json",
+        "retained_record_sha256": "ca6807a705581f333ef947039b93cb5ee7dccb04b0cbe99b761b14fb89740348",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c4c454bfd47eccc1b4ee8605d3e92affa09d502fd6634c3bff88113fdee46c98",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116b1572.json",
+        "retained_record_sha256": "5147080b914e292a9e0ada8848bb8ac96d2a8f1e3d36c8c828f0e0d162eca64d",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_33b0323a2b0bb8f0bf3b3789cd62f0555970a60d29c26bc32b1cf769bff81dc4",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116b15ac.json",
+        "retained_record_sha256": "d5deeba18d4e2c85d0e3df0869704830c09b7b245c6bb171038be1818d5045f1",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_bfec5f345cd2331410007e7308e2819bdd125c899257fbb55ab84ac673d6e55c",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116bd4f2.json",
+        "retained_record_sha256": "ebabe5b37b8ac88eccf0f17059528f4f0d0dd2135f1b26ddb1cb927f2de66822",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_4b5a10deb67dc933fcc62e1925eada33c0cd7946706ea59cbd068fe5bc809b66",
+        "operation": "analyze_function",
+        "retained_local_path": "out/vfs-layer52-20261115/fn-116bd528.json",
+        "retained_record_sha256": "300e6ec509ea47b46335e05bacec1cccfeb418a31254e48e8ce431e45dd3509f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_bfb1e4d881768dfa12e9d3f5772caf643b5389050670a5095a967fff730f76a6",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer52-20261115/extra-1172f114.json",
+        "retained_record_sha256": "5bf0e3a44ddb85a570cdc285f7da4a5885b6c5f19bcf0ae03aa2bca734a33ea9",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_cb48f3a6e68183d776c6d4c2d790c022d880ae8f7af5f626b4124f097341e2bf",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer52-20261115/extra-1172f344.json",
+        "retained_record_sha256": "f03f037707dd5c4c50a48bee39e738e1594a5ad84a94cf4c88661d2ee38efb55",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_ca74a7c7dffb633edc4107c336bb174eb9ec92e278dd2d016498f769516829d9",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer52-20261115/extra-11914110.json",
+        "retained_record_sha256": "31da12624610e3a48fb5b89f2319b64590bda393e34dd1e6d889bd4a70e46621",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_08f3fc9f5a226f740acea2cfebb7f1624542387b679009165de4a6a1dcf10cf0",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer52-20261115/extra-119ebf34.json",
+        "retained_record_sha256": "9ce976ccd701ae652ef7e64a8e2e53acd03c18d3c315cf5280edb38cd9b37d8e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_720a758ad208bae17f4ba4756f3254bee54fd05b457baeceb6d916849b6053b0",
+        "operation": "read_bytes",
+        "retained_local_path": "out/vfs-layer52-20261115/extra-119ec730.json",
+        "retained_record_sha256": "8ef42d7c084c5683abadeb8f0b260486d031d3dbe256d7e19ac72ccf76186e0b",
+        "retained_record_format": "original MCP result envelope"
+      }
+    ],
+    "closed_snapshot_local_path": "out/vfs-layer52-20261115/session.rea.json",
+    "closed_snapshot_sha256": "2e74b507bb9c4b1ae869925ed88b5cdee762d5b3ea8a597e693d5b9885820348",
+    "closed_evidence_records": 102,
+    "new_evidence_records": 33,
+    "retained_operation_envelopes": 33,
+    "reused_layer51_evidence_records": 69,
+    "extra_evidence_views_count": 0,
+    "validated_bundle_local_path": "out/vfs-layer52-20261115/validated-evidence-bundle.json",
+    "validated_bundle_sha256": "e9e8964cc85703864884fecd9eb3ca548cf1bc869d7ec35865c15d4bc7c586fa",
+    "cumulative_validated_bundle_local_path": "out/vfs-layer52-20261115/cumulative-validated-evidence-bundle.json",
+    "cumulative_validated_bundle_sha256": "e9e8964cc85703864884fecd9eb3ca548cf1bc869d7ec35865c15d4bc7c586fa",
+    "cumulative_validated_bundle_records": 102,
+    "partition1_validated_bundle_local_path": "out/vfs-layer24-20261114/validated-evidence-bundle.json",
+    "partition1_validated_bundle_sha256": "475ab7199d42e3cb2a866a007302f7868344303e3bfda6f975c2e19ae2040a0e",
+    "partition1_validated_bundle_records": 367,
+    "partition2_validated_bundle_local_path": "out/vfs-layer41-20261115/cumulative-validated-evidence-bundle.json",
+    "partition2_validated_bundle_sha256": "691eee5f4134ecfe5fa9ace57f78daead53f4c917e0aa4db243de429f03b0a7c",
+    "partition2_validated_bundle_records": 743,
+    "partition3_validated_bundle_local_path": "out/vfs-layer49-20261115/cumulative-validated-evidence-bundle.json",
+    "partition3_validated_bundle_sha256": "1fd402dd9c34d773769dcdb3f634bda90c0947c76f316a09467979c24c3459f6",
+    "partition3_validated_bundle_records": 264,
+    "prior_partitions_validated_records": 1374,
+    "cumulative_all_partitions_records": 1476,
+    "non_proc_slots": [],
+    "resource_constrained_slots": [],
+    "limitations": [
+      "Layer 52 extends Partition 4 from Layer 51 alongside sealed Partition 1 (367), Partition 2 (743), and Partition 3 (264)",
+      "KERNEL32 WriteConsoleW/LCMapStringW IAT slots, 64B NaN/INF pointer LUT (0x11914110), _pwctype (0x119ebf34), console handle (0x119ec730), and .bss _tzname/mbstate_t slots are anchored by read_bytes and instruction_witnesses",
+      "0x116afb0a (_strncpy_s) enters at 0x116afb0a and tail-jumps backward into common_tcsncpy_s<char> (0x116afa57..0x116afb14), recorded cleanly via body_ranges"
     ]
   }
 }

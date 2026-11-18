@@ -2565,7 +2565,9 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_crt_locale_cat16_32, wrefcount_ptr_0c, 0x0c);
 
 /* 184B (0xb8) MSVC __crt_locale_data prefix traversed by 0x116b5c9e, 0x116b5d1b, 0x116b5ee6. */
 typedef struct rome2_vfs_crt_threadlocinfo184_32 {
-    uint8_t pad_00[0x0c];                        /* 00..0b */
+    uint32_t pctype_00;                          /* 00 (_pctype table ptr read by 0x116b1590) */
+    int32_t mb_cur_max_04;                       /* 04 (_mb_cur_max checked by _mbtowc_l 0x116a5aa6) */
+    uint32_t lc_codepage_08;                     /* 08 (codepage returned by ____lc_codepage_func 0x116a25f6) */
     int32_t refcount_0c;                         /* 0c */
     uint8_t pad_10[0x0c];                        /* 10..1b */
     rome2_vfs_crt_locale_cat16_32 cats_1c[6];    /* 1c..7b */
@@ -2581,6 +2583,7 @@ typedef struct rome2_vfs_crt_threadlocinfo184_32 {
     uint32_t lc_name_dup_a0[6];                  /* a0..b7 (freed when wrefcount==0) */
 } rome2_vfs_crt_threadlocinfo184_32;
 _Static_assert(sizeof(rome2_vfs_crt_threadlocinfo184_32) == 0xb8, "crt threadlocinfo184 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_threadlocinfo184_32, lc_codepage_08, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_threadlocinfo184_32, refcount_0c, 0x0c);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_threadlocinfo184_32, cats_1c, 0x1c);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_threadlocinfo184_32, lconv_intl_refcount_7c, 0x7c);
@@ -2748,6 +2751,31 @@ typedef struct rome2_vfs_crt_tzname_pair8_32 {
 _Static_assert(sizeof(rome2_vfs_crt_tzname_pair8_32) == 0x08, "crt tzname pair8 32 size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tzname_pair8_32, std_name_ptr_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tzname_pair8_32, dst_name_ptr_04, 0x04);
+
+/* 8B (0x08) UCRT mbstate_t accumulator state used by __mbrtoc32_utf8 (0x116b15ac, fallback 0x121262ec). */
+typedef struct rome2_vfs_crt_mbstate8_32 {
+    uint32_t wchar_00;                           /* 00 */
+    uint16_t byte_04;                            /* 04 (expected UTF-8 sequence byte length 2..4) */
+    uint16_t state_06;                           /* 06 (remaining trailing bytes) */
+} rome2_vfs_crt_mbstate8_32;
+_Static_assert(sizeof(rome2_vfs_crt_mbstate8_32) == 0x08, "crt mbstate8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_mbstate8_32, wchar_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_mbstate8_32, byte_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_mbstate8_32, state_06, 0x06);
+
+/* 64B (0x40) 16-entry NaN/Infinity pointer LUT at 0x11914110 indexed by __acrt_fp_format_nan_or_infinity (0x116a649f). */
+typedef struct rome2_vfs_crt_fp_nan_inf_table64_32 {
+    uint32_t entries_00[16];                     /* 00..3f (upper/lower INF/NAN/NAN(SNAN)/NAN(IND) pointers) */
+} rome2_vfs_crt_fp_nan_inf_table64_32;
+_Static_assert(sizeof(rome2_vfs_crt_fp_nan_inf_table64_32) == 0x40, "crt fp nan inf table64 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_fp_nan_inf_table64_32, entries_00, 0x00);
+
+/* 4B (0x04) __crt_unique_heap_ptr<T> single owned 32-bit guest pointer slot managed by 0x11689010. */
+typedef struct rome2_vfs_crt_unique_heap_ptr4_32 {
+    uint32_t ptr_00;                             /* 00 */
+} rome2_vfs_crt_unique_heap_ptr4_32;
+_Static_assert(sizeof(rome2_vfs_crt_unique_heap_ptr4_32) == 0x04, "crt unique heap ptr4 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_unique_heap_ptr4_32, ptr_00, 0x00);
 
 #undef ROME2_LAYOUT_ASSERT
 #endif
