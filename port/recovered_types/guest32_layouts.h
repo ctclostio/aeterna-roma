@@ -2677,5 +2677,38 @@ _Static_assert(sizeof(rome2_vfs_crt_lc_time_data180_32) == 0xb4, "crt lc time da
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_lc_time_data180_32, ww_caltype_ac, 0xac);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_lc_time_data180_32, refcount_b0, 0xb0);
 
+/* 12B (0x0c) CRT lowio write result returned on stack by 0x116a49a3..0x116a4fea. */
+typedef struct rome2_vfs_crt_lowio_write_result12_32 {
+    uint32_t os_err_00;                          /* 00 */
+    uint32_t bytes_written_04;                   /* 04 */
+    uint32_t extra_lf_or_chars_08;               /* 08 */
+} rome2_vfs_crt_lowio_write_result12_32;
+_Static_assert(sizeof(rome2_vfs_crt_lowio_write_result12_32) == 0x0c, "crt lowio write result12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_lowio_write_result12_32, os_err_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_lowio_write_result12_32, bytes_written_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_lowio_write_result12_32, extra_lf_or_chars_08, 0x08);
+
+/* 12B (0x0c) CRT DST transition cache (dststart 0x119ec1d0, dstend 0x119ec1dc). */
+typedef struct rome2_vfs_crt_tz_transition_date12_32 {
+    int32_t yr_00;                               /* 00 */
+    int32_t yd_04;                               /* 04 */
+    int32_t ms_08;                               /* 08 */
+} rome2_vfs_crt_tz_transition_date12_32;
+_Static_assert(sizeof(rome2_vfs_crt_tz_transition_date12_32) == 0x0c, "crt tz transition date12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tz_transition_date12_32, yr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tz_transition_date12_32, yd_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tz_transition_date12_32, ms_08, 0x08);
+
+/* 8B (0x08) Win32 ANSI_STRING / UNICODE_STRING descriptor formatted by 0x1168af61 (%Z). */
+typedef struct rome2_vfs_crt_unicode_string8_32 {
+    uint16_t length_00;                          /* 00 */
+    uint16_t max_length_02;                      /* 02 */
+    uint32_t buffer_04;                          /* 04 */
+} rome2_vfs_crt_unicode_string8_32;
+_Static_assert(sizeof(rome2_vfs_crt_unicode_string8_32) == 0x08, "crt unicode string8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_unicode_string8_32, length_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_unicode_string8_32, max_length_02, 0x02);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_unicode_string8_32, buffer_04, 0x04);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif
