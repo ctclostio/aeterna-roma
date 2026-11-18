@@ -2589,5 +2589,55 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_crt_threadlocinfo184_32, ctype1_90, 0x90);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_threadlocinfo184_32, lc_time_curr_9c, 0x9c);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_threadlocinfo184_32, lc_name_dup_a0, 0xa0);
 
+/* 64B (0x40) __crt_stdio_output::output_processor<wchar_t> state core (`0x11689d22..0x1168ae87`). */
+typedef struct rome2_vfs_crt_wprintf_state64_32 {
+    uint32_t flags_opt_00;                       /* 00 */
+    uint32_t locinfo_04;                         /* 04 */
+    uint32_t adapter_08;                         /* 08 */
+    uint32_t reserved_0c;                        /* 0c */
+    uint32_t fmt_ptr_10;                         /* 10 */
+    uint32_t valist_14;                          /* 14 */
+    int32_t chars_written_18;                    /* 18 */
+    uint32_t fsm_state_1c;                       /* 1c */
+    uint32_t fmt_flags_20;                       /* 20 (1='+',2=' ',4='-',8='0',0x20='#') */
+    int32_t width_24;                            /* 24 */
+    int32_t precision_28;                        /* 28 */
+    uint32_t length_mod_2c;                      /* 2c */
+    uint8_t byte_30;                             /* 30 */
+    uint8_t pad_31;                              /* 31 */
+    uint16_t cur_ch_32;                          /* 32 (wchar_t) */
+    uint32_t pad_34;                             /* 34 */
+    uint32_t suppress_38;                        /* 38 */
+    uint8_t cap_exp_3c;                          /* 3c */
+    uint8_t pad_3d[3];                           /* 3d..3f */
+} rome2_vfs_crt_wprintf_state64_32;
+_Static_assert(sizeof(rome2_vfs_crt_wprintf_state64_32) == 0x40, "crt wprintf state64 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_wprintf_state64_32, valist_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_wprintf_state64_32, fsm_state_1c, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_wprintf_state64_32, fmt_flags_20, 0x20);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_wprintf_state64_32, width_24, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_wprintf_state64_32, precision_28, 0x28);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_wprintf_state64_32, cur_ch_32, 0x32);
+
+/* 116B (0x74) __crt_stdio_input::input_processor<char> layout (`0x11696308`, `0x11696278`, `0x11697068`). */
+typedef struct rome2_vfs_crt_scanf_input116_32 {
+    uint32_t options_00;                         /* 00 */
+    uint32_t reserved_04;                        /* 04 */
+    uint32_t input_begin_08;                     /* 08 */
+    uint32_t input_end_0c;                       /* 0c */
+    uint32_t input_cur_10;                       /* 10 */
+    uint32_t valist_14;                          /* 14 */
+    rome2_vfs_crt_fmt_parser76_32 fmt_18;        /* 18..63 */
+    uint32_t reserved_64;                        /* 64 */
+    uint32_t locinfo_arg_68;                     /* 68 */
+    uint32_t reserved_6c;                        /* 6c */
+    uint32_t converted_count_70;                 /* 70 */
+} rome2_vfs_crt_scanf_input116_32;
+_Static_assert(sizeof(rome2_vfs_crt_scanf_input116_32) == 0x74, "crt scanf input116 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_scanf_input116_32, input_begin_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_scanf_input116_32, fmt_18, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_scanf_input116_32, locinfo_arg_68, 0x68);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_scanf_input116_32, converted_count_70, 0x70);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

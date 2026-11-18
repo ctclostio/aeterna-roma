@@ -1309,3 +1309,28 @@ callees.
   tests (**310** skipped) on Python 3.14 and 3.15 without touching the shared
   Ghidra project or canonical exports; remaining Layer 48+ leaf CRT/overlapping/thunk
   callees and live runtime execution remain open.
+
+### Layer 48 CRT printf/scanf FSM, leap/calendar, fullpath resize & timezone helpers (2026-11-18)
+- Added 2 fixed-width guest32 wprintf/scanf state layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  (`rome2_vfs_crt_wprintf_state64_32`, `rome2_vfs_crt_scanf_input116_32`) and
+  bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_engine_crt_printf_ops.h](port/recovered_types/vfs_fs_engine_crt_printf_ops.h),
+  [port/recovered_types/vfs_fs_engine_crt_printf_ops.c](port/recovered_types/vfs_fs_engine_crt_printf_ops.c),
+  and [port/recovered_types/test_vfs_fs_engine_crt_printf_ops.c](port/recovered_types/test_vfs_fs_engine_crt_printf_ops.c)
+  (**44** checks) closing **26** clean single-part CRT runtime helpers
+  (`0x116842e0`..`0x116afbb0`).
+- Advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  (**952** functions, **489** globals, **40** vtables, **879** instruction
+  witnesses) and [port/recovered_types/verification.json](port/recovered_types/verification.json)
+  with **234** Partition 3 validated REA records (**28** new records across
+  `26` `analyze_function` + `2` `read_bytes`, **206** reused Layer 47 records;
+  combined with Partition 1's **367** and Partition 2's **743** records for
+  **1344** disjoint validated records total; `non_proc_slots=[]`,
+  `resource_constrained_slots=[]`).
+- Verified **105/105** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **83** contract tests on Python 3.14 and 3.15, and **911** clean-public Python
+  tests (**311** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; remaining Layer 49+ CRT leaf/multi-part/overlapping/thunk
+  callees and live runtime execution remain open.
