@@ -2385,5 +2385,68 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tiddata868_32, tdoserrno_14, 0x14);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tiddata868_32, ownlocale_350, 0x350);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tiddata868_32, invalid_parameter_handler_35c, 0x35c);
 
+/* 8B Win32 EXCEPTION_POINTERS pair pushed by 0x1168783d to UnhandledExceptionFilter. */
+typedef struct rome2_vfs_win32_exception_pointers8_32 {
+    uint32_t exception_record_00;                /* 00 -> rome2_vfs_win32_exception_record80_32 */
+    uint32_t context_record_04;                  /* 04 -> 716B CONTEXT */
+} rome2_vfs_win32_exception_pointers8_32;
+_Static_assert(sizeof(rome2_vfs_win32_exception_pointers8_32) == 0x08, "win32 exception pointers8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_win32_exception_pointers8_32, exception_record_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_win32_exception_pointers8_32, context_record_04, 0x04);
+
+/* 80B (0x50) Win32 EXCEPTION_RECORD zeroed and populated by 0x1168783d. */
+typedef struct rome2_vfs_win32_exception_record80_32 {
+    uint32_t exception_code_00;                  /* 00 */
+    uint32_t exception_flags_04;                 /* 04 */
+    uint32_t exception_record_08;                /* 08 */
+    uint32_t exception_address_0c;               /* 0c */
+    uint32_t number_parameters_10;               /* 10 */
+    uint32_t exception_information_14[15];       /* 14..4f */
+} rome2_vfs_win32_exception_record80_32;
+_Static_assert(sizeof(rome2_vfs_win32_exception_record80_32) == 0x50, "win32 exception record80 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_win32_exception_record80_32, exception_code_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_win32_exception_record80_32, exception_flags_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_win32_exception_record80_32, exception_address_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_win32_exception_record80_32, exception_information_14, 0x14);
+
+/* 76B (0x4c) __crt_stdio_input::format_string_parser<char> state initialized by 0x11692cc4 and advanced by 0x11692f4e. */
+typedef struct rome2_vfs_crt_fmt_parser76_32 {
+    uint32_t locinfo_00;                         /* 00 */
+    uint32_t state_val_04;                       /* 04 */
+    uint32_t fmt_cur_08;                         /* 08 */
+    int32_t err_0c;                              /* 0c */
+    uint32_t mode_10;                            /* 10 (1=EOF, 2=space, 3=lit, 4=conv) */
+    uint16_t lit_ch_14;                          /* 14 */
+    uint8_t suppress_16;                         /* 16 ('*') */
+    uint8_t pad_17;                              /* 17 */
+    uint32_t width_18;                           /* 18 */
+    uint32_t length_mod_1c;                      /* 1c */
+    uint32_t length_idx_20;                      /* 20 */
+    uint8_t is_wide_24;                          /* 24 */
+    uint8_t pad_25[3];                           /* 25..27 */
+    uint32_t conv_idx_28;                        /* 28 */
+    uint32_t scanset_words_2c[8];                /* 2c..4b (rep stosd x8) */
+} rome2_vfs_crt_fmt_parser76_32;
+_Static_assert(sizeof(rome2_vfs_crt_fmt_parser76_32) == 0x4c, "crt fmt parser76 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_fmt_parser76_32, fmt_cur_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_fmt_parser76_32, err_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_fmt_parser76_32, mode_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_fmt_parser76_32, conv_idx_28, 0x28);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_fmt_parser76_32, scanset_words_2c, 0x2c);
+
+/* 32B (0x20) MSVC struct _exception built on stack by 0x116a234d (__umatherr). */
+typedef struct rome2_vfs_crt_math_exception32_32 {
+    int32_t type_00;                             /* 00 */
+    uint32_t name_04;                            /* 04 */
+    double arg1_08;                              /* 08 */
+    double arg2_10;                              /* 10 */
+    double retval_18;                            /* 18 */
+} rome2_vfs_crt_math_exception32_32;
+_Static_assert(sizeof(rome2_vfs_crt_math_exception32_32) == 0x20, "crt math exception32 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_math_exception32_32, type_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_math_exception32_32, name_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_math_exception32_32, arg1_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_math_exception32_32, retval_18, 0x18);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

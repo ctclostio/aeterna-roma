@@ -1182,3 +1182,29 @@ callees.
   Ghidra project or canonical exports; **44** clean single-part CRT callees
   (queued across Layers 43–44) plus remaining multi-part/thunk callees and live
   runtime execution remain open.
+
+### Layer 43 CRT security cookies, `__alloca_probe`, stdio input/output adapters, `stat64`, matherr/FP dispatch & `construct_ptd` (2026-11-18)
+- Added 4 fixed-width guest32 exception/parser/matherr layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  (`rome2_vfs_win32_exception_pointers8_32`,
+  `rome2_vfs_win32_exception_record80_32`, `rome2_vfs_crt_fmt_parser76_32`,
+  `rome2_vfs_crt_math_exception32_32`) and bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_engine_crt_sec_ops.h](port/recovered_types/vfs_fs_engine_crt_sec_ops.h),
+  [port/recovered_types/vfs_fs_engine_crt_sec_ops.c](port/recovered_types/vfs_fs_engine_crt_sec_ops.c),
+  and [port/recovered_types/test_vfs_fs_engine_crt_sec_ops.c](port/recovered_types/test_vfs_fs_engine_crt_sec_ops.c)
+  (**36** checks) closing **25** single-part CRT runtime helpers
+  (`0x11683dd0`..`0x116a4434`).
+- Advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  (**820** functions, **435** globals, **40** vtables, **747** instruction
+  witnesses) and [port/recovered_types/verification.json](port/recovered_types/verification.json)
+  with **71** Partition 3 validated REA records (**35** new records across
+  `25` `analyze_function` + `10` `read_bytes`, **36** reused Layer 42 records;
+  combined with Partition 1's **367** and Partition 2's **743** records for
+  **1181** disjoint validated records total; `non_proc_slots=[]`,
+  `resource_constrained_slots=[]`).
+- Verified **100/100** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **78** contract tests on Python 3.14 and 3.15, and **906** clean-public Python
+  tests (**306** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; remaining Layer 44+ CRT/multi-part/thunk
+  callees and live runtime execution remain open.

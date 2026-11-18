@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 795)
-        self.assertEqual(result["globals"], 417)
+        self.assertEqual(result["functions"], 820)
+        self.assertEqual(result["globals"], 435)
         self.assertEqual(result["vtables"], 40)
-        self.assertEqual(result["instruction_witnesses"], 722)
+        self.assertEqual(result["instruction_witnesses"], 747)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -2297,6 +2297,44 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual((by_g["12125d90"]["width"], by_g["12125d90"]["storage"]), (4, "zero_fill"))
         self.assertEqual((by_g["12125f14"]["width"], by_g["12125f14"]["storage"]), (4, "zero_fill"))
         self.assertEqual((by_g["12126328"]["width"], by_g["12126328"]["storage"]), (4, "zero_fill"))
+
+    def test_layer43_engine_crt_sec_contracts(self):
+        ev = self.registry["rea_layer43_evidence"]
+        self.assertEqual(ev["snapshot_mode"], "extending_layer42")
+        self.assertEqual(ev["closed_evidence_records"], 71)
+        self.assertEqual(ev["new_evidence_records"], 35)
+        self.assertEqual(ev["retained_operation_envelopes"], 35)
+        self.assertEqual(ev["reused_layer42_evidence_records"], 36)
+        self.assertEqual(ev["extra_evidence_views_count"], 0)
+        self.assertEqual(ev["cumulative_validated_bundle_records"], 71)
+        self.assertEqual(ev["partition1_validated_bundle_records"], 367)
+        self.assertEqual(ev["partition2_validated_bundle_records"], 743)
+        self.assertEqual(ev["prior_partitions_validated_records"], 1110)
+        self.assertEqual(ev["cumulative_all_partitions_records"], 1181)
+        self.assertEqual(ev["non_proc_slots"], [])
+        self.assertEqual(ev["resource_constrained_slots"], [])
+        self.assertEqual(len(ev["records"]), 35)
+        self.assertEqual(sum(1 for r in ev["records"] if r["operation"] == "analyze_function"), 25)
+        self.assertEqual(sum(1 for r in ev["records"] if r["operation"] == "read_bytes"), 10)
+
+        by_fn = {f["address"]: f for f in self.registry["functions"]}
+        by_g = {g["address"]: g for g in self.registry["globals"]}
+        self.assertEqual((by_fn["11683dd0"]["bytes"], by_fn["11683dd0"]["return_instruction_addresses"]), (45, ["11683df3"]))
+        self.assertEqual((by_fn["11684b3c"]["bytes"], by_fn["11684b3c"]["return_instruction_addresses"]), (17, ["11684b46"]))
+        self.assertEqual((by_fn["1168783d"]["bytes"], by_fn["1168783d"]["stack_argument_bytes"]), (313, 12))
+        self.assertEqual((by_fn["11688f27"]["calling_convention"], by_fn["11688f27"]["callee_pop_bytes"]), ("thiscall", 24))
+        self.assertEqual(by_fn["1168c5c8"]["stack_argument_bytes"], 16)
+        self.assertEqual((by_fn["11692cc4"]["calling_convention"], by_fn["11692cc4"]["callee_pop_bytes"]), ("thiscall", 12))
+        self.assertEqual(by_fn["11692f4e"]["bytes"], 280)
+        self.assertEqual(by_fn["116997f6"]["bytes"], 174)
+        self.assertEqual((by_fn["116a17ca"]["calling_convention"], by_fn["116a17ca"]["callee_pop_bytes"]), ("stdcall", 12))
+        self.assertEqual(by_fn["116a2028"]["stack_argument_bytes"], 28)
+        self.assertEqual(by_fn["116a234d"]["stack_argument_bytes"], 36)
+        self.assertEqual(by_fn["116a4434"]["stack_argument_bytes"], 8)
+        self.assertEqual(by_g["11910528"]["width"], 120)
+        self.assertEqual(by_g["11913748"]["width"], 232)
+        self.assertEqual(by_g["11915f18"]["width"], 8)
+        self.assertEqual(by_g["119ec210"]["width"], 4)
 
     def test_dropped_registry_category_rejected(self):
         registry = copy.deepcopy(self.registry)
