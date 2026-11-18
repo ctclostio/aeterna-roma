@@ -2448,5 +2448,40 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_crt_math_exception32_32, name_04, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_math_exception32_32, arg1_08, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_math_exception32_32, retval_18, 0x18);
 
+/* 24B (0x18) __crt_win32_buffer<wchar_t> header used by 0x1168c5c8/0x1168c77b/0x1168c7bc. */
+typedef struct rome2_vfs_crt_win32_buffer24_32 {
+    uint32_t policy_00[2];                       /* 00..07 */
+    uint32_t data_08;                            /* 08 */
+    uint32_t capacity_words_0c;                  /* 0c */
+    uint32_t size_words_10;                      /* 10 */
+    uint8_t allocated_14;                        /* 14 */
+    uint8_t pad_15[3];                           /* 15..17 */
+} rome2_vfs_crt_win32_buffer24_32;
+_Static_assert(sizeof(rome2_vfs_crt_win32_buffer24_32) == 0x18, "crt win32 buffer24 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_win32_buffer24_32, data_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_win32_buffer24_32, capacity_words_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_win32_buffer24_32, size_words_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_win32_buffer24_32, allocated_14, 0x14);
+
+/* 12B (0x0c) MSVC CRT _strflt struct updated by 0x116a8dad. */
+typedef struct rome2_vfs_crt_strflt12_32 {
+    int32_t sign_00;                             /* 00 */
+    int32_t decpt_04;                            /* 04 */
+    uint32_t digits_ptr_08;                      /* 08 */
+} rome2_vfs_crt_strflt12_32;
+_Static_assert(sizeof(rome2_vfs_crt_strflt12_32) == 0x0c, "crt strflt12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_strflt12_32, sign_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_strflt12_32, decpt_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_strflt12_32, digits_ptr_08, 0x08);
+
+/* 8B (0x08) CRT x87/SSE FP control state pair captured/applied by 0x116b822e..0x116b8296. */
+typedef struct rome2_vfs_crt_fp_env8_32 {
+    uint32_t word0_00;                           /* 00 */
+    uint32_t word1_04;                           /* 04 */
+} rome2_vfs_crt_fp_env8_32;
+_Static_assert(sizeof(rome2_vfs_crt_fp_env8_32) == 0x08, "crt fp env8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_fp_env8_32, word0_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_fp_env8_32, word1_04, 0x04);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

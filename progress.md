@@ -1208,3 +1208,28 @@ callees.
   tests (**306** skipped) on Python 3.14 and 3.15 without touching the shared
   Ghidra project or canonical exports; remaining Layer 44+ CRT/multi-part/thunk
   callees and live runtime execution remain open.
+
+### Layer 44 CRT `win32_buffer`, stdio tmpbuf, `___acrt_getptd`, Win32/FLS APIs & IEEE-754/`fenv` helpers (2026-11-18)
+- Added 3 fixed-width guest32 buffer/float/fenv layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  (`rome2_vfs_crt_win32_buffer24_32`, `rome2_vfs_crt_strflt12_32`,
+  `rome2_vfs_crt_fp_env8_32`) and bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_engine_crt_flt_ops.h](port/recovered_types/vfs_fs_engine_crt_flt_ops.h),
+  [port/recovered_types/vfs_fs_engine_crt_flt_ops.c](port/recovered_types/vfs_fs_engine_crt_flt_ops.c),
+  and [port/recovered_types/test_vfs_fs_engine_crt_flt_ops.c](port/recovered_types/test_vfs_fs_engine_crt_flt_ops.c)
+  (**57** checks) closing **26** single-part CRT runtime helpers
+  (`0x1168499d`..`0x116bcc58`).
+- Advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  (**846** functions, **449** globals, **40** vtables, **773** instruction
+  witnesses) and [port/recovered_types/verification.json](port/recovered_types/verification.json)
+  with **102** Partition 3 validated REA records (**31** new records across
+  `26` `analyze_function` + `5` `read_bytes`, **71** reused Layer 43 records;
+  combined with Partition 1's **367** and Partition 2's **743** records for
+  **1212** disjoint validated records total; `non_proc_slots=[]`,
+  `resource_constrained_slots=[]`).
+- Verified **101/101** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **79** contract tests on Python 3.14 and 3.15, and **907** clean-public Python
+  tests (**307** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; remaining Layer 45+ CRT/multi-part/thunk
+  callees and live runtime execution remain open.
