@@ -2375,7 +2375,8 @@ typedef struct rome2_vfs_crt_tiddata868_32 {
     uint32_t tdoserrno_14;                       /* 14 (0x11698b03) */
     uint8_t middle_18[0x30];                     /* 18..47 */
     uint32_t ptmbcinfo_48;                       /* 48 (0x116a42c8, 0x116a4434) */
-    uint8_t middle_4c[0x304];                    /* 4c..34f */
+    uint32_t ptlocinfo_4c;                       /* 4c (0x116a2553, 0x116a45bb) */
+    uint8_t middle_50[0x300];                    /* 50..34f */
     uint32_t ownlocale_350;                      /* 350 (0x11688f63, 0x11698f1e) */
     uint8_t mid2_354[8];                         /* 354..35b */
     uint32_t invalid_parameter_handler_35c;      /* 35c (0x11687985) */
@@ -2385,6 +2386,7 @@ _Static_assert(sizeof(rome2_vfs_crt_tiddata868_32) == 0x364, "crt tiddata868 32 
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tiddata868_32, terrno_10, 0x10);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tiddata868_32, tdoserrno_14, 0x14);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tiddata868_32, ptmbcinfo_48, 0x48);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tiddata868_32, ptlocinfo_4c, 0x4c);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tiddata868_32, ownlocale_350, 0x350);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tiddata868_32, invalid_parameter_handler_35c, 0x35c);
 
@@ -2511,6 +2513,33 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_win32_critsec24_32, debug_info_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_win32_critsec24_32, lock_count_04, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_win32_critsec24_32, recursion_count_08, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_vfs_win32_critsec24_32, spin_count_14, 0x14);
+
+/* 56B (0x38) CRT __crt_lowio_handle_data chunk slot indexed by 0x116b6038 (__isatty). */
+typedef struct rome2_vfs_crt_ioinfo56_32 {
+    uint32_t osfhnd_00;                          /* 00 */
+    uint8_t pad_04[0x24];                        /* 04..27 */
+    uint8_t osfile_28;                           /* 28 (0x40=_FDEV bit tested by __isatty) */
+    uint8_t pad_29[0x0f];                        /* 29..37 */
+} rome2_vfs_crt_ioinfo56_32;
+_Static_assert(sizeof(rome2_vfs_crt_ioinfo56_32) == 0x38, "crt ioinfo56 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_ioinfo56_32, osfhnd_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_ioinfo56_32, osfile_28, 0x28);
+
+/* 28B (0x1c) 32-bit protected-mode x87 FPU environment loaded/stored by fnstenv/fldenv (0x116b89d3..0x116b8b73). */
+typedef struct rome2_vfs_x87_env28_32 {
+    uint32_t cw_00;                              /* 00 */
+    uint32_t sw_04;                              /* 04 */
+    uint32_t tw_08;                              /* 08 */
+    uint32_t fip_0c;                             /* 0c */
+    uint32_t fcs_10;                             /* 10 */
+    uint32_t foo_14;                             /* 14 */
+    uint32_t fos_18;                             /* 18 */
+} rome2_vfs_x87_env28_32;
+_Static_assert(sizeof(rome2_vfs_x87_env28_32) == 0x1c, "x87 env28 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_x87_env28_32, cw_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_x87_env28_32, sw_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_x87_env28_32, tw_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_x87_env28_32, fos_18, 0x18);
 
 #undef ROME2_LAYOUT_ASSERT
 #endif

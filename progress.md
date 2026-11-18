@@ -1258,3 +1258,28 @@ callees.
   tests (**308** skipped) on Python 3.14 and 3.15 without touching the shared
   Ghidra project or canonical exports; remaining Layer 46+ CRT/multi-part/thunk
   callees and live runtime execution remain open.
+
+### Layer 46 CRT locale/module cache, recalloc/isatty, log10 & fenv helpers (2026-11-18)
+- Added 2 fixed-width guest32 ioinfo/x87-env layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  (`rome2_vfs_crt_ioinfo56_32`, `rome2_vfs_x87_env28_32`, plus `ptlocinfo_4c` on
+  `rome2_vfs_crt_tiddata868_32`) and bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_engine_crt_fenv_ops.h](port/recovered_types/vfs_fs_engine_crt_fenv_ops.h),
+  [port/recovered_types/vfs_fs_engine_crt_fenv_ops.c](port/recovered_types/vfs_fs_engine_crt_fenv_ops.c),
+  and [port/recovered_types/test_vfs_fs_engine_crt_fenv_ops.c](port/recovered_types/test_vfs_fs_engine_crt_fenv_ops.c)
+  (**39** checks) closing all **28** remaining clean single-part CRT runtime
+  callees across the 871-function graph (`0x1168781e`..`0x116be8d3`).
+- Advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  (**899** functions, **473** globals, **40** vtables, **826** instruction
+  witnesses) and [port/recovered_types/verification.json](port/recovered_types/verification.json)
+  with **169** Partition 3 validated REA records (**35** new records across
+  `28` `analyze_function` + `7` `read_bytes`, **134** reused Layer 45 records;
+  combined with Partition 1's **367** and Partition 2's **743** records for
+  **1279** disjoint validated records total; `non_proc_slots=[]`,
+  `resource_constrained_slots=[]`).
+- Verified **103/103** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **81** contract tests on Python 3.14 and 3.15, and **909** clean-public Python
+  tests (**309** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; remaining Layer 47+ CRT leaf/multi-part/thunk
+  callees and live runtime execution remain open.
