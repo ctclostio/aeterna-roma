@@ -2541,5 +2541,53 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_x87_env28_32, sw_04, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_x87_env28_32, tw_08, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_vfs_x87_env28_32, fos_18, 0x18);
 
+/* 8B (0x08) __crt_strtox::c_string_character_source<char> initialized by 0x1169de44. */
+typedef struct rome2_vfs_crt_cstr_source8_32 {
+    uint32_t cur_00;                             /* 00 */
+    uint32_t endptr_slot_04;                     /* 04 */
+} rome2_vfs_crt_cstr_source8_32;
+_Static_assert(sizeof(rome2_vfs_crt_cstr_source8_32) == 0x08, "crt cstr source8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_cstr_source8_32, cur_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_cstr_source8_32, endptr_slot_04, 0x04);
+
+/* 16B (0x10) MSVC __crt_locale_data category entry traversed by 0x116b5c9e..0x116b5ee6. */
+typedef struct rome2_vfs_crt_locale_cat16_32 {
+    uint32_t locale_name_00;                     /* 00 */
+    uint32_t wlocale_name_04;                    /* 04 (0x119ec000 = "C" sentinel) */
+    uint32_t refcount_ptr_08;                    /* 08 */
+    uint32_t wrefcount_ptr_0c;                   /* 0c */
+} rome2_vfs_crt_locale_cat16_32;
+_Static_assert(sizeof(rome2_vfs_crt_locale_cat16_32) == 0x10, "crt locale cat16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_locale_cat16_32, locale_name_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_locale_cat16_32, wlocale_name_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_locale_cat16_32, refcount_ptr_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_locale_cat16_32, wrefcount_ptr_0c, 0x0c);
+
+/* 184B (0xb8) MSVC __crt_locale_data prefix traversed by 0x116b5c9e, 0x116b5d1b, 0x116b5ee6. */
+typedef struct rome2_vfs_crt_threadlocinfo184_32 {
+    uint8_t pad_00[0x0c];                        /* 00..0b */
+    int32_t refcount_0c;                         /* 0c */
+    uint8_t pad_10[0x0c];                        /* 10..1b */
+    rome2_vfs_crt_locale_cat16_32 cats_1c[6];    /* 1c..7b */
+    uint32_t lconv_intl_refcount_7c;             /* 7c */
+    uint32_t lconv_num_refcount_80;              /* 80 */
+    uint32_t lconv_mon_refcount_84;              /* 84 */
+    uint32_t lconv_88;                           /* 88 (0x119ebed0 sentinel) */
+    uint32_t ctype1_refcount_8c;                 /* 8c */
+    uint32_t ctype1_90;                          /* 90 (-0xfe base on free) */
+    uint32_t pclmap_94;                          /* 94 (-0x80 base on free) */
+    uint32_t pcumap_98;                          /* 98 (-0x80 base on free) */
+    uint32_t lc_time_curr_9c;                    /* 9c */
+    uint32_t lc_name_dup_a0[6];                  /* a0..b7 (freed when wrefcount==0) */
+} rome2_vfs_crt_threadlocinfo184_32;
+_Static_assert(sizeof(rome2_vfs_crt_threadlocinfo184_32) == 0xb8, "crt threadlocinfo184 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_threadlocinfo184_32, refcount_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_threadlocinfo184_32, cats_1c, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_threadlocinfo184_32, lconv_intl_refcount_7c, 0x7c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_threadlocinfo184_32, lconv_88, 0x88);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_threadlocinfo184_32, ctype1_90, 0x90);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_threadlocinfo184_32, lc_time_curr_9c, 0x9c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_threadlocinfo184_32, lc_name_dup_a0, 0xa0);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

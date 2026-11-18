@@ -1283,3 +1283,29 @@ callees.
   tests (**309** skipped) on Python 3.14 and 3.15 without touching the shared
   Ghidra project or canonical exports; remaining Layer 47+ CRT leaf/multi-part/thunk
   callees and live runtime execution remain open.
+
+### Layer 47 CRT strtox/bigint division, parser FSM, locale refcounts & fenv mappers (2026-11-18)
+- Added 3 fixed-width guest32 strtox/locale layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  (`rome2_vfs_crt_cstr_source8_32`, `rome2_vfs_crt_locale_cat16_32`,
+  `rome2_vfs_crt_threadlocinfo184_32`) and bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_engine_crt_strtox_ops.h](port/recovered_types/vfs_fs_engine_crt_strtox_ops.h),
+  [port/recovered_types/vfs_fs_engine_crt_strtox_ops.c](port/recovered_types/vfs_fs_engine_crt_strtox_ops.c),
+  and [port/recovered_types/test_vfs_fs_engine_crt_strtox_ops.c](port/recovered_types/test_vfs_fs_engine_crt_strtox_ops.c)
+  (**51** checks) closing **27** clean non-overlapping CRT runtime helpers
+  (**17** single-part + **10** multi-part/switch/tail-jump across
+  `0x11683e00`..`0x116b88e6`).
+- Advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  (**926** functions, **484** globals, **40** vtables, **853** instruction
+  witnesses) and [port/recovered_types/verification.json](port/recovered_types/verification.json)
+  with **206** Partition 3 validated REA records (**37** new records across
+  `27` `analyze_function` + `10` `read_bytes`, **169** reused Layer 46 records;
+  combined with Partition 1's **367** and Partition 2's **743** records for
+  **1316** disjoint validated records total; `non_proc_slots=[]`,
+  `resource_constrained_slots=[]`).
+- Verified **104/104** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **82** contract tests on Python 3.14 and 3.15, and **910** clean-public Python
+  tests (**310** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; remaining Layer 48+ leaf CRT/overlapping/thunk
+  callees and live runtime execution remain open.
