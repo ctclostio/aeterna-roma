@@ -2710,5 +2710,44 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_crt_unicode_string8_32, length_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_unicode_string8_32, max_length_02, 0x02);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_unicode_string8_32, buffer_04, 0x04);
 
+/* 1032B (0x408) CRT __crt_stdio_output::formatting_buffer at wprintf +0x40 (0x11688991..0x11688b3c). */
+typedef struct rome2_vfs_crt_formatting_buffer1032_32 {
+    uint8_t inline_buf_000[1024];                /* 000..3ff */
+    uint32_t allocated_bytes_400;                /* 400 */
+    uint32_t heap_ptr_404;                       /* 404 */
+} rome2_vfs_crt_formatting_buffer1032_32;
+_Static_assert(sizeof(rome2_vfs_crt_formatting_buffer1032_32) == 0x408, "crt formatting buffer1032 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_formatting_buffer1032_32, inline_buf_000, 0x000);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_formatting_buffer1032_32, allocated_bytes_400, 0x400);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_formatting_buffer1032_32, heap_ptr_404, 0x404);
+
+/* 172B (0xac) Win32 TIME_ZONE_INFORMATION stored at tzinfo 0x12126220..0x121262cb (0x116b0111). */
+typedef struct rome2_vfs_crt_time_zone_info172_32 {
+    int32_t bias_00;                             /* 00 */
+    uint16_t standard_name_04[32];               /* 04..43 */
+    uint16_t standard_date_44[8];                /* 44..53 (SYSTEMTIME 16B) */
+    int32_t standard_bias_54;                    /* 54 */
+    uint16_t daylight_name_58[32];               /* 58..97 */
+    uint16_t daylight_date_98[8];                /* 98..a7 (SYSTEMTIME 16B) */
+    int32_t daylight_bias_a8;                    /* a8 */
+} rome2_vfs_crt_time_zone_info172_32;
+_Static_assert(sizeof(rome2_vfs_crt_time_zone_info172_32) == 0xac, "crt time zone info172 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_time_zone_info172_32, bias_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_time_zone_info172_32, standard_name_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_time_zone_info172_32, standard_date_44, 0x44);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_time_zone_info172_32, standard_bias_54, 0x54);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_time_zone_info172_32, daylight_name_58, 0x58);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_time_zone_info172_32, daylight_date_98, 0x98);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_time_zone_info172_32, daylight_bias_a8, 0xa8);
+
+/* 8B (0x08) CRT _tzname[2] 32-bit pointer pair updated by 0x116aff36 and 0x116b0111. */
+typedef struct rome2_vfs_crt_tzname_pair8_32 {
+    uint32_t std_name_ptr_00;                    /* 00 */
+    uint32_t dst_name_ptr_04;                    /* 04 */
+} rome2_vfs_crt_tzname_pair8_32;
+_Static_assert(sizeof(rome2_vfs_crt_tzname_pair8_32) == 0x08, "crt tzname pair8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tzname_pair8_32, std_name_ptr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_tzname_pair8_32, dst_name_ptr_04, 0x04);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif
