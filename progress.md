@@ -1334,3 +1334,28 @@ callees.
   tests (**311** skipped) on Python 3.14 and 3.15 without touching the shared
   Ghidra project or canonical exports; remaining Layer 49+ CRT leaf/multi-part/overlapping/thunk
   callees and live runtime execution remain open.
+
+### Layer 49 CRT lconv/lc_time lifecycle, _write_nolock, wprintf type & __87except helpers (2026-11-18)
+- Added 2 new fixed-width guest32 lconv/lc_time layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  (`rome2_vfs_crt_lconv80_32`, `rome2_vfs_crt_lc_time_data180_32`, alongside
+  reused `rome2_vfs_crt_math_exception32_32`) and bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_engine_crt_lconv_ops.h](port/recovered_types/vfs_fs_engine_crt_lconv_ops.h),
+  [port/recovered_types/vfs_fs_engine_crt_lconv_ops.c](port/recovered_types/vfs_fs_engine_crt_lconv_ops.c),
+  and [port/recovered_types/test_vfs_fs_engine_crt_lconv_ops.c](port/recovered_types/test_vfs_fs_engine_crt_lconv_ops.c)
+  (**52** checks) closing **22** clean single-part CRT runtime helpers
+  (`0x1168949f`..`0x116bcfc0`).
+- Advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  (**974** functions, **513** globals, **40** vtables, **901** instruction
+  witnesses) and [port/recovered_types/verification.json](port/recovered_types/verification.json)
+  with **264** Partition 3 validated REA records (**30** new records across
+  `22` `analyze_function` + `8` `read_bytes`, **234** reused Layer 48 records;
+  combined with Partition 1's **367** and Partition 2's **743** records for
+  **1374** disjoint validated records total; `non_proc_slots=[]`,
+  `resource_constrained_slots=[]`).
+- Verified **106/106** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **84** contract tests on Python 3.14 and 3.15, and **912** clean-public Python
+  tests (**312** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; remaining Layer 50+ CRT leaf/multi-part/overlapping/thunk
+  callees and live runtime execution remain open.

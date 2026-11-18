@@ -2639,5 +2639,43 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_crt_scanf_input116_32, fmt_18, 0x18);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_scanf_input116_32, locinfo_arg_68, 0x68);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_scanf_input116_32, converted_count_70, 0x70);
 
+/* 80B (0x50) MSVC CRT struct lconv checked against __lconv_c defaults in 0x116b60c7/0x116b657c. */
+typedef struct rome2_vfs_crt_lconv80_32 {
+    uint32_t decimal_point_00;                   /* 00 */
+    uint32_t thousands_sep_04;                   /* 04 */
+    uint32_t grouping_08;                        /* 08 */
+    uint32_t int_curr_symbol_0c;                 /* 0c */
+    uint32_t currency_symbol_10;                 /* 10 */
+    uint32_t mon_decimal_point_14;               /* 14 */
+    uint32_t mon_thousands_sep_18;               /* 18 */
+    uint32_t mon_grouping_1c;                    /* 1c */
+    uint32_t positive_sign_20;                   /* 20 */
+    uint32_t negative_sign_24;                   /* 24 */
+    uint8_t digits_and_signs_28[8];              /* 28..2f */
+    uint32_t w_decimal_point_30;                 /* 30 */
+    uint32_t w_thousands_sep_34;                 /* 34 */
+    uint32_t w_int_curr_symbol_38;               /* 38 */
+    uint32_t w_currency_symbol_3c;               /* 3c */
+    uint32_t w_mon_decimal_point_40;             /* 40 */
+    uint32_t w_mon_thousands_sep_44;             /* 44 */
+    uint32_t w_positive_sign_48;                 /* 48 */
+    uint32_t w_negative_sign_4c;                 /* 4c */
+} rome2_vfs_crt_lconv80_32;
+_Static_assert(sizeof(rome2_vfs_crt_lconv80_32) == 0x50, "crt lconv80 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_lconv80_32, decimal_point_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_lconv80_32, int_curr_symbol_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_lconv80_32, w_decimal_point_30, 0x30);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_lconv80_32, w_negative_sign_4c, 0x4c);
+
+/* 180B (0xb4) MSVC __lc_time_data prefix up through refcount_b0 inspected by 0x116b5e63..0x116b5ebd. */
+typedef struct rome2_vfs_crt_lc_time_data180_32 {
+    uint32_t narrow_and_meta_00[43];             /* 00..ab */
+    uint32_t ww_caltype_ac;                      /* ac */
+    int32_t refcount_b0;                         /* b0 */
+} rome2_vfs_crt_lc_time_data180_32;
+_Static_assert(sizeof(rome2_vfs_crt_lc_time_data180_32) == 0xb4, "crt lc time data180 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_lc_time_data180_32, ww_caltype_ac, 0xac);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_lc_time_data180_32, refcount_b0, 0xb0);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif
