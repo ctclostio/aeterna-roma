@@ -2949,5 +2949,63 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_crt_cpinfo20_32, max_char_size_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_cpinfo20_32, default_char_04, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_cpinfo20_32, lead_byte_06, 0x06);
 
+/* 12B (0x0c) fixed vector header for 12-byte elements grown and relocated by 0x1011fc50. */
+typedef struct rome2_vfs_elem12_vec12_32 {
+    uint32_t data_00;                            /* 00 */
+    uint32_t count_04;                           /* 04 */
+    uint32_t cap_08;                             /* 08 */
+} rome2_vfs_elem12_vec12_32;
+_Static_assert(sizeof(rome2_vfs_elem12_vec12_32) == 0x0c, "elem12 vec12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_elem12_vec12_32, data_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_elem12_vec12_32, count_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_elem12_vec12_32, cap_08, 0x08);
+
+/* 12B (0x0c) doubly-linked observable channel peer node unlinked and freed by 0x101cfaf0. */
+typedef struct rome2_vfs_peer_node12_32 {
+    uint32_t prev_00;                            /* 00 */
+    uint32_t next_04;                            /* 04 */
+    uint32_t peer_08;                            /* 08 */
+} rome2_vfs_peer_node12_32;
+_Static_assert(sizeof(rome2_vfs_peer_node12_32) == 0x0c, "peer node12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_peer_node12_32, prev_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_peer_node12_32, next_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_peer_node12_32, peer_08, 0x08);
+
+/* 32B (0x20) VFS folder open-addressed hash table header torn down by 0x112ab060 and 0x112ab150. */
+typedef struct rome2_vfs_folder_hashtable32_32 {
+    uint32_t data_00;                            /* 00 */
+    uint32_t cap_04;                             /* 04 */
+    uint32_t empty_key_08[3];                    /* 08..13 */
+    uint32_t deleted_key_14[3];                  /* 14..1f */
+} rome2_vfs_folder_hashtable32_32;
+_Static_assert(sizeof(rome2_vfs_folder_hashtable32_32) == 0x20, "folder hashtable32 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_folder_hashtable32_32, data_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_folder_hashtable32_32, cap_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_folder_hashtable32_32, empty_key_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_folder_hashtable32_32, deleted_key_14, 0x14);
+
+/* 128B (0x80) VFS recursive folder node destroyed and freed (size 0x80) by 0x112ab8b0. */
+typedef struct rome2_vfs_folder_node128_32 {
+    uint32_t hdr_00[2];                          /* 00..07 */
+    uint32_t name_08[3];                         /* 08..13 */
+    uint32_t full_path_14[3];                    /* 14..1f */
+    rome2_vfs_folder_hashtable32_32 subdirs_map_20; /* 20..3f */
+    uint32_t pad_40;                             /* 40 */
+    rome2_vfs_folder_hashtable32_32 files_map_44;   /* 44..63 */
+    uint32_t pad_64[3];                          /* 64..6f */
+    uint32_t aux_buf_70;                         /* 70 */
+    uint32_t tuples_base_74;                     /* 74 */
+    uint32_t tuples_count_78;                    /* 78 */
+    uint32_t tuples_cap_7c;                      /* 7c */
+} rome2_vfs_folder_node128_32;
+_Static_assert(sizeof(rome2_vfs_folder_node128_32) == 0x80, "folder node128 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_folder_node128_32, name_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_folder_node128_32, full_path_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_folder_node128_32, subdirs_map_20, 0x20);
+ROME2_LAYOUT_ASSERT(rome2_vfs_folder_node128_32, files_map_44, 0x44);
+ROME2_LAYOUT_ASSERT(rome2_vfs_folder_node128_32, aux_buf_70, 0x70);
+ROME2_LAYOUT_ASSERT(rome2_vfs_folder_node128_32, tuples_base_74, 0x74);
+ROME2_LAYOUT_ASSERT(rome2_vfs_folder_node128_32, tuples_cap_7c, 0x7c);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

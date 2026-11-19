@@ -1552,3 +1552,34 @@ callees.
   Ghidra project or canonical exports; NORET/IAT thunks (`19`), overlapping
   shared-tail entries (`7`), further engine/export roots, and live runtime
   execution remain open.
+
+### Layer 57 Engine/VFS/CRT Tail-Jump Closures & Win32/Winsock IAT Thunks (2026-11-19)
+- Added fail-closed `tail_exit` (`direct_jmp` and `iat_jmp`) validation to
+  [scripts/type_recovery_contracts.py](scripts/type_recovery_contracts.py),
+  locked 4 fixed-width guest32 vector/peer/hash/folder layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  (`rome2_vfs_elem12_vec12_32`, `rome2_vfs_peer_node12_32`,
+  `rome2_vfs_folder_hashtable32_32`, `rome2_vfs_folder_node128_32`), and added
+  bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_engine_tail_thunk_ops.h](port/recovered_types/vfs_fs_engine_tail_thunk_ops.h),
+  [port/recovered_types/vfs_fs_engine_tail_thunk_ops.c](port/recovered_types/vfs_fs_engine_tail_thunk_ops.c),
+  and [port/recovered_types/test_vfs_fs_engine_tail_thunk_ops.c](port/recovered_types/test_vfs_fs_engine_tail_thunk_ops.c)
+  (**80** checks) closing all **22** remaining non-overlapping engine/VFS/CRT
+  tail-jumpers and Win32/Winsock IAT thunks across the 1,145-function frontier
+  (`0x100d12c0`..`0x116c8125`: 10 engine/VFS helpers, 3 CRT tail-jumpers, and
+  9 Win32/`WS2_32` IAT thunks) to reach **1,167** recovered functions.
+- Extended Partition 5 (**65** validated records) and advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  (**1167** functions, **587** globals, **40** vtables, **1094** instruction
+  witnesses) and [port/recovered_types/verification.json](port/recovered_types/verification.json)
+  (`extending_layer56`: `29` new records across `22` `analyze_function` + `7`
+  `read_bytes`, `36` reused Layer 56 records; combined with Partitions 1–4
+  `367 + 743 + 264 + 181 = 1555` for **1620** disjoint validated records total;
+  `non_proc_slots=[]`, `resource_constrained_slots=[]`, **22,444,408B** snapshot).
+- Verified **114/114** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **94** contract tests on Python 3.14 and 3.15, and **922** clean-public Python
+  tests (**322** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; 4 Layer 58 CRT noreturn roots
+  (`10120b20`, `11686192`, `116879f9`, `1169b93d`), 3 embedded sub-entries
+  (`11696481`, `1169933e`, `116ae512`), further engine/export roots, and live
+  runtime execution remain open.
