@@ -1,10 +1,18 @@
-# Next x64 execution milestone: caller-closure binder
+# Next x64 execution milestone: not yet frozen
 
-Status: evidence candidate frozen after admission of the standalone whole
-nonempty ordinary-domain parent. Implementation remains `BUILD_TESTING`-only
-and is not yet admitted.
+Status: no successor candidate is frozen. The caller-closure binder was
+admitted (`docs/x64_startup_100edd70_caller_closure.md`) and then composed with
+the selector and registration-data interval into the structural entry decision
+(`docs/x64_startup_100edd70_entry_decision.md`). The open `entry_point`
+boundary is everything past the hard stops `0x100edf41` and `0x100edf94`: the
+installed tail, exception gap, common epilogue, `CoUninitialize`, and SEH
+restoration.
 
-## Current successor boundary
+The binder's frozen packet is kept below as history.
+
+# Historical x64 execution milestone: caller-closure binder (admitted)
+
+## Successor boundary at freeze time
 
 The next bounded slice is not the result-one list route inside `0x100ed3c0`.
 The authenticated `0x100ec5c0` ordinary return domain is exactly `{0,2}`, so a

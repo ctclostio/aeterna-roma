@@ -1,13 +1,240 @@
-# Decompilation progress
+# Progress ledger
 
-## Step 2 — types, layouts, and ownership
+Detailed record of admitted work, oldest first within each section. The
+[live status page](https://ctclostio.github.io/aeterna-roma/) summarizes it,
+and open work is listed in the [README](README.md#open-work). Completed entries
+describe bounded evidence and executable behavior; they do not imply
+whole-engine or gameplay equivalence.
 
-This ledger tracks the type-recovery work. The code-recovery agent owns step 1,
-the shared `workspace/TW2` Ghidra database, and canonical export publication.
-Completed entries describe bounded evidence and executable behavior; they do
-not imply whole-engine or gameplay equivalence.
+Rules for new entries:
 
-### Layer 1 — completed, 2026-11-03
+- Keep original image identities separate from native pointers. Prefix extents
+  are not proofs of complete class sizes.
+- Preserve step 1's files and active export. Do not relax provenance locks to
+  hide metadata changes from concurrent recovery work.
+- Link files with repository-relative paths, not `file:///` URLs.
+
+## Analysis milestones
+
+- [x] Ghidra headless pipeline validated on Rome2.exe
+- [x] PE metadata extracted (exports/imports)
+- [x] Lossless 522-export ABI lock → `docs/x64_export_contract.md`
+- [x] empire.retail.dll auto-analysis and code-gap recovery — all 81,280
+  canonical functions exported; see `docs/code_recovery_wave.md`
+- [x] funcid solo pass #1 (2024-08): 250/250 `work/solo_claim_addrs.txt` classified →
+  `work/funcid_solo.tsv` (raw, all parallel runs) + `work/funcid_solo_merged.tsv`
+  (1,066 unique addrs deduped last-wins; subsystem mix: core 421, battle 207,
+  render 103, anim 73, facefx 54, ui 50). Known anchors: MSVC LCG rand
+  (0x343fd+0x269ec3), rad→16-bit angle ×10430.378, anim-id remap switch
+  (8→0x5d9 … default 0x7f3), soldier class letters @obj+0x1dd, unit state
+  byte @obj+0x1dc / idle short 0x11 @+0x1e2, slot array session+0x68→+0xc0.
+- Historical FuncID snapshot (superseded by the next item): intermediate
+  classifications in `work/funcid_solo.tsv` (+ main/todo2). Method + anchor
+  table: `work/SOLO_SESSION_SUMMARY.md`; the contemporaneous remaining queue is
+  `work/remaining_after_solo1.txt`.
+- [~] FuncID pass: **9,036 unique addresses named (11.1% of 81,280; 14.3% of the earlier
+  63,326-function corpus)**. Corpus integrity
+  note: `funcid_batch1.tsv`, `v2/v3/v4` and `funcid_solo_batch1.tsv` are
+  successive versions of the same 5,398 rows, so naive row sums over-report;
+  `funcid_batch1_final.tsv` also mixes `0x`-prefixed and bare-hex addresses
+  (13 rows), so count the union of both forms.
+  Track 3 registrar wave: 23 vtables → 49 handlers, 4,105 functions reached to
+  depth 6, 3,572 still unnamed; callee-cluster propagation is structurally
+  starved (only 11.5% of call edges reach a named address, +74 subsystems);
+  ~1,993 `.text` addresses then had no decompilation (since closed by
+  the code-recovery wave, `docs/code_recovery_wave.md`)
+  → `docs/funcid_track3_report.md`, `work/registrar_roots.tsv`,
+  `work/registrar_reach.tsv`, `work/registrar_proposed.tsv`
+  Output `work/funcid_batch1_final.tsv` (5,452; restored byte-identically from
+  `2891a19` after a 549-row duplicate overwrote it)
+
+## x64 port milestones
+
+All x64 work below is `BUILD_TESTING`-only unless stated otherwise.
+
+- [x] 64-bit build scaffolding (CMake/MSVC x64) → `docs/x64_bootstrap.md`
+- [x] Strict canonical compile island (16/16 x64 syntax gate) → `docs/compile_island.md`
+- [x] Evidence-only x86 startup initializer inventory (9,874 slots, exact PE
+  validation, rollback-safe publication) → `docs/startup_audit_spec.md`
+- [x] First isolated pointer-width behavior slice (`0x1093c450` →
+  `0x100e81a0`) with a checked guest32 address API and pinned original-byte
+  provenance → `docs/guest32_slice.md`
+- [x] Static x64 entry-policy selector for original `0x100edd70`, including
+  bounded UTF-16LE guest reads, original-byte provenance, adversarial tests,
+  and bootstrap-link containment → `docs/x64_entry_policy_selector_spec.md`
+- [x] Test-only x64 DLL-boundary probe for that selector (guest addresses stay
+  32-bit; no recovered startup execution) →
+  `docs/x64_entry_policy_probe.md`
+- [x] First bounded post-policy startup leaf (`0x100f1c10`), isolated as a
+  `BUILD_TESTING`-only guest32 writer with pinned bytes, static/mutant gates,
+  boundary tests, and unchanged bootstrap artifacts →
+  `docs/x64_startup_100f1c10_spec.md`
+- [x] First native x64 lifecycle composition (`rome2_headless64.exe`), still
+  `BUILD_TESTING`-only: entry-policy selection, bounded UTF-16 measurement,
+  empty-startup construction, nonowning cleanup, and the bounded initializer
+  branches listed below, with gameplay explicitly unlinked
+- [x] Deterministic middle slice of platform-heavy `0x100df270`: exact
+  post-platform field projection for empty descriptors, with Win32 effects,
+  global publication, initializers, and virtual dispatch explicitly excluded
+  → `docs/x64_startup_100df270_headless.md`
+- [x] Short nonallocating branch of descriptor copy `0x100f2750`: exact
+  2-to-30-byte forward copies, external 15-unit ceiling, guest32 alias/range
+  containment, and allocation/release/overlap routes explicitly excluded
+  → `docs/x64_startup_100f2750_nonalloc.md`
+- [x] Bounded no-crash fast path of crash-record `0x100e8240`: read-only
+  branch returning the `0x119f3a38` identity, crash-handler/crash-file window
+  excluded. The adjacent `0x100ea4d0` body remains separately pinned as the
+  original evidence authority; its later executable boundary uses only
+  injected allocation and the bounded router
+  → `docs/x64_startup_100e8240_fastpath.md`,
+  `docs/x64_startup_100ea4d0_evidence.md`
+- [x] First state-mutating step past that boundary: allocation-free append
+  prefix of `0x100e2460`, with exact two-cell commit ordering, full
+  allocator/dispatch/`PeekMessageW` exclusion evidence, and a runnable
+  headless guest32 composition. This historical prefix milestone is now
+  composed by the completed preallocated branch below
+  → `docs/x64_startup_100e2460_append_prefix.md`
+- [x] One genuine return path through `0x100e2460`: the complete allocation-free
+  unsigned `count < capacity` branch, using total injected dispatch and
+  `PeekMessageW`-shaped effects with a finite drain bound. Native USER32 and
+  other platform calls and the then-unported allocation routes remain excluded
+  from this historical branch milestone
+  → `docs/x64_startup_100e2460_preallocated_branch.md`
+- [x] Second genuine return path through `0x100e2460`: the complete intended
+  `capacity == count == backing == 0` branch. It preserves capacity-before-
+  allocation ordering with a total injected `(4, 0)` guest allocator,
+  validates the returned guest32 cell, and reuses the bounded dispatch/Peek
+  tail. This historical branch is now joined by the growth route below
+  → `docs/x64_startup_100e2460_capacity_zero_branch.md`
+- [x] Normal full-vector growth path through `0x100e2460`: checked capacity
+  doubling, injected guest allocation, ascending copy and append, injected
+  release of the old backing, and the bounded dispatch/Peek tail.
+  Wrapped/signed resize states and the native stack-slot self-alias subroute
+  remain excluded
+  → `docs/x64_startup_100e2460_growth_branch.md`
+- [x] Unified bounded router over all three admitted `0x100e2460` storage
+  paths. A persistent six-insertion composition now follows the original
+  zero/growth/growth/preallocated/growth/preallocated route sequence, requests
+  pre-provisioned 4/8/16/32-byte guest spans, releases all three superseded
+  backings, and retains the six handler identities in order. Native allocation,
+  release, and platform effects remain excluded
+  → `docs/x64_startup_100e2460_router.md`
+- [x] First registered slot-4 handler `0x100e8d00`: authenticated six-call
+  sequence represented as a typed injected transcript, with exact argument
+  identities/order and AL publication only after the sixth effect
+  → `docs/x64_startup_100e8d00_handler_transcript.md`
+- [x] Second registered handler `0x100e85d0`: effect-free adapter for the
+  authenticated no-op-helper call and `AL=1`, preserving both ignored guest
+  identities and excluding native linkage
+  → `docs/x64_startup_100e85d0_normal_adapter.md`
+- [x] Third registered handler `0x100e8580`: nine-step injected transcript with
+  an explicit snapshotted `0x100e8240` result, checked guest32 `+0x68`, and
+  exactly-seven-step prefix semantics on null/overflow
+  → `docs/x64_startup_100e8580_handler_transcript.md`
+- [x] Bounded injected outer composition of `0x100ea4d0`: six total `(4, 0)`
+  handler allocations, authenticated vtable stores, unified-router calls,
+  accumulated handler-graph audits, and explicit fail-closed statuses in place
+  of native allocation and the original null-write trap; finalized checkpoint
+  verification is extended through the complete six-handler composition
+  → `docs/x64_startup_100ea4d0_injected.md`
+- [x] Fourth registered handler `0x100e9340`: four-step injected transcript
+  covering two virtual lookup results, receiver-low-byte replacement, and the
+  native-singleton/helper suffix without exposing a host pointer
+  → `docs/x64_startup_100e9340_handler_transcript.md`
+- [x] Fifth registered handler `0x100e92c0`: exact 3/4/6-step predicate routes,
+  dependent two-word getter results, and final four-word startup call with all
+  Steam and global behavior injected
+  → `docs/x64_startup_100e92c0_handler_transcript.md`
+- [x] Sixth registered handler `0x100e87a0`: injected listener allocation,
+  checked guest32 vtable store, publication, and FaceFX startup with explicit
+  prefix-commit failures and a typed memory policy
+  → `docs/x64_startup_100e87a0_handler_transcript.md`
+- [x] Complete deterministic suffix of `0x100df270`: authenticated receiver
+  publication, adjacent direct-call identities, two selector-2 queries,
+  mismatch-only four-call route, final marker store, and receiver return as a
+  bounded injected transcript
+  → `docs/x64_startup_100df270_suffix_transcript.md`
+- [x] Complete platform-bound prefix interval of `0x100df270` as a typed
+  injected call-shape transcript: exact 7/10-step normal and duplicate routes,
+  three ordered guest writes, resource/callee provenance, and fail-closed
+  guest32 containment. Native resource, mutex, UI, system-setting, global, and
+  termination effects remain deliberately unexecuted
+  → `docs/x64_startup_100df270_platform_prefix_transcript.md`
+- [x] Empty-input straight-line prefix of launcher-facing parent `0x100ed3c0`:
+  exact `0x90c` frame construction, the contiguous bounded `0x100df270`
+  prefix/middle/suffix composition, nonowning cleanup, and a hard stop before
+  the first parent loop instruction. The completion token is
+  `startup-100ed3c0-empty-preloop=injected-composition-complete`
+  → `docs/x64_startup_100ed3c0_empty_preloop.md`
+- [x] Ordinary-domain lifecycle tail `[0x100ed471,0x100ed550)`: prevalidated
+  finite `0* -> 2` poll transcript, checked first slot-`0x54` dispatch,
+  injected timestamp and teardown, four ordered nonowning cleanups, exact
+  result-last commit, and hard exclusion of the ordinary-unreachable
+  result-one list/second indirect route. The completion token is
+  `startup-100ed471-ordinary-lifecycle=injected-bounded-complete`
+  → `docs/x64_startup_100ed471_ordinary_lifecycle.md`
+- [x] Bounded nonempty UTF-16 descriptor lifecycle through
+  `0x100f1bb0 -> 0x100ef330` and owning cleanup `0x100f1cc0`: exact
+  `2*N+10` allocation grant, all four raw-address alignment residues, hidden
+  raw-base metadata, opaque UTF-16 copy, literal-zero terminator, and
+  one-shot LIVE/CONSUMED ownership with compensating release for unusable
+  grants. This leaf remains a standalone `BUILD_TESTING` target
+  → `docs/x64_startup_100f1bb0_owned_utf16.md`
+- [x] First-use sentinel-to-owned persistent crash descriptor route in
+  `0x100f2750` plus registered one-shot teardown: authenticated temporary
+  source ownership, injected allocation/release authority, exact commit order,
+  compensating release, and SENTINEL/LIVE/CONSUMED lifecycle. This leaf remains
+  a standalone `BUILD_TESTING` target
+  → `docs/x64_startup_100f2750_sentinel_owned.md`
+- [x] Typed mid-suffix substitution seam at the observed `0x100f2750` call in
+  `0x100df270`: snapshotted status-returning delegate, exact
+  emit/execute/resume order, three-step committed failure prefix, unchanged
+  observation-only API, and expanded 76-case oracle
+  → `docs/x64_startup_100df270_suffix_transcript.md`,
+  `docs/x64_startup_100ed3c0_nonempty_preloop_spec.md`
+- [x] Compose the distinct temporary `0x100f1bb0` owner and persistent
+  `0x100f2750` owner into a bounded nonempty `0x100ed3c0` preloop adapter:
+  exact parent/child/cleanup order, independent 48-case total-order oracle,
+  reciprocal admission gate, and strict `BUILD_TESTING` containment
+  → `docs/x64_startup_100ed3c0_nonempty_preloop.md`,
+  `docs/x64_startup_100ed3c0_nonempty_preloop_spec.md`
+- [x] Whole nonempty ordinary-domain parent `[0x100ed3c0,0x100ed550)`:
+  standalone composition of the admitted nonempty preloop and finite ordinary
+  lifecycle, private successor preview before external effects, 36-case
+  total-order oracle, reciprocal/provenance admission gates, and unchanged
+  production binaries under strict `BUILD_TESTING` containment
+  → `docs/x64_startup_100ed3c0_nonempty_lifecycle.md`
+- [x] Bind that whole parent to the two exact `entry_point` call/continuation
+  windows `[0x100edf20,0x100edf41)` and `[0x100edf73,0x100edf94)`, preserving
+  all four caller positions, calling the whole parent exactly once, and
+  modeling the two post-parent keeper stores plus grouped cleanup as injected
+  success-only effects with hard stops before both epilogues. The 54-case
+  oracle, reciprocal mutation gate, strict analyzer/ASan runs, two independent
+  186/186 graphs, and testing-disabled containment are admitted
+  → `docs/x64_startup_100edd70_caller_closure.md`
+- [x] Compose the exact selector `[0x100edecc,0x100edf05)`, conditional
+  registration-data interval `[0x100edf05,0x100edf20)`, and both admitted
+  caller routes into one structural entry decision. The 44-case outer oracle
+  re-runs the unchanged 54-case child oracle, pins four inert registration
+  records on the install route, embeds the child result, commits result-last,
+  and stops before the installed tail, exception gap, and common epilogue.
+  Strict analyzer/ASan runs, primary and fresh 192/192 graphs,
+  testing-disabled token containment, and unchanged reproducible production
+  hashes are admitted
+  → `docs/x64_startup_100edd70_entry_decision.md`
+- [x] Corrected test-only battle entity field projection (`0x10cbe350`):
+  independent origin/vector inputs, authenticated nineteen-word argument map,
+  widened vector storage, atomic construction failure, and paired host cleanup
+  → `docs/x64_battle_entity_10cbe350.md`. Strings remain borrowed; this does not
+  integrate gameplay or reproduce native string ownership.
+
+## Type-recovery layers
+
+Step 2 of the project: types, layouts, and ownership. The code-recovery agent
+owns step 1, the shared `workspace/TW2` Ghidra database, and canonical export
+publication. Each heading reads `Layer N — scope (date closed)`.
+
+### Layer 1 — Guest layouts, incomplete types and owned strings (2026-11-03)
 
 - Replaced 158 fabricated 64-byte types with incomplete declarations and
   preserved exact 3/5/6/7-byte and ten-byte x87 storage.
@@ -24,7 +251,7 @@ not imply whole-engine or gameplay equivalence.
 - Details: [type recovery](docs/type_recovery.md),
   [verification record](port/recovered_types/verification.json).
 
-### Layer 2 — completed, 2026-11-03
+### Layer 2 — Unit-card tag/helper boundary and nested containers (2026-11-03)
 
 Target: the provisional unit-card tag/helper boundary and nested container
 ownership.
@@ -71,7 +298,7 @@ Details: [tag copy map, evidence, and limits](docs/unitcard_tag_type_recovery.md
 [native owning API](port/recovered_types/owned_tag.h),
 [verification record](port/recovered_types/verification.json).
 
-### Layer 3 — native ownership milestone completed, 2026-11-03
+### Layer 3 — Native ownership (2026-11-03)
 
 - [x] Implement the attachment copy, including the observed `+0x50` word and
   accurate capacity/count order.
@@ -141,7 +368,7 @@ earlier quota reset, layer 3 used a test worker and a read-only reviewer, follow
 by a review of the fixes. Root supplied binary interpretations, integrated the
 work and independently ran the final builds. No alternate model was substituted.
 
-### Layer 4 — resource-backed setup completed for the admitted domain, 2026-11-07
+### Layer 4 — Resource-backed setup for the admitted domain (2026-11-07)
 
 - [x] Verify the existing PFH4 resource reader, owned XML frontend and
   `FUN_10141630` fauna decoder against retained original-image evidence.
@@ -180,7 +407,7 @@ Shared Ghidra state and canonical exports were unchanged. Details and limits:
 [verification record](port/recovered_types/verification.json), and
 [installed-asset identities](port/recovered_types/fauna_assets.json).
 
-### Layer 5 — explicit XML-node setup completed for the native domain, 2026-11-07
+### Layer 5 — Explicit XML-node setup for the native domain (2026-11-07)
 
 - [x] Verify the nonzero XML-node branch of `0x101a97f0` against retained REA
   evidence and an additional original-byte instruction window.
@@ -218,7 +445,7 @@ nonempty backing-allocation behavior. Details:
 [setup recovery](docs/unitcard_resource_recovery.md) and
 [verification record](port/recovered_types/verification.json).
 
-### Layer 6 — XML loader policy and failure distinctions, 2026-11-07
+### Layer 6 — XML loader policy and failure distinctions (2026-11-07)
 
 - [x] Follow the 20-byte callback adapter into the original filename loader
   and recover nine focused function dossiers in one private REA session.
@@ -257,7 +484,7 @@ Shared Ghidra state, canonical exports and frozen admission locks were unchanged
 See [XML loader recovery](docs/xml_loader_recovery.md) and the
 [verification record](port/recovered_types/verification.json).
 
-### Layer 7 — VFS dispatch, filename hash and table probing, 2026-11-07
+### Layer 7 — VFS dispatch, filename hash and table probing (2026-11-07)
 
 - [x] Resolve the XML loader's secondary-interface slot to active/static
   targets and trace original hit branches omitted by pseudocode.
@@ -295,7 +522,7 @@ priority and normalization remain separate obligations. See
 [VFS recovery](docs/vfs_recovery.md) and the
 [verification record](port/recovered_types/verification.json).
 
-### Layer 8 — VFS name-table assignment, duplicate suppression and archive-candidate comparison, 2026-11-12
+### Layer 8 — VFS name-table assignment, duplicate suppression and archive-candidate comparison (2026-11-12)
 
 - [x] Recover generic hash-table assignment `0x112ddee0` and adapt its
   fixed-capacity probing/write loop as `rome2_vfs_assign_name32`.
@@ -333,7 +560,7 @@ confirmed defect or overclaim. Shared Ghidra state, canonical exports and
 frozen admission locks were unchanged. See [VFS recovery](docs/vfs_recovery.md)
 and the [verification record](port/recovered_types/verification.json).
 
-### Layer 9 — archive-name tree search, string-key ordering, winning-archive resolution and dependency-graph walk (complete, 2026-11-12)
+### Layer 9 — Archive-name tree search, string-key ordering, winning-archive resolution and dependency-graph walk (2026-11-12)
 
 Target: trace the two-level archive lookup in `0x112ce0c0` (`0x112c0250` ->
 `0x112ce0f2` -> `0x112c1130`), the name-entry less-than comparator chain
@@ -367,7 +594,7 @@ Completed deliverables:
   public tests** (with 272 expected private-evidence skips) on Python 3.14 and
   Python 3.15.
 
-### Layer 10 — archive dependency-graph reachability, candidate priority comparator, and tree/registration callees (completed, 2026-11-12)
+### Layer 10 — Archive dependency-graph reachability, candidate priority comparator, and tree/registration callees (2026-11-12)
 
 Target: close the exact semantics and native helper coverage of the archive
 dependency graph and candidate priority comparator (`0x112e1500` -> `0x112d59f0`
@@ -407,7 +634,7 @@ Completed and verified:
   suites on Python 3.14 & Python 3.15 (`873` tests run, `273` skipped, `OK`), and
   updated `docs/vfs_recovery.md`, `progress.md`, `README.md`, and `verification.json`.
 
-### Layer 11 — archive registration (`0x112cfc10`) orchestration, precondition gates, and candidate-set insertion policy (2026-11-12)
+### Layer 11 — Archive registration (`0x112cfc10`) orchestration, precondition gates, and candidate-set insertion policy (2026-11-12)
 
 Target: recover the remaining callees of `0x112cfc10` and `0x112bb620`/`0x112a4320`
 (`0x112a37b0`, `0x112a3c90`, `0x112a4230`, `0x112a27c0`, `0x112c0b20`,
@@ -487,7 +714,7 @@ validate bounded C17 helpers.
   clean-public Python 3.14 & Python 3.15 suites, and updated
   `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
 
-### Layer 13 — completed, 2026-11-12 (Pack Entry Vtable `0x118976c0`, Winner Notification `+0x34` & `0x112a9560` Stream/Pool Callees)
+### Layer 13 — Pack Entry Vtable `0x118976c0`, Winner Notification `+0x34` & `0x112a9560` Stream/Pool Callees (2026-11-12)
 
 - [x] **REA Evidence Extraction (`out/vfs-layer13-20261112/`)**: Inspected
   `0x118976c0` (64B pack-entry vtable including non-procedure slots `+0x04`
@@ -508,7 +735,7 @@ validate bounded C17 helpers.
   `scripts/test_type_recovery_contracts.py` (**48** contract tests OK on Python 3.14 & 3.15),
   clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
 
-### Layer 14 — completed, 2026-11-12 (Remaining `0x112a9560` Non-CRT Callees & Full `0x118976c0` Pack-Entry Vtable Slots)
+### Layer 14 — Remaining `0x112a9560` Non-CRT Callees & Full `0x118976c0` Pack-Entry Vtable Slots (2026-11-12)
 
 - [x] **REA Evidence Extraction (`out/vfs-layer14-20261112/`)**: Recovered the remaining
   non-CRT `0x112a9560` callees (`0x100f3880` IAT `GetLastError` thunk, `0x10102f50`
@@ -529,7 +756,7 @@ validate bounded C17 helpers.
   `scripts/test_type_recovery_contracts.py` (**49** contract tests OK on Python 3.14 & 3.15),
   clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
 
-### Current target: Layer 15 (Completed — Archive-Name Disposer Vtable `0x1189a434`, Base Vtable `0x11849278`, VFS Mutex/Global Map `0x112bff80`/`0x112e32b0`, & Pool Slabs)
+### Layer 15 — Archive-Name Disposer Vtable `0x1189a434`, Base Vtable `0x11849278`, VFS Mutex/Global Map `0x112bff80`/`0x112e32b0`, & Pool Slabs (2026-11-13)
 
 - [x] **REA Evidence Extraction (`out/vfs-layer15-20261113/`)**: Read base pack-entry
   vtable `0x11849278` (60B/15 slots + 12 xrefs) alongside `0x118976c0` (`0x112a9963`),
@@ -552,7 +779,7 @@ validate bounded C17 helpers.
   `scripts/test_type_recovery_contracts.py` (**50** contract tests OK on Python 3.14 & 3.15),
   clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
 
-### Current target: Layer 16 (Completed — Pack-Entry Site `0x112a9963`, Base Concrete Slots `0x11849278`, Quota Tracker, RB Sentinel/Recycler & Global Map Probe)
+### Layer 16 — Pack-Entry Site `0x112a9963`, Base Concrete Slots `0x11849278`, Quota Tracker, RB Sentinel/Recycler & Global Map Probe (2026-11-13)
 
 - [x] **REA Evidence Extraction (`out/vfs-layer16-20261113/`)**: Resolved
   `0x112a9963` inside `0x112a9560`, recovered base vtable `0x11849278` concrete
@@ -576,7 +803,7 @@ validate bounded C17 helpers.
   `scripts/test_type_recovery_contracts.py` (**51** contract tests OK on Python 3.14 & 3.15),
   clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
 
-### Current target: Layer 17 (Completed — Unpinned Direct VFS Callees of Root Scan, Per-Thread Quota, Stream Openers & `pack_props`)
+### Layer 17 — Unpinned Direct VFS Callees of Root Scan, Per-Thread Quota, Stream Openers & `pack_props` (2026-11-13)
 
 - [x] **REA Evidence Extraction (`out/vfs-layer17-20261113/`)**: Recovered all 11
   remaining unpinned direct VFS callees of Layers 12–16 (`0x112d4160`, `0x112d4c50`,
@@ -598,7 +825,7 @@ validate bounded C17 helpers.
   `scripts/test_type_recovery_contracts.py` (**52** contract tests OK on Python 3.14 & 3.15),
   clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
 
-### Completed: Layer 18 (`0x1189a424` / Stream Wrapper Vtable Slots, Bucket Rehash `0x112d9e20` & `0x112bb790` Dependency Sub-Callees)
+### Layer 18 — `0x1189a424` / Stream Wrapper Vtable Slots, Bucket Rehash `0x112d9e20` & `0x112bb790` Dependency Sub-Callees (2026-11-13)
 
 - [x] **REA Evidence Extraction (`out/vfs-layer18-20261113/`)**: Recovered
   `0x1189a424` slots (`0x112afce0` tail-jump, `0x112acd50` `0x50`B scalar dtor),
@@ -621,7 +848,7 @@ validate bounded C17 helpers.
   `scripts/test_type_recovery_contracts.py` (**53** contract tests OK on Python 3.14 & 3.15),
   clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
 
-### Completed: Layer 19 (Deep VFS Leaf/Mutation Sub-Callees of Layer 18)
+### Layer 19 — Deep VFS Leaf/Mutation Sub-Callees of Layer 18 (2026-11-13)
 
 - [x] **REA Evidence Extraction (`out/vfs-layer19-20261113/`)**: Recovered all 15
   remaining unpinned `0x112...` sub-callees of Layer 18 (`0x112a21f0`, `0x112a25b0`,
@@ -641,7 +868,7 @@ validate bounded C17 helpers.
   `scripts/test_type_recovery_contracts.py` (**54** contract tests OK on Python 3.14 & 3.15),
   clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
 
-### Completed: Layer 20 (Stream-Wrapper Vtable Slots `+0x08..+0x1c` & RB Rotate/Iterator Leaves)
+### Layer 20 — Stream-Wrapper Vtable Slots `+0x08..+0x1c` & RB Rotate/Iterator Leaves (2026-11-13)
 
 - [x] **REA Evidence Extraction (`out/vfs-layer20-20261113/`)**: Recovered all 10
   remaining slots `+0x08..+0x1c` of stream-wrapper vtables `0x118977ec` &
@@ -663,88 +890,52 @@ validate bounded C17 helpers.
   `scripts/test_type_recovery_contracts.py` (**55** contract tests OK on Python 3.14 & 3.15),
   clean-public Python suites, `docs/vfs_recovery.md`, `progress.md`, and `verification.json`.
 
-### Completed: Layer 21 (Deferred VFS Sub-Callees, Stream-Wrapper Open Slots & Ref-Block Destructors)
+### Layer 21 — Deferred VFS Sub-Callees, Stream-Wrapper Open Slots & Ref-Block Destructors (2026-11-14)
 
 - [x] **REA Evidence Extraction (`out/vfs-layer21-20261114/`)**: Recovered all 13 Layer 21 VFS procedures and virtual slots (`0x112a2660`, `0x112a2910`, `0x112a3ee0`, `0x112ac1a0`, `0x112accd0`, `0x112acd50`, `0x112acd70`, `0x112be350`, `0x112c0c60`, `0x112cd4c0`, `0x112d8c50`, `0x112d8d30`, `0x112d8e20`) on top of `out/vfs-layer20-20261113/session.rea.json`, closing `out/vfs-layer21-20261114/session.rea.json` (`281` validated evidence records = `267` Layer 20 + `14` net new unique evidence IDs across `18` retained envelopes: `8` `analyze_function` + `5` `resolve_containing_procedure` + `5` `read_bytes` length=320). Verified `0x112a2910` has a `1`B `0x90` NOP gap at `0x112a2a1f`.
 - [x] **Layouts & Native C17 Helpers**: Locked 4 fixed-width guest32 structs (`rome2_vfs_adj_hash_node32` 36B, `rome2_vfs_recursive_mutex_prefix32` 8B, `rome2_vfs_u32_ptr_vec32` 12B, `rome2_vfs_flag_chain_node32` 8B) in `port/recovered_types/guest32_layouts.h`, implemented 7 checked helpers (`rome2_vfs_adj_hash_can_allocate32`, `rome2_vfs_decode_adj_hash_node32`, `rome2_vfs_u32_vec_plan_push32`, `rome2_vfs_state_wait_plan32`, `rome2_vfs_stream_wrap_check_open_reentry32`, `rome2_vfs_clear_flag_chain_bounded`, `rome2_vfs_ref_block_delete_size32`) in `port/recovered_types/vfs_adj_open_ops.h/.c`, and verified **20 checks** in `test_vfs_adj_open_ops.c` plus **78/78** native suites on `/W4 /WX /sdl /GS /guard:cf /analyze` (`5.84s`) and ASan (`5.61s`) with zero warnings.
 - [x] **Contracts, Docs & Public-Clean Parity**: Pinned **231 functions, 113 globals, 20 vtables, and 241 instruction witnesses** in `port/recovered_types/contracts.json`, added `test_adj_hash_stream_open_and_ref_dtor_contracts` and `"112a2910": [1]` gap verification to `scripts/test_type_recovery_contracts.py` (**56** contract tests passing on Python 3.14 & 3.15), verified **884** public tests (`284` skipped) in clean checkout on Python 3.14 & 3.15, updated `docs/vfs_recovery.md` and `port/recovered_types/verification.json` (`layer21`, `82` source identities), and committed cleanly.
 
-### Layer 22 (Completed — Stream Handle-Box & View-Map Callees, Pack-Entry Vtable `0x118976c0` Completion & Ref-Block Destructors)
+### Layer 22 — Stream Handle-Box & View-Map Callees, Pack-Entry Vtable `0x118976c0` Completion & Ref-Block Destructors (2026-11-14)
 
 - [x] **REA Evidence Extraction (`out/vfs-layer22-20261114/`)**: Recovered all 16 Layer 22 targets (`0x112afb90`, `0x101d9910`, `0x116835d7`, `0x112a7860`, `0x10102f90`, `0x112e1830`, `0x10e13a60`, `0x10115900`, `0x112ad1b0`, `0x112d3270`, `0x112e0d80`, `0x112c9540`, `0x112afd00`, `0x112accf0`, `0x112acd10`, `0x112acd30`) over `out/vfs-layer21-20261114/session.rea.json` (`302` closed/validated records = `281` reused Layer 21 + `18` primary new IDs [`7` direct `analyze_function`, `1` `fn-116835d7-bundle-record.json`, `8` `read_bytes(768)`, `2` new `resolve_containing_procedure`] + `3` `inspect_analysis_view` extras for `0x116835d7`, with `6` resolve IDs reused from Layer 18).
 - [x] **Layouts & Native C17 Helpers**: Locked `rome2_vfs_state_ref_block32` (`44`B), `rome2_vfs_pack_telemetry_mgr32` (`108`B), and `rome2_vfs_pack_vtable_76c0_prefix32` (`40`B) with `_Static_assert` checks in [guest32_layouts.h](port/recovered_types/guest32_layouts.h); implemented bounded helpers in [vfs_view_map_ops.h](port/recovered_types/vfs_view_map_ops.h) / [vfs_view_map_ops.c](port/recovered_types/vfs_view_map_ops.c) with **21 checks** passing in [test_vfs_view_map_ops.c](port/recovered_types/test_vfs_view_map_ops.c) and **79/79** CTest suites passing on `/W4 /WX /sdl /GS /guard:cf /analyze` and ASan.
 - [x] **Contracts, Docs & Public-Clean Parity**: Pinned **247 functions, 119 globals, 24 vtables, and 253 instruction witnesses** in [contracts.json](port/recovered_types/contracts.json) (`rea_layer22_evidence`), verified **57** contract tests on Python 3.14 and 3.15, updated [vfs_recovery.md](docs/vfs_recovery.md), verified **885** clean-public Python tests (`285` skipped) on Python 3.14 and 3.15, and locked **85** normalized source hashes in [verification.json](port/recovered_types/verification.json).
 
-### Layer 23 — Stream-State Inner Vtables `0x118977bc`–`0x118977e0`, Async View-Map / Page-Prefetch / Heap-Free Callees & Pack Telemetry Vtable `0x118976a4` Completion (`Done`)
+### Layer 23 — Stream-State Inner Vtables `0x118977bc`–`0x118977e0`, Async View-Map / Page-Prefetch / Heap-Free Callees & Pack Telemetry Vtable `0x118976a4` Completion (2026-11-14)
 
 - [x] **REA Evidence Extraction (`out/vfs-layer23-20261114/`)**: Recovered all 21 VFS procedures and virtual slots (`0x112acd90`, `0x112ad140`, `0x112acfe0`, `0x112bade0`, `0x112baf00`, `0x112d9640`, `0x112d97f0`, `0x112c0300`, `0x112d91c0`, `0x10115730`, `0x10115940`, `0x100fcc50`, `0x112d36f0`, `0x100e80b0`, `0x112badd0`, `0x10299640`, `0x10497c50`, `0x112e1780`, `0x112e17e0`, `0x112e1960`, `0x112e19b0`) on top of `out/vfs-layer22-20261114/session.rea.json`, closing `out/vfs-layer23-20261114/session.rea.json` (`336` validated records: `302` reused from Layer 22 + `31` new primary + `3` view records).
 - [x] **Layouts & Native C17 Helpers**: Locked `rome2_vfs_state_ref_block28_32`, `rome2_vfs_state_inner_listener28_32`, `rome2_vfs_sys_info32`, and `rome2_vfs_pack_vtable_76a4_32` in `guest32_layouts.h`, implemented 9 checked C17 helpers in `port/recovered_types/vfs_state_telemetry_ops.h/.c`, and verified **21 checks** (`test_vfs_state_telemetry_ops.c`) plus **80/80** suites on `/W4 /WX /sdl /GS /guard:cf /analyze` and ASan.
 - [x] **Contracts, Docs & Public-Clean Parity**: Pinned **268 functions, 131 globals, 28 vtables, and 270 instruction witnesses** in `contracts.json`, expanded `scripts/test_type_recovery_contracts.py` to **58** passing contract tests on Python 3.14 and 3.15, updated `docs/vfs_recovery.md` and `verification.json` (`88` source identities), and verified **886** public Python tests (`286` skipped) on clean checkouts of Python 3.14 and 3.15.
 
-### Layer 24 — Stream Cipher/Cache/Worker/Tagged-Alloc/CRT-64 Callees & Pack/Stream/Ref-Block Vtable Tail Completion (`Done`)
+### Layer 24 — Stream Cipher/Cache/Worker/Tagged-Alloc/CRT-64 Callees & Pack/Stream/Ref-Block Vtable Tail Completion (2026-11-14)
 
 - [x] **REA Evidence Extraction (`out/vfs-layer24-20261114/`)**: Recovered all 22 VFS procedures and virtual slots (`0x100fa6d0`, `0x100fcfd0`, `0x100f19f0`, `0x100ff8c0`, `0x112b3270`, `0x112b2f40`, `0x100fcc80`, `0x11684200`, `0x11684270`, `0x112d9890`, `0x112d2900`, `0x112d0bd0`, `0x112dd2f0`, `0x112c0090`, `0x112c0c40`, `0x1018ad20`, `0x108b2600`, `0x112b3190`, `0x101a0430`, `0x105cd140`, `0x112b30b0`, `0x1090b600`) on top of `out/vfs-layer23-20261114/session.rea.json`, closing `out/vfs-layer24-20261114/session.rea.json` (`367` validated records: `336` reused from Layer 23 + `31` new IDs across `28` primary + `3` view records; `3` reused resolve IDs from Layers 13/14).
 - [x] **Layouts & Native C17 Helpers**: Locked `rome2_vfs_open_cache_entry16_32`, `rome2_vfs_async_worker_ref_block56_32`, `rome2_vfs_stream_vtable_11slot32`, and `rome2_vfs_pack_vtable_76c0_full32` in `guest32_layouts.h`, implemented 13 checked C17 helpers in `port/recovered_types/vfs_stream_completion_ops.h/.c`, and verified **21 checks** (`test_vfs_stream_completion_ops.c`) plus **81/81** suites on `/W4 /WX /sdl /GS /guard:cf /analyze` and ASan.
 - [x] **Contracts, Docs & Public-Clean Parity**: Pinned **290 functions, 145 globals, 29 vtables, and 286 instruction witnesses** in `contracts.json`, expanded `scripts/test_type_recovery_contracts.py` to **59** passing contract tests on Python 3.14 and 3.15, updated `docs/vfs_recovery.md` and `verification.json` (`91` source identities), and verified **887** public Python tests (`287` skipped) on clean checkouts of Python 3.14 and 3.15.
 
-### Layer 25 — Win32 Handle/Semaphore Lifecycle, `std::bad_alloc`, Intrusive Queue Teardown & Pack Sub-Vtables `0x11897be0` / `0x11897c24` / `0x11897c44` (`Done`)
+### Layer 25 — Win32 Handle/Semaphore Lifecycle, `std::bad_alloc`, Intrusive Queue Teardown & Pack Sub-Vtables `0x11897be0` / `0x11897c24` / `0x11897c44` (2026-11-14)
 
 - [x] **REA Evidence Extraction (`out/vfs-layer25-20261114/`)**: Opened a clean **48-record** REA partition snapshot (`session.rea.json`, `13` primitive entries; `validated-evidence-bundle.json` `49,807,427` bytes) to avoid V8's `536,870,888`-byte JS string ceiling hit past Layer 24 (`532,429,932` bytes), while retaining `cumulative-validated-evidence-bundle.json` (`415` records). Recovered all **24 functions** (`13` direct `analyze_function`, `3` `resource_constraint` bundle records + `9` `inspect_analysis_view` calls, `8` `invalid_request` -> `8` `resolve_containing_procedure` + `8` `read_bytes`), **7** extra `read_bytes` records (`39` unique evidence items in `contracts.json["rea_layer25_evidence"]`), **10 globals**, **2 vtables** (`0x11741d78`, `0x11897c44`), and **16 instruction witnesses**.
 - [x] **Layouts & Native C17 Helpers**: Locked `rome2_vfs_win32_handle_box8_32` (`8`B), `rome2_vfs_open_file_mapping16_32` (`16`B), `rome2_vfs_bad_alloc_exc8_32` (`8`B), `rome2_vfs_pack_vtable_7be0_17slot32` (`68`B), and `rome2_vfs_pack_vtable_7c44_8slot32` (`32`B) in `port/recovered_types/guest32_layouts.h`, implemented **15** checked C17 helpers plus the mockable `rome2_vfs_win32_handle_ops` interface in `port/recovered_types/vfs_handle_lifecycle_ops.h/.c`, and verified **21 checks** in `test_vfs_handle_lifecycle_ops.c` across **82/82** native CTest suites on `/W4 /WX /sdl /GS /guard:cf /analyze` and ASan.
 - [x] **Contracts, Docs & Public-Clean Parity**: Pinned **314 functions, 155 globals, 31 vtables, and 302 instruction witnesses** in `contracts.json`, expanded `scripts/test_type_recovery_contracts.py` to **60** passing contract tests on Python 3.14 and 3.15, updated `docs/vfs_recovery.md` and `verification.json` (`94` source identities), and verified **888** public Python tests (`288` skipped) on clean checkouts of Python 3.14 and 3.15.
 
-### Layer 26 - VFS Loose-Entry (`0x11897710`), Pack Wrapper (`0x11897760`), Buffered Substream (`0x11897c24`), and `std::exception` (`0x11741d58` / `0x11741d78`) Completion (`Done`)
+### Layer 26 — VFS Loose-Entry (`0x11897710`), Pack Wrapper (`0x11897760`), Buffered Substream (`0x11897c24`), and `std::exception` (`0x11741d58` / `0x11741d78`) Completion (2026-11-14)
 
 - [x] **REA Evidence Extraction & Cumulative Validation**: Extended the clean 48-record Layer 25 REA snapshot (`out/vfs-layer25-20261114/session.rea.json`) to close `out/vfs-layer26-20261114/session.rea.json` (`95` evidence records = `48` reused + `47` new: `20` direct `analyze_function`, `10` `invalid_request` targets paired with `10` `resolve_containing_procedure` + `10` `read_bytes(length=320)`, and `7` extra `read_bytes` calls) and merged canonically via `import_evidence_bundle` + `rea evidence-export` into `out/vfs-layer26-20261114/cumulative-validated-evidence-bundle.json` (`462` validated records) outside Git, recovering **30 functions**, **8 globals**, **3 vtables** (`0x11897760` -> `0x112ace20`, `0x11897c24` -> `0x112ad6a0`, `0x11741d58` -> `0x100f3820`), and **16 instruction witnesses**.
 - [x] **Bounded Guest32 Layouts & C17 Implementation**: Added 6 `_Static_assert`-checked guest32 structs (`rome2_vfs_loose_file_entry32` `32`B, `rome2_vfs_buffered_substream40_32` `40`B, `rome2_vfs_file_stat20_32` `20`B, `rome2_vfs_loose_vtable_7710_20slot32` `80`B, `rome2_vfs_pack_wrap_vtable_7760_12slot32` `48`B, and `rome2_vfs_substream_vtable_7c24_8slot32` `32`B) to `port/recovered_types/guest32_layouts.h` and implemented **15** checked C17 helpers (`rome2_vfs_close_handle_bool_6fd0`, `rome2_vfs_create_file_flags_4cc0`, `rome2_vfs_file_stat20_zero_fda0`, `rome2_vfs_aligned16_or_memcpy_43d0`, `rome2_vfs_std_exception_what_5df0`, `rome2_vfs_loose_entry_clamp_window_0d20`, `rome2_vfs_loose_entry_teardown_handles_aa40`, `rome2_vfs_loose_vtable_7710_matches`, `rome2_vfs_pack_wrap_vtable_7760_matches`, `rome2_vfs_pack_wrap_flag_bit6_9520`, `rome2_vfs_substream_vtable_7c24_matches`, `rome2_vfs_substream_can_read_8c40`, `rome2_vfs_substream_refresh_eof_57d0`, `rome2_vfs_substream_advance_0cf0`, and `rome2_vfs_substream_rewind_c1a0`) in `port/recovered_types/vfs_substream_loose_ops.h` and `port/recovered_types/vfs_substream_loose_ops.c`.
 - [x] **Native CTest Gate (`/analyze` & ASan)**: Added `port/recovered_types/test_vfs_substream_loose_ops.c` (`22 checks passed (0 failures)`) to `port/recovered_types/CMakeLists.txt` and passed **83/83** CTest suites on both `/W4 /WX /analyze` and AddressSanitizer builds.
 - [x] **Contracts, Docs & Public-Clean Parity**: Pinned **344 functions, 163 globals, 34 vtables, and 318 instruction witnesses** in `contracts.json`, expanded `scripts/test_type_recovery_contracts.py` to **61** passing contract tests on Python 3.14 and 3.15, updated `docs/vfs_recovery.md` and `verification.json` (`97` source identities), and verified **889** public Python tests (`289` skipped) on clean checkouts of Python 3.14 and 3.15.
 
-### Layer 27 - VFS Dual-Slot View (`0x11897818`), Cipher-Memory View (`0x11897844`), Delegating Stream Adapter (`0x11897c90`), and Loose-File Stat/Path/String Helpers (`Done`)
+### Layer 27 — VFS Dual-Slot View (`0x11897818`), Cipher-Memory View (`0x11897844`), Delegating Stream Adapter (`0x11897c90`), and Loose-File Stat/Path/String Helpers (2026-11-15)
 
 - [x] **REA Evidence Extraction & Cumulative Validation**: Extended the Layer 26 95-record REA snapshot (`out/vfs-layer26-20261114/session.rea.json`) to close `out/vfs-layer27-20261115/session.rea.json` (`156` evidence records = `95` reused + `61` new: `18` direct `analyze_function`, `2` `resource_constraint` bundle records `0x100f1720` / `0x100f3090` + `6` `inspect_analysis_view` view records, `10` `invalid_request` targets paired with `10` `resolve_containing_procedure` + `10` `read_bytes(length=320)`, and `15` extra `read_bytes` calls) and merged canonically via `import_evidence_bundle` + `rea evidence-export` into `out/vfs-layer27-20261115/cumulative-validated-evidence-bundle.json` (`523` validated records) outside Git, recovering **30 functions**, **6 globals**, **3 vtables** (`0x11897818` -> `0x112ad210`, `0x11897844` -> `0x112ace20`, `0x11897c90` -> `0x112ad1e0`), and **20 instruction witnesses**.
 - [x] **Bounded Guest32 Layouts & C17 Implementation**: Added 5 `_Static_assert`-checked guest32 structs (`rome2_vfs_dual_slot_entry32` `16`B, `rome2_vfs_dual_slot_view32` `84`B, `rome2_vfs_cipher_mem_view32` `32`B, `rome2_vfs_stream_delegate_adapter32` `20`B, and `rome2_vfs_file_stat32` `16`B) to `port/recovered_types/guest32_layouts.h` and implemented **24** bounded C17 helpers (`rome2_vfs_dual_slot_entry_zero_init`, `rome2_vfs_dual_slot_view_init`, `_destroy`, `_has_active_task`, `_is_active_task_ready`, `_active_remaining_bytes`, `_has_active_refs`, `_release_ref`, `_is_window_cache_miss`, `_map_and_prefetch`, `rome2_vfs_cipher_mem_view_init`, `_inc_ref`, `_dec_ref`, `_is_valid`, `_is_ready`, `_install_buffer`, `_get_buffer`, `rome2_vfs_stream_delegate_adapter_init_base`, `_init`, `_destroy`, `_query_interface`, `_resolve_thunk_target`, `rome2_vfs_file_stat32_from_mode_and_meta`, and `rome2_vfs_widen_ascii_to_utf16`) in `port/recovered_types/vfs_stream_mux_async_ops.h` and `port/recovered_types/vfs_stream_mux_async_ops.c`.
 - [x] **Native CTest Gate (`/analyze` & ASan)**: Added `port/recovered_types/test_vfs_stream_mux_async_ops.c` (`vfs_stream_mux_async_ops_tests: 3 suites passed (0 failures)`, `129` `CHECK` evaluations) to `port/recovered_types/CMakeLists.txt` and passed **84/84** CTest suites on both `/W4 /WX /analyze` and AddressSanitizer builds.
 - [x] **Contracts, Docs & Public-Clean Parity**: Pinned **374 functions, 169 globals, 37 vtables, and 338 instruction witnesses** in `contracts.json`, expanded `scripts/test_type_recovery_contracts.py` to **62** passing contract tests on Python 3.14 and 3.15, updated `docs/vfs_recovery.md` and `verification.json` (`100` source identities), and verified **890** public Python tests (`290` skipped) on clean checkouts of Python 3.14 and 3.15.
 
-### Remaining work
 
-1. Extend the verified resource-backed domain toward full archive registration
-   (`0x112cfc10`) mutation/orchestration (red-black rebalancing writes,
-   recursive dependency registration loop `0/1` tolerance, open-pack/archive-tree
-   mutation, virtual winner notification `+0x34`), live Win32 `CreateFileA` /
-   `CreateFileMappingA` / `MapViewOfFile` execution (`0x116835d7` CRT free
-   wrapper, `0x10102f90`/`0x112a7860` mapping/handle-box planning, and
-   `0x118976c0` non-proc slots are now recovered/modeled read-only), full
-   normalization rules, exact partial parser/exception outcomes, and the rest
-   of the original XML object ABI. Historic CRT/locale behavior and full
-   resource-backed constructor equivalence remain open.
-2. Recover the remaining unit-card methods and meanings of opaque 32-bit
-   words before widening any of them into native pointers or ownership links.
-3. Continue engine/FaceFX class recovery, complete vtable bounds and callable
-   method signatures, and general allocator/threading behavior. Step 2 and
-   whole-game playability are not declared complete by this milestone.
-
-### Integration constraints and open work
-
-- Keep original image identities separate from native pointers. Prefix extents
-  are not proofs of complete class sizes.
-- Preserve step 1's files and active export. Do not relax provenance locks to
-  hide metadata changes from its concurrent recovery work.
-- The broader Python run during the export recorded 71 failures and six
-  errors; the 44-test oracle-context module subsequently passed on rerun.
-  Downstream canonical-index locks and an older entry-tail oracle pin still
-  need a coordinated admission update.
-- The layer-5 public runner invoked in the full local corpus tree recorded
-  nine failures and 502 errors, including canonical-index/acceptance mismatches
-  and static-gate exceptions. The focused failing static-gate module passed
-  separately on both interpreters. The clean public-worktree suite passed on
-  both; full local-suite health is not claimed and no frozen pins were relaxed.
-- Complete engine/FaceFX layouts, callable vtable method signatures, general
-  allocator/threading behavior, and full unit-card constructor equivalence
-  remain open.
-
-### Layer 28: Base VFS FileSystem, `_Ref_count_base` & Active Secondary Interface (`0x1189791c`, `0x11897994`, `0x1189a520`, `0x118978e8`)
+### Layer 28 — Base VFS FileSystem, `_Ref_count_base` & Active Secondary Interface (`0x1189791c`, `0x11897994`, `0x1189a520`, `0x118978e8`) (2026-11-15)
 - Extended the closed Layer 27 REA session (`156` reused records) to `216`
   validated records (`60` net new across `15` direct `analyze_function`
   calls, `1` `resource_constraint` procedure `0x1018bd90` + `3`
@@ -771,7 +962,7 @@ validate bounded C17 helpers.
   Ghidra project or canonical exports; active primary FileSystem interface
   `0x11897870` (`28` slots) and live runtime threading remain open.
 
-### Layer 29 — completed, 2026-11-15
+### Layer 29 — Active VFS FileSystem primary interface and TLS vector helpers (2026-11-15)
 
 Target: active VFS FileSystem primary interface (`0x11897870`, all `30/30` slots)
 and directly coupled TLS singleton / vector helpers.
@@ -807,7 +998,7 @@ and directly coupled TLS singleton / vector helpers.
   (`0x112d5cc0`, `0x112e1a00`, `0x112d4de0`, `0x112cfc10`, `0x112da500`) and
   live runtime threading remain open.
 
-### Layer 30 — completed, 2026-11-15
+### Layer 30 — VFS mount rebuild, teardown, hash-container and probe callees (2026-11-15)
 
 Target: active VFS FileSystem mount-rebuild, flush, teardown (`WaitForSingleObject`),
 open-address hash container, vector push/copy, and command-line/capability probe
@@ -840,7 +1031,7 @@ callees.
   `0x100fec00` directory traversal, atexit destructors, and live runtime
   threading remain open.
 
-### Layer 31 VFS pack-entry index, Win32 traversal, container/rehash ops, diagnostics & 10 atexit destructors
+### Layer 31 — VFS pack-entry index, Win32 traversal, container/rehash ops, diagnostics & 10 atexit destructors (2026-11-15)
 - Closed **31 additional VFS functions, 15 globals, and 27 instruction
   witnesses** (`rea_layer31_evidence` -> **497 functions, 240 globals,
   40 vtables, 434 instruction witnesses**; **376** closed Layer 31 session
@@ -869,7 +1060,7 @@ callees.
   `0x10120b30`/`0x10120c10` locked entry builders, remaining `0x112a..0x1130`
   VFS callees) and live runtime threading remain open.
 
-### Layer 32 VFS bootstrap initialization, path interning, XML save dispatch & string/handle primitives
+### Layer 32 — VFS bootstrap initialization, path interning, XML save dispatch & string/handle primitives (2026-11-15)
 - Closed **32 additional VFS functions, 22 globals, and 24 instruction
   witnesses** (`rea_layer32_evidence` -> **529 functions, 262 globals,
   40 vtables, 458 instruction witnesses**; **423** closed Layer 32 session
@@ -899,7 +1090,7 @@ callees.
   folder-entry tree & `0x112aa800..0x112e4050` VFS helpers) and live runtime
   execution remain open.
 
-### Layer 33 VFS folder-tree, path-normalization & unit-switch reconstruction (2026-11-16)
+### Layer 33 — VFS folder-tree, path-normalization & unit-switch reconstruction (2026-11-16)
 - Added 4 fixed-width guest32 folder-tree/path/slab layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   and bounded C17 helpers/tests in
@@ -925,7 +1116,7 @@ callees.
   Ghidra project or canonical exports; the remaining **20** RET-bearing
   `0x100f..0x1012` leaves and live runtime execution remain open.
 
-### Layer 34 Final `0x100f..0x1012` leaves, error switches & `dlmalloc` reconstruction (2026-11-16)
+### Layer 34 — Final `0x100f..0x1012` leaves, error switches & `dlmalloc` reconstruction (2026-11-16)
 - Added 3 fixed-width guest32 handle/dlmalloc layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   and bounded C17 helpers/tests in
@@ -952,7 +1143,7 @@ callees.
   `0x112a..0x112e` internal callees (Layer 35) and live runtime execution
   remain open.
 
-### Layer 35 UTF-16/ASCII formatters, math `vector`/`euler` codecs, telemetry & tuple/hash vector ops (2026-11-16)
+### Layer 35 — UTF-16/ASCII formatters, math `vector`/`euler` codecs, telemetry & tuple/hash vector ops (2026-11-16)
 - Added 3 fixed-width guest32 memory/vector layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   and bounded C17 helpers/tests in
@@ -981,7 +1172,7 @@ callees.
   `0x112b..0x1136` internal callees (Layer 36+) and live runtime execution
   remain open.
 
-### Layer 36 `dlmalloc` internals, `12B` bucket vectors, `wstringstream`/`num_get`, and stream/hash leaves (2026-11-16)
+### Layer 36 — `dlmalloc` internals, `12B` bucket vectors, `wstringstream`/`num_get`, and stream/hash leaves (2026-11-16)
 - Added 3 fixed-width guest32 allocator/bucket/iterator layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   and bounded C17 helpers/tests in
@@ -1010,7 +1201,7 @@ callees.
   Ghidra project or canonical exports; remaining **22** clean `0x1023..0x1103`
   engine callees (Layer 37) and live runtime execution remain open.
 
-### Layer 37 Engine container, allocator, UTF-16 stream & channel bit-stream ops (2026-11-16)
+### Layer 37 — Engine container, allocator, UTF-16 stream & channel bit-stream ops (2026-11-16)
 - Added 3 fixed-width guest32 refcount/bit-cursor/channel layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   and bounded C17 helpers/tests in
@@ -1038,7 +1229,7 @@ callees.
   callees plus non-clean/multi-part callees and live runtime execution remain
   open.
 
-### Layer 38 `std::basic_stringbuf<wchar_t>`, `%l`/`float32` formatters, socket/Steam helpers, `dlmalloc` top/segments & SWAR bit-range codec (2026-11-16)
+### Layer 38 — `std::basic_stringbuf<wchar_t>`, `%l`/`float32` formatters, socket/Steam helpers, `dlmalloc` top/segments & SWAR bit-range codec (2026-11-16)
 - Added 3 fixed-width guest32 wstringbuf/queue/endpoint layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   and bounded C17 helpers/tests in
@@ -1068,7 +1259,7 @@ callees.
   format callees (`16` single-part + `8` multi-part), CRT runtime helpers, and
   live runtime execution remain open.
 
-### Layer 39 TLS singletons, thread-name SEH, formatters, Winsock messages, `dlmalloc` `sys_alloc`, MSB bitcopy, ack ring & channel transport (2026-11-16)
+### Layer 39 — TLS singletons, thread-name SEH, formatters, Winsock messages, `dlmalloc` `sys_alloc`, MSB bitcopy, ack ring & channel transport (2026-11-16)
 - Added 3 fixed-width guest32 thread-name, ack-ring, and channel slot layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   and bounded C17 helpers/tests in
@@ -1099,7 +1290,7 @@ callees.
   Ghidra project or canonical exports; **26** Layer 40 callees (`11` clean
   engine + `15` CRT helpers) and live runtime execution remain open.
 
-### Layer 40 UTF-16 scanners, `WS2_32!send`, `dlmalloc` `add_segment`/`prepend_alloc`, `564B` channel manager, SteamID/P2P & 15 CRT runtime helpers (2026-11-16)
+### Layer 40 — UTF-16 scanners, `WS2_32!send`, `dlmalloc` `add_segment`/`prepend_alloc`, `564B` channel manager, SteamID/P2P & 15 CRT runtime helpers (2026-11-16)
 - Added 3 fixed-width guest32 CRT/SEH/channel layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   (`rome2_vfs_crt_filex56_32`, `rome2_vfs_cxx_throw_template32_32`,
@@ -1127,7 +1318,7 @@ callees.
   callees (`7` engine + `13` CRT + `6` multi-part) plus remaining IAT/noret
   thunks and live runtime execution remain open.
 
-### Layer 41 ASCII/UTF-8 formatters, sliding timestamp trim, `EP2PSend` switch, `$I10_OUTPUT`, `_stat32i64`, `memcpy` & `memmove` (2026-11-16)
+### Layer 41 — ASCII/UTF-8 formatters, sliding timestamp trim, `EP2PSend` switch, `$I10_OUTPUT`, `_stat32i64`, `memcpy` & `memmove` (2026-11-16)
 - Added 3 fixed-width guest32 queue/thread-param layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   (`rome2_vfs_ts_node16_32`, `rome2_vfs_ts_queue24_32`,
@@ -1157,7 +1348,7 @@ callees.
   Partition 3 because Layer 41's closed snapshot reached `517.8 MB`) plus
   remaining Layer 43+ CRT/thunk callees and live runtime execution remain open.
 
-### Layer 42 Partition 3 opening (`0x100f17a0` engine repeat-fill & 24 CRT SEH/`_LocaleUpdate`/`_stat64`/PTD/error helpers) (2026-11-16)
+### Layer 42 — Partition 3 opening (`0x100f17a0` engine repeat-fill & 24 CRT SEH/`_LocaleUpdate`/`_stat64`/PTD/error helpers) (2026-11-16)
 - Added 4 fixed-width guest32 CRT/locale/stat/PTD layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   (`rome2_vfs_crt_locale_update16_32`, `rome2_vfs_crt_errentry8_32`,
@@ -1183,7 +1374,7 @@ callees.
   (queued across Layers 43–44) plus remaining multi-part/thunk callees and live
   runtime execution remain open.
 
-### Layer 43 CRT security cookies, `__alloca_probe`, stdio input/output adapters, `stat64`, matherr/FP dispatch & `construct_ptd` (2026-11-18)
+### Layer 43 — CRT security cookies, `__alloca_probe`, stdio input/output adapters, `stat64`, matherr/FP dispatch & `construct_ptd` (2026-11-18)
 - Added 4 fixed-width guest32 exception/parser/matherr layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   (`rome2_vfs_win32_exception_pointers8_32`,
@@ -1209,7 +1400,7 @@ callees.
   Ghidra project or canonical exports; remaining Layer 44+ CRT/multi-part/thunk
   callees and live runtime execution remain open.
 
-### Layer 44 CRT `win32_buffer`, stdio tmpbuf, `___acrt_getptd`, Win32/FLS APIs & IEEE-754/`fenv` helpers (2026-11-18)
+### Layer 44 — CRT `win32_buffer`, stdio tmpbuf, `___acrt_getptd`, Win32/FLS APIs & IEEE-754/`fenv` helpers (2026-11-18)
 - Added 3 fixed-width guest32 buffer/float/fenv layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   (`rome2_vfs_crt_win32_buffer24_32`, `rome2_vfs_crt_strflt12_32`,
@@ -1234,7 +1425,7 @@ callees.
   Ghidra project or canonical exports; remaining Layer 45+ CRT/multi-part/thunk
   callees and live runtime execution remain open.
 
-### Layer 45 CRT stdio flush, parser scans, UNC/drive pathing, locks/onexit & `try_get_function` (2026-11-18)
+### Layer 45 — CRT stdio flush, parser scans, UNC/drive pathing, locks/onexit & `try_get_function` (2026-11-18)
 - Added 2 fixed-width guest32 onexit/lock layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   (`rome2_vfs_crt_onexit_table12_32`, `rome2_vfs_win32_critsec24_32`, plus
@@ -1259,7 +1450,7 @@ callees.
   Ghidra project or canonical exports; remaining Layer 46+ CRT/multi-part/thunk
   callees and live runtime execution remain open.
 
-### Layer 46 CRT locale/module cache, recalloc/isatty, log10 & fenv helpers (2026-11-18)
+### Layer 46 — CRT locale/module cache, recalloc/isatty, log10 & fenv helpers (2026-11-18)
 - Added 2 fixed-width guest32 ioinfo/x87-env layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   (`rome2_vfs_crt_ioinfo56_32`, `rome2_vfs_x87_env28_32`, plus `ptlocinfo_4c` on
@@ -1284,7 +1475,7 @@ callees.
   Ghidra project or canonical exports; remaining Layer 47+ CRT leaf/multi-part/thunk
   callees and live runtime execution remain open.
 
-### Layer 47 CRT strtox/bigint division, parser FSM, locale refcounts & fenv mappers (2026-11-18)
+### Layer 47 — CRT strtox/bigint division, parser FSM, locale refcounts & fenv mappers (2026-11-18)
 - Added 3 fixed-width guest32 strtox/locale layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   (`rome2_vfs_crt_cstr_source8_32`, `rome2_vfs_crt_locale_cat16_32`,
@@ -1310,7 +1501,7 @@ callees.
   Ghidra project or canonical exports; remaining Layer 48+ leaf CRT/overlapping/thunk
   callees and live runtime execution remain open.
 
-### Layer 48 CRT printf/scanf FSM, leap/calendar, fullpath resize & timezone helpers (2026-11-18)
+### Layer 48 — CRT printf/scanf FSM, leap/calendar, fullpath resize & timezone helpers (2026-11-18)
 - Added 2 fixed-width guest32 wprintf/scanf state layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   (`rome2_vfs_crt_wprintf_state64_32`, `rome2_vfs_crt_scanf_input116_32`) and
@@ -1335,7 +1526,7 @@ callees.
   Ghidra project or canonical exports; remaining Layer 49+ CRT leaf/multi-part/overlapping/thunk
   callees and live runtime execution remain open.
 
-### Layer 49 CRT lconv/lc_time lifecycle, _write_nolock, wprintf type & __87except helpers (2026-11-18)
+### Layer 49 — CRT lconv/lc_time lifecycle, _write_nolock, wprintf type & __87except helpers (2026-11-18)
 - Added 2 new fixed-width guest32 lconv/lc_time layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   (`rome2_vfs_crt_lconv80_32`, `rome2_vfs_crt_lc_time_data180_32`, alongside
@@ -1360,7 +1551,7 @@ callees.
   Ghidra project or canonical exports; remaining Layer 50+ CRT leaf/multi-part/overlapping/thunk
   callees and live runtime execution remain open.
 
-### Layer 50 CRT wprintf type handlers, lowio text/console writers, DST/TZ & locale helpers (2026-11-18)
+### Layer 50 — CRT wprintf type handlers, lowio text/console writers, DST/TZ & locale helpers (2026-11-18)
 - Added 3 fixed-width guest32 lowio/timezone/string layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   (`rome2_vfs_crt_lowio_write_result12_32`,
@@ -1386,7 +1577,7 @@ callees.
   Ghidra project or canonical exports; remaining Layer 51+ CRT leaf/multi-part/overlapping/thunk
   callees and live runtime execution remain open.
 
-### Layer 51 CRT formatting_buffer, FP formatters, UTF-8/MBCS, lseek64, TZ/DST & drive/locale helpers (2026-11-18)
+### Layer 51 — CRT formatting_buffer, FP formatters, UTF-8/MBCS, lseek64, TZ/DST & drive/locale helpers (2026-11-18)
 - Added 3 fixed-width guest32 buffer/timezone layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   (`rome2_vfs_crt_formatting_buffer1032_32`,
@@ -1412,7 +1603,7 @@ callees.
   Ghidra project or canonical exports; remaining Layer 52+ CRT leaf/multi-part/overlapping/thunk
   callees and live runtime execution remain open.
 
-### Layer 52 CRT UTF-8, FP formatters (`%a/%e/%f/%g`/INF/NAN), lowio `_get_osfhandle`/console & `strncpy_s` helpers (2026-11-18)
+### Layer 52 — CRT UTF-8, FP formatters (`%a/%e/%f/%g`/INF/NAN), lowio `_get_osfhandle`/console & `strncpy_s` helpers (2026-11-18)
 - Added 3 fixed-width guest32 mbstate/FP-table/heap-ptr layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   (`rome2_vfs_crt_mbstate8_32`,
@@ -1439,7 +1630,7 @@ callees.
   Ghidra project or canonical exports; remaining Layer 53+ CRT leaf/multi-part/overlapping/thunk
   callees and live runtime execution remain open.
 
-### Layer 53 CRT `_flsbuf`/`_flswbuf`, switch tables, `parse_integer`, `__wctomb_s_l` & `__alldvrm` helpers (2026-11-18)
+### Layer 53 — CRT `_flsbuf`/`_flswbuf`, switch tables, `parse_integer`, `__wctomb_s_l` & `__alldvrm` helpers (2026-11-18)
 - Added 3 fixed-width guest32 stream/API-descriptor/SEH4 layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   (`rome2_vfs_crt_stdio_stream56_32`,
@@ -1466,7 +1657,7 @@ callees.
   Ghidra project or canonical exports; remaining Layer 54+ CRT leaf/overlapping/thunk
   callees and live runtime execution remain open.
 
-### Layer 54 CRT scanf adapters, stdio buffer/EOF checks, `__c32rtomb_utf8` & downlevel locale lookup helpers (2026-11-18)
+### Layer 54 — CRT scanf adapters, stdio buffer/EOF checks, `__c32rtomb_utf8` & downlevel locale lookup helpers (2026-11-18)
 - Corrected `charbuf_14`/`bufsiz_18` field ordering on
   `rome2_vfs_crt_stdio_stream56_32` and added 3 fixed-width guest32 scanf/locale
   layouts in [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
@@ -1493,7 +1684,7 @@ callees.
   Ghidra project or canonical exports; remaining Layer 55+ CRT leaf/overlapping/thunk
   callees and live runtime execution remain open.
 
-### Layer 55 CRT env init, multibyte, `_strnicoll`, `common_lseek<int64>` & scanf adapter helpers (2026-11-18)
+### Layer 55 — CRT env init, multibyte, `_strnicoll`, `common_lseek<int64>` & scanf adapter helpers (2026-11-18)
 - Refined `rome2_vfs_crt_input_char_source32_32` (`+0x08` `width_lo_08`/`+0x0c`
   `width_hi_0c`, `+0x18` `succeeded_ptr_18`) and added 4 fixed-width guest32
   mbctype/mbcasemap/SEH4 layouts in
@@ -1524,7 +1715,7 @@ callees.
   Ghidra project or canonical exports; remaining 23 Layer 56 clean CRT callees
   plus NORET/overlapping/thunk entries and live runtime execution remain open.
 
-### Layer 56 Final CRT Clean Closure — `setmbcp`, `CompareStringEx`, `LCMapStringA`, `getptd`, `setenv` & `strchr` (2026-11-18)
+### Layer 56 — Final CRT Clean Closure: `setmbcp`, `CompareStringEx`, `LCMapStringA`, `getptd`, `setenv` & `strchr` (2026-11-18)
 - Added 4 fixed-width guest32 multibyte/codepage/cpinfo layouts in
   [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   (`rome2_vfs_crt_multibyte_data544_32`, `rome2_vfs_crt_codepage_info48_32`,
@@ -1553,7 +1744,7 @@ callees.
   shared-tail entries (`7`), further engine/export roots, and live runtime
   execution remain open.
 
-### Layer 57 Engine/VFS/CRT Tail-Jump Closures & Win32/Winsock IAT Thunks (2026-11-19)
+### Layer 57 — Engine/VFS/CRT Tail-Jump Closures & Win32/Winsock IAT Thunks (2026-11-19)
 - Added fail-closed `tail_exit` (`direct_jmp` and `iat_jmp`) validation to
   [scripts/type_recovery_contracts.py](scripts/type_recovery_contracts.py),
   locked 4 fixed-width guest32 vector/peer/hash/folder layouts in
@@ -1584,9 +1775,9 @@ callees.
   (`11696481`, `1169933e`, `116ae512`), further engine/export roots, and live
   runtime execution remain open.
 
-### Layer 58: Final CRT exception, signal, abort & exit closure (1197 functions; 100% transitive closure)
-- Extended [type_recovery_contracts.py](file:///x:/decompilation/scripts/type_recovery_contracts.py) and
-  [test_type_recovery_contracts.py](file:///x:/decompilation/scripts/test_type_recovery_contracts.py)
+### Layer 58 — Final CRT exception, signal, abort & exit closure (2026-11-19)
+- Extended [type_recovery_contracts.py](scripts/type_recovery_contracts.py) and
+  [test_type_recovery_contracts.py](scripts/test_type_recovery_contracts.py)
   with fail-closed `noreturn_call` (`0xE8` terminal call) and
   `noreturn_iat_call` (`FF 15` terminal IAT call) verification and mutation tests.
 - Extended Partition 5 (`extending_layer57`) across all **30** final CRT
@@ -1595,17 +1786,17 @@ callees.
   `0x1168601c`, `0x1168606c`, `0x116bf74d`, `0x1168d0ce`–`0x1168d362`,
   `0x116a176f`–`0x116a23ed`, `0x116a8555`, `0x116a8c48`, and
   `0x116b03fb`–`0x116b06aa` including two-range `raise` `0x116b0517`),
-  growing [contracts.json](file:///x:/decompilation/port/recovered_types/contracts.json)
+  growing [contracts.json](port/recovered_types/contracts.json)
   to **1,197 functions, 618 globals, 40 vtables, and 1,124 instruction witnesses**
   over **118** Partition 5 validated REA records (**1,673** cumulative across
   Partitions 1–5; `28,032,212B` snapshot; `0` Ghidra mismatches).
 - Reused `rome2_vfs_crt_onexit_table12_32`, locked 3 fixed-width
-  [guest32_layouts.h](file:///x:/decompilation/port/recovered_types/guest32_layouts.h)
+  [guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   layouts (`rome2_vfs_crt_std_exception12_32`, `rome2_vfs_crt_throw_info16_32`,
   `rome2_vfs_crt_xcpt_action12_32`), and added bounded C17 reconstruction and
-  **109 checks** in [vfs_fs_engine_crt_exit_ops.h](file:///x:/decompilation/port/recovered_types/vfs_fs_engine_crt_exit_ops.h),
-  [vfs_fs_engine_crt_exit_ops.c](file:///x:/decompilation/port/recovered_types/vfs_fs_engine_crt_exit_ops.c), and
-  [test_vfs_fs_engine_crt_exit_ops.c](file:///x:/decompilation/port/recovered_types/test_vfs_fs_engine_crt_exit_ops.c).
+  **109 checks** in [vfs_fs_engine_crt_exit_ops.h](port/recovered_types/vfs_fs_engine_crt_exit_ops.h),
+  [vfs_fs_engine_crt_exit_ops.c](port/recovered_types/vfs_fs_engine_crt_exit_ops.c), and
+  [test_vfs_fs_engine_crt_exit_ops.c](port/recovered_types/test_vfs_fs_engine_crt_exit_ops.c).
 - Verified **115/115** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
   and ASan, **97** contract tests on Python 3.14 and 3.15, and **925** clean-public
   Python tests (**325** skipped) on Python 3.14 and 3.15 without touching the
@@ -1614,7 +1805,7 @@ callees.
   already-embedded sub-entry labels `11696481`, `1169933e`, `116ae512`,
   further engine/export roots, and live runtime execution remain open).
 
-### Layer 59: Partition 6 mod-options exports & startup bootstrap foundation (1222 functions)
+### Layer 59 — Partition 6 mod-options exports & startup bootstrap foundation (2026-11-19)
 - Sealed Partition 5 (**118** records; **1,673** cumulative across Partitions 1–5)
   and opened fresh Partition 6 (`fresh_partition_p6`) closing all **25** self-contained
   `RET`-bearing functions across both non-`entry_point` Rome II DLL exports
@@ -1627,17 +1818,17 @@ callees.
   `0x100ea4d0`) spanning all 29 vtables (`0x1173f20c..0x1173f2ec`), 228B perf config
   `0x100d24c0`, allocator selector `0x100fcc30`, section timings `0x112dc9f0`,
   formatters (`0x101c89e0`, `0x100de500`, `0x100f4920`), and CRT `strstr`
-  (`0x116be670`), growing [contracts.json](file:///x:/decompilation/port/recovered_types/contracts.json)
+  (`0x116be670`), growing [contracts.json](port/recovered_types/contracts.json)
   to **1,222 functions, 677 globals, 69 vtables, and 1,149 instruction witnesses**
   over **99** fresh Partition 6 validated REA records (**1,772** cumulative across
   Partitions 1–6; `21,616,716B` snapshot; `0` Ghidra mismatches).
-- Locked 5 fixed-width [guest32_layouts.h](file:///x:/decompilation/port/recovered_types/guest32_layouts.h)
+- Locked 5 fixed-width [guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   layouts (`rome2_startup_perf_config228_32`, `rome2_startup_user_folder_entry12_32`,
   `rome2_startup_dir_rb_node48_32`, `rome2_startup_timing_slot16_32`,
   `rome2_startup_mod_options2_32`) and added bounded C17 reconstruction and
-  **184 checks** in [startup_export_bootstrap_ops.h](file:///x:/decompilation/port/recovered_types/startup_export_bootstrap_ops.h),
-  [startup_export_bootstrap_ops.c](file:///x:/decompilation/port/recovered_types/startup_export_bootstrap_ops.c), and
-  [test_startup_export_bootstrap_ops.c](file:///x:/decompilation/port/recovered_types/test_startup_export_bootstrap_ops.c).
+  **184 checks** in [startup_export_bootstrap_ops.h](port/recovered_types/startup_export_bootstrap_ops.h),
+  [startup_export_bootstrap_ops.c](port/recovered_types/startup_export_bootstrap_ops.c), and
+  [test_startup_export_bootstrap_ops.c](port/recovered_types/test_startup_export_bootstrap_ops.c).
 - Verified **116/116** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
   and ASan, **98** contract tests on Python 3.14 and 3.15, and **926** clean-public
   Python tests (**326** skipped) on Python 3.14 and 3.15 without touching the
@@ -1645,7 +1836,7 @@ callees.
   `noret_or_thunk=0` across **1,222** functions; further startup/engine roots and
   live runtime execution remain open).
 
-### Layer 60: Partition 6 `entry_point` & `0x100ed3c0` startup spine foundation (1251 functions)
+### Layer 60 — Partition 6 `entry_point` & `0x100ed3c0` startup spine foundation (2026-11-19)
 - Extended Partition 6 (`extending_layer59`) closing **29** single-part `RET`-bearing
   functions across `EMPIRE_APP::EMPIRE_APP` (`0x100df270`, observer/pair/terminate/temp-cleanup
   helpers `0x100f0eb0`, `0x1014d170`, `0x10102850`, `0x101046d0`, `0x100fe770`, `0x10122e40`),
@@ -1654,17 +1845,17 @@ callees.
   formatter/abort prompt (`0x100de6d0`, `0x100f4a10`, `0x101032a0`), cookie-encoded
   `_set_invalid_parameter_handler` (`0x11687a4a`), and section timings completion + WinMM timer
   (`0x112dcaf0`, `0x112b2d40`, `0x106b91a0`, `0x112e2bb0`, `0x10115800`, `0x10115810`),
-  growing [contracts.json](file:///x:/decompilation/port/recovered_types/contracts.json)
+  growing [contracts.json](port/recovered_types/contracts.json)
   to **1,251 functions, 703 globals, 73 vtables, and 1,178 instruction witnesses**
   over **152** Partition 6 validated REA records (`53` new + `99` reused Layer 59; **1,825**
   cumulative across Partitions 1–6; `45,485,318B` snapshot; `0` Ghidra mismatches).
-- Locked 4 fixed-width [guest32_layouts.h](file:///x:/decompilation/port/recovered_types/guest32_layouts.h)
+- Locked 4 fixed-width [guest32_layouts.h](port/recovered_types/guest32_layouts.h)
   layouts (`rome2_startup_observer_node12_32`, `rome2_startup_pair8_32`,
   `rome2_startup_wprintf_string_adapter16_32`, `rome2_startup_timing_vec12_32`) and added
   bounded C17 reconstruction and **79 checks** in
-  [startup_app_ctor_timing_ops.h](file:///x:/decompilation/port/recovered_types/startup_app_ctor_timing_ops.h),
-  [startup_app_ctor_timing_ops.c](file:///x:/decompilation/port/recovered_types/startup_app_ctor_timing_ops.c), and
-  [test_startup_app_ctor_timing_ops.c](file:///x:/decompilation/port/recovered_types/test_startup_app_ctor_timing_ops.c).
+  [startup_app_ctor_timing_ops.h](port/recovered_types/startup_app_ctor_timing_ops.h),
+  [startup_app_ctor_timing_ops.c](port/recovered_types/startup_app_ctor_timing_ops.c), and
+  [test_startup_app_ctor_timing_ops.c](port/recovered_types/test_startup_app_ctor_timing_ops.c).
 - Verified **117/117** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
   and ASan, **99** contract tests on Python 3.14 and 3.15, and **927** clean-public
   Python tests (**327** skipped) on Python 3.14 and 3.15 without touching the

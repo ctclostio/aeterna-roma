@@ -9,7 +9,9 @@ import xml.etree.ElementTree as ET
 import gen_status_site as g
 
 README = """\
-## Progress tracker
+# Project
+
+## Status
 
 | Axis | Current state | What it means |
 | --- | ---: | --- |
@@ -18,10 +20,15 @@ README = """\
 | Decompiler-warning triage | 9 warnings / 3 functions | Mostly dispatch. |
 | Playable | <1% (planning estimate) | Nothing integrated. |
 
-- [x] Done item
-- [~] Partial **item**. Long tail note.
-- [ ] Open <item> → `docs/y.md`
-- [ ] RTTI class recovery → headers
+Ledger link.
+
+## Open work
+
+- **Next milestone:** not frozen. Past the
+  hard stops lie `0x1`.
+- **Unit <cards>:** finish **ownership**.
+
+## Getting started
 """
 
 
@@ -36,26 +43,27 @@ class ParserTests(unittest.TestCase):
         self.assertTrue(rows[3]["below"])
         self.assertEqual(rows[0]["meaning_html"], "All exported.")
 
-    def test_checklist_escapes_and_trims(self) -> None:
-        checklist = g.parse_checklist(README)
-        self.assertEqual(checklist["done"], 1)
-        self.assertEqual([o["html"] for o in checklist["open"]], [
-            "Partial <strong>item</strong>.", "Open &lt;item&gt;", "RTTI class recovery → headers"])
-        self.assertTrue(checklist["open"][0]["partial"])
+    def test_open_work_escapes_and_joins_lines(self) -> None:
+        self.assertEqual(g.parse_open_work(README), [
+            {"label": "Next milestone", "html": "not frozen. Past the hard stops lie <code>0x1</code>."},
+            {"label": "Unit <cards>", "html": "finish <strong>ownership</strong>."},
+        ])
 
     def test_progress_takes_latest_counts(self) -> None:
         progress = (
-            "### Layer 1 — old\nVerified **10/10** CTest, **5** contract tests, **90**\n"
-            "  public Python tests (`9` skipped).\n\n### Remaining work\n\n1. First thing. More.\n"
-            "2. Second `x`.\n\n### Layer 2: new\nVerified **12/12** native CTest suites, **6** contract\n"
+            "# Ledger\n\n## x64 port milestones\n\n- [x] One\n  more\n- [x] Two\n\n"
+            "## Type-recovery layers\n\n- [x] not a milestone\n\n"
+            "### Layer 1 — old (2026-01-01)\nVerified **10/10** CTest, **5** contract tests, **90**\n"
+            "  public Python tests (`9` skipped).\n\n"
+            "### Layer 2 — new (2026-01-02)\nVerified **12/12** native CTest suites, **6** contract\n"
             "tests, and **95** clean-public Python tests (**11** skipped); **40** cumulative.\n")
         parsed = g.parse_progress(progress)
+        self.assertEqual(parsed["port_milestones"], 2)
         self.assertEqual(parsed["ctest"], {"passed": 12, "total": 12})
         self.assertEqual(parsed["contract_tests"], 6)
         self.assertEqual(parsed["python_tests"], {"run": 95, "skipped": 11})
         self.assertEqual(parsed["rea_records"], 40)
-        self.assertEqual(parsed["latest_heading"], "Layer 2: new")
-        self.assertEqual(parsed["remaining"], ["First thing.", "Second <code>x</code>."])
+        self.assertEqual(parsed["latest_heading"], "Layer 2 — new (2026-01-02)")
 
 
 class RepositoryTests(unittest.TestCase):
@@ -68,6 +76,8 @@ class RepositoryTests(unittest.TestCase):
         for key in g.COUNTED:
             self.assertEqual(self.status["contracts"][key], len(contracts[key]))
         self.assertTrue(self.status["tracker"])
+        self.assertTrue(self.status["open_work"])
+        self.assertGreater(self.status["progress"]["port_milestones"], 0)
         layers = [row["layer"] for row in self.status["history"]]
         self.assertEqual(layers, sorted(set(layers)))
 

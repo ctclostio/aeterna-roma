@@ -86,14 +86,7 @@ header { display: grid; gap: 10px; }
 
 .board { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px; display: grid; gap: 12px; align-content: start; min-width: 0; }
-.card ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; font-size: 14px; }
-.card li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; align-items: baseline; }
-.card li.plain { grid-template-columns: minmax(0, 1fr); padding-left: 14px; position: relative; }
-.card li.plain::before { content: ""; position: absolute; left: 0; top: 0.65em; width: 5px; height: 5px; border-radius: 1px; background: var(--muted); }
-.pill { font: 500 11px/1 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 8px; border-radius: 99px; white-space: nowrap; }
-.pill.next { background: var(--accent-bg); color: var(--accent); }
-.pill.open { background: var(--amber-bg); color: var(--amber); }
-.pill.none { background: var(--crit-bg); color: var(--crit); }
+.card p { font-size: 14px; }
 .note { font-size: 13px; color: var(--muted); max-width: 75ch; }
 #state { color: var(--muted); }
 footer { font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
@@ -139,10 +132,7 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
   </div>
 
   <section class="head" id="row4h" hidden><h2>What remains</h2></section>
-  <div class="board" id="row4" hidden>
-    <article class="card"><h3>Open checklist items</h3><p class="note">From the README milestone checklist.</p><ul id="open-items"></ul></article>
-    <article class="card"><h3>Remaining work</h3><p class="note">From the <code>progress.md</code> remaining-work list.</p><ul id="remaining"></ul></article>
-  </div>
+  <div class="board" id="row4" hidden></div>
 
   <footer id="foot" hidden></footer>
 </div>
@@ -154,6 +144,7 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
   var $ = function (id) { return document.getElementById(id); };
   var tone = function (p) { return p >= 90 ? '' : p >= 10 ? 'mid' : 'low'; };
   var pct = function (a, b) { return b ? 100 * a / b : null; };
+  var cap = function (s) { return s.replace(/^[a-z]/, function (ch) { return ch.toUpperCase(); }); };
   var round = function (p) { return p >= 10 ? p.toFixed(1).replace(/\.0$/, '') : p.toFixed(2); };
 
   fetch('status.json', { cache: 'no-cache' })
@@ -228,15 +219,14 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
     $('verify-note').textContent = 'Latest counts recorded in progress.md.';
 
     $('ms-title').textContent = s.next_milestone.title.charAt(0).toUpperCase() + s.next_milestone.title.slice(1);
-    $('ms-status').innerHTML = (s.next_milestone.status_html || '').replace(/^[a-z]/, function (ch) { return ch.toUpperCase(); });
-    $('ms-note').textContent = s.checklist.done + ' README checklist milestones complete.';
+    $('ms-status').innerHTML = cap(s.next_milestone.status_html || '');
+    $('ms-note').textContent = p.port_milestones + ' x64 port milestones complete.';
 
-    $('open-items').innerHTML = s.checklist.open.map(function (o) {
-      return '<li><span class="pill ' + (o.partial ? 'open">Partial' : 'none">Open') + '</span><span>' + o.html + '</span></li>';
+    $('row4').innerHTML = s.open_work.map(function (o) {
+      return '<article class="card"><h3>' + esc(o.label) + '</h3><p>' + cap(o.html) + '</p></article>';
     }).join('');
-    $('remaining').innerHTML = p.remaining.map(function (r) { return '<li class="plain"><span>' + r + '</span></li>'; }).join('');
 
-    $('foot').innerHTML = '<span>Rebuilt on every push to main from <code>README.md</code>, <code>progress.md</code>, <code>contracts.json</code> and its Git history, and <code>docs/x64_next_milestone_candidates.md</code>.</span>' +
+    $('foot').innerHTML = '<span>Rebuilt on every push to main from the README status table and open-work list, <code>progress.md</code>, <code>contracts.json</code> and its Git history, and <code>docs/x64_next_milestone_candidates.md</code>.</span>' +
       '<span>Latest commit: ' + esc(s.head.subject) + '</span>' +
       (s.repo ? '<span><a href="' + esc(s.repo) + '">Repository</a></span>' : '');
 

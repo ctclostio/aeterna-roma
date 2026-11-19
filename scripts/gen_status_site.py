@@ -3,8 +3,8 @@
 
 Inputs (all tracked in Git, so the page needs no private exports):
 
-- README.md: the progress-tracker table and the milestone checklist;
-- progress.md: the latest verification counts and the remaining-work list;
+- README.md: the status table and the open-work list;
+- progress.md: the x64 port milestones and the latest verification counts;
 - port/recovered_types/contracts.json: current pinned counts, plus its Git
   history for the per-layer growth curve;
 - docs/x64_next_milestone_candidates.md: the next milestone and its status.
@@ -45,8 +45,7 @@ def collapse(text: str) -> str:
 
 
 def first_sentence(text: str) -> str:
-    text = re.split(r"\s+→\s+(?=`)", collapse(text))[0]
-    return re.split(r"(?<=[.])\s+(?=[A-Z])", text)[0]
+    return re.split(r"(?<=[.])\s+(?=[A-Z])", collapse(text))[0]
 
 
 def inline_md(text: str) -> str:
@@ -64,10 +63,15 @@ def last_match(pattern: str, text: str) -> re.Match[str] | None:
     return match
 
 
+def section(text: str, heading: str) -> str:
+    """Body of the `## heading` section, up to the next level-2 heading."""
+    return re.split(r"\n## ", text.split(f"\n## {heading}\n", 1)[1], maxsplit=1)[0]
+
+
 def parse_tracker(readme: str) -> list[dict]:
-    section = readme.split("## Progress tracker", 1)[1]
+    body = section(readme, "Status")
     lines = []
-    for line in section.splitlines():
+    for line in body.splitlines():
         if line.startswith("|"):
             lines.append(line)
         elif lines:
@@ -90,14 +94,11 @@ def parse_tracker(readme: str) -> list[dict]:
     return rows
 
 
-def parse_checklist(readme: str) -> dict:
-    items = re.finditer(
-        r"^\s*- \[( |~)\] (.+?)(?=\n\s*- \[|\n\s*\n|\n#|\Z)", readme, re.M | re.S)
-    return {
-        "done": len(re.findall(r"^\s*- \[x\]", readme, re.M)),
-        "open": [{"partial": m.group(1) == "~", "html": inline_md(first_sentence(m.group(2)))}
-                 for m in items],
-    }
+def parse_open_work(readme: str) -> list[dict]:
+    """`- **Label:** body` bullets of the README open-work section."""
+    return [{"label": m.group(1), "html": inline_md(collapse(m.group(2)))}
+            for m in re.finditer(r"^- \*\*(.+?):\*\* (.+?)(?=\n- |\Z)",
+                                 section(readme, "Open work").strip(), re.M | re.S)]
 
 
 def parse_progress(progress: str) -> dict:
@@ -107,16 +108,14 @@ def parse_progress(progress: str) -> dict:
         r"\*\*([\d,]+)\*\*\s+(?:clean-public|public)\s+Python tests\s+\([*`]+([\d,]+)[*`]+\s+skipped",
         progress)
     rea = last_match(r"\*\*([\d,]+)\*\*\s+cumulative", progress)
-    heading = last_match(r"(?m)^### (?:Completed: |Current target: )?(Layer \d+.*)$", progress)
-    remaining = progress.split("### Remaining work", 1)[1].split("\n### ", 1)[0]
+    heading = last_match(r"(?m)^### (Layer \d+.*)$", progress)
     return {
         "latest_heading": heading.group(1).replace("`", "") if heading else None,
+        "port_milestones": len(re.findall(r"(?m)^- \[x\]", section(progress, "x64 port milestones"))),
         "ctest": {"passed": num(ctest.group(1)), "total": num(ctest.group(2))} if ctest else None,
         "contract_tests": num(contract.group(1)) if contract else None,
         "python_tests": {"run": num(python.group(1)), "skipped": num(python.group(2))} if python else None,
         "rea_records": num(rea.group(1)) if rea else None,
-        "remaining": [inline_md(first_sentence(m.group(1)))
-                      for m in re.finditer(r"^\d+\. (.+?)(?=\n\d+\. |\n\s*\n|\Z)", remaining, re.M | re.S)],
     }
 
 
@@ -159,7 +158,7 @@ def build_status() -> dict:
         "contracts": contract_counts(contracts),
         "vtables_inventoried": num(vtables.group(1)) if vtables else None,
         "history": contract_history(),
-        "checklist": parse_checklist(readme),
+        "open_work": parse_open_work(readme),
         "progress": parse_progress(progress),
         "next_milestone": parse_next_milestone((ROOT / NEXT_MILESTONE).read_text(encoding="utf-8")),
     }
