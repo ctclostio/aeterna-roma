@@ -408,7 +408,7 @@ static uint8_t r2_fls_common_prepare(
 
     if ((stream->flags_0c & ROME2_VFS_L53_IOSTD_TTY_BYPASS) == 0u) {
         if (is_std_err_or_out_tty == 0u && stream->base_04 == 0u) {
-            stream->bufsiz_14 = 4096;
+            stream->bufsiz_18 = 4096;
         }
     }
     return 1u;

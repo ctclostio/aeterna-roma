@@ -206,7 +206,7 @@ int main(void) {
     mock_stream_ctx sc = { { 0 }, 0u, 1u, 1u };
     err = 0;
     TEST_ASSERT(rome2_vfs_crt_flsbuf('R', &st_out, 0u, mock_seek0, mock_write_byte, &sc, &err) == 'R');
-    TEST_ASSERT((st_out.flags_0c & 0x03u) == 0x02u && st_out.bufsiz_14 == 4096 && sc.len == 1u && sc.bytes[0] == 'R');
+    TEST_ASSERT((st_out.flags_0c & 0x03u) == 0x02u && st_out.bufsiz_18 == 4096 && sc.len == 1u && sc.bytes[0] == 'R');
     TEST_ASSERT(rome2_vfs_crt_flswbuf(0x03b1u, &st_out, 0u, mock_seek0, mock_write_word, &sc, &err) == 0x03b1u);
     TEST_ASSERT(sc.len == 3u && sc.bytes[1] == 0xb1u && sc.bytes[2] == 0x03u);
 

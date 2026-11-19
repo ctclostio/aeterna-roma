@@ -2777,15 +2777,15 @@ typedef struct rome2_vfs_crt_unique_heap_ptr4_32 {
 _Static_assert(sizeof(rome2_vfs_crt_unique_heap_ptr4_32) == 0x04, "crt unique heap ptr4 32 size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_unique_heap_ptr4_32, ptr_00, 0x00);
 
-/* 56B (0x38) UCRT __crt_stdio_stream_data layout observed across 0x1169e514, 0x116a66a3, 0x1168bcc3, 0x116a5864, 0x116a586f. */
+/* 56B (0x38) UCRT __crt_stdio_stream_data layout observed across 0x1169e514, 0x116a66a3, 0x1168bcc3, 0x116a5864, 0x116a586f, and 0x116b1c0d. */
 typedef struct rome2_vfs_crt_stdio_stream56_32 {
     uint32_t ptr_00;                             /* 00 */
     uint32_t base_04;                            /* 04 */
     int32_t cnt_08;                              /* 08 */
-    uint32_t flags_0c;                           /* 0c (_IOREAD=1, _IOWRITE=2, _IORW=4, _IOYOURBUF=8, _IOERR=0x10, _IOCOMMIT=0x400, _IOSTRG=0x1000) */
+    uint32_t flags_0c;                           /* 0c (_IOREAD=1, _IOWRITE=2, _IORW=4, _IOYOURBUF=8, _IOERR=0x10, _IOBUFFER_CRT=0x40, _IOBUFFER_NONE=0x400, _IOSTRG=0x1000) */
     int32_t file_10;                             /* 10 */
-    int32_t bufsiz_14;                           /* 14 */
-    uint32_t charbuf_18;                         /* 18 */
+    uint32_t charbuf_14;                         /* 14 (inline 2B fallback buffer) */
+    int32_t bufsiz_18;                           /* 18 (4096 or 2) */
     uint32_t tmpfname_1c;                        /* 1c */
     uint8_t lock_cs_20[24];                      /* 20..37 */
 } rome2_vfs_crt_stdio_stream56_32;
@@ -2795,7 +2795,8 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stdio_stream56_32, base_04, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stdio_stream56_32, cnt_08, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stdio_stream56_32, flags_0c, 0x0c);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stdio_stream56_32, file_10, 0x10);
-ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stdio_stream56_32, bufsiz_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stdio_stream56_32, charbuf_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stdio_stream56_32, bufsiz_18, 0x18);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_stdio_stream56_32, lock_cs_20, 0x20);
 
 /* 8B (0x08) Win32 API module descriptor record (0x11914d60, sentinel 0x11914d68) passed by 0x116a83bd. */
@@ -2819,6 +2820,37 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_crt_seh4_scope16_32, gscookie_offset_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_seh4_scope16_32, gscookie_xor_offset_04, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_seh4_scope16_32, ehcookie_offset_08, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_seh4_scope16_32, ehcookie_xor_offset_0c, 0x0c);
+
+/* 32B (0x20) __crt_strtox::input_adapter_character_source constructed by 0x1168f338 / 0x11692d4c for 0x11691750. */
+typedef struct rome2_vfs_crt_input_char_source32_32 {
+    uint32_t adapter_ptr_00;                     /* 00 */
+    uint32_t width_or_limit_lo_04;               /* 04 */
+    uint32_t width_or_limit_hi_08;               /* 08 */
+    uint32_t read_count_0c;                      /* 0c */
+    uint32_t state_words_10[4];                  /* 10..1f (including trailing out_succeeded ptr at +0x1c) */
+} rome2_vfs_crt_input_char_source32_32;
+_Static_assert(sizeof(rome2_vfs_crt_input_char_source32_32) == 0x20, "crt input char source32 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_input_char_source32_32, adapter_ptr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_input_char_source32_32, read_count_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_input_char_source32_32, state_words_10, 0x10);
+
+/* 8B (0x08) downlevel LCID->name table entry (0x1191c408) indexed by 0x116b81e9. */
+typedef struct rome2_vfs_crt_lcid_name_entry8_32 {
+    uint32_t lcid_00;                            /* 00 */
+    uint32_t locale_name_ptr_04;                 /* 04 */
+} rome2_vfs_crt_lcid_name_entry8_32;
+_Static_assert(sizeof(rome2_vfs_crt_lcid_name_entry8_32) == 0x08, "crt lcid name entry8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_lcid_name_entry8_32, lcid_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_lcid_name_entry8_32, locale_name_ptr_04, 0x04);
+
+/* 8B (0x08) sorted locale-name->index entry (0x1191cb28) binary-searched by 0x116b80ef. */
+typedef struct rome2_vfs_crt_locale_index_entry8_32 {
+    uint32_t locale_name_ptr_00;                 /* 00 */
+    int32_t lcid_table_idx_04;                   /* 04 */
+} rome2_vfs_crt_locale_index_entry8_32;
+_Static_assert(sizeof(rome2_vfs_crt_locale_index_entry8_32) == 0x08, "crt locale index entry8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_locale_index_entry8_32, locale_name_ptr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_locale_index_entry8_32, lcid_table_idx_04, 0x04);
 
 #undef ROME2_LAYOUT_ASSERT
 #endif
