@@ -3139,5 +3139,50 @@ _Static_assert(sizeof(rome2_startup_mod_options2_32) == 0x02, "startup mod optio
 ROME2_LAYOUT_ASSERT(rome2_startup_mod_options2_32, allow_user_script_packs_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_startup_mod_options2_32, allow_unknown_movie_packs_01, 0x01);
 
+/* 12B (0x0c) startup observer node initialized with vtable 0x11741e08 by 0x100f0eb0 inside 0x100df270. */
+typedef struct rome2_startup_observer_node12_32 {
+    uint32_t vtable_00;                          /* 00 (0x11741e08) */
+    uint32_t state_04;                           /* 04 (0) */
+    uint32_t owner_08;                           /* 08 */
+} rome2_startup_observer_node12_32;
+_Static_assert(sizeof(rome2_startup_observer_node12_32) == 0x0c, "startup observer node12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_observer_node12_32, vtable_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_observer_node12_32, state_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_observer_node12_32, owner_08, 0x08);
+
+/* 8B (0x08) pair zeroed by 0x1014d170 (FxMountUnmountResult / EMPIRE_APP tail field). */
+typedef struct rome2_startup_pair8_32 {
+    uint32_t lo_00;                              /* 00 */
+    uint32_t hi_04;                              /* 04 */
+} rome2_startup_pair8_32;
+_Static_assert(sizeof(rome2_startup_pair8_32) == 0x08, "startup pair8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_pair8_32, lo_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_pair8_32, hi_04, 0x04);
+
+/* 16B (0x10) UCRT string_output_adapter<wchar_t> target buffer state driven by 0x11688718/0x1168b96f/0x1168bd56. */
+typedef struct rome2_startup_wprintf_string_adapter16_32 {
+    uint32_t buffer_cursor_00;                   /* 00 */
+    uint32_t max_chars_04;                       /* 04 */
+    uint32_t written_chars_08;                   /* 08 */
+    uint8_t continue_on_truncation_0c;           /* 0c */
+    uint8_t pad_0d[3];                           /* 0d..0f */
+} rome2_startup_wprintf_string_adapter16_32;
+_Static_assert(sizeof(rome2_startup_wprintf_string_adapter16_32) == 0x10, "startup wprintf string adapter16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_wprintf_string_adapter16_32, buffer_cursor_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_wprintf_string_adapter16_32, max_chars_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_wprintf_string_adapter16_32, written_chars_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_wprintf_string_adapter16_32, continue_on_truncation_0c, 0x0c);
+
+/* 12B (0x0c) section-timing vector header at 0x120321e8..0x120321f0 passed to 0x112b2d40. */
+typedef struct rome2_startup_timing_vec12_32 {
+    uint32_t cap_00;                             /* 00 (0x120321e8) */
+    uint32_t count_04;                           /* 04 (0x120321ec) */
+    uint32_t slots_ptr_08;                       /* 08 (0x120321f0 -> timing_slot16[]) */
+} rome2_startup_timing_vec12_32;
+_Static_assert(sizeof(rome2_startup_timing_vec12_32) == 0x0c, "startup timing vec12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_timing_vec12_32, cap_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_timing_vec12_32, count_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_timing_vec12_32, slots_ptr_08, 0x08);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

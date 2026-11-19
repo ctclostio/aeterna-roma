@@ -1644,3 +1644,30 @@ callees.
   shared Ghidra project or canonical exports (`clean_eng=0`, `clean_crt=0`,
   `noret_or_thunk=0` across **1,222** functions; further startup/engine roots and
   live runtime execution remain open).
+
+### Layer 60: Partition 6 `entry_point` & `0x100ed3c0` startup spine foundation (1251 functions)
+- Extended Partition 6 (`extending_layer59`) closing **29** single-part `RET`-bearing
+  functions across `EMPIRE_APP::EMPIRE_APP` (`0x100df270`, observer/pair/terminate/temp-cleanup
+  helpers `0x100f0eb0`, `0x1014d170`, `0x10102850`, `0x101046d0`, `0x100fe770`, `0x10122e40`),
+  the 11-function UCRT `wchar_t` `string_output_adapter` `vswprintf` cluster
+  (`0x11688718..0x1168c120` + wrapper `0x100edfe0`), `entry_point` fatal diagnostic/pointer hex
+  formatter/abort prompt (`0x100de6d0`, `0x100f4a10`, `0x101032a0`), cookie-encoded
+  `_set_invalid_parameter_handler` (`0x11687a4a`), and section timings completion + WinMM timer
+  (`0x112dcaf0`, `0x112b2d40`, `0x106b91a0`, `0x112e2bb0`, `0x10115800`, `0x10115810`),
+  growing [contracts.json](file:///x:/decompilation/port/recovered_types/contracts.json)
+  to **1,251 functions, 703 globals, 73 vtables, and 1,178 instruction witnesses**
+  over **152** Partition 6 validated REA records (`53` new + `99` reused Layer 59; **1,825**
+  cumulative across Partitions 1–6; `45,485,318B` snapshot; `0` Ghidra mismatches).
+- Locked 4 fixed-width [guest32_layouts.h](file:///x:/decompilation/port/recovered_types/guest32_layouts.h)
+  layouts (`rome2_startup_observer_node12_32`, `rome2_startup_pair8_32`,
+  `rome2_startup_wprintf_string_adapter16_32`, `rome2_startup_timing_vec12_32`) and added
+  bounded C17 reconstruction and **79 checks** in
+  [startup_app_ctor_timing_ops.h](file:///x:/decompilation/port/recovered_types/startup_app_ctor_timing_ops.h),
+  [startup_app_ctor_timing_ops.c](file:///x:/decompilation/port/recovered_types/startup_app_ctor_timing_ops.c), and
+  [test_startup_app_ctor_timing_ops.c](file:///x:/decompilation/port/recovered_types/test_startup_app_ctor_timing_ops.c).
+- Verified **117/117** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
+  and ASan, **99** contract tests on Python 3.14 and 3.15, and **927** clean-public
+  Python tests (**327** skipped) on Python 3.14 and 3.15 without touching the
+  shared Ghidra project or canonical exports (`clean_eng=0`, `clean_crt=0`,
+  `noret_or_thunk=0` across **1,251** functions; remaining startup/handler roots and
+  live runtime execution remain open).

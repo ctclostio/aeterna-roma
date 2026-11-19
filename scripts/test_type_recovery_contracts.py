@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 1222)
-        self.assertEqual(result["globals"], 677)
-        self.assertEqual(result["vtables"], 69)
-        self.assertEqual(result["instruction_witnesses"], 1149)
+        self.assertEqual(result["functions"], 1251)
+        self.assertEqual(result["globals"], 703)
+        self.assertEqual(result["vtables"], 73)
+        self.assertEqual(result["instruction_witnesses"], 1178)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -3149,6 +3149,86 @@ class TypeContractProvenanceTests(unittest.TestCase):
             ("119f3f04", 4), ("119f3f5c", 4), ("11af4290", 512), ("12031af0", 4),
             ("12031af4", 4), ("12031af8", 4), ("12031f00", 4), ("120321e8", 4),
             ("120321ec", 4), ("120321f0", 4), ("1203514c", 4),
+        ]:
+            self.assertEqual(by_g[addr]["width"], width)
+
+    def test_layer60_startup_app_ctor_wprintf_and_timing_contracts(self) -> None:
+        ev = self.registry["rea_layer60_evidence"]
+        self.assertEqual(ev["snapshot_mode"], "extending_layer59")
+        self.assertEqual(ev["closed_evidence_records"], 152)
+        self.assertEqual(ev["new_evidence_records"], 53)
+        self.assertEqual(ev["retained_operation_envelopes"], 152)
+        self.assertEqual(ev["reused_layer59_evidence_records"], 99)
+        self.assertEqual(ev["extra_evidence_views_count"], 0)
+        self.assertEqual(ev["cumulative_validated_bundle_records"], 152)
+        self.assertEqual(ev["partition1_validated_bundle_records"], 367)
+        self.assertEqual(ev["partition2_validated_bundle_records"], 743)
+        self.assertEqual(ev["partition3_validated_bundle_records"], 264)
+        self.assertEqual(ev["partition4_validated_bundle_records"], 181)
+        self.assertEqual(ev["partition5_validated_bundle_records"], 118)
+        self.assertEqual(ev["prior_partitions_validated_records"], 1673)
+        self.assertEqual(ev["cumulative_all_partitions_records"], 1825)
+        self.assertEqual(ev["non_proc_slots"], [])
+        self.assertEqual(ev["resource_constrained_slots"], [])
+        self.assertEqual(len(ev["new_records"]), 53)
+        self.assertEqual(sum(1 for r in ev["new_records"] if r["operation"] == "analyze_function"), 29)
+        self.assertEqual(sum(1 for r in ev["new_records"] if r["operation"] == "read_bytes"), 24)
+
+        by_fn = {f["address"]: f for f in self.registry["functions"]}
+        by_g = {g["address"]: g for g in self.registry["globals"]}
+        by_vt = {v["address"]: v for v in self.registry["vtables"]}
+        for addr, size, cc, pop in [
+            ("100de6d0", 369, "cdecl", 0),
+            ("100df270", 640, "thiscall", 8),
+            ("100edfe0", 46, "cdecl", 0),
+            ("100f0eb0", 25, "thiscall", 4),
+            ("100f4a10", 679, "cdecl", 0),
+            ("100fe770", 1161, "cdecl", 0),
+            ("10102850", 16, "cdecl", 0),
+            ("101032a0", 426, "cdecl", 0),
+            ("101046d0", 370, "cdecl", 0),
+            ("10115800", 11, "cdecl", 0),
+            ("10115810", 11, "cdecl", 0),
+            ("10122e40", 15, "cdecl", 0),
+            ("1014d170", 16, "thiscall", 0),
+            ("106b91a0", 138, "cdecl", 0),
+            ("112b2d40", 447, "cdecl", 0),
+            ("112dcaf0", 996, "cdecl", 0),
+            ("112e2bb0", 63, "cdecl", 0),
+            ("11687a4a", 48, "cdecl", 0),
+            ("11688718", 391, "cdecl", 0),
+            ("11688e2b", 49, "cdecl", 0),
+            ("11689bc9", 249, "thiscall", 0),
+            ("11689dbc", 31, "thiscall", 0),
+            ("11689e69", 27, "thiscall", 0),
+            ("1168a3b6", 376, "thiscall", 0),
+            ("1168abf7", 613, "thiscall", 0),
+            ("1168b96f", 69, "thiscall", 8),
+            ("1168bc04", 147, "thiscall", 4),
+            ("1168bd56", 113, "thiscall", 16),
+            ("1168c120", 36, "cdecl", 0),
+        ]:
+            self.assertEqual(
+                (by_fn[addr]["bytes"], by_fn[addr]["calling_convention"], by_fn[addr]["callee_pop_bytes"]),
+                (size, cc, pop),
+            )
+            self.assertNotIn("tail_exit", by_fn[addr])
+            self.assertTrue(by_fn[addr]["return_instruction_addresses"])
+        for vt_addr, slot0 in [
+            ("1173dc18", "100d7cd0"),
+            ("1173f208", "100e1a20"),
+            ("1173f2f4", "100e1380"),
+            ("11741e08", "101015a0"),
+        ]:
+            self.assertEqual(by_vt[vt_addr]["first_slot_code_identity"], slot0)
+        for addr, width in [
+            ("1172f17c", 4), ("1172f66c", 4), ("1172f69c", 4), ("1172f6a8", 4),
+            ("1172f714", 4), ("1172f798", 4), ("1172f79c", 4), ("1173f440", 24),
+            ("1173f460", 62), ("1173f4a0", 130), ("11741e28", 30), ("11741e48", 88),
+            ("117420a0", 4), ("11745058", 17), ("1174506c", 17), ("1174510c", 44),
+            ("11898960", 12), ("11898970", 94), ("118989d0", 107), ("11934528", 4),
+            ("119f3140", 4), ("119f3854", 4), ("119f3f50", 4), ("11af4058", 4),
+            ("12031ae8", 4), ("12031aec", 4),
         ]:
             self.assertEqual(by_g[addr]["width"], width)
 
