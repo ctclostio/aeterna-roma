@@ -1583,3 +1583,33 @@ callees.
   (`10120b20`, `11686192`, `116879f9`, `1169b93d`), 3 embedded sub-entries
   (`11696481`, `1169933e`, `116ae512`), further engine/export roots, and live
   runtime execution remain open.
+
+### Layer 58: Final CRT exception, signal, abort & exit closure (1197 functions; 100% transitive closure)
+- Extended [type_recovery_contracts.py](file:///x:/decompilation/scripts/type_recovery_contracts.py) and
+  [test_type_recovery_contracts.py](file:///x:/decompilation/scripts/test_type_recovery_contracts.py)
+  with fail-closed `noreturn_call` (`0xE8` terminal call) and
+  `noreturn_iat_call` (`FF 15` terminal IAT call) verification and mutation tests.
+- Extended Partition 5 (`extending_layer57`) across all **30** final CRT
+  exception, signal, abort, and exit functions from the 4 `NORET` frontier
+  roots (`0x10120b20`, `0x11686192`, `0x116879f9`, `0x1169b93d`, plus
+  `0x1168601c`, `0x1168606c`, `0x116bf74d`, `0x1168d0ce`–`0x1168d362`,
+  `0x116a176f`–`0x116a23ed`, `0x116a8555`, `0x116a8c48`, and
+  `0x116b03fb`–`0x116b06aa` including two-range `raise` `0x116b0517`),
+  growing [contracts.json](file:///x:/decompilation/port/recovered_types/contracts.json)
+  to **1,197 functions, 618 globals, 40 vtables, and 1,124 instruction witnesses**
+  over **118** Partition 5 validated REA records (**1,673** cumulative across
+  Partitions 1–5; `28,032,212B` snapshot; `0` Ghidra mismatches).
+- Reused `rome2_vfs_crt_onexit_table12_32`, locked 3 fixed-width
+  [guest32_layouts.h](file:///x:/decompilation/port/recovered_types/guest32_layouts.h)
+  layouts (`rome2_vfs_crt_std_exception12_32`, `rome2_vfs_crt_throw_info16_32`,
+  `rome2_vfs_crt_xcpt_action12_32`), and added bounded C17 reconstruction and
+  **109 checks** in [vfs_fs_engine_crt_exit_ops.h](file:///x:/decompilation/port/recovered_types/vfs_fs_engine_crt_exit_ops.h),
+  [vfs_fs_engine_crt_exit_ops.c](file:///x:/decompilation/port/recovered_types/vfs_fs_engine_crt_exit_ops.c), and
+  [test_vfs_fs_engine_crt_exit_ops.c](file:///x:/decompilation/port/recovered_types/test_vfs_fs_engine_crt_exit_ops.c).
+- Verified **115/115** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
+  and ASan, **97** contract tests on Python 3.14 and 3.15, and **925** clean-public
+  Python tests (**325** skipped) on Python 3.14 and 3.15 without touching the
+  shared Ghidra project or canonical exports, achieving **100% transitive VFS+CRT
+  closure** (`clean_eng=0`, `clean_crt=0`, `noret_or_thunk=0`; only 3
+  already-embedded sub-entry labels `11696481`, `1169933e`, `116ae512`,
+  further engine/export roots, and live runtime execution remain open).

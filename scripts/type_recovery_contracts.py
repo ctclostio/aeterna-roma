@@ -138,36 +138,39 @@ def validate_contracts(image: bytes, registry: dict) -> dict:
         if tail_exit is not None:
             if returns is not None:
                 raise ValueError(f"tail_exit and return_instruction_addresses are mutually exclusive: {function['address']}")
-            if (not isinstance(tail_exit, dict) or tail_exit.get("kind") not in ("direct_jmp", "iat_jmp") or
-                    not isinstance(tail_exit.get("address"), str)):
+            kind = tail_exit.get("kind") if isinstance(tail_exit, dict) else None
+            if kind not in ("direct_jmp", "iat_jmp", "noreturn_call", "noreturn_iat_call") or not isinstance(tail_exit.get("address"), str):
                 raise ValueError(f"invalid tail_exit contract: {function['address']}")
             pc = int(tail_exit["address"], 16)
             last_start, last_data = parts[-1]
-            if tail_exit["kind"] == "direct_jmp":
+            if kind in ("direct_jmp", "noreturn_call"):
+                expected_op = 0xE9 if kind == "direct_jmp" else 0xE8
                 if pc < last_start or pc + 5 != last_start + len(last_data):
-                    raise ValueError(f"tail_exit direct_jmp address disagrees: {function['address']}")
+                    raise ValueError(f"tail_exit {kind} address disagrees: {function['address']}")
                 insn = last_data[pc - last_start:pc - last_start + 5]
-                if insn[0] != 0xE9:
-                    raise ValueError(f"tail_exit direct_jmp opcode disagrees: {function['address']}")
+                if insn[0] != expected_op:
+                    raise ValueError(f"tail_exit {kind} opcode disagrees: {function['address']}")
                 actual_target = (pc + 5 + struct.unpack_from("<i", insn, 1)[0]) & 0xFFFFFFFF
                 target = tail_exit.get("target")
                 if target != f"{actual_target:08x}" or target not in functions_by_addr:
-                    raise ValueError(f"tail_exit direct_jmp target disagrees: {function['address']}")
-                target_fn = functions_by_addr[target]
-                target_pop = target_fn.get("callee_pop_bytes", target_fn["stack_argument_bytes"])
-                if target_pop != pop:
-                    raise ValueError(f"tail_exit stack pop disagrees: {function['address']}")
+                    raise ValueError(f"tail_exit {kind} target disagrees: {function['address']}")
+                if kind == "direct_jmp":
+                    target_fn = functions_by_addr[target]
+                    target_pop = target_fn.get("callee_pop_bytes", target_fn["stack_argument_bytes"])
+                    if target_pop != pop:
+                        raise ValueError(f"tail_exit stack pop disagrees: {function['address']}")
             else:
+                expected_op = b"\xff\x25" if kind == "iat_jmp" else b"\xff\x15"
                 if pc < last_start or pc + 6 != last_start + len(last_data):
-                    raise ValueError(f"tail_exit iat_jmp address disagrees: {function['address']}")
+                    raise ValueError(f"tail_exit {kind} address disagrees: {function['address']}")
                 insn = last_data[pc - last_start:pc - last_start + 6]
-                if insn[:2] != b"\xff\x25":
-                    raise ValueError(f"tail_exit iat_jmp opcode disagrees: {function['address']}")
+                if insn[:2] != expected_op:
+                    raise ValueError(f"tail_exit {kind} opcode disagrees: {function['address']}")
                 actual_slot = struct.unpack_from("<I", insn, 2)[0]
                 iat_slot = tail_exit.get("iat_slot")
                 if (iat_slot != f"{actual_slot:08x}" or iat_slot not in globals_by_addr or
                         globals_by_addr[iat_slot]["width"] != 4):
-                    raise ValueError(f"tail_exit iat_jmp slot disagrees: {function['address']}")
+                    raise ValueError(f"tail_exit {kind} slot disagrees: {function['address']}")
         elif returns is None:
             if not parts[-1][1].endswith(tail):
                 raise ValueError(f"stack return disagrees: {function['address']}")

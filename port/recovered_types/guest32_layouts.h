@@ -3007,5 +3007,40 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_folder_node128_32, aux_buf_70, 0x70);
 ROME2_LAYOUT_ASSERT(rome2_vfs_folder_node128_32, tuples_base_74, 0x74);
 ROME2_LAYOUT_ASSERT(rome2_vfs_folder_node128_32, tuples_cap_7c, 0x7c);
 
+/* 12B (0x0c) MSVC std::exception / std::length_error layout initialized by 0x1168601c/0x1168606c and 0x116bf74d. */
+typedef struct rome2_vfs_crt_std_exception12_32 {
+    uint32_t vtable_00;                          /* 00 (0x1190bbd0 base, 0x1190bbf4 length_error) */
+    uint32_t what_ptr_04;                        /* 04 */
+    uint8_t do_free_08;                          /* 08 */
+    uint8_t pad_09[3];                           /* 09..0b */
+} rome2_vfs_crt_std_exception12_32;
+_Static_assert(sizeof(rome2_vfs_crt_std_exception12_32) == 0x0c, "crt std exception12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_std_exception12_32, vtable_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_std_exception12_32, what_ptr_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_std_exception12_32, do_free_08, 0x08);
+
+/* 16B (0x10) MSVC _ThrowInfo descriptor (0x11925254) passed to 0x116bebf1 by 0x11686192. */
+typedef struct rome2_vfs_crt_throw_info16_32 {
+    uint32_t attributes_00;                      /* 00 */
+    uint32_t pmfn_unwind_04;                     /* 04 */
+    uint32_t p_forward_compat_08;                /* 08 */
+    uint32_t p_catchable_type_array_0c;          /* 0c */
+} rome2_vfs_crt_throw_info16_32;
+_Static_assert(sizeof(rome2_vfs_crt_throw_info16_32) == 0x10, "crt throw info16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_throw_info16_32, pmfn_unwind_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_throw_info16_32, p_forward_compat_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_throw_info16_32, p_catchable_type_array_0c, 0x0c);
+
+/* 12B (0x0c) CRT _XCPT_ACTION signal table slot scanned by siglookup (0x116b04a1) and cleared by raise (0x116b0517). */
+typedef struct rome2_vfs_crt_xcpt_action12_32 {
+    uint32_t xcpt_num_00;                        /* 00 */
+    int32_t sig_num_04;                          /* 04 */
+    uint32_t action_ptr_08;                      /* 08 */
+} rome2_vfs_crt_xcpt_action12_32;
+_Static_assert(sizeof(rome2_vfs_crt_xcpt_action12_32) == 0x0c, "crt xcpt action12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_xcpt_action12_32, xcpt_num_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_xcpt_action12_32, sig_num_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_xcpt_action12_32, action_ptr_08, 0x08);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif
