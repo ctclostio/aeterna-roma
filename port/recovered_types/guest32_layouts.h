@@ -3042,5 +3042,102 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_crt_xcpt_action12_32, xcpt_num_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_xcpt_action12_32, sig_num_04, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_xcpt_action12_32, action_ptr_08, 0x08);
 
+/* 228B (0xe4) startup performance/audio/LOD config initialized by 0x100d24c0 inside 0x100ea060. */
+typedef struct rome2_startup_perf_config228_32 {
+    uint8_t flag_00;                             /* 00 */
+    uint8_t pad_01[3];                           /* 01..03 */
+    uint32_t sentinel_04;                        /* 04 (0xffffffff) */
+    uint32_t reserved_08_10[3];                  /* 08..13 */
+    uint32_t val_14;                             /* 14 (0x3f800000 = 1.0f) */
+    uint32_t val_18;                             /* 18 (0x38d1b717 = 1e-4f) */
+    uint32_t val_1c;                             /* 1c (0x3e4ccccd = 0.2f) */
+    uint32_t val_20;                             /* 20 (0x3e4ccccd = 0.2f) */
+    uint32_t val_24;                             /* 24 (0x3e19999a = 0.15f) */
+    uint32_t val_28;                             /* 28 (0x3f000000 = 0.5f) */
+    uint32_t val_2c;                             /* 2c (0x3f800000 = 1.0f) */
+    uint32_t val_30;                             /* 30 (0x3dcccccd = 0.1f) */
+    uint32_t val_34;                             /* 34 (0) */
+    uint32_t val_38;                             /* 38 (0x3dcccccd = 0.1f) */
+    uint32_t val_3c;                             /* 3c (0xffffffff) */
+    uint32_t vals_40_58[7];                      /* 40..5b (0) */
+    uint32_t val_5c;                             /* 5c (0x3f800000 = 1.0f) */
+    uint32_t val_60;                             /* 60 (0x3e4ccccd = 0.2f) */
+    uint32_t val_64;                             /* 64 (0) */
+    uint8_t flag_68;                             /* 68 (0) */
+    uint8_t pad_69[3];                           /* 69..6b */
+    uint32_t vals_6c_74[3];                      /* 6c..77 (0) */
+    uint32_t val_78;                             /* 78 (0x3d4ccccd = 0.05f) */
+    uint32_t val_7c;                             /* 7c (0x41700000 = 15.0f) */
+    uint32_t vals_80_ac[12];                     /* 80..af (0) */
+    uint32_t val_b0;                             /* b0 (0x7f7fffff = FLT_MAX) */
+    uint32_t vals_b4_c4[5];                      /* b4..c7 (0) */
+    uint16_t u16_c8;                             /* c8 (0) */
+    uint8_t flag_ca;                             /* ca (0) */
+    uint8_t pad_cb;                              /* cb */
+    uint32_t vals_cc_e0[6];                      /* cc..e3 (0) */
+} rome2_startup_perf_config228_32;
+_Static_assert(sizeof(rome2_startup_perf_config228_32) == 0xe4, "startup perf config228 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_perf_config228_32, val_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_startup_perf_config228_32, val_5c, 0x5c);
+ROME2_LAYOUT_ASSERT(rome2_startup_perf_config228_32, flag_68, 0x68);
+ROME2_LAYOUT_ASSERT(rome2_startup_perf_config228_32, val_b0, 0xb0);
+ROME2_LAYOUT_ASSERT(rome2_startup_perf_config228_32, flag_ca, 0xca);
+ROME2_LAYOUT_ASSERT(rome2_startup_perf_config228_32, vals_cc_e0, 0xcc);
+
+/* 12B (0x0c) user-folder table row at 0x1193452c indexed by 0x10122e30. */
+typedef struct rome2_startup_user_folder_entry12_32 {
+    uint32_t subpath_u16_ptr_00;                 /* 00 */
+    uint32_t flags_04;                           /* 04 */
+    uint32_t desc_ptr_08;                        /* 08 */
+} rome2_startup_user_folder_entry12_32;
+_Static_assert(sizeof(rome2_startup_user_folder_entry12_32) == 0x0c, "startup user folder entry12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_user_folder_entry12_32, subpath_u16_ptr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_user_folder_entry12_32, flags_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_user_folder_entry12_32, desc_ptr_08, 0x08);
+
+/* 48B (0x30) directory file-size RB-tree node allocated and inserted by 0x100ea5e0. */
+typedef struct rome2_startup_dir_rb_node48_32 {
+    uint32_t left_00;                            /* 00 */
+    uint32_t parent_04;                          /* 04 */
+    uint32_t right_08;                           /* 08 */
+    uint32_t pad_0c;                             /* 0c */
+    uint32_t key_len_10;                         /* 10 */
+    uint32_t key_cap_14;                         /* 14 */
+    uint32_t key_ptr_18;                         /* 18 */
+    uint32_t pad_1c;                             /* 1c */
+    uint32_t size_lo_20;                         /* 20 */
+    uint32_t size_hi_24;                         /* 24 */
+    uint8_t color_28;                            /* 28 (0=RED, 1=BLACK) */
+    uint8_t is_nil_29;                           /* 29 */
+    uint8_t pad_2a[6];                           /* 2a..2f */
+} rome2_startup_dir_rb_node48_32;
+_Static_assert(sizeof(rome2_startup_dir_rb_node48_32) == 0x30, "startup dir rb node48 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_dir_rb_node48_32, left_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_dir_rb_node48_32, key_len_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_startup_dir_rb_node48_32, size_lo_20, 0x20);
+ROME2_LAYOUT_ASSERT(rome2_startup_dir_rb_node48_32, size_hi_24, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_startup_dir_rb_node48_32, color_28, 0x28);
+ROME2_LAYOUT_ASSERT(rome2_startup_dir_rb_node48_32, is_nil_29, 0x29);
+
+/* 16B (0x10) section-timing record copied in xmm0 strides by 0x112dc9f0. */
+typedef struct rome2_startup_timing_slot16_32 {
+    uint32_t label_ptr_00;                       /* 00 */
+    uint32_t start_ms_04;                        /* 04 */
+    uint32_t elapsed_ms_08;                      /* 08 */
+    uint32_t flags_0c;                           /* 0c */
+} rome2_startup_timing_slot16_32;
+_Static_assert(sizeof(rome2_startup_timing_slot16_32) == 0x10, "startup timing slot16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_timing_slot16_32, label_ptr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_timing_slot16_32, flags_0c, 0x0c);
+
+/* 2B (0x02) mod-options pair read/written by export #522 set_or_get_mod_options (0x11304980). */
+typedef struct rome2_startup_mod_options2_32 {
+    uint8_t allow_user_script_packs_00;          /* 00 */
+    uint8_t allow_unknown_movie_packs_01;        /* 01 */
+} rome2_startup_mod_options2_32;
+_Static_assert(sizeof(rome2_startup_mod_options2_32) == 0x02, "startup mod options2 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_mod_options2_32, allow_user_script_packs_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_mod_options2_32, allow_unknown_movie_packs_01, 0x01);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

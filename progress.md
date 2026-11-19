@@ -1613,3 +1613,34 @@ callees.
   closure** (`clean_eng=0`, `clean_crt=0`, `noret_or_thunk=0`; only 3
   already-embedded sub-entry labels `11696481`, `1169933e`, `116ae512`,
   further engine/export roots, and live runtime execution remain open).
+
+### Layer 59: Partition 6 mod-options exports & startup bootstrap foundation (1222 functions)
+- Sealed Partition 5 (**118** records; **1,673** cumulative across Partitions 1–5)
+  and opened fresh Partition 6 (`fresh_partition_p6`) closing all **25** self-contained
+  `RET`-bearing functions across both non-`entry_point` Rome II DLL exports
+  (ordinals 521–522 `0x113048b0` / `0x11304980` + HKCU registry helpers
+  `0x11302cc0` / `0x11303db0`), crash-reporter singleton `0x100e8240`, AppData and
+  user-folder resolvers (`0x101016c0`, `0x10120d90`, `0x10122e30`, `0x100e1050`),
+  recursive directory scanner & 48B RB-tree (`0x100e3360`, `0x100ea5e0`,
+  `0x10102c10`, `0x100f71b0`, `0x100f3000`), `entry_point` continuation keepers
+  (`0x101136d0`, `0x101150f0`), startup handler queue registrations (`0x100ea060`,
+  `0x100ea4d0`) spanning all 29 vtables (`0x1173f20c..0x1173f2ec`), 228B perf config
+  `0x100d24c0`, allocator selector `0x100fcc30`, section timings `0x112dc9f0`,
+  formatters (`0x101c89e0`, `0x100de500`, `0x100f4920`), and CRT `strstr`
+  (`0x116be670`), growing [contracts.json](file:///x:/decompilation/port/recovered_types/contracts.json)
+  to **1,222 functions, 677 globals, 69 vtables, and 1,149 instruction witnesses**
+  over **99** fresh Partition 6 validated REA records (**1,772** cumulative across
+  Partitions 1–6; `21,616,716B` snapshot; `0` Ghidra mismatches).
+- Locked 5 fixed-width [guest32_layouts.h](file:///x:/decompilation/port/recovered_types/guest32_layouts.h)
+  layouts (`rome2_startup_perf_config228_32`, `rome2_startup_user_folder_entry12_32`,
+  `rome2_startup_dir_rb_node48_32`, `rome2_startup_timing_slot16_32`,
+  `rome2_startup_mod_options2_32`) and added bounded C17 reconstruction and
+  **184 checks** in [startup_export_bootstrap_ops.h](file:///x:/decompilation/port/recovered_types/startup_export_bootstrap_ops.h),
+  [startup_export_bootstrap_ops.c](file:///x:/decompilation/port/recovered_types/startup_export_bootstrap_ops.c), and
+  [test_startup_export_bootstrap_ops.c](file:///x:/decompilation/port/recovered_types/test_startup_export_bootstrap_ops.c).
+- Verified **116/116** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
+  and ASan, **98** contract tests on Python 3.14 and 3.15, and **926** clean-public
+  Python tests (**326** skipped) on Python 3.14 and 3.15 without touching the
+  shared Ghidra project or canonical exports (`clean_eng=0`, `clean_crt=0`,
+  `noret_or_thunk=0` across **1,222** functions; further startup/engine roots and
+  live runtime execution remain open).
