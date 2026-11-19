@@ -2893,5 +2893,61 @@ _Static_assert(sizeof(rome2_vfs_crt_seh4_scope_table32_32) == 0x20, "crt seh4 sc
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_seh4_scope_table32_32, header_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_seh4_scope_table32_32, scope_10, 0x10);
 
+/* 544B (0x220) UCRT __crt_multibyte_data (0x119ec210 __initialmbcinfo; updated by 0x116b471f/4851/48b6/4a37/4c4b). */
+typedef struct rome2_vfs_crt_multibyte_data544_32 {
+    int32_t refcount_00;                         /* 00 (atomic reference count) */
+    uint32_t mbcodepage_04;                      /* 04 (active multibyte codepage or 0xfde9) */
+    int32_t ismbcodepage_08;                     /* 08 (1 for DBCS MBCS, 0 for SBCS/UTF-8) */
+    uint16_t mbulinfo_0c[6];                     /* 0c..17 (6 Unicode lead-byte info words) */
+    uint8_t mbctype_18[257];                     /* 18..118 (EOF byte at [0], byte ch at [1 + ch]) */
+    uint8_t mbcasemap_119[256];                  /* 119..218 (upper/lower case map) */
+    uint8_t pad_219[3];                          /* 219..21b */
+    uint32_t mblocalename_ptr_21c;               /* 21c (wchar_t* locale name, or 0) */
+} rome2_vfs_crt_multibyte_data544_32;
+_Static_assert(sizeof(rome2_vfs_crt_multibyte_data544_32) == 0x220, "crt multibyte data544 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_multibyte_data544_32, refcount_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_multibyte_data544_32, mbcodepage_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_multibyte_data544_32, ismbcodepage_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_multibyte_data544_32, mbulinfo_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_multibyte_data544_32, mbctype_18, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_multibyte_data544_32, mbcasemap_119, 0x119);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_multibyte_data544_32, mblocalename_ptr_21c, 0x21c);
+
+/* 48B (0x30) DBCS codepage descriptor (_rgctype_info[5] at 0x119ec640; scanned by 0x116b4c4b). */
+typedef struct rome2_vfs_crt_codepage_info48_32 {
+    uint32_t codepage_00;                        /* 00 (932, 936, 949, 950, 1361) */
+    uint16_t mbulinfo_04[6];                     /* 04..0f */
+    uint8_t rgrange_10[4][8];                    /* 10..2f (4 pairs-tables indexed with 0x119ec638 bits) */
+} rome2_vfs_crt_codepage_info48_32;
+_Static_assert(sizeof(rome2_vfs_crt_codepage_info48_32) == 0x30, "crt codepage info48 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_codepage_info48_32, codepage_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_codepage_info48_32, mbulinfo_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_codepage_info48_32, rgrange_10, 0x10);
+
+/* 16B (0x10) DBCS UTF-16LE locale pointer table at 0x1191b630 (ja-JP, zh-CN, ko-KR, zh-TW) indexed by 0x116b47a2. */
+typedef struct rome2_vfs_crt_mbcs_locale_ptrs16_32 {
+    uint32_t ja_jp_ptr_00;                       /* 00 (CP 932) */
+    uint32_t zh_cn_ptr_04;                       /* 04 (CP 936) */
+    uint32_t ko_kr_ptr_08;                       /* 08 (CP 949) */
+    uint32_t zh_tw_ptr_0c;                       /* 0c (CP 950) */
+} rome2_vfs_crt_mbcs_locale_ptrs16_32;
+_Static_assert(sizeof(rome2_vfs_crt_mbcs_locale_ptrs16_32) == 0x10, "crt mbcs locale ptrs16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_mbcs_locale_ptrs16_32, ja_jp_ptr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_mbcs_locale_ptrs16_32, zh_cn_ptr_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_mbcs_locale_ptrs16_32, ko_kr_ptr_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_mbcs_locale_ptrs16_32, zh_tw_ptr_0c, 0x0c);
+
+/* 20B (0x14) Win32 CPINFO view queried by 0x116b1c66, 0x116b48b6, and 0x116b4c4b. */
+typedef struct rome2_vfs_crt_cpinfo20_32 {
+    uint32_t max_char_size_00;                   /* 00 */
+    uint8_t default_char_04[2];                  /* 04 */
+    uint8_t lead_byte_06[12];                    /* 06 */
+    uint8_t pad_12[2];                           /* 12 */
+} rome2_vfs_crt_cpinfo20_32;
+_Static_assert(sizeof(rome2_vfs_crt_cpinfo20_32) == 0x14, "crt cpinfo20 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_cpinfo20_32, max_char_size_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_cpinfo20_32, default_char_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_cpinfo20_32, lead_byte_06, 0x06);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

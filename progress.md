@@ -1523,3 +1523,32 @@ callees.
   tests (**318** skipped) on Python 3.14 and 3.15 without touching the shared
   Ghidra project or canonical exports; remaining 23 Layer 56 clean CRT callees
   plus NORET/overlapping/thunk entries and live runtime execution remain open.
+
+### Layer 56 Final CRT Clean Closure — `setmbcp`, `CompareStringEx`, `LCMapStringA`, `getptd`, `setenv` & `strchr` (2026-11-18)
+- Added 4 fixed-width guest32 multibyte/codepage/cpinfo layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  (`rome2_vfs_crt_multibyte_data544_32`, `rome2_vfs_crt_codepage_info48_32`,
+  `rome2_vfs_crt_mbcs_locale_ptrs16_32`, `rome2_vfs_crt_cpinfo20_32`),
+  and added bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_engine_crt_mbcp_ops.h](port/recovered_types/vfs_fs_engine_crt_mbcp_ops.h),
+  [port/recovered_types/vfs_fs_engine_crt_mbcp_ops.c](port/recovered_types/vfs_fs_engine_crt_mbcp_ops.c),
+  and [port/recovered_types/test_vfs_fs_engine_crt_mbcp_ops.c](port/recovered_types/test_vfs_fs_engine_crt_mbcp_ops.c)
+  (**70** checks) closing the **final 23 clean non-overlapping CRT runtime callees**
+  (`22` single-part + `1` two-part `0x116b56b1`) across the 1,122-function graph
+  (`0x116a2c97`..`0x116bf200`) to reach **1,145** recovered functions (**100%
+  transitive clean closure**: zero remaining `clean_eng`, `clean_crt`, or
+  non-overlapping multi-part callees).
+- Sealed Partition 4 (`181` records) and opened fresh Partition 5 (**36**
+  validated records) in [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  (**1145** functions, **580** globals, **40** vtables, **1072** instruction
+  witnesses) and [port/recovered_types/verification.json](port/recovered_types/verification.json)
+  (`fresh_partition_p5`: `23` `analyze_function` + `13` `read_bytes`; combined
+  with Partitions 1–4 `367 + 743 + 264 + 181 = 1555` for **1591** disjoint
+  validated records total; `non_proc_slots=[]`, `resource_constrained_slots=[]`,
+  **8,316,221B** snapshot).
+- Verified **113/113** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **91** contract tests on Python 3.14 and 3.15, and **919** clean-public Python
+  tests (**319** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; NORET/IAT thunks (`19`), overlapping
+  shared-tail entries (`7`), further engine/export roots, and live runtime
+  execution remain open.
