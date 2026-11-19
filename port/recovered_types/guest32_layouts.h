@@ -2821,18 +2821,24 @@ ROME2_LAYOUT_ASSERT(rome2_vfs_crt_seh4_scope16_32, gscookie_xor_offset_04, 0x04)
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_seh4_scope16_32, ehcookie_offset_08, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_seh4_scope16_32, ehcookie_xor_offset_0c, 0x0c);
 
-/* 32B (0x20) __crt_strtox::input_adapter_character_source constructed by 0x1168f338 / 0x11692d4c for 0x11691750. */
+/* 32B (0x20) __crt_strtox::input_adapter_character_source constructed by 0x1168f338 / 0x11692d4c for 0x11691750 / 0x11695a17 / 0x11696503 / 0x116971c4 / 0x116972d5. */
 typedef struct rome2_vfs_crt_input_char_source32_32 {
     uint32_t adapter_ptr_00;                     /* 00 */
-    uint32_t width_or_limit_lo_04;               /* 04 */
-    uint32_t width_or_limit_hi_08;               /* 08 */
-    uint32_t read_count_0c;                      /* 0c */
-    uint32_t state_words_10[4];                  /* 10..1f (including trailing out_succeeded ptr at +0x1c) */
+    uint32_t pad_04;                             /* 04 (8-byte alignment padding before width_u64) */
+    uint32_t width_lo_08;                        /* 08 */
+    uint32_t width_hi_0c;                        /* 0c */
+    uint32_t read_count_lo_10;                   /* 10 */
+    uint32_t read_count_hi_14;                   /* 14 */
+    uint32_t succeeded_ptr_18;                   /* 18 (bool *out_succeeded) */
+    uint32_t pad_1c;                             /* 1c (trailing alignment padding) */
 } rome2_vfs_crt_input_char_source32_32;
 _Static_assert(sizeof(rome2_vfs_crt_input_char_source32_32) == 0x20, "crt input char source32 32 size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_input_char_source32_32, adapter_ptr_00, 0x00);
-ROME2_LAYOUT_ASSERT(rome2_vfs_crt_input_char_source32_32, read_count_0c, 0x0c);
-ROME2_LAYOUT_ASSERT(rome2_vfs_crt_input_char_source32_32, state_words_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_input_char_source32_32, width_lo_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_input_char_source32_32, width_hi_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_input_char_source32_32, read_count_lo_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_input_char_source32_32, read_count_hi_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_input_char_source32_32, succeeded_ptr_18, 0x18);
 
 /* 8B (0x08) downlevel LCID->name table entry (0x1191c408) indexed by 0x116b81e9. */
 typedef struct rome2_vfs_crt_lcid_name_entry8_32 {
@@ -2851,6 +2857,41 @@ typedef struct rome2_vfs_crt_locale_index_entry8_32 {
 _Static_assert(sizeof(rome2_vfs_crt_locale_index_entry8_32) == 0x08, "crt locale index entry8 32 size");
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_locale_index_entry8_32, locale_name_ptr_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_vfs_crt_locale_index_entry8_32, lcid_table_idx_04, 0x04);
+
+/* 257B (0x101) CRT default _mbctype table (0x119ec430) published at [0x121262fc] by 0x116b4bf0. */
+typedef struct rome2_vfs_crt_mbctype_table257_32 {
+    uint8_t entries_00[257];                     /* 00..100 (EOF byte at [0], byte ch at [ch + 1]) */
+} rome2_vfs_crt_mbctype_table257_32;
+_Static_assert(sizeof(rome2_vfs_crt_mbctype_table257_32) == 0x101, "crt mbctype table257 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_mbctype_table257_32, entries_00, 0x00);
+
+/* 256B (0x100) CRT default _mbcasemap table (0x119ec538) published at [0x12126300] by 0x116b4bf0. */
+typedef struct rome2_vfs_crt_mbcasemap_table256_32 {
+    uint8_t entries_00[256];                     /* 00..ff */
+} rome2_vfs_crt_mbcasemap_table256_32;
+_Static_assert(sizeof(rome2_vfs_crt_mbcasemap_table256_32) == 0x100, "crt mbcasemap table256 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_mbcasemap_table256_32, entries_00, 0x00);
+
+/* 16B (0x10) MSVC SEH4 scope entry record following 16B scope header (0x11925670 + 0x10 for common_lseek<int64>). */
+typedef struct rome2_vfs_crt_seh4_scope_entry16_32 {
+    uint32_t enclosing_level_00;                 /* 00 (-2 = outermost) */
+    uint32_t filter_func_04;                     /* 04 (0 for __finally) */
+    uint32_t handler_func_08;                    /* 08 (e.g. 0x1169e71f) */
+    uint32_t reserved_0c;                        /* 0c */
+} rome2_vfs_crt_seh4_scope_entry16_32;
+_Static_assert(sizeof(rome2_vfs_crt_seh4_scope_entry16_32) == 0x10, "crt seh4 scope entry16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_seh4_scope_entry16_32, enclosing_level_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_seh4_scope_entry16_32, filter_func_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_seh4_scope_entry16_32, handler_func_08, 0x08);
+
+/* 32B (0x20) single-scope MSVC SEH4 scope table (header + scope0) at 0x11925670. */
+typedef struct rome2_vfs_crt_seh4_scope_table32_32 {
+    rome2_vfs_crt_seh4_scope16_32 header_00;     /* 00..0f */
+    rome2_vfs_crt_seh4_scope_entry16_32 scope_10;/* 10..1f */
+} rome2_vfs_crt_seh4_scope_table32_32;
+_Static_assert(sizeof(rome2_vfs_crt_seh4_scope_table32_32) == 0x20, "crt seh4 scope table32 32 size");
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_seh4_scope_table32_32, header_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_vfs_crt_seh4_scope_table32_32, scope_10, 0x10);
 
 #undef ROME2_LAYOUT_ASSERT
 #endif

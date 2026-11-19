@@ -70,14 +70,15 @@ int main(void) {
     TEST_ASSERT(offsetof(rome2_vfs_crt_stdio_stream56_32, charbuf_14) == 0x14u);
     TEST_ASSERT(offsetof(rome2_vfs_crt_stdio_stream56_32, bufsiz_18) == 0x18u);
     TEST_ASSERT(sizeof(rome2_vfs_crt_input_char_source32_32) == 0x20u);
-    TEST_ASSERT(offsetof(rome2_vfs_crt_input_char_source32_32, state_words_10) == 0x10u);
+    TEST_ASSERT(offsetof(rome2_vfs_crt_input_char_source32_32, read_count_lo_10) == 0x10u);
+    TEST_ASSERT(offsetof(rome2_vfs_crt_input_char_source32_32, succeeded_ptr_18) == 0x18u);
     TEST_ASSERT(sizeof(rome2_vfs_crt_lcid_name_entry8_32) == 0x08u);
     TEST_ASSERT(sizeof(rome2_vfs_crt_locale_index_entry8_32) == 0x08u);
 
     /* 2. make_input_char_source (0x1168f338) & parse_uint64_adapter (0x11691750) */
     rome2_vfs_crt_input_char_source32_32 cs;
     TEST_ASSERT(rome2_vfs_crt_make_input_char_source(&cs, 0x10002000u, 0x0000000100000010ULL, 0x20003000u) == &cs);
-    TEST_ASSERT(cs.adapter_ptr_00 == 0x10002000u && cs.width_or_limit_hi_08 == 1u && cs.state_words_10[3] == 0x20003000u);
+    TEST_ASSERT(cs.adapter_ptr_00 == 0x10002000u && cs.width_lo_08 == 0x10u && cs.width_hi_0c == 1u && cs.succeeded_ptr_18 == 0x20003000u);
 
     size_t used = 0u;
     uint8_t ok = 0u;

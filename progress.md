@@ -1492,3 +1492,34 @@ callees.
   tests (**317** skipped) on Python 3.14 and 3.15 without touching the shared
   Ghidra project or canonical exports; remaining Layer 55+ CRT leaf/overlapping/thunk
   callees and live runtime execution remain open.
+
+### Layer 55 CRT env init, multibyte, `_strnicoll`, `common_lseek<int64>` & scanf adapter helpers (2026-11-18)
+- Refined `rome2_vfs_crt_input_char_source32_32` (`+0x08` `width_lo_08`/`+0x0c`
+  `width_hi_0c`, `+0x18` `succeeded_ptr_18`) and added 4 fixed-width guest32
+  mbctype/mbcasemap/SEH4 layouts in
+  [port/recovered_types/guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  (`rome2_vfs_crt_mbctype_table257_32`, `rome2_vfs_crt_mbcasemap_table256_32`,
+  `rome2_vfs_crt_seh4_scope_entry16_32`, `rome2_vfs_crt_seh4_scope_table32_32`),
+  and added bounded C17 helpers/tests in
+  [port/recovered_types/vfs_fs_engine_crt_envinit_ops.h](port/recovered_types/vfs_fs_engine_crt_envinit_ops.h),
+  [port/recovered_types/vfs_fs_engine_crt_envinit_ops.c](port/recovered_types/vfs_fs_engine_crt_envinit_ops.c),
+  and [port/recovered_types/test_vfs_fs_engine_crt_envinit_ops.c](port/recovered_types/test_vfs_fs_engine_crt_envinit_ops.c)
+  (**77** checks; **74** checks in
+  [port/recovered_types/test_vfs_fs_engine_crt_scanf_ops.c](port/recovered_types/test_vfs_fs_engine_crt_scanf_ops.c))
+  closing **23** clean non-overlapping CRT runtime callees (`20` single-part +
+  `1` switch-table `0x1169712a` + `2` two-part `0x1169e653`/`0x116a1729`)
+  across the 1,099-function graph (`0x11692d4c`..`0x116b8400`) to reach
+  **1,122** recovered functions.
+- Extended Partition 4 (**181** validated records) and advanced PE32 contracts in
+  [port/recovered_types/contracts.json](port/recovered_types/contracts.json)
+  (**1122** functions, **566** globals, **40** vtables, **1049** instruction
+  witnesses) and [port/recovered_types/verification.json](port/recovered_types/verification.json)
+  (`extending_layer54`: `28` new records across `23` `analyze_function` + `5`
+  `read_bytes`, `153` reused Layer 54 records; combined with Partitions 1–3
+  `367 + 743 + 264 = 1374` for **1555** disjoint validated records total;
+  `non_proc_slots=[]`, `resource_constrained_slots=[]`, **46,501,290B** snapshot).
+- Verified **112/112** native CTest suites on both `/W4 /WX /analyze` and ASan,
+  **90** contract tests on Python 3.14 and 3.15, and **918** clean-public Python
+  tests (**318** skipped) on Python 3.14 and 3.15 without touching the shared
+  Ghidra project or canonical exports; remaining 23 Layer 56 clean CRT callees
+  plus NORET/overlapping/thunk entries and live runtime execution remain open.

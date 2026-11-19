@@ -89,9 +89,9 @@ rome2_vfs_crt_input_char_source32_32 *rome2_vfs_crt_make_input_char_source(
     }
     memset(out_src, 0, sizeof(*out_src));
     out_src->adapter_ptr_00 = adapter_ptr;
-    out_src->width_or_limit_lo_04 = (uint32_t)(width_limit & 0xffffffffULL);
-    out_src->width_or_limit_hi_08 = (uint32_t)(width_limit >> 32);
-    out_src->state_words_10[3] = ok_flag_slot;
+    out_src->width_lo_08 = (uint32_t)(width_limit & 0xffffffffULL);
+    out_src->width_hi_0c = (uint32_t)(width_limit >> 32);
+    out_src->succeeded_ptr_18 = ok_flag_slot;
     return out_src;
 }
 
