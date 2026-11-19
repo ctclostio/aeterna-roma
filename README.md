@@ -3,6 +3,16 @@
 [![Tests](https://github.com/ctclostio/aeterna-roma/actions/workflows/ci.yml/badge.svg)](https://github.com/ctclostio/aeterna-roma/actions/workflows/ci.yml)
 [![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](LICENSE)
 
+<a href="https://ctclostio.github.io/aeterna-roma/">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://ctclostio.github.io/aeterna-roma/status-dark.svg">
+    <img alt="Decompilation status: completion axes, pinned functions and test gates" src="https://ctclostio.github.io/aeterna-roma/status-light.svg">
+  </picture>
+</a>
+
+Live [status page](https://ctclostio.github.io/aeterna-roma/), rebuilt from
+this repository on every push to `main` by `scripts/gen_status_site.py`.
+
 Long-horizon effort to decompile Total War: Rome II (2013) so the game can be
 recompiled as a native 64-bit executable.
 

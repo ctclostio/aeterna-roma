@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aeterna Roma Progress</title>
+<meta name="description" content="Live status of the Total War: Rome II 32→64-bit decompilation, rebuilt from the repository on every push.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: survey sheet. Summary strip, scale grid beside the axes, pinning curve, gates, then the open-work board. */
+:root {
+  --bg: #f2f4f2; --surface: #ffffff; --ink: #18211d; --muted: #59655f; --line: #d8dedb;
+  --accent: #1d7663; --mid: #8fc6b6; --open: #d3d9d6; --amber: #a86d12; --crit: #b2443a;
+  --amber-bg: #f6ead6; --crit-bg: #f6dfdc; --accent-bg: #d7ece5;
+  --display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #101513; --surface: #171f1c; --ink: #e2e9e6; --muted: #94a19b; --line: #29342f;
+  --accent: #4fb89b; --mid: #2c6657; --open: #25302c; --amber: #e2a64a; --crit: #e57c70;
+  --amber-bg: #3a2c14; --crit-bg: #3d211e; --accent-bg: #18372f; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #101513; --surface: #171f1c; --ink: #e2e9e6; --muted: #94a19b; --line: #29342f;
+  --accent: #4fb89b; --mid: #2c6657; --open: #25302c; --amber: #e2a64a; --crit: #e57c70;
+  --amber-bg: #3a2c14; --crit-bg: #3d211e; --accent-bg: #18372f; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 var(--body); }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-block: 32px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); font-stretch: 85%; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 800; line-height: 1.05; }
+h2 { font-size: 20px; font-weight: 700; }
+h3 { font-size: 16px; font-weight: 700; }
+p { margin: 0; }
+code { font-family: var(--mono); font-size: 0.88em; overflow-wrap: anywhere; }
+.eyebrow { font: 500 12px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.muted { color: var(--muted); }
+
+header { display: grid; gap: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font: 13px/1.4 var(--mono); }
+.verdict { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; background: var(--line);
+  border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.verdict > div { background: var(--surface); padding: 16px 18px; display: grid; gap: 4px; align-content: start; }
+.big { font: 700 32px/1 var(--display); font-stretch: 80%; font-variant-numeric: tabular-nums; }
+.big.low { color: var(--crit); }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 20px; display: grid; gap: 16px; align-content: start; min-width: 0; }
+.two { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 20px; }
+@media (max-width: 860px) { .two { grid-template-columns: minmax(0, 1fr); } }
+.head { display: grid; gap: 4px; }
+
+.axes { display: grid; gap: 14px; }
+.axis { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: baseline; }
+.axis .label { font-weight: 600; }
+.axis .val { font: 500 13px var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+.axis .sub { grid-column: 1 / -1; font-size: 13px; color: var(--muted); }
+.bar { grid-column: 1 / -1; height: 8px; background: var(--open); border-radius: 2px; position: relative; overflow: hidden; }
+.bar i { position: absolute; inset: 0 auto 0 0; background: var(--accent); min-width: 3px; border-radius: 2px; }
+.bar.mid i { background: var(--amber); }
+.bar.low i { background: var(--crit); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, 9px); gap: 2px; }
+.grid span { width: 9px; height: 9px; border-radius: 1px; background: var(--open); }
+.grid span.n { background: var(--mid); }
+.grid span.p { background: var(--accent); }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--muted); }
+.legend b { display: inline-block; width: 10px; height: 10px; border-radius: 1px; margin-right: 6px; vertical-align: -1px; }
+
+.chart { overflow-x: auto; }
+.chart svg { display: block; width: 100%; min-width: 520px; height: auto; }
+.chart text { fill: var(--muted); font: 11px var(--mono); }
+.chart .endl { fill: var(--ink); font: 700 14px var(--display); }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
+.stat { display: grid; gap: 2px; }
+.stat .big { font-size: 26px; }
+
+.board { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; font-size: 14px; }
+.card li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; align-items: baseline; }
+.card li.plain { grid-template-columns: minmax(0, 1fr); padding-left: 14px; position: relative; }
+.card li.plain::before { content: ""; position: absolute; left: 0; top: 0.65em; width: 5px; height: 5px; border-radius: 1px; background: var(--muted); }
+.pill { font: 500 11px/1 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 8px; border-radius: 99px; white-space: nowrap; }
+.pill.next { background: var(--accent-bg); color: var(--accent); }
+.pill.open { background: var(--amber-bg); color: var(--amber); }
+.pill.none { background: var(--crit-bg); color: var(--crit); }
+.note { font-size: 13px; color: var(--muted); max-width: 75ch; }
+#state { color: var(--muted); }
+footer { font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Total War: Rome II · 32→64-bit decompilation</span>
+    <h1>Aeterna Roma progress</h1>
+    <div class="meta" id="meta"><span id="state">Loading status…</span></div>
+  </header>
+  <section class="verdict" id="verdict" aria-label="Summary" hidden></section>
+
+  <div class="two" id="row1" hidden>
+    <section class="panel">
+      <div class="head"><h2>Completion axes</h2><p class="note">Separate axes from the README tracker. They measure different things and should not be averaged into one figure.</p></div>
+      <div class="axes" id="axes"></div>
+    </section>
+    <section class="panel">
+      <div class="head"><h2>The whole binary, to scale</h2><p class="note" id="grid-note"></p></div>
+      <div class="grid" id="grid" role="img"></div>
+      <div class="legend" id="legend"></div>
+    </section>
+  </div>
+
+  <section class="panel" id="row2" hidden>
+    <div class="head"><h2>Functions pinned, layer by layer</h2><p class="note">Function count in <code>contracts.json</code> at the commit that closed each layer. Dashed spans cover layers that landed together in one commit. Hover a point for its commit.</p></div>
+    <div class="chart" id="chart"></div>
+    <p class="note" id="pace"></p>
+  </section>
+
+  <div class="two" id="row3" hidden>
+    <section class="panel">
+      <div class="head"><h2>Verification</h2><p class="note" id="verify-note"></p></div>
+      <div class="stats" id="stats"></div>
+    </section>
+    <section class="panel">
+      <div class="head"><span class="eyebrow">Next milestone</span><h2 id="ms-title"></h2></div>
+      <p id="ms-status"></p>
+      <p class="note" id="ms-note"></p>
+    </section>
+  </div>
+
+  <section class="head" id="row4h" hidden><h2>What remains</h2></section>
+  <div class="board" id="row4" hidden>
+    <article class="card"><h3>Open checklist items</h3><p class="note">From the README milestone checklist.</p><ul id="open-items"></ul></article>
+    <article class="card"><h3>Remaining work</h3><p class="note">From the <code>progress.md</code> remaining-work list.</p><ul id="remaining"></ul></article>
+  </div>
+
+  <footer id="foot" hidden></footer>
+</div>
+
+<script>
+(function () {
+  var fmt = function (n) { return Number(n).toLocaleString('en-US'); };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var $ = function (id) { return document.getElementById(id); };
+  var tone = function (p) { return p >= 90 ? '' : p >= 10 ? 'mid' : 'low'; };
+  var pct = function (a, b) { return b ? 100 * a / b : null; };
+  var round = function (p) { return p >= 10 ? p.toFixed(1).replace(/\.0$/, '') : p.toFixed(2); };
+
+  fetch('status.json', { cache: 'no-cache' })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(render)
+    .catch(function (e) {
+      $('state').textContent = 'Could not load status.json (' + e.message + '). Run scripts/gen_status_site.py and serve its output folder.';
+    });
+
+  function find(rows, re) { for (var i = 0; i < rows.length; i++) if (re.test(rows[i].axis)) return rows[i]; return null; }
+
+  function render(s) {
+    var t = s.tracker, c = s.contracts, p = s.progress, hist = s.history;
+    var exp = find(t, /export/i), ident = find(t, /identification/i), play = find(t, /playable/i);
+    var total = exp ? exp.total : null;
+    var commitUrl = s.repo ? s.repo + '/commit/' + s.head.sha : null;
+
+    $('meta').innerHTML = '<span>updated ' + esc(s.head.date) + '</span>' +
+      '<span>' + (commitUrl ? '<a href="' + esc(commitUrl) + '">' + esc(s.head.commit) + '</a>' : esc(s.head.commit)) + '</span>' +
+      (p.latest_heading ? '<span>' + esc(p.latest_heading) + '</span>' : '');
+
+    // Summary tiles
+    var tiles = [];
+    if (exp) tiles.push(['Analysis export', round(exp.pct) + '%', '', 'All ' + fmt(exp.total) + ' functions decompiled and exported.']);
+    tiles.push(['Type recovery', 'Layer ' + c.layer, '', fmt(c.functions) + ' functions pinned with native tests' + (hist.length ? ' since ' + hist[0].date : '') + '.']);
+    if (p.ctest) tiles.push(['Test gates', p.ctest.passed + '/' + p.ctest.total, p.ctest.passed < p.ctest.total ? 'low' : '', 'Native CTest suites on strict and ASan builds.']);
+    if (play) tiles.push(['Playable', play.state.split(' (')[0], 'low', play.meaning.split('. ')[0].replace(/\.?$/, '.')]);
+    $('verdict').innerHTML = tiles.map(function (x) {
+      return '<div><span class="eyebrow">' + esc(x[0]) + '</span><span class="big ' + x[2] + '">' + esc(x[1]) + '</span><p class="muted">' + esc(x[3]) + '</p></div>';
+    }).join('');
+
+    // Completion axes: tracker rows plus two derived from contracts.json
+    var axes = t.map(function (r) { return { label: r.axis, val: r.state, pct: r.pct, below: r.below, sub: r.meaning_html }; });
+    var at = ident ? t.indexOf(ident) + 1 : axes.length;
+    if (total) axes.splice(at, 0, { label: 'Types pinned with tests', val: fmt(c.functions) + ' / ' + fmt(total) + ' (' + round(pct(c.functions, total)) + '%)', pct: pct(c.functions, total),
+      sub: 'Plus ' + fmt(c.globals) + ' globals and ' + fmt(c.instruction_witnesses) + ' instruction witnesses in <code>contracts.json</code>.' });
+    if (s.vtables_inventoried) axes.splice(at + 1, 0, { label: 'Vtables pinned', val: fmt(c.vtables) + ' / ' + fmt(s.vtables_inventoried) + ' (' + round(pct(c.vtables, s.vtables_inventoried)) + '%)',
+      pct: pct(c.vtables, s.vtables_inventoried), sub: 'Pinned in <code>contracts.json</code> against the vtable inventory.' });
+    $('axes').innerHTML = axes.map(function (a) {
+      var w = a.pct == null ? null : a.below ? a.pct / 2 : Math.min(a.pct, 100);
+      return '<div class="axis"><span class="label">' + esc(a.label) + '</span><span class="val">' + esc(a.val) + '</span>' +
+        (w == null ? '' : '<div class="bar ' + tone(a.pct) + '"><i style="width:' + w + '%"></i></div>') +
+        '<span class="sub">' + a.sub + '</span></div>';
+    }).join('');
+
+    // Scale grid: one square per 100 functions
+    if (total) {
+      var cells = Math.round(total / 100), named = ident ? Math.round(ident.done / 100) : 0, pinned = Math.max(1, Math.round(c.functions / 100));
+      var g = $('grid'), frag = document.createDocumentFragment();
+      for (var i = 0; i < cells; i++) {
+        var sq = document.createElement('span');
+        if (i < pinned) sq.className = 'p'; else if (i < named) sq.className = 'n';
+        frag.appendChild(sq);
+      }
+      g.appendChild(frag);
+      g.setAttribute('aria-label', cells + ' squares of about 100 functions each: ' + pinned + ' pinned with tests, ' + Math.max(0, named - pinned) + ' more named');
+      $('grid-note').textContent = 'Each square is about 100 of the ' + fmt(total) + ' functions. The two coloured sets are tracked separately and drawn nested only to show their size.';
+      $('legend').innerHTML = '<span><b style="background:var(--accent)"></b>Pinned with tests · ' + fmt(c.functions) + '</span>' +
+        (ident ? '<span><b style="background:var(--mid)"></b>Named · ' + fmt(ident.done) + '</span>' : '') +
+        '<span><b style="background:var(--open)"></b>Decompiled only</span>';
+    }
+
+    if (hist.length > 1) drawChart(hist);
+
+    // Verification
+    var stats = [];
+    if (p.ctest) stats.push([p.ctest.passed + '/' + p.ctest.total, 'native CTest suites, strict <code>/analyze</code> and ASan']);
+    if (p.contract_tests != null) stats.push([fmt(p.contract_tests), 'contract tests on Python 3.14 and 3.15']);
+    if (p.python_tests) stats.push([fmt(p.python_tests.run), 'clean-public Python tests (' + fmt(p.python_tests.skipped) + ' skipped)']);
+    if (p.rea_records != null) stats.push([fmt(p.rea_records), 'validated REA evidence records']);
+    $('stats').innerHTML = stats.map(function (x) { return '<div class="stat"><span class="big">' + esc(x[0]) + '</span><span class="muted">' + x[1] + '</span></div>'; }).join('');
+    $('verify-note').textContent = 'Latest counts recorded in progress.md.';
+
+    $('ms-title').textContent = s.next_milestone.title.charAt(0).toUpperCase() + s.next_milestone.title.slice(1);
+    $('ms-status').innerHTML = (s.next_milestone.status_html || '').replace(/^[a-z]/, function (ch) { return ch.toUpperCase(); });
+    $('ms-note').textContent = s.checklist.done + ' README checklist milestones complete.';
+
+    $('open-items').innerHTML = s.checklist.open.map(function (o) {
+      return '<li><span class="pill ' + (o.partial ? 'open">Partial' : 'none">Open') + '</span><span>' + o.html + '</span></li>';
+    }).join('');
+    $('remaining').innerHTML = p.remaining.map(function (r) { return '<li class="plain"><span>' + r + '</span></li>'; }).join('');
+
+    $('foot').innerHTML = '<span>Rebuilt on every push to main from <code>README.md</code>, <code>progress.md</code>, <code>contracts.json</code> and its Git history, and <code>docs/x64_next_milestone_candidates.md</code>.</span>' +
+      '<span>Latest commit: ' + esc(s.head.subject) + '</span>' +
+      (s.repo ? '<span><a href="' + esc(s.repo) + '">Repository</a></span>' : '');
+
+    ['verdict', 'row1', 'row2', 'row3', 'row4h', 'row4', 'foot'].forEach(function (id) { $(id).hidden = false; });
+  }
+
+  function drawChart(d) {
+    var W = 760, H = 250, L = 48, R = 56, T = 16, B = 34;
+    var l0 = d[0].layer, l1 = d[d.length - 1].layer, max = d[d.length - 1].functions;
+    for (var k = 0; k < d.length; k++) max = Math.max(max, d[k].functions);
+    var raw = max / 4, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    var step = [1, 2, 2.5, 5, 10].filter(function (m) { return m * mag >= raw; })[0] * mag;
+    var ymax = Math.ceil(max * 1.08 / step) * step;
+    var x = function (l) { return L + (l - l0) / Math.max(1, l1 - l0) * (W - L - R); };
+    var y = function (v) { return T + (1 - v / ymax) * (H - T - B); };
+    var ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', 'Pinned functions rise from ' + fmt(d[0].functions) + ' at layer ' + l0 + ' to ' + fmt(d[d.length - 1].functions) + ' at layer ' + l1);
+    function el(tag, a, txt) {
+      var e = document.createElementNS(ns, tag);
+      for (var n in a) e.setAttribute(n, a[n]);
+      if (txt != null) e.textContent = txt;
+      svg.appendChild(e); return e;
+    }
+    for (var v = 0; v <= ymax; v += step) {
+      el('line', { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: 'var(--line)', 'stroke-width': 1 });
+      el('text', { x: L - 8, y: y(v) + 4, 'text-anchor': 'end' }, fmt(v));
+    }
+    var ticks = [l0];
+    for (var t = Math.ceil((l0 + 1) / 10) * 10; t <= l1; t += 10) if (t - l0 >= 4) ticks.push(t);
+    if (ticks[ticks.length - 1] !== l1 && l1 - ticks[ticks.length - 1] >= 4) ticks.push(l1);
+    ticks.forEach(function (l) { el('text', { x: x(l), y: H - B + 18, 'text-anchor': 'middle' }, 'L' + l); });
+
+    var area = 'M' + x(d[0].layer) + ',' + y(0);
+    d.forEach(function (p) { area += ' L' + x(p.layer) + ',' + y(p.functions); });
+    el('path', { d: area + ' L' + x(l1) + ',' + y(0) + ' Z', fill: 'var(--accent)', 'fill-opacity': 0.12 });
+    for (var j = 1; j < d.length; j++) {
+      el('line', { x1: x(d[j - 1].layer), y1: y(d[j - 1].functions), x2: x(d[j].layer), y2: y(d[j].functions),
+        stroke: 'var(--accent)', 'stroke-width': 2.25, 'stroke-linecap': 'round',
+        'stroke-dasharray': d[j].layer - d[j - 1].layer > 1 ? '4 4' : 'none' });
+    }
+    d.forEach(function (p) {
+      var hit = el('circle', { cx: x(p.layer), cy: y(p.functions), r: 6, fill: 'transparent' });
+      var tt = document.createElementNS(ns, 'title');
+      tt.textContent = 'Layer ' + p.layer + ' · ' + fmt(p.functions) + ' functions · ' + p.date + ' · ' + p.commit + '\n' + p.subject;
+      hit.appendChild(tt);
+    });
+    var last = d[d.length - 1];
+    el('circle', { cx: x(last.layer), cy: y(last.functions), r: 4.5, fill: 'var(--accent)', stroke: 'var(--surface)', 'stroke-width': 2 });
+    el('text', { x: x(last.layer) + 9, y: y(last.functions) + 5, 'class': 'endl' }, fmt(last.functions));
+    $('chart').appendChild(svg);
+
+    var days = (Date.parse(last.date) - Date.parse(d[0].date)) / 864e5;
+    if (days >= 1) $('pace').textContent = 'Average pace since ' + d[0].date + ': about ' + fmt(Math.round((last.functions - d[0].functions) / days)) +
+      ' functions a day across ' + (l1 - l0) + ' layers.';
+  }
+})();
+</script>
+</body>
+</html>
