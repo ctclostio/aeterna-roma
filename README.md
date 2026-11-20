@@ -42,6 +42,9 @@ x64 port milestones, and the type-recovery layers.
 
 ## Open work
 
+- **Post-validation rewrite:** After decompilation and validation are complete, the
+  engine will be rewritten in Rust for memory safety, modern tooling, and long-term
+  maintainability. See `docs/rust_rewrite_decision.md`.
 - **Next x64 milestone:** not yet frozen. The `entry_point` (`0x100edd70`)
   entry decision is admitted up to the hard stops `0x100edf41` and
   `0x100edf94`. Past them lie the installed tail, exception gap, common
