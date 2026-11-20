@@ -1892,3 +1892,34 @@ callees.
   shared Ghidra project or canonical exports (`clean_eng=0`, `clean_crt=0`,
   `noret_or_thunk=0` across **1,282** functions; remaining startup/handler roots and
   live runtime execution remain open).
+
+### Layer 62 — Partition 6 startup input, message pump, console registry & helper cluster (2026-11-19)
+- Extended Partition 6 (`extending_layer61`) closing **33** single-part `RET`-bearing
+  functions across all 8 clean `0x100ec5c0` callees (`0x101061b0` `PeekMessageW` /
+  `TranslateMessage` / `DispatchMessageW` message pump, `0x1010eda0` DirectInput
+  keyboard/mouse poller, `0x10101980` `GetSystemPowerStatus` mapper, `0x112ac3f0` 64-bit
+  delta, `0x112bff20` flag read, `0x112e2b00` / `0x112e2c20` `/1000` ms timers with
+  `__ultod3` `0x11683d60`, and `0x100f2d60` NUL-prefixed UTF-16 concat), 15 functions
+  closing 8 of 12 `0x100e2980` callees (48B RB-tree iterator/min/max/rotations/destroy/erase
+  `0x100e0ff0`..`0x100ec560`, UTF-16 compare/rfind/%s formatters `0x100f5f20`..`0x1011fb70`,
+  AppData subpath builders `0x100ddfc0`/`0x10121350`, and `wfstream` filebuf open/close
+  `0x11347290`/`0x11349100`), plus the full 9-function `0x1173f2ac` Warscape console
+  registry closure (`0x100d1e30`..`0x100fd130`, including CFG-verified 97B `non_proc_slot`
+  `0x100e8660`), growing [contracts.json](port/recovered_types/contracts.json) to
+  **1,315 functions, 739 globals, 76 vtables, and 1,242 instruction witnesses** over
+  **252** Partition 6 validated REA records (`56` new = `32` `analyze_function` + `1`
+  `resolve_containing_procedure` + `23` `read_bytes`; `196` reused Layer 61; **1,925**
+  cumulative across Partitions 1–6; `70,481,281B` snapshot; `0` Ghidra mismatches).
+- Locked 4 fixed-width [guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  layouts (`rome2_startup_dinput_mouse16_32`, `rome2_startup_mouse_pub16_32`,
+  `rome2_startup_sys_power_status12_32`, `rome2_startup_console_node_prefix64_32`) and
+  added bounded C17 reconstruction and **83 checks** in
+  [startup_input_msg_console_ops.h](port/recovered_types/startup_input_msg_console_ops.h),
+  [startup_input_msg_console_ops.c](port/recovered_types/startup_input_msg_console_ops.c),
+  and [test_startup_input_msg_console_ops.c](port/recovered_types/test_startup_input_msg_console_ops.c).
+- Verified **119/119** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
+  and ASan, **101** contract tests on Python 3.14 and 3.15, and **934** clean-public
+  Python tests (**329** skipped) on Python 3.14 and 3.15 without touching the
+  shared Ghidra project or canonical exports (`clean_eng=0`, `clean_crt=0`,
+  `noret_or_thunk=0` across **1,315** functions; remaining startup/handler roots and
+  live runtime execution remain open).

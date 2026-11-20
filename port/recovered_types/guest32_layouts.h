@@ -3227,5 +3227,76 @@ ROME2_LAYOUT_ASSERT(rome2_startup_crt_ioinfo56_32, lock_cs_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_startup_crt_ioinfo56_32, osfhnd_18, 0x18);
 ROME2_LAYOUT_ASSERT(rome2_startup_crt_ioinfo56_32, osfile_28, 0x28);
 
+/* 16B (0x10) DirectInput DIMOUSESTATE scratch buffer at 0x119f3d78 read by 0x1010eda0. */
+typedef struct rome2_startup_dinput_mouse16_32 {
+    int32_t lX_00;                               /* 00 */
+    int32_t lY_04;                               /* 04 */
+    int32_t lZ_08;                               /* 08 */
+    uint8_t rgb_buttons_0c[4];                   /* 0c..0f (high bit 0x80 = pressed) */
+} rome2_startup_dinput_mouse16_32;
+_Static_assert(sizeof(rome2_startup_dinput_mouse16_32) == 0x10, "startup dinput mouse16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_dinput_mouse16_32, lX_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_dinput_mouse16_32, lY_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_dinput_mouse16_32, lZ_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_dinput_mouse16_32, rgb_buttons_0c, 0x0c);
+
+/* 16B (0x10) published mouse delta/button block at 0x119344d8 written by 0x1010eda0. */
+typedef struct rome2_startup_mouse_pub16_32 {
+    float dx_f32_00;                             /* 00 ((float)lX) */
+    float neg_dy_f32_04;                         /* 04 (-(float)lY) */
+    float neg_dz_f32_08;                         /* 08 (-(float)lZ) */
+    uint8_t btn0_0c;                             /* 0c (rgbButtons[0] >> 7) */
+    uint8_t btn2_0d;                             /* 0d (rgbButtons[2] >> 7) */
+    uint8_t btn1_0e;                             /* 0e (rgbButtons[1] >> 7) */
+    uint8_t pad_0f;                              /* 0f */
+} rome2_startup_mouse_pub16_32;
+_Static_assert(sizeof(rome2_startup_mouse_pub16_32) == 0x10, "startup mouse pub16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_mouse_pub16_32, dx_f32_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_mouse_pub16_32, neg_dy_f32_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_mouse_pub16_32, neg_dz_f32_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_mouse_pub16_32, btn0_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_startup_mouse_pub16_32, btn2_0d, 0x0d);
+ROME2_LAYOUT_ASSERT(rome2_startup_mouse_pub16_32, btn1_0e, 0x0e);
+
+/* 12B (0x0c) Win32 SYSTEM_POWER_STATUS wire struct populated on stack by 0x10101980. */
+typedef struct rome2_startup_sys_power_status12_32 {
+    uint8_t ac_line_status_00;                   /* 00 (0=offline, 1=online, 255=unknown) */
+    uint8_t battery_flag_01;                     /* 01 (1=high, 2=low, 4=crit, 8=charging, 128=none) */
+    uint8_t battery_life_percent_02;             /* 02 */
+    uint8_t reserved1_03;                        /* 03 */
+    uint32_t battery_life_time_04;               /* 04 */
+    uint32_t battery_full_life_time_08;          /* 08 */
+} rome2_startup_sys_power_status12_32;
+_Static_assert(sizeof(rome2_startup_sys_power_status12_32) == 0x0c, "startup sys power status12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_sys_power_status12_32, ac_line_status_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_sys_power_status12_32, battery_flag_01, 0x01);
+ROME2_LAYOUT_ASSERT(rome2_startup_sys_power_status12_32, battery_life_time_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_sys_power_status12_32, battery_full_life_time_08, 0x08);
+
+/* 64B (0x40) Warscape console command node initialized by 0x100f0fd0 and 0x100d2860. */
+typedef struct rome2_startup_console_node_prefix64_32 {
+    rome2_vtable_address32 vtable_00;            /* 00 (0x11744dd8 -> 0x1173deb0 / 0x1173dbb4 / 0x11744de4) */
+    uint32_t zero_04;                            /* 04 */
+    rome2_string8_layout32 name_08;              /* 08..13 */
+    rome2_string8_layout32 desc_14;              /* 14..1f ("<Unknown>") */
+    uint32_t zero_20;                            /* 20 */
+    uint16_t zero_24;                            /* 24 */
+    uint16_t pad_26;                             /* 26 */
+    uint32_t zero_28;                            /* 28 */
+    uint32_t zero_2c;                            /* 2c */
+    uint32_t zero_30;                            /* 30 */
+    int32_t index_34;                            /* 34 (-1) */
+    uint8_t flag_38;                             /* 38 (0) */
+    uint8_t pad_39[3];                           /* 39..3b */
+    uint32_t tag_or_slot_3c;                     /* 3c (1, 2, or vtable 0x11741e08) */
+} rome2_startup_console_node_prefix64_32;
+_Static_assert(sizeof(rome2_startup_console_node_prefix64_32) == 0x40, "startup console node64 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_console_node_prefix64_32, vtable_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_console_node_prefix64_32, name_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_console_node_prefix64_32, desc_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_startup_console_node_prefix64_32, index_34, 0x34);
+ROME2_LAYOUT_ASSERT(rome2_startup_console_node_prefix64_32, flag_38, 0x38);
+ROME2_LAYOUT_ASSERT(rome2_startup_console_node_prefix64_32, tag_or_slot_3c, 0x3c);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif
