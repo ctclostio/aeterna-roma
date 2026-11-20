@@ -51,7 +51,7 @@ x64 port milestones, and the type-recovery layers.
   epilogue, `CoUninitialize`, and SEH restoration. See
   `docs/x64_next_milestone_candidates.md`.
 - **Startup type recovery:** close the remaining Partition 6 startup and
-  handler roots after Layer 60, then the further engine and export roots.
+  handler roots after Layer 61, then the further engine and export roots.
 - **Live execution:** recovered routines run only as bounded, test-only
   transcripts with injected effects. Native Win32 file mapping (`CreateFileA`,
   `MapViewOfFile`), threading, and CRT effects are modelled, not executed.

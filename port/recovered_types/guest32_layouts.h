@@ -3184,5 +3184,48 @@ ROME2_LAYOUT_ASSERT(rome2_startup_timing_vec12_32, cap_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_startup_timing_vec12_32, count_04, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_startup_timing_vec12_32, slots_ptr_08, 0x08);
 
+/* 8B (0x08) startup log handle box pointed to by [EMPIRE_APP+0x89c] in 0x100e32e0 / 0x10121170. */
+typedef struct rome2_startup_log_file_box8_32 {
+    uint32_t stdio_file_00;                      /* 00 (FILE* opened for startup log) */
+    int32_t last_errno_04;                       /* 04 (0, 0x26=_IOEOF, ferror(), or errno after fclose) */
+} rome2_startup_log_file_box8_32;
+_Static_assert(sizeof(rome2_startup_log_file_box8_32) == 0x08, "startup log file box8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_log_file_box8_32, stdio_file_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_log_file_box8_32, last_errno_04, 0x04);
+
+/* 16B (0x10) UCRT _fwrite lambda capture passed in ECX to 0x11687e75 from 0x11688039. */
+typedef struct rome2_startup_fwrite_capture16_32 {
+    uint32_t stream_ptr_va_00;                   /* 00 (FILE**) */
+    uint32_t buf_ptr_va_04;                      /* 04 (const void**) */
+    uint32_t elem_size_ptr_va_08;                /* 08 (size_t*) */
+    uint32_t elem_count_ptr_va_0c;               /* 0c (size_t*) */
+} rome2_startup_fwrite_capture16_32;
+_Static_assert(sizeof(rome2_startup_fwrite_capture16_32) == 0x10, "startup fwrite capture16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_fwrite_capture16_32, stream_ptr_va_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_fwrite_capture16_32, buf_ptr_va_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_fwrite_capture16_32, elem_size_ptr_va_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_fwrite_capture16_32, elem_count_ptr_va_0c, 0x0c);
+
+/* 4B (0x04) startup handler slot adapter prefix destroyed/reset to 0x1173db9c by 0x100d38b0..0x100e1a70. */
+typedef struct rome2_startup_handler_slot4_32 {
+    rome2_vtable_address32 vtable_00;            /* 00 */
+} rome2_startup_handler_slot4_32;
+_Static_assert(sizeof(rome2_startup_handler_slot4_32) == 0x04, "startup handler slot4 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_handler_slot4_32, vtable_00, 0x00);
+
+/* 56B (0x38) VS2019 UCRT __crt_lowio_handle_data slot observed at [+0x18] (osfhnd) and [+0x28] (osfile)
+ * in 0x116ab5cb, 0x116ab658, 0x116ae9c8, and 0x116aea59. */
+typedef struct rome2_startup_crt_ioinfo56_32 {
+    uint32_t lock_cs_00[6];                      /* 00..17 (24B CRITICAL_SECTION) */
+    uint32_t osfhnd_18;                          /* 18 (Win32 HANDLE or 0xffffffff) */
+    uint32_t startpos_and_flags_1c[3];           /* 1c..27 */
+    uint8_t osfile_28;                           /* 28 (0x01=FOPEN, 0x40=FDEV) */
+    uint8_t pad_29[0x0f];                        /* 29..37 */
+} rome2_startup_crt_ioinfo56_32;
+_Static_assert(sizeof(rome2_startup_crt_ioinfo56_32) == 0x38, "startup crt ioinfo56 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_ioinfo56_32, lock_cs_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_ioinfo56_32, osfhnd_18, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_ioinfo56_32, osfile_28, 0x28);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

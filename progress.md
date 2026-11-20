@@ -1862,3 +1862,33 @@ callees.
   shared Ghidra project or canonical exports (`clean_eng=0`, `clean_crt=0`,
   `noret_or_thunk=0` across **1,251** functions; remaining startup/handler roots and
   live runtime execution remain open).
+
+### Layer 61 — Partition 6 startup handlers, teardown & CRT stdio close cluster (2026-11-19)
+- Extended Partition 6 (`extending_layer60`) closing **31** single-part `RET`-bearing
+  functions across startup log closer `"End Logging\r\n"` (`0x100e32e0`), the complete
+  17-function UCRT stdio close/fwrite stack (`0x11687a7a..0x116bc6d8`: `_feof`, `_fwrite`,
+  `__fwrite_nolock`, `_fclose`, `__fclose_nolock`, `__acrt_stdio_free_stream`, `__close`,
+  `__close_nolock`, `___acrt_stdio_free_buffer_nolock`, `__free_osfhnd` with `SetStdHandle`
+  & SEH4 lock/unlock helpers), 3 `EMPIRE_APP` teardown callees (`0x100d3620`, `0x100e7690`,
+  `0x10121170`), and 10 startup handler vtable `slot0`/`slot1` methods (`0x100d38b0`,
+  `0x100e14d0`, `0x100e16a0`, `0x100e1820`, `0x100e1a70`, `0x100e85d0`, `0x100e8be0`,
+  `0x100e8e50`, `0x100e9230`, `0x100ea040`, including `0x100e8e50`/`0x100e9230` logging
+  to `0x112dcaf0`), growing [contracts.json](port/recovered_types/contracts.json) to
+  **1,282 functions, 712 globals, 73 vtables, and 1,209 instruction witnesses** over
+  **196** Partition 6 validated REA records (`44` new = `25` `analyze_function` + `6`
+  `resolve_containing_procedure` + `13` `read_bytes` including 6 CFG-verified vtable-slot
+  `non_proc_slots`; `152` reused Layer 60; **1,869** cumulative across Partitions 1–6;
+  `55,880,972B` snapshot; `0` Ghidra mismatches).
+- Locked 4 fixed-width [guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  layouts (`rome2_startup_log_file_box8_32`, `rome2_startup_fwrite_capture16_32`,
+  `rome2_startup_handler_slot4_32`, `rome2_startup_crt_ioinfo56_32`) and added bounded C17
+  reconstruction and **95 checks** in
+  [startup_handler_stdio_close_ops.h](port/recovered_types/startup_handler_stdio_close_ops.h),
+  [startup_handler_stdio_close_ops.c](port/recovered_types/startup_handler_stdio_close_ops.c),
+  and [test_startup_handler_stdio_close_ops.c](port/recovered_types/test_startup_handler_stdio_close_ops.c).
+- Verified **118/118** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
+  and ASan, **100** contract tests on Python 3.14 and 3.15, and **933** clean-public
+  Python tests (**328** skipped) on Python 3.14 and 3.15 without touching the
+  shared Ghidra project or canonical exports (`clean_eng=0`, `clean_crt=0`,
+  `noret_or_thunk=0` across **1,282** functions; remaining startup/handler roots and
+  live runtime execution remain open).
