@@ -136,6 +136,17 @@ class CorpusIntegrityTests(unittest.TestCase):
                 % (suffix, extra),
             )
 
+    def test_wave2_rows_are_well_formed(self):
+        """Guard 2c: wave-2 files keep the 4-column, 0x-prefixed, tagged format."""
+        row = re.compile(r"^0x[0-9a-f]{8}\t[A-Za-z_][A-Za-z0-9_]{2,120}\t[a-z-]+\t\S")
+        for path in sorted(WORK.glob("funcid_w2_*.tsv")):
+            lines = path.read_text(encoding="utf-8").splitlines()
+            bad = [l for l in lines if not row.match(l) or l.count("\t") != 3]
+            self.assertEqual(bad[:5], [], f"{path.name}: {len(bad)} malformed rows")
+            if path.name == "funcid_w2_agents.tsv":
+                untagged = [l for l in lines if l.split("\t")[3][:4] not in ("[H] ", "[M] ", "[L] ")]
+                self.assertEqual(untagged[:5], [], f"{len(untagged)} rows lack a [H]/[M]/[L] confidence tag")
+
     def test_named_addresses_resolve_to_canonical_functions(self):
         """Every named corpus address must have a canonical function.
 

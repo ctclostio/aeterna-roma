@@ -47,6 +47,13 @@ Rules for new entries:
   `work/registrar_reach.tsv`, `work/registrar_proposed.tsv`
   Output `work/funcid_batch1_final.tsv` (5,452; restored byte-identically from
   `2891a19` after a 549-row duplicate overwrote it)
+- [~] FuncID Wave 2 checkpoint (2026-11-21): **65,524 / 81,280 (80.6%)** unique
+  canonical functions named across `work/funcid_*.tsv` (Wave 1 baseline plus
+  Wave 2 `work/funcid_w2_library.tsv` `1,837` library/import symbols,
+  `work/funcid_w2_agents.tsv` `51,588` tiered classifications [`[H]` `16,862`,
+  `[M]` `21,317`, `[L]` `13,409`], and `work/funcid_w2_thunks.tsv` `212`
+  internal thunks; shards complete: hubs `49/49`, `t0` `382/382`, `t1` `114/173`
+  + `4` partial; `t2`–`t4` queued; `0` dangling canonical addresses).
 
 ## x64 port milestones
 
