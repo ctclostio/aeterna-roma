@@ -31,7 +31,7 @@ These are separate completion axes and must not be blended into one percentage:
 | Axis | Current state | What it means |
 | --- | ---: | --- |
 | Canonical decompiler export | 81,280 / 81,280 (100%) | Every indexed function has canonical output, and the former non-indexed gaps are closed: all 1,973 named `.text` addresses and all 20 startup registrar handlers now have functions and decompilations. The corpus grew from 63,326 to 81,280 functions (+17,954). See `docs/code_recovery_wave.md`. |
-| Function identification | 81,055 / 81,280 (99.7%) | Unique canonical functions named across Wave 1 (`work/funcid_*.tsv`) and in-progress Wave 2 (`work/funcid_w2_*.tsv`: hubs `49/49`, `t0` `382/382`, `t1` `173/173`, `t2` `80/80`, `t3` `42/42`, `t4` `60/64`). |
+| Function identification | 81,280 / 81,280 (100.0%) | Unique canonical functions named across Wave 1 (`work/funcid_*.tsv`) and Wave 2 (`work/funcid_w2_*.tsv`: hubs `49/49`, `t0` `382/382`, `t1` `173/173`, `t2` `80/80`, `t3` `42/42`, `t4` `64/64`). |
 | Indirect-call resolution | 2,157 / 59,079 (3.65%) | Statically resolved sites across 1,337 functions; 9,051 vtables / 121,692 slots inventoried. The remaining 56,360 sites need cross-function type propagation. See `work/indirect_call_summary_after.md`. |
 | Decompiler-warning triage | 9,856 warnings / 6,765 functions | 1,110 jumptable warnings reduce to 29 true switch-table failures in 16 functions (21 addressed + 8 selector-normalization); the rest are virtual/IAT dispatch. Repair worklist: `work/switch_table_repairs_after.tsv`. |
 | Latest admitted x64 milestone | 150 / 150 decision-and-caller bytes (100%) | The `entry_point` entry decision: the frozen selector, conditional registration-data interval, and two caller/continuation windows compose the admitted 400-byte nonempty ordinary-domain parent in a standalone test-only route. |
@@ -173,7 +173,8 @@ workflows and SonarQube Cloud setup.
    `port/recovered_types/`. In progress; see the type-recovery layers in
    [progress.md](progress.md).
 5. Symbolic renaming: exports, `steam_api` thunks, D3D vtables, string-xref
-   names. In progress (FuncID).
+   names. FuncID pass complete: all 81,280 canonical functions named with
+   tiered `[H]`/`[M]`/`[L]` confidence; `[L]` names remain open to refinement.
 6. 64-bit port: pointer-width fixes, calling-convention normalization
    (`__thiscall` → x64 `RCX`), and relinking against 64-bit dependencies
    (`steam_api64`, D3D9/D3D11, OpenSSL x64). Started with test-only startup
