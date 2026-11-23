@@ -47,13 +47,13 @@ Rules for new entries:
   `work/registrar_reach.tsv`, `work/registrar_proposed.tsv`
   Output `work/funcid_batch1_final.tsv` (5,452; restored byte-identically from
   `2891a19` after a 549-row duplicate overwrote it)
-- [~] FuncID Wave 2 checkpoint (2026-11-23): **80,444 / 81,280 (99.0%)** unique
+- [~] FuncID Wave 2 checkpoint (2026-11-23): **81,055 / 81,280 (99.7%)** unique
   canonical functions named across `work/funcid_*.tsv` (Wave 1 baseline plus
   Wave 2 `work/funcid_w2_library.tsv` `1,837` library/import symbols,
-  `work/funcid_w2_agents.tsv` `66,470` tiered classifications [`[H]` `24,479`,
-  `[M]` `27,588`, `[L]` `14,403`], and `work/funcid_w2_thunks.tsv` `250`
+  `work/funcid_w2_agents.tsv` `67,079` tiered classifications [`[H]` `24,547`,
+  `[M]` `28,071`, `[L]` `14,461`], and `work/funcid_w2_thunks.tsv` `252`
   internal thunks; shards complete: hubs `49/49`, `t0` `382/382`, `t1` `173/173`,
-  `t2` `80/80`, `t3` `42/42`, `t4` `50/64`; `pro` audits across `8` sampled `t1`
+  `t2` `80/80`, `t3` `42/42`, `t4` `60/64`; `pro` audits across `8` sampled `t1`
   shards: `81/96` ok [`84.4%`], `2` wrong auto-fixed; `t4` remainder queued;
   `0` dangling canonical addresses).
 
