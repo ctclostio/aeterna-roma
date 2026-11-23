@@ -44,67 +44,71 @@ def sanitize_c(text: str) -> tuple[str, list[str]]:
     index = 0
     length = len(text)
 
-    while index < length:
-        char = text[index]
-        following = text[index + 1] if index + 1 < length else ""
-        if char == "/" and following == "/":
-            output.extend("  ")
-            index += 2
-            while index < length and text[index] not in "\r\n":
-                output.append(" ")
-                index += 1
+    import re
+    token_re = re.compile(r"//|/\*|(?:u8|L|u|U)?['\"]")
+
+    for match in token_re.finditer(text):
+        start = match.start()
+        if start < index:
             continue
-        if char == "/" and following == "*":
-            output.extend("  ")
-            index += 2
-            closed = False
-            while index < length:
-                if index + 1 < length and text[index : index + 2] == "*/":
-                    output.extend("  ")
-                    index += 2
-                    closed = True
-                    break
-                output.append("\n" if text[index] == "\n" else " ")
-                index += 1
-            if not closed:
+
+        output.append(text[index:start])
+        index = start
+        match_str = match.group(0)
+
+        if match_str == '//':
+            end = text.find('\n', index)
+            if end == -1: end = length
+            end_r = text.find('\r', index)
+            if end_r != -1 and end_r < end: end = end_r
+
+            output.append(' ' * (end - index))
+            index = end
+            continue
+
+        if match_str == '/*':
+            end = text.find('*/', index + 2)
+            if end == -1:
                 findings.append("unterminated block comment")
+                comment_text = text[index:]
+                index = length
+            else:
+                comment_text = text[index:end+2]
+                index = end + 2
+
+            output.append(''.join(['\n' if c == '\n' else ' ' for c in comment_text]))
             continue
 
-        prefix_length = 0
-        if text.startswith('u8"', index):
-            prefix_length = 2
-        elif char in "LuU" and following in "\"'":
-            prefix_length = 1
-            if char == "L":
-                findings.append("native wide literal")
+        prefix_len = len(match_str) - 1
+        quote = match_str[-1]
 
-        quote_index = index + prefix_length
-        if quote_index < length and text[quote_index] in "\"'":
-            quote = text[quote_index]
-            for _ in range(prefix_length + 1):
-                output.append(" ")
-            index = quote_index + 1
-            escaped = False
-            closed = False
-            while index < length:
-                literal_char = text[index]
-                output.append("\n" if literal_char == "\n" else " ")
-                index += 1
-                if escaped:
-                    escaped = False
-                elif literal_char == "\\":
-                    escaped = True
-                elif literal_char == quote:
-                    closed = True
-                    break
-            if not closed:
-                findings.append("unterminated string or character literal")
-            continue
+        if match_str.startswith('L'):
+            findings.append("native wide literal")
 
-        output.append(char)
-        index += 1
+        end = index + prefix_len + 1
+        escaped = False
+        closed = False
+
+        while end < length:
+            c = text[end]
+            end += 1
+
+            if escaped:
+                escaped = False
+            elif c == '\\':
+                escaped = True
+            elif c == quote:
+                closed = True
+                break
+
+        if not closed:
+            findings.append("unterminated string or character literal")
+
+        output.append(''.join(['\n' if c == '\n' else ' ' for c in text[index:end]]))
+        index = end
+
+    output.append(text[index:])
     return "".join(output), findings
-
 
 def identifiers(code: str) -> set[str]:
     return set(re.findall(r"\b[A-Za-z_]\w*\b", code))
