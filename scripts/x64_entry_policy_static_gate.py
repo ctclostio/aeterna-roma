@@ -37,6 +37,13 @@ BANNED_POLICY_CALLS = {
 }
 
 
+# Match only prefixes recognized by the original scanner: u8 character
+# literals deliberately leave the u8 in code. A final bare L is also matched
+# to preserve the original scanner's native-wide finding at end of input.
+_SANITIZE_TOKEN_RE = re.compile(r"//|/\*|u8\"|[LuU]?['\"]|L\Z")
+_LINE_END_RE = re.compile(r"[\r\n]")
+
+
 def sanitize_c(text: str) -> tuple[str, list[str]]:
     """Remove comments and literal bodies while retaining code positions."""
     output: list[str] = []
@@ -44,23 +51,27 @@ def sanitize_c(text: str) -> tuple[str, list[str]]:
     index = 0
     length = len(text)
 
-    import re
-    token_re = re.compile(r"//|/\*|(?:u8|L|u|U)?['\"]")
-
-    for match in token_re.finditer(text):
+    while index < length:
+        match = _SANITIZE_TOKEN_RE.search(text, index)
+        if match is None:
+            break
         start = match.start()
-        if start < index:
-            continue
 
         output.append(text[index:start])
         index = start
         match_str = match.group(0)
 
+        if match_str == 'L':
+            findings.append("native wide literal")
+            output.append('L')
+            index += 1
+            continue
+
         if match_str == '//':
-            end = text.find('\n', index)
-            if end == -1: end = length
-            end_r = text.find('\r', index)
-            if end_r != -1 and end_r < end: end = end_r
+            # One scan to the first line ending, including CR-only input.
+            # Separate unbounded LF/CR searches rescan the remaining file.
+            line_end = _LINE_END_RE.search(text, index + 2)
+            end = line_end.start() if line_end is not None else length
 
             output.append(' ' * (end - index))
             index = end
@@ -109,6 +120,7 @@ def sanitize_c(text: str) -> tuple[str, list[str]]:
 
     output.append(text[index:])
     return "".join(output), findings
+
 
 def identifiers(code: str) -> set[str]:
     return set(re.findall(r"\b[A-Za-z_]\w*\b", code))
