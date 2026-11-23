@@ -74,7 +74,7 @@ def _sha256(data: bytes) -> str:
 
 
 def _compact(text: str) -> str:
-    return re.sub(r"\s+", "", text)
+    return "".join(text.split())
 
 
 def _check_exact(
@@ -131,7 +131,7 @@ def inspect_header_text(text: str) -> list[str]:
         findings.append("header must declare exactly one selected-route API")
     if re.search(r"\bcommand_line\b", code):
         findings.append("the selector identity must be structural, not redundant")
-    contract = _compact(re.sub(r"[*/]", "", text))
+    contract = _compact(text.replace("*", "").replace("/", ""))
     for token in (
         "fourteen-control,seven-backing,eight-context",
         "statefulpass-throughcontrols",

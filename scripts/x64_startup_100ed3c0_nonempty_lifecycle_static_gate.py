@@ -94,7 +94,7 @@ def _sha256(data: bytes) -> str:
 
 
 def _compact(text: str) -> str:
-    return re.sub(r"\s+", "", text)
+    return "".join(text.split())
 
 
 def _check_exact(
@@ -172,7 +172,7 @@ def inspect_header_text(text: str) -> list[str]:
             findings.append(message)
     if _call_count(code, FUNCTION) != 1:
         findings.append("header must declare exactly one typed whole-parent API")
-    contract = re.sub(r"[\s*]+", "", text)
+    contract = "".join(text.replace("*", "").split())
     for token in (
         "private scratch frame",
         "exactly one nonempty-preloop call",

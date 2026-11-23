@@ -74,7 +74,7 @@ def _sha256(data: bytes) -> str:
 
 
 def _compact(text: str) -> str:
-    return re.sub(r"\s+", "", text)
+    return "".join(text.split())
 
 
 def _check_exact(
@@ -128,7 +128,7 @@ def inspect_header_text(text: str) -> list[str]:
             findings.append(f"header caller contract changed: {token}")
     if _call_count(code, FUNCTION) != 1:
         findings.append("header must declare exactly one caller-closure API")
-    contract = _compact(re.sub(r"[*/]", "", text))
+    contract = _compact(text.replace("*", "").replace("/", ""))
     for token in (
         "thirteen-control,seven-backing,seven-context",
         "parentisinvokedexactlyonce",
