@@ -2013,3 +2013,30 @@ callees.
   shared Ghidra project or canonical exports (`clean_eng=0`, `clean_crt=0`,
   `noret_or_thunk=0` across **1,347** functions; remaining `entry_point` spine
   roots across Layers 64–71 and live runtime execution remain open).
+
+### Layer 64 — Partition 7 narrow vfprintf/fprintf & lowio _read cluster (2026-11-24)
+- Extended Partition 7 (`extending_layer63_batched_p7`) closing **27** CRT narrow
+  `vfprintf`/`fprintf` and lowio `_read` functions (`0x100edfb0` `crt_fprintf`,
+  `0x1168bfab` `___stdio_common_vfprintf`, full `stream_output_adapter<char>` /
+  `output_processor<char>` stack `0x1168809c..0x1168be6e`, two-part `0x116aaee6`
+  `_read` [`0x116aaee6..0x116aafc0` + `0x116aafcf..0x116aaff9`], `0x116aaffa`
+  `_read_nolock`, and CR-LF/`^Z`/UTF-8/UTF-16LE/`ReadConsoleW` translators
+  `0x116aa9e2..0x116aae6b`), growing [contracts.json](port/recovered_types/contracts.json)
+  to **1,374 functions, 755 globals, 76 vtables, and 1,301 instruction witnesses**
+  over **72** Partition 7 validated REA records (`32` new = `27` `analyze_function` +
+  `5` `read_bytes`; `40` reused Layer 63; `non_proc_slots=[]`,
+  `resource_constrained_slots=[]`; **1,997** cumulative across Partitions 1–7;
+  `48,909,660B` shared Partition 7 snapshot; `0` Ghidra mismatches).
+- Locked 3 fixed-width [guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  layouts (`rome2_startup_vfprintf_stream_adapter8_32`,
+  `rome2_startup_vfprintf_lambda_ctx20_32`,
+  `rome2_startup_crt_ioinfo_read56_32`) and added bounded C17 reconstruction and
+  **50 checks** in [startup_vfprintf_read_ops.h](port/recovered_types/startup_vfprintf_read_ops.h),
+  [startup_vfprintf_read_ops.c](port/recovered_types/startup_vfprintf_read_ops.c),
+  and [test_startup_vfprintf_read_ops.c](port/recovered_types/test_startup_vfprintf_read_ops.c).
+- Verified **121/121** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
+  and ASan, **103** contract tests on Python 3.14 and 3.15, and **966** clean-public
+  Python tests (**333** skipped) on Python 3.14 and 3.15 without touching the
+  shared Ghidra project or canonical exports (`clean_eng=0`, `clean_crt=0`,
+  `noret_or_thunk=0` across **1,374** functions; remaining `entry_point` spine
+  roots across Layers 65–71 and live runtime execution remain open).

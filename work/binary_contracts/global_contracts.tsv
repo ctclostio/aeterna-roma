@@ -50,7 +50,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1172f0c0	4	file	701f9301	.rdata	IAT slot in .rdata (KERNEL32.dll!GetFullPathNameW) called by 0x116ae1c9 and 0x116ae232	IAT slot in .rdata (KERNEL32.dll!GetFullPathNameW) called by 0x116ae1c9 and 0x116ae232	true
 1172f0c4	4	file	621f9301	.rdata	pe_iat_slot	KERNEL32.dll!MoveFileExW	false
 1172f0c8	4	file	4a1f9301	.rdata	pe_iat_slot	KERNEL32.dll!GetFileAttributesExW	false
-1172f0cc	4	file	3a1f9301	.rdata	pe_iat_slot	KERNEL32.dll!ReadConsoleW	false
+1172f0cc	4	file	3a1f9301	.rdata	4-byte IAT slot in .rdata importing KERNEL32.DLL!ReadConsoleW called by 0x116aaffa	4-byte IAT slot in .rdata importing KERNEL32.DLL!ReadConsoleW called by 0x116aaffa	true
 1172f0d0	4	file	241f9301	.rdata	pe_iat_slot	KERNEL32.dll!EnumSystemLocalesW	false
 1172f0d4	4	file	0e1f9301	.rdata	pe_iat_slot	KERNEL32.dll!GetUserDefaultLCID	false
 1172f0d8	4	file	fe1e9301	.rdata	pe_iat_slot	KERNEL32.dll!IsValidLocale	false
@@ -111,7 +111,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1172f1b4	4	file	3a089301	.rdata	pe_iat_slot	KERNEL32.dll!GetFileAttributesW	false
 1172f1b8	4	file	50089301	.rdata	IAT slot in .rdata called by 0x100fcb00 (KERNEL32.dll!GetFileSize)	IAT slot in .rdata called by 0x100fcb00 (KERNEL32.dll!GetFileSize)	true
 1172f1bc	4	file	5e089301	.rdata	IAT slot in .rdata (KERNEL32.dll!GetFileSizeEx) called by 0x116a57df	IAT slot in .rdata (KERNEL32.dll!GetFileSizeEx) called by 0x116a57df	true
-1172f1c0	4	file	6e089301	.rdata	pe_iat_slot	KERNEL32.dll!ReadFile	false
+1172f1c0	4	file	6e089301	.rdata	4-byte IAT slot in .rdata importing KERNEL32.DLL!ReadFile called by 0x116aa9e2/0x116aab43/0x116aaffa	4-byte IAT slot in .rdata importing KERNEL32.DLL!ReadFile called by 0x116aa9e2/0x116aab43/0x116aaffa	true
 1172f1c4	4	file	7a089301	.rdata	pe_iat_slot	KERNEL32.dll!SetFilePointer	false
 1172f1c8	4	file	8c089301	.rdata	IAT slot in .rdata (KERNEL32.dll!SetFilePointerEx) called by 0x10115050	IAT slot in .rdata (KERNEL32.dll!SetFilePointerEx) called by 0x10115050	true
 1172f1cc	4	file	a0089301	.rdata	IAT slot in .rdata (KERNEL32.dll!IsDebuggerPresent) called by 0x1168783d (___acrt_call_reportfault)	IAT slot in .rdata (KERNEL32.dll!IsDebuggerPresent) called by 0x1168783d (___acrt_call_reportfault)	true
@@ -860,6 +860,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1190ca78	16	file	436f6d70617265537472696e67457800	.rdata	NUL-terminated ASCII string 'CompareStringEx' in .rdata queried by 0x116a82ed	NUL-terminated ASCII string 'CompareStringEx' in .rdata queried by 0x116a82ed	true
 1190ca98	14	file	4c434d6170537472696e67457800	.rdata	NUL-terminated ASCII string 'LCMapStringEx' in .rdata queried by 0x116a83bd	NUL-terminated ASCII string 'LCMapStringEx' in .rdata queried by 0x116a83bd	true
 1190ec70	91	file	06000006000100001000030600060210044545450505050505353000500000000028203850580708003730305750070000202008070000000860686060606000007870787878780807080700070008080800000807080007080007	.rdata	91-byte packed printf format-char state transition table in .rdata indexed by 0x1168934e ([ch+0x1190ec50] & 0xf row, [prev_state + row*8 + 0x1190ec70] >> 4)	91-byte packed printf format-char state transition table in .rdata indexed by 0x1168934e ([ch+0x1190ec50] & 0xf row, [prev_state + row*8 + 0x1190ec70] >> 4)	true
+1190ecd0	91	file	06808086808180000010038680868280140505454545858585050000303080508088000800282738505780000700373030505088070000202880888080000000606860686868080807787770777070080800000807080007080007	.rdata	91-byte UCRT __acrt_printf_lookup_table_second in .rdata indexed by 0x116892d1 (compiler-folded -0x20 base 0x1190ecb0)	91-byte UCRT __acrt_printf_lookup_table_second in .rdata indexed by 0x116892d1 (compiler-folded -0x20 base 0x1190ecb0)	true
 1190ed2c	14	file	28006e0075006c006c0029000000	.rdata	14-byte UTF-16LE L'(null)' literal in .rdata emitted by 0x1168b78e (%ls)	14-byte UTF-16LE L'(null)' literal in .rdata emitted by 0x1168b78e (%ls)	true
 1190f9dc	24	file	6d00730063006f007200650065002e0064006c006c000000	.rdata	NUL-terminated UTF-16LE string L'mscoree.dll' in .rdata passed by 0x1168d2f1	NUL-terminated UTF-16LE string L'mscoree.dll' in .rdata passed by 0x1168d2f1	true
 1190f9f4	15	file	436f724578697450726f6365737300	.rdata	NUL-terminated ASCII string 'CorExitProcess' in .rdata resolved by 0x1168d2f1	NUL-terminated ASCII string 'CorExitProcess' in .rdata resolved by 0x1168d2f1	true
@@ -931,6 +932,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 11925254	16	file	000000001a6168110000000064529211	.rdata	16-byte MSVC _ThrowInfo descriptor for std::length_error in .rdata pushed by 0x11686192	16-byte MSVC _ThrowInfo descriptor for std::length_error in .rdata pushed by 0x11686192	true
 119253c8	16	file	feffffff00000000d4ffffff00000000	.rdata	MSVC SEH4 scope table descriptor in .rdata pushed by 0x11687e1a	MSVC SEH4 scope table descriptor in .rdata pushed by 0x11687e1a	true
 11925408	16	file	feffffff00000000d4ffffff00000000	.rdata	16-byte MSVC SEH scope descriptor in .rdata loaded by 0x116880f7	16-byte MSVC SEH scope descriptor in .rdata loaded by 0x116880f7	true
+11925428	16	file	feffffff00000000d4ffffff00000000	.rdata	16-byte MSVC SEH4 scope table in .rdata for 0x1168809c	16-byte MSVC SEH4 scope table in .rdata for 0x1168809c	true
 11925448	16	file	feffffff00000000d8ffffff00000000	.rdata	16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x1168d11b	16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x1168d11b	true
 11925468	16	file	feffffff00000000d8ffffff00000000	.rdata	16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x1168d0ce	16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x1168d0ce	true
 119254e8	16	file	feffffff00000000d0ffffff00000000	.rdata	MSVC SEH4 scope table descriptor in .rdata pushed by 0x1168ed98	MSVC SEH4 scope table descriptor in .rdata pushed by 0x1168ed98	true
@@ -941,6 +943,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 11925830	16	file	feffffff00000000d8ffffff00000000	.rdata	16-byte MSVC SEH scope descriptor in .rdata pushed by 0x116a42c8	16-byte MSVC SEH scope descriptor in .rdata pushed by 0x116a42c8	true
 11925850	16	file	feffffff00000000d8ffffff00000000	.rdata	16-byte MSVC SEH scope descriptor in .rdata pushed by 0x116a43da	16-byte MSVC SEH scope descriptor in .rdata pushed by 0x116a43da	true
 119258d0	16	file	feffffff00000000d0ffffff00000000	.rdata	16-byte SEH scope table descriptor in .rdata pushed by 0x116a511c (__write)	16-byte SEH scope table descriptor in .rdata pushed by 0x116a511c (__write)	true
+119259b0	16	file	feffffff00000000d0ffffff00000000	.rdata	16-byte MSVC SEH4 scope table in .rdata for 0x116aaee6 (immediately preceding 0x119259d0)	16-byte MSVC SEH4 scope table in .rdata for 0x116aaee6 (immediately preceding 0x119259d0)	true
 119259d0	16	file	feffffff00000000d4ffffff00000000	.rdata	MSVC SEH4 scope table descriptor in .rdata pushed by 0x116ab53f	MSVC SEH4 scope table descriptor in .rdata pushed by 0x116ab53f	true
 11925af8	16	file	feffffff00000000d4ffffff00000000	.rdata	16-byte MSVC SEH scope table descriptor in .rdata pushed by 0x116b03a7 (__isindst)	16-byte MSVC SEH scope table descriptor in .rdata pushed by 0x116b03a7 (__isindst)	true
 11925b18	16	file	feffffff00000000d8ffffff00000000	.rdata	16-byte MSVC SEH scope table descriptor in .rdata pushed by 0x116b034a (__tzset)	16-byte MSVC SEH scope table descriptor in .rdata pushed by 0x116b034a (__tzset)	true

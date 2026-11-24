@@ -13,7 +13,7 @@
     "class_field_entries": 95747,
     "rtti_type_descriptors": 181,
     "rtti_complete_object_locators": 15,
-    "globals": 10838,
+    "globals": 10841,
     "exported_code_targets_pinned": 405
   },
   "distributions": {
@@ -40,7 +40,7 @@
       "static_rdata_ptr": 7913,
       "static_fn_ptr": 888,
       "static_vptr_instance": 584,
-      "pe_iat_slot": 493,
+      "pe_iat_slot": 491,
       "msvc_rtti_type_descriptor": 181,
       "curated": 46,
       "pe_data_export": 29,
@@ -63,6 +63,7 @@
       "IAT slot in .rdata (KERNEL32.dll!GetTimeZoneInformation) called by 0x116b0111": 1,
       "IAT slot in .rdata (KERNEL32.dll!SetStdHandle) called by 0x116ae9c8": 1,
       "IAT slot in .rdata (KERNEL32.dll!GetFullPathNameW) called by 0x116ae1c9 and 0x116ae232": 1,
+      "4-byte IAT slot in .rdata importing KERNEL32.DLL!ReadConsoleW called by 0x116aaffa": 1,
       "IAT slot in .rdata (KERNEL32.dll!LoadLibraryExW) called by 0x116a840b (try_get_first_available_module)": 1,
       "IAT slot in .rdata (KERNEL32.dll!HeapAlloc) called by 0x116ab734 (__calloc_base)": 1,
       "IAT slot in .rdata (KERNEL32!HeapFree) called by 0x116a5967 (_free_crt)": 1,
@@ -94,6 +95,7 @@
       "IAT slot in .rdata (KERNEL32.dll!GetFileAttributesA) called by 0x100ff880": 1,
       "IAT slot in .rdata called by 0x100fcb00 (KERNEL32.dll!GetFileSize)": 1,
       "IAT slot in .rdata (KERNEL32.dll!GetFileSizeEx) called by 0x116a57df": 1,
+      "4-byte IAT slot in .rdata importing KERNEL32.DLL!ReadFile called by 0x116aa9e2/0x116aab43/0x116aaffa": 1,
       "IAT slot in .rdata (KERNEL32.dll!SetFilePointerEx) called by 0x10115050": 1,
       "IAT slot in .rdata (KERNEL32.dll!IsDebuggerPresent) called by 0x1168783d (___acrt_call_reportfault)": 1,
       "IAT slot in .rdata (KERNEL32.dll!OutputDebugStringW) called by 0x101034b0": 1,
@@ -354,6 +356,7 @@
       "NUL-terminated ASCII string 'CompareStringEx' in .rdata queried by 0x116a82ed": 1,
       "NUL-terminated ASCII string 'LCMapStringEx' in .rdata queried by 0x116a83bd": 1,
       "91-byte packed printf format-char state transition table in .rdata indexed by 0x1168934e ([ch+0x1190ec50] & 0xf row, [prev_state + row*8 + 0x1190ec70] >> 4)": 1,
+      "91-byte UCRT __acrt_printf_lookup_table_second in .rdata indexed by 0x116892d1 (compiler-folded -0x20 base 0x1190ecb0)": 1,
       "14-byte UTF-16LE L'(null)' literal in .rdata emitted by 0x1168b78e (%ls)": 1,
       "NUL-terminated UTF-16LE string L'mscoree.dll' in .rdata passed by 0x1168d2f1": 1,
       "NUL-terminated ASCII string 'CorExitProcess' in .rdata resolved by 0x1168d2f1": 1,
@@ -425,6 +428,7 @@
       "16-byte MSVC _ThrowInfo descriptor for std::length_error in .rdata pushed by 0x11686192": 1,
       "MSVC SEH4 scope table descriptor in .rdata pushed by 0x11687e1a": 1,
       "16-byte MSVC SEH scope descriptor in .rdata loaded by 0x116880f7": 1,
+      "16-byte MSVC SEH4 scope table in .rdata for 0x1168809c": 1,
       "16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x1168d11b": 1,
       "16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x1168d0ce": 1,
       "MSVC SEH4 scope table descriptor in .rdata pushed by 0x1168ed98": 1,
@@ -435,6 +439,7 @@
       "16-byte MSVC SEH scope descriptor in .rdata pushed by 0x116a42c8": 1,
       "16-byte MSVC SEH scope descriptor in .rdata pushed by 0x116a43da": 1,
       "16-byte SEH scope table descriptor in .rdata pushed by 0x116a511c (__write)": 1,
+      "16-byte MSVC SEH4 scope table in .rdata for 0x116aaee6 (immediately preceding 0x119259d0)": 1,
       "MSVC SEH4 scope table descriptor in .rdata pushed by 0x116ab53f": 1,
       "16-byte MSVC SEH scope table descriptor in .rdata pushed by 0x116b03a7 (__isindst)": 1,
       "16-byte MSVC SEH scope table descriptor in .rdata pushed by 0x116b034a (__tzset)": 1,
@@ -748,24 +753,24 @@
     }
   },
   "curated_reconciliation": {
-    "curated_functions_total": 1347,
-    "curated_in_canonical_index": 1316,
-    "curated_exact_body_sha256_match": 1298,
+    "curated_functions_total": 1374,
+    "curated_in_canonical_index": 1343,
+    "curated_exact_body_sha256_match": 1325,
     "curated_multi_range_expanded": 18,
     "curated_non_proc_slots": 31,
-    "curated_globals_matched": 750,
+    "curated_globals_matched": 755,
     "curated_vtables_matched": 76
   },
   "files": {
     "function_contracts_part1.tsv": {
       "rows": 40640,
-      "bytes": 9392000,
-      "sha256": "5a84ed885494e79b3d1318e213af35478d3ca7a17f1ccec37fba152a90a5b087"
+      "bytes": 9392017,
+      "sha256": "06b418894b8131e66a9f20da6ab946065198d9523d282a81353d188340f2e01e"
     },
     "function_contracts_part2.tsv": {
       "rows": 40640,
-      "bytes": 9469014,
-      "sha256": "1dc9a27b89bcb01ab13efb3fbb4abca7519e9817431ca41d0fa213ad842372fa"
+      "bytes": 9469456,
+      "sha256": "048681203dc0045fe6349489d2fe6cd0772d0049a6d6779bcaf1e41f24158c98"
     },
     "non_proc_curated_slots.tsv": {
       "rows": 31,
@@ -788,9 +793,9 @@
       "sha256": "534964ec1fa25fd15189a0fd007ba1412fe7fe339981ade410ca82a303f8e912"
     },
     "global_contracts.tsv": {
-      "rows": 10838,
-      "bytes": 920151,
-      "sha256": "92b3be62656264205f688a5eb3517279459a2ae16a405b8ca28a2e506f91579d"
+      "rows": 10841,
+      "bytes": 921309,
+      "sha256": "6e9b9f31a4cf4b1bddd87c63a4771aad41fbd278e0e604ed78d311058ec65d2a"
     }
   }
 }

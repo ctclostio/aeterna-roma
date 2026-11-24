@@ -3348,5 +3348,47 @@ ROME2_LAYOUT_ASSERT(rome2_startup_narrow_printf_processor1100_32, core_00, 0x00)
 ROME2_LAYOUT_ASSERT(rome2_startup_narrow_printf_processor1100_32, fmt_buf_40, 0x40);
 ROME2_LAYOUT_ASSERT(rome2_startup_narrow_printf_processor1100_32, adapter_ptr_448, 0x448);
 
+/* 8B (0x08) UCRT stream_output_adapter_data<char> wrapper holding guest FILE* pointer (0x1168b848/0x1168b9b4/0x1168bc97). */
+typedef struct rome2_startup_vfprintf_stream_adapter8_32 {
+    uint32_t stream_ptr_00;                      /* 00 (FILE_32*) */
+    uint32_t reserved_04;                        /* 04 */
+} rome2_startup_vfprintf_stream_adapter8_32;
+_Static_assert(sizeof(rome2_startup_vfprintf_stream_adapter8_32) == 0x08, "startup vfprintf stream adapter8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_vfprintf_stream_adapter8_32, stream_ptr_00, 0x00);
+
+/* 20B (0x14) common_vfprintf SEH lambda capture frame used by 0x1168809c / 0x116890f3. */
+typedef struct rome2_startup_vfprintf_lambda_ctx20_32 {
+    uint32_t stream_pp_00;                       /* 00 (FILE_32**) */
+    uint32_t locale_pp_04;                       /* 04 (__crt_locale_pointers**) */
+    uint32_t options_p_08;                       /* 08 (uint64_t*) */
+    uint32_t format_pp_0c;                       /* 0c (const char**) */
+    uint32_t arglist_p_10;                       /* 10 (va_list*) */
+} rome2_startup_vfprintf_lambda_ctx20_32;
+_Static_assert(sizeof(rome2_startup_vfprintf_lambda_ctx20_32) == 0x14, "startup vfprintf lambda ctx20 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_vfprintf_lambda_ctx20_32, stream_pp_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_vfprintf_lambda_ctx20_32, options_p_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_vfprintf_lambda_ctx20_32, arglist_p_10, 0x10);
+
+/* 56B (0x38) UCRT __crt_lowio_ioinfo layout with textmode/pipech2/unicode fields accessed by 0x116aaffa & 0x1168b8a6. */
+typedef struct rome2_startup_crt_ioinfo_read56_32 {
+    uint32_t lock_cs_00[6];                      /* 00..17 (CRITICAL_SECTION) */
+    uint32_t osfhnd_18;                          /* 18 (Win32 HANDLE or INVALID_HANDLE_VALUE) */
+    uint32_t peekch_reserved_1c;                 /* 1c */
+    uint32_t startpos_lo_20;                     /* 20 (int64 low word set before UTF-8 reads) */
+    uint32_t startpos_hi_24;                     /* 24 (int64 high word) */
+    uint8_t osfile_28;                           /* 28 (0x01=FOPEN, 0x02=FEOF, 0x04=FCRLF, 0x08=FPIPE, 0x40=FDEV, 0x80=FTEXT) */
+    uint8_t textmode_29;                         /* 29 (0=ANSI, 1=UTF-8, 2=UTF-16LE) */
+    uint8_t pipech2_2a[3];                       /* 2a..2c (2B/3B lookahead buffer; 0x0a = empty) */
+    uint8_t utf8_crlf_flags_2d;                  /* 2d (bit 0 = unicode flag, bit 1 = split UTF-8 translation active) */
+    uint8_t pad_2e[10];                          /* 2e..37 */
+} rome2_startup_crt_ioinfo_read56_32;
+_Static_assert(sizeof(rome2_startup_crt_ioinfo_read56_32) == 0x38, "startup crt ioinfo read56 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_ioinfo_read56_32, osfhnd_18, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_ioinfo_read56_32, startpos_lo_20, 0x20);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_ioinfo_read56_32, osfile_28, 0x28);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_ioinfo_read56_32, textmode_29, 0x29);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_ioinfo_read56_32, pipech2_2a, 0x2a);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_ioinfo_read56_32, utf8_crlf_flags_2d, 0x2d);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif
