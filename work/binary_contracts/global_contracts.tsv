@@ -656,14 +656,19 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1173df40	18	file	57617273636170652f4d69704c6576656c00	.rdata	NUL-terminated ASCII string 'Warscape/MipLevel' in .rdata used by 0x100d2860	NUL-terminated ASCII string 'Warscape/MipLevel' in .rdata used by 0x100d2860	true
 1173df54	22	file	57617273636170652f546578656c44656e7369747900	.rdata	NUL-terminated ASCII string 'Warscape/TexelDensity' in .rdata used by 0x100d2860	NUL-terminated ASCII string 'Warscape/TexelDensity' in .rdata used by 0x100d2860	true
 1173dfac	8	file	5c000000312e3231	.rdata	"static path-separator string ""\"" (0x5c,0x00,0x00,0x00) followed by version string ""1.21"""	"static path-separator string ""\"" (0x5c,0x00,0x00,0x00) followed by version string ""1.21"""	true
+1173e2b4	4	file	00000000	.rdata	binary32 0.0 in .rdata compared against the inertia speed by 0x100dcfe0	binary32 0.0 in .rdata compared against the inertia speed by 0x100dcfe0	true
 1173e2b8	4	file	6f12833a	.rdata	4-byte IEEE-754 float 0.001f (0x3a83126f) in .rdata multiplied by 0x112e2b00	4-byte IEEE-754 float 0.001f (0x3a83126f) in .rdata multiplied by 0x112e2b00	true
 1173e2bc	4	file	cdcccc3d	.rdata	curated	curated	true
+1173e2c0	4	file	0000803e	.rdata	binary32 0.25 pinch/rotate damping factor in .rdata read by 0x100da620	binary32 0.25 pinch/rotate damping factor in .rdata read by 0x100da620	true
+1173e2c4	4	file	0000003f	.rdata	binary32 0.5 threshold in .rdata read by 0x100d89a0	binary32 0.5 threshold in .rdata read by 0x100d89a0	true
 1173e2c8	4	file	0000103f	.rdata	4-byte float aspect-ratio crop scale 0.5625f (9/16) in .rdata for 0x100dd4c0	4-byte float aspect-ratio crop scale 0.5625f (9/16) in .rdata for 0x100dd4c0	true
 1173e2d0	4	file	0000803f	.rdata	curated	curated	true
 1173e2d4	4	file	abaaaa3f	.rdata	4-byte float 4:3 aspect-ratio factor 1.3333334f in .rdata for 0x100dd4c0	4-byte float 4:3 aspect-ratio factor 1.3333334f in .rdata for 0x100dd4c0	true
 1173e2d8	4	file	3333b33f	.rdata	4-byte float aspect-ratio lower bound 1.4f in .rdata for 0x100dd4c0	4-byte float aspect-ratio lower bound 1.4f in .rdata for 0x100dd4c0	true
 1173e2dc	4	file	9a99d93f	.rdata	4-byte float aspect-ratio upper bound 1.7f in .rdata for 0x100dd4c0	4-byte float aspect-ratio upper bound 1.7f in .rdata for 0x100dd4c0	true
 1173e2e0	4	file	398ee33f	.rdata	4-byte float 16:9 aspect-ratio factor 1.7777778f in .rdata for 0x100dd4c0	4-byte float 16:9 aspect-ratio factor 1.7777778f in .rdata for 0x100dd4c0	true
+1173e2f0	4	file	46276542	.rdata	binary32 57.288353 positive angle scale in .rdata read by 0x100d7f30	binary32 57.288353 positive angle scale in .rdata read by 0x100d7f30	true
+1173e2f8	4	file	462765c2	.rdata	binary32 -57.288353 negative angle scale in .rdata read by 0x100d7f30	binary32 -57.288353 negative angle scale in .rdata read by 0x100d7f30	true
 1173e300	16	file	0000000000000000000000000000f041	.rdata	Unsigned-to-double conversion bias pair referenced by float load-factor computation in 0x112cbe10	Unsigned-to-double conversion bias pair referenced by float load-factor computation in 0x112cbe10	true
 1173f1f0	16	file	2a0000000a0000000a00000025730000	.rdata	"VFS trace/format descriptor {'*', 10, 10, ""%s""} passed by 0x112b5730 to 0x112a4e10"	"VFS trace/format descriptor {'*', 10, 10, ""%s""} passed by 0x112b5730 to 0x112a4e10"	true
 1173f200	4	file	e0110e10	.rdata	4-byte 1-slot base vtable {0x100e11e0} in .rdata installed by 0x100e0650	4-byte 1-slot base vtable {0x100e11e0} in .rdata installed by 0x100e0650	true
@@ -941,6 +946,10 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1190ec70	91	file	06000006000100001000030600060210044545450505050505353000500000000028203850580708003730305750070000202008070000000860686060606000007870787878780807080700070008080800000807080007080007	.rdata	91-byte packed printf format-char state transition table in .rdata indexed by 0x1168934e ([ch+0x1190ec50] & 0xf row, [prev_state + row*8 + 0x1190ec70] >> 4)	91-byte packed printf format-char state transition table in .rdata indexed by 0x1168934e ([ch+0x1190ec50] & 0xf row, [prev_state + row*8 + 0x1190ec70] >> 4)	true
 1190ecd0	91	file	06808086808180000010038680868280140505454545858585050000303080508088000800282738505780000700373030505088070000202880888080000000606860686868080807787770777070080800000807080007080007	.rdata	91-byte UCRT __acrt_printf_lookup_table_second in .rdata indexed by 0x116892d1 (compiler-folded -0x20 base 0x1190ecb0)	91-byte UCRT __acrt_printf_lookup_table_second in .rdata indexed by 0x116892d1 (compiler-folded -0x20 base 0x1190ecb0)	true
 1190ed2c	14	file	28006e0075006c006c0029000000	.rdata	14-byte UTF-16LE L'(null)' literal in .rdata emitted by 0x1168b78e (%ls)	14-byte UTF-16LE L'(null)' literal in .rdata emitted by 0x1168b78e (%ls)	true
+1190ed40	64	file	1a532e31e015813de2579333e016833d08865234e017853d674c1e340019873d07042e34201a893d4e822c31601b8b3db55b1d34801c8d3df30cfe33c01d8f3d	.rdata	first 64 bytes (four 16B entries) of the libm acosf interval table in .rdata indexed by 0x1168cad5	first 64 bytes (four 16B entries) of the libm acosf interval table in .rdata indexed by 0x1168cad5	true
+1190f540	16	file	4cef2eb4dc0fc93f0000000000000000	.rdata	16B libm vector {pi/2 low -1.6292068e-07, pi/2 high 1.5707964, 0, 0} in .rdata read by 0x1168cad5	16B libm vector {pi/2 low -1.6292068e-07, pi/2 high 1.5707964, 0, 0} in .rdata read by 0x1168cad5	true
+1190f550	16	file	2ebdbb33db0f49c00000000000000000	.rdata	16B libm vector {8.742278e-08, -pi, 0, 0} in .rdata ANDed by 0x1168cad5	16B libm vector {8.742278e-08, -pi, 0, 0} in .rdata ANDed by 0x1168cad5	true
+1190f560	16	file	2ebdbbb3db0f49400000000000000000	.rdata	16B libm vector {-8.742278e-08, pi, 0, 0} in .rdata read by 0x1168cad5	16B libm vector {-8.742278e-08, pi, 0, 0} in .rdata read by 0x1168cad5	true
 1190f9dc	24	file	6d00730063006f007200650065002e0064006c006c000000	.rdata	NUL-terminated UTF-16LE string L'mscoree.dll' in .rdata passed by 0x1168d2f1	NUL-terminated UTF-16LE string L'mscoree.dll' in .rdata passed by 0x1168d2f1	true
 1190f9f4	15	file	436f724578697450726f6365737300	.rdata	NUL-terminated ASCII string 'CorExitProcess' in .rdata resolved by 0x1168d2f1	NUL-terminated ASCII string 'CorExitProcess' in .rdata resolved by 0x1168d2f1	true
 11910528	120	file	010001010100000001000001010001010100000001000001010101010101010100010100010101010101010100010100010101010101010100010100010101010101010100010100010101010101010100010100010000010000000001000000010000010000000000000001010101010101010100010100	.rdata	120-byte (10 x 12B) scanf format length/specifier compatibility table in .rdata indexed by 0x11692f4e	120-byte (10 x 12B) scanf format length/specifier compatibility table in .rdata indexed by 0x11692f4e	true
@@ -988,6 +997,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 11914d8c	17	file	4c6f63616c654e616d65546f4c43494400	.rdata	NUL-terminated ASCII string 'LocaleNameToLCID' in .rdata queried and used as descriptor end sentinel by 0x116a83d7	NUL-terminated ASCII string 'LocaleNameToLCID' in .rdata queried and used as descriptor end sentinel by 0x116a83d7	true
 11914de4	4	file	12000000	.rdata	4-byte Win32 API name length/header dword (0x12) in .rdata preceding AppPolicyGetProcessTerminationMethod for 0x116a8555	4-byte Win32 API name length/header dword (0x12) in .rdata preceding AppPolicyGetProcessTerminationMethod for 0x116a8555	true
 11914de8	37	file	417070506f6c69637947657450726f636573735465726d696e6174696f6e4d6574686f6400	.rdata	NUL-terminated ASCII string 'AppPolicyGetProcessTerminationMethod' in .rdata queried by 0x116a8555	NUL-terminated ASCII string 'AppPolicyGetProcessTerminationMethod' in .rdata queried by 0x116a8555	true
+11914e40	64	file	dd7d7f3fcb797f3fa9757f3f76717f3f346d7f3fe1687f3f7f647f3f0c607f3f895b7f3ff6567f3f53527f3fa04d7f3fdc487f3f09447f3f253f7f3f323a7f3f	.rdata	first 64 bytes (sixteen binary32 entries) of the libm acosf slope table in .rdata indexed by 0x1168cad5	first 64 bytes (sixteen binary32 entries) of the libm acosf slope table in .rdata indexed by 0x1168cad5	true
 119152d8	6	file	3123494e4600	.rdata	NUL-terminated ASCII special float string '1#INF' in .rdata formatted by $I10_OUTPUT 0x116a8e6d	NUL-terminated ASCII special float string '1#INF' in .rdata formatted by $I10_OUTPUT 0x116a8e6d	true
 119152e0	7	file	3123514e414e00	.rdata	NUL-terminated ASCII special float string '1#QNAN' in .rdata formatted by $I10_OUTPUT 0x116a8e6d	NUL-terminated ASCII special float string '1#QNAN' in .rdata formatted by $I10_OUTPUT 0x116a8e6d	true
 119152e8	7	file	3123534e414e00	.rdata	NUL-terminated ASCII special float string '1#SNAN' in .rdata formatted by $I10_OUTPUT 0x116a8e6d	NUL-terminated ASCII special float string '1#SNAN' in .rdata formatted by $I10_OUTPUT 0x116a8e6d	true
@@ -1055,6 +1065,9 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 11933000	4	file	01000000	.data	4-byte initialized video letterbox enable flag (initial 1) in .data written by 0x100dd4c0	4-byte initialized video letterbox enable flag (initial 1) in .data written by 0x100dd4c0	true
 11933184	4	file	78d27311	.data	static_rdata_ptr	ptr_0x1173d278	false
 119331a0	4	file	98d27311	.data	static_rdata_ptr	ptr_0x1173d298	false
+119331d8	4	file	cdccccbd	.data	binary32 -0.1 rotate angle scale in .data read by 0x100da620	binary32 -0.1 rotate angle scale in .data read by 0x100da620	true
+119331dc	4	file	0000c842	.data	binary32 100.0 pinch span scale in .data read by 0x100da620	binary32 100.0 pinch span scale in .data read by 0x100da620	true
+119331e0	4	file	00000041	.data	binary32 8.0 peak-speed decay rate in .data read by 0x100dcfe0	binary32 8.0 peak-speed decay rate in .data read by 0x100dcfe0	true
 119331e8	4	file	20e37311	.data	static_rdata_ptr	ptr_0x1173e320	false
 119331ec	4	file	30e37311	.data	static_rdata_ptr	ptr_0x1173e330	false
 119331f0	4	file	78e97311	.data	static_rdata_ptr	ptr_0x1173e978	false
@@ -1115,6 +1128,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 11933c70	4	file	90157411	.data	static_rdata_ptr	ptr_0x11741590	false
 11933c74	4	file	9c157411	.data	static_rdata_ptr	ptr_0x1174159c	false
 11933c78	4	file	a8157411	.data	static_rdata_ptr	ptr_0x117415a8	false
+11933c7c	1	file	01	.data	1-byte mouse-state-valid flag (initial 1) in .data written by 0x100f1090/0x100f1100 and tested by 0x10103c50	1-byte mouse-state-valid flag (initial 1) in .data written by 0x100f1090/0x100f1100 and tested by 0x10103c50	true
 11933c80	4	file	b4157411	.data	static_rdata_ptr	ptr_0x117415b4	false
 11933c88	4	file	bc157411	.data	static_rdata_ptr	ptr_0x117415bc	false
 11933c90	4	file	c0157411	.data	static_rdata_ptr	ptr_0x117415c0	false
@@ -1385,6 +1399,8 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 119344ac	4	file	a8097411	.data	static_rdata_ptr	ptr_0x117409a8	false
 119344b0	4	file	c0097411	.data	static_rdata_ptr	ptr_0x117409c0	false
 119344b4	4	file	c8097411	.data	static_rdata_ptr	ptr_0x117409c8	false
+119344c0	16	file	000000000000000000000000ffff7f7f	.data	first 16 bytes of the 40B global mouse state in .data (float +0x0c initial 0x7f7fffff) written by 0x100f1100 and read by 0x100f1160	first 16 bytes of the 40B global mouse state in .data (float +0x0c initial 0x7f7fffff) written by 0x100f1100 and read by 0x100f1160	true
+119344d0	8	file	0000000000000000	.data	bytes 0x10..0x17 of the 40B global mouse state in .data; bytes 0x18..0x27 lie in the previously pinned 0x119344d8	bytes 0x10..0x17 of the 40B global mouse state in .data; bytes 0x18..0x27 lie in the previously pinned 0x119344d8	true
 119344d8	16	file	00000000000000000000000000000000	.data	16-byte initialized DirectInput mouse state block {dx, -dy, -dz, btns} in .data written by 0x1010eda0	16-byte initialized DirectInput mouse state block {dx, -dy, -dz, btns} in .data written by 0x1010eda0	true
 119344e8	12	file	000000000000000060100000	.data	12-byte freelist pool header {0, 0, 0x1060} in .data returned by 0x10105fa0	12-byte freelist pool header {0, 0, 0x1060} in .data returned by 0x10105fa0	true
 119344f4	12	file	000000000000000060100000	.data	12-byte freelist pool header {freelist_head, slab_list, initial_slab_count=0x1060} returned by 10106000	12-byte freelist pool header {freelist_head, slab_list, initial_slab_count=0x1060} returned by 10106000	true

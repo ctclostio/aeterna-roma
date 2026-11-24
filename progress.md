@@ -2201,3 +2201,59 @@ callees.
   `clean_crt=0`, `noret_or_thunk=0` across **1,525** functions; remaining `38`
   `entry_point` spine functions across Layers 70–71 Partition 8 and live runtime
   execution remain open).
+
+### Layer 70 — Partition 8 touch-gesture recognizer, input-handler dispatch, mouse-state & acosf cluster (2026-11-24)
+- Extended Partition 8 (`extending_layer69_batched_p8`) closing **21** functions:
+  the touch-gesture recognizer (`0x100d8430` raw-touch ingest, `0x100d89a0`
+  state step, `0x100da620` pinch/rotate record, `0x100d9880` record replay into
+  pointer events, `0x100dcfe0` per-frame tick with flick inertia), the input
+  manager (`0x100dd7a0` update, `0x100dd280` primary and `0x100ddcd0` secondary
+  handler dispatch), the published mouse-state helpers (`0x100f1090`,
+  `0x100f1100`, `0x100f1160`, `0x10103c50`), two-touch span and signed-angle
+  measures taking two by-value 48B records (`0x100d7b80`, `0x100d7f30`, both
+  `ret 0x60`), four `{capacity, count, data}` push helpers for 48B/44B/64B
+  elements (`0x100d9e40`, `0x100d9f80`, `0x100da2b0`, `0x100da3f0`), two
+  twelve-dword copies (`0x100d2690`, `0x100d6910`) and the register-argument
+  `libm_sse2_acosf` (`0x1168cad5`), growing
+  [contracts.json](port/recovered_types/contracts.json) to **1,546** functions,
+  **889** globals (`16` Layer 70 non-overlapping globals: `.rdata` binary32
+  constants `0x1173e2b4` `0.0`, `0x1173e2c0` `0.25`, `0x1173e2c4` `0.5`,
+  `0x1173e2f0`/`0x1173e2f8` `±57.288353`, the `acosf` tables `0x1190ed40`,
+  `0x1190f540..0x1190f560` and `0x11914e40`, the `.data` tunables `0x119331d8`
+  `-0.1`, `0x119331dc` `100.0` and `0x119331e0` `8.0`, the `0x11933c7c`
+  mouse-valid byte and the `0x119344c0`/`0x119344d0` pointer state), **85**
+  vtables (none new), and **1,473** instruction witnesses (`198` Partition 8
+  validated REA records: `40` new + `158` reused Layer 69, `non_proc_slots=[]`,
+  `resource_constrained_slots=[]`; **2,316** cumulative across Partitions 1–8;
+  `123,442,666B` snapshot; `0` unpinned internal callees).
+- The cluster is named from its disassembly, not from the library-match labels
+  in the whole-binary index (`facefx_playback_state_machine_update` and
+  `facefx_collect_results_clamp_copy` for `0x100d89a0`/`0x100dd7a0`): the code
+  tracks touch points by id, classifies tap, long-press, drag, pinch/rotate and
+  three-finger swipes, and forwards records and synthesized pointer events to
+  two handler lists. Four data operands without a retained `read_bytes` record
+  (`0x1173e2cc`, `0x1173e2f4`, `0x1173e310`, `0x119331d4`) and the
+  uninitialized `.data` cells `0x119f30a0` and `0x119f3d90..0x119f3dbf` stay
+  unpinned and are recorded as limitations in `rea_layer70_evidence`; the two
+  `acosf` tables are pinned for the 64 bytes each record returned.
+- Locked 6 fixed-width [guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  layouts (`rome2_startup_raw_touch24_32`, `rome2_startup_touch_point48_32`,
+  `rome2_startup_mouse_state40_32`, `rome2_startup_input_event44_32`,
+  `rome2_startup_input_state88_32`, `rome2_startup_gesture_record64_32`) and
+  added bounded C17 reconstruction and **56 checks** in
+  [startup_touch_gesture_input_ops.h](port/recovered_types/startup_touch_gesture_input_ops.h),
+  [startup_touch_gesture_input_ops.c](port/recovered_types/startup_touch_gesture_input_ops.c),
+  and [test_startup_touch_gesture_input_ops.c](port/recovered_types/test_startup_touch_gesture_input_ops.c).
+  Floating results use the host libm and are not claimed bit-identical to the
+  table-driven SSE2 `acosf`; record fields the original leaves as uninitialized
+  stack are zero in the port.
+- [build_whole_binary_contracts.py](scripts/build_whole_binary_contracts.py) now
+  writes `manifest.json` and `summary.md` with LF line endings on every host.
+- Verified **127/127** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
+  and ASan, **110** contract tests on Python 3.14 and 3.15 (`10,969` PE-verified
+  whole-binary globals in [manifest.json](work/binary_contracts/manifest.json)),
+  and **973** clean-public Python tests (**339** skipped) on Python 3.14 and 3.15
+  without touching the shared Ghidra project or canonical exports (`clean_eng=0`,
+  `clean_crt=0`, `noret_or_thunk=0` across **1,546** functions; remaining `17`
+  `entry_point` spine functions in Layer 71 Partition 8 and live runtime
+  execution remain open).

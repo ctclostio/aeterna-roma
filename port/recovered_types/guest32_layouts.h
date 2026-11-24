@@ -3602,5 +3602,81 @@ ROME2_LAYOUT_ASSERT(rome2_startup_fx_name_bucket20_32, name_words_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_startup_fx_name_bucket20_32, hash_0c, 0x0c);
 ROME2_LAYOUT_ASSERT(rome2_startup_fx_name_bucket20_32, value_10, 0x10);
 
+typedef struct rome2_startup_raw_touch24_32 {
+    uint32_t unread_00[2];                       /* 00..07 not read by 0x100d8430 */
+    float x_08;                                  /* 08 touch x */
+    float y_0c;                                  /* 0c touch y */
+    uint32_t id_10;                              /* 10 touch id matched against tracked points */
+    uint32_t flags_14;                           /* 14 flags (0x04 released, 0x10 primary) */
+} rome2_startup_raw_touch24_32;
+_Static_assert(sizeof(rome2_startup_raw_touch24_32) == 0x18, "startup raw touch24 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_raw_touch24_32, x_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_raw_touch24_32, id_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_startup_raw_touch24_32, flags_14, 0x14);
+
+typedef struct rome2_startup_touch_point48_32 {
+    uint32_t id_00;                              /* 00 touch id */
+    float start_04[3];                           /* 04..0f position at gesture start */
+    float prev_10[3];                            /* 10..1b position at the previous step */
+    float cur_1c[3];                             /* 1c..27 current position */
+    float age_28;                                /* 28 accumulated frame time */
+    uint32_t flags_2c;                           /* 2c flags (0x04 released, 0x10 primary) */
+} rome2_startup_touch_point48_32;
+_Static_assert(sizeof(rome2_startup_touch_point48_32) == 0x30, "startup touch point48 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_touch_point48_32, start_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_touch_point48_32, prev_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_startup_touch_point48_32, cur_1c, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_startup_touch_point48_32, age_28, 0x28);
+ROME2_LAYOUT_ASSERT(rome2_startup_touch_point48_32, flags_2c, 0x2c);
+
+typedef struct rome2_startup_mouse_state40_32 {
+    float x_00;                                  /* 00 pointer x */
+    float y_04;                                  /* 04 pointer y */
+    uint32_t word_08;                            /* 08 not interpreted */
+    uint32_t word_0c;                            /* 0c initial image value 0x7f7fffff */
+    uint8_t buttons_10[8];                       /* 10..17 button/flag bytes written by 0x100d9880 */
+    uint32_t words_18[4];                        /* 18..27 not interpreted */
+} rome2_startup_mouse_state40_32;
+_Static_assert(sizeof(rome2_startup_mouse_state40_32) == 0x28, "startup mouse state40 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_mouse_state40_32, word_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_startup_mouse_state40_32, buttons_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_startup_mouse_state40_32, words_18, 0x18);
+
+typedef struct rome2_startup_input_event44_32 {
+    uint32_t kind_00;                            /* 00 event kind (0..9, 0xc) */
+    rome2_startup_mouse_state40_32 state_04;     /* 04..2b pointer state at the event */
+} rome2_startup_input_event44_32;
+_Static_assert(sizeof(rome2_startup_input_event44_32) == 0x2c, "startup input event44 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_input_event44_32, state_04, 0x04);
+
+typedef struct rome2_startup_input_state88_32 {
+    rome2_startup_mouse_state40_32 mouse_00;     /* 00..27 pointer state */
+    uint8_t record_28[48];                       /* 28..57 48B record copy */
+} rome2_startup_input_state88_32;
+_Static_assert(sizeof(rome2_startup_input_state88_32) == 0x58, "startup input state88 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_input_state88_32, record_28, 0x28);
+
+typedef struct rome2_startup_gesture_record64_32 {
+    uint32_t tag_00;                             /* 00 gesture tag (0 end, 2, 5, 6, 7, 9, 10, 0xb, 0xc) */
+    float start_04[2];                           /* 04..0b start xy */
+    float prev_0c[2];                            /* 0c..13 previous xy */
+    float cur_14[2];                             /* 14..1b current xy */
+    float second_1c[2];                          /* 1c..23 second point xy (tag 0xb) */
+    float angle_24;                              /* 24 scaled rotation (tag 0xb) */
+    float span_28;                               /* 28 scaled span change (tag 0xb) */
+    uint32_t word_2c;                            /* 2c not written by the recovered builders */
+    uint8_t ended_30;                            /* 30 ended/direction byte */
+    uint8_t flag_31;                             /* 31 inertia byte */
+    uint8_t pad_32[2];                           /* 32..33 */
+    int32_t code_34;                             /* 34 replay code (-1 none, 0..0xe) */
+    float code_xy_38[2];                         /* 38..3f replay xy */
+} rome2_startup_gesture_record64_32;
+_Static_assert(sizeof(rome2_startup_gesture_record64_32) == 0x40, "startup gesture record64 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_gesture_record64_32, cur_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_startup_gesture_record64_32, angle_24, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_startup_gesture_record64_32, ended_30, 0x30);
+ROME2_LAYOUT_ASSERT(rome2_startup_gesture_record64_32, code_34, 0x34);
+ROME2_LAYOUT_ASSERT(rome2_startup_gesture_record64_32, code_xy_38, 0x38);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

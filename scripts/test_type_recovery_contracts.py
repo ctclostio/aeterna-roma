@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 1525)
-        self.assertEqual(result["globals"], 873)
+        self.assertEqual(result["functions"], 1546)
+        self.assertEqual(result["globals"], 889)
         self.assertEqual(result["vtables"], 85)
-        self.assertEqual(result["instruction_witnesses"], 1452)
+        self.assertEqual(result["instruction_witnesses"], 1473)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -3872,6 +3872,66 @@ class TypeContractProvenanceTests(unittest.TestCase):
             "117e1a08": 76, "119247b0": 16,
         }
         for addr, width in expected_globals.items():
+            self.assertEqual(by_g[addr]["width"], width)
+            self.assertEqual(by_g[addr]["storage"], "file")
+
+    def test_layer70_startup_touch_gesture_input_contracts(self):
+        ev = self.registry["rea_layer70_evidence"]
+        self.assertEqual(ev["snapshot_mode"], "extending_layer69_batched_p8")
+        self.assertEqual(ev["closed_evidence_records"], 198)
+        self.assertEqual(ev["new_evidence_records"], 40)
+        self.assertEqual(ev["reused_layer69_evidence_records"], 158)
+        self.assertEqual(ev["retained_operation_envelopes"], 198)
+        self.assertEqual(ev["extra_evidence_views_count"], 0)
+        self.assertEqual(ev["non_proc_slots"], [])
+        self.assertEqual(ev["resource_constrained_slots"], [])
+        self.assertEqual(ev["cumulative_validated_bundle_records"], 198)
+        self.assertEqual(ev["prior_partitions_validated_records"], 2118)
+        self.assertEqual(ev["cumulative_all_partitions_records"], 2316)
+        self.assertEqual(
+            ev["closed_snapshot_sha256"],
+            "19261c2e0ae8d1f75f5328bd2bcf364117e470e8f7e892ae29496af406936e00",
+        )
+        self.assertEqual(
+            ev["validated_bundle_sha256"],
+            "78b04418c2eff5f57bcf8efc40d0643df1fbd9cf6556dbba5a2662bda1ef1b63",
+        )
+        ops = {}
+        for rec in ev["new_records"]:
+            ops[rec["operation"]] = ops.get(rec["operation"], 0) + 1
+        self.assertEqual(ops, {"analyze_function": 21, "read_bytes": 19})
+
+        by_fn = {item["address"]: item for item in self.registry["functions"]}
+        layer70_thiscall = {
+            "100d2690": 4, "100d8430": 4, "100d89a0": 4, "100d9880": 0,
+            "100d9e40": 4, "100d9f80": 4, "100da2b0": 4, "100da3f0": 4,
+            "100da620": 4, "100dcfe0": 4, "100dd280": 4, "100dd7a0": 4,
+            "100ddcd0": 4, "100f1090": 4, "100f1100": 4, "100f1160": 0,
+            "10103c50": 0,
+        }
+        for addr, pop in layer70_thiscall.items():
+            self.assertEqual(by_fn[addr]["calling_convention"], "thiscall")
+            self.assertEqual(by_fn[addr]["receiver_register"], "ECX")
+            self.assertEqual(by_fn[addr]["callee_pop_bytes"], pop)
+        for addr, pop in {"100d6910": 8, "100d7b80": 96, "100d7f30": 96}.items():
+            self.assertEqual(by_fn[addr]["calling_convention"], "stdcall")
+            self.assertEqual(by_fn[addr]["callee_pop_bytes"], pop)
+        self.assertEqual(by_fn["1168cad5"]["calling_convention"], "cdecl")
+        self.assertEqual(by_fn["1168cad5"]["callee_pop_bytes"], 0)
+
+        by_g = {item["address"]: item for item in self.registry["globals"]}
+        expected_globals = {
+            "1173e2b4": "00000000", "1173e2c0": "0000803e", "1173e2c4": "0000003f",
+            "1173e2f0": "46276542", "1173e2f8": "462765c2", "119331d8": "cdccccbd",
+            "119331dc": "0000c842", "119331e0": "00000041", "11933c7c": "01",
+            "119344c0": "000000000000000000000000ffff7f7f", "119344d0": "0000000000000000",
+        }
+        for addr, initial in expected_globals.items():
+            self.assertEqual(by_g[addr]["initial_hex_le"], initial)
+            self.assertEqual(by_g[addr]["storage"], "file")
+        for addr, width in {
+            "1190ed40": 64, "1190f540": 16, "1190f550": 16, "1190f560": 16, "11914e40": 64,
+        }.items():
             self.assertEqual(by_g[addr]["width"], width)
             self.assertEqual(by_g[addr]["storage"], "file")
 

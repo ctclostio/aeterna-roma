@@ -13,7 +13,7 @@
     "class_field_entries": 95747,
     "rtti_type_descriptors": 181,
     "rtti_complete_object_locators": 15,
-    "globals": 10953,
+    "globals": 10969,
     "exported_code_targets_pinned": 405
   },
   "distributions": {
@@ -218,12 +218,17 @@
       "NUL-terminated ASCII string 'Warscape/MipLevel' in .rdata used by 0x100d2860": 1,
       "NUL-terminated ASCII string 'Warscape/TexelDensity' in .rdata used by 0x100d2860": 1,
       "static path-separator string \"\\\" (0x5c,0x00,0x00,0x00) followed by version string \"1.21\"": 1,
+      "binary32 0.0 in .rdata compared against the inertia speed by 0x100dcfe0": 1,
       "4-byte IEEE-754 float 0.001f (0x3a83126f) in .rdata multiplied by 0x112e2b00": 1,
+      "binary32 0.25 pinch/rotate damping factor in .rdata read by 0x100da620": 1,
+      "binary32 0.5 threshold in .rdata read by 0x100d89a0": 1,
       "4-byte float aspect-ratio crop scale 0.5625f (9/16) in .rdata for 0x100dd4c0": 1,
       "4-byte float 4:3 aspect-ratio factor 1.3333334f in .rdata for 0x100dd4c0": 1,
       "4-byte float aspect-ratio lower bound 1.4f in .rdata for 0x100dd4c0": 1,
       "4-byte float aspect-ratio upper bound 1.7f in .rdata for 0x100dd4c0": 1,
       "4-byte float 16:9 aspect-ratio factor 1.7777778f in .rdata for 0x100dd4c0": 1,
+      "binary32 57.288353 positive angle scale in .rdata read by 0x100d7f30": 1,
+      "binary32 -57.288353 negative angle scale in .rdata read by 0x100d7f30": 1,
       "Unsigned-to-double conversion bias pair referenced by float load-factor computation in 0x112cbe10": 1,
       "VFS trace/format descriptor {'*', 10, 10, \"%s\"} passed by 0x112b5730 to 0x112a4e10": 1,
       "4-byte 1-slot base vtable {0x100e11e0} in .rdata installed by 0x100e0650": 1,
@@ -442,6 +447,10 @@
       "91-byte packed printf format-char state transition table in .rdata indexed by 0x1168934e ([ch+0x1190ec50] & 0xf row, [prev_state + row*8 + 0x1190ec70] >> 4)": 1,
       "91-byte UCRT __acrt_printf_lookup_table_second in .rdata indexed by 0x116892d1 (compiler-folded -0x20 base 0x1190ecb0)": 1,
       "14-byte UTF-16LE L'(null)' literal in .rdata emitted by 0x1168b78e (%ls)": 1,
+      "first 64 bytes (four 16B entries) of the libm acosf interval table in .rdata indexed by 0x1168cad5": 1,
+      "16B libm vector {pi/2 low -1.6292068e-07, pi/2 high 1.5707964, 0, 0} in .rdata read by 0x1168cad5": 1,
+      "16B libm vector {8.742278e-08, -pi, 0, 0} in .rdata ANDed by 0x1168cad5": 1,
+      "16B libm vector {-8.742278e-08, pi, 0, 0} in .rdata read by 0x1168cad5": 1,
       "NUL-terminated UTF-16LE string L'mscoree.dll' in .rdata passed by 0x1168d2f1": 1,
       "NUL-terminated ASCII string 'CorExitProcess' in .rdata resolved by 0x1168d2f1": 1,
       "120-byte (10 x 12B) scanf format length/specifier compatibility table in .rdata indexed by 0x11692f4e": 1,
@@ -489,6 +498,7 @@
       "NUL-terminated ASCII string 'LocaleNameToLCID' in .rdata queried and used as descriptor end sentinel by 0x116a83d7": 1,
       "4-byte Win32 API name length/header dword (0x12) in .rdata preceding AppPolicyGetProcessTerminationMethod for 0x116a8555": 1,
       "NUL-terminated ASCII string 'AppPolicyGetProcessTerminationMethod' in .rdata queried by 0x116a8555": 1,
+      "first 64 bytes (sixteen binary32 entries) of the libm acosf slope table in .rdata indexed by 0x1168cad5": 1,
       "NUL-terminated ASCII special float string '1#INF' in .rdata formatted by $I10_OUTPUT 0x116a8e6d": 1,
       "NUL-terminated ASCII special float string '1#QNAN' in .rdata formatted by $I10_OUTPUT 0x116a8e6d": 1,
       "NUL-terminated ASCII special float string '1#SNAN' in .rdata formatted by $I10_OUTPUT 0x116a8e6d": 1,
@@ -554,8 +564,14 @@
       "16-byte SEH scope table descriptor in .rdata pushed by 0x116b5824 (_query_new_handler)": 1,
       "16-byte SEH scope table descriptor in .rdata pushed by 0x116b5f67 (update_thread_locale_data_internal)": 1,
       "4-byte initialized video letterbox enable flag (initial 1) in .data written by 0x100dd4c0": 1,
+      "binary32 -0.1 rotate angle scale in .data read by 0x100da620": 1,
+      "binary32 100.0 pinch span scale in .data read by 0x100da620": 1,
+      "binary32 8.0 peak-speed decay rate in .data read by 0x100dcfe0": 1,
+      "1-byte mouse-state-valid flag (initial 1) in .data written by 0x100f1090/0x100f1100 and tested by 0x10103c50": 1,
       "4-byte socket failure message pointer [0x11741d2c 'Could not create socket.'] in .data loaded by 0x10fd6d80": 1,
       "default heap fill byte constant (0xca) in .data passed by 0x100fcc80 to memset when [0x119f3f57] != 0": 1,
+      "first 16 bytes of the 40B global mouse state in .data (float +0x0c initial 0x7f7fffff) written by 0x100f1100 and read by 0x100f1160": 1,
+      "bytes 0x10..0x17 of the 40B global mouse state in .data; bytes 0x18..0x27 lie in the previously pinned 0x119344d8": 1,
       "16-byte initialized DirectInput mouse state block {dx, -dy, -dz, btns} in .data written by 0x1010eda0": 1,
       "12-byte freelist pool header {0, 0, 0x1060} in .data returned by 0x10105fa0": 1,
       "12-byte freelist pool header {freelist_head, slab_list, initial_slab_count=0x1060} returned by 10106000": 1,
@@ -871,24 +887,24 @@
     }
   },
   "curated_reconciliation": {
-    "curated_functions_total": 1525,
-    "curated_in_canonical_index": 1494,
-    "curated_exact_body_sha256_match": 1476,
+    "curated_functions_total": 1546,
+    "curated_in_canonical_index": 1515,
+    "curated_exact_body_sha256_match": 1497,
     "curated_multi_range_expanded": 18,
     "curated_non_proc_slots": 31,
-    "curated_globals_matched": 873,
+    "curated_globals_matched": 889,
     "curated_vtables_matched": 85
   },
   "files": {
     "function_contracts_part1.tsv": {
       "rows": 40640,
-      "bytes": 9392595,
-      "sha256": "ef4e15fed9752b75a966194e52cbb1f1d119aee1a1d4bbf34a0586d6de2c9462"
+      "bytes": 9392935,
+      "sha256": "f19309c3042abc3c141095206ab6c3d064a04c3bf9cc1e155d22a790489088bf"
     },
     "function_contracts_part2.tsv": {
       "rows": 40640,
-      "bytes": 9471445,
-      "sha256": "1236aa4424e4bd2a5df00a02f865552dff902aa41352f369507dd008c8a39c3d"
+      "bytes": 9471462,
+      "sha256": "e190c19706db6f1181eb1a77cff758f15c80d6e4e242ad80758a596da0a66812"
     },
     "non_proc_curated_slots.tsv": {
       "rows": 31,
@@ -911,9 +927,9 @@
       "sha256": "534964ec1fa25fd15189a0fd007ba1412fe7fe339981ade410ca82a303f8e912"
     },
     "global_contracts.tsv": {
-      "rows": 10953,
-      "bytes": 945312,
-      "sha256": "a3e7cec68546d0dc49e11347f5b42bcda5ed68292c60cab9b01c495bae6d6100"
+      "rows": 10969,
+      "bytes": 948876,
+      "sha256": "f410940dc7d42e74aa9e8e1e2e7226e23772635eb5efae1012a968678714866c"
     }
   }
 }

@@ -905,7 +905,7 @@ def main() -> int:
         },
         "files": file_meta,
     }
-    (OUT_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    (OUT_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
 
     # Write concise summary.md
     curated_layer = max(
@@ -955,7 +955,7 @@ def main() -> int:
         "",
         "* Whole-binary contracts capture PE-verified byte identities, x86 return/tail-jump mechanics, calling-convention/stack-purge bounds, RTTI descriptors, static globals, and observed `this+off` field accesses — NOT handwritten C17 native behavioral implementations (`port/recovered_types/contracts.json` remains separate and authoritative for tested C17 native semantics).",
     ]
-    (OUT_DIR / "summary.md").write_text("\n".join(summary_lines) + "\n", encoding="utf-8")
+    (OUT_DIR / "summary.md").write_text("\n".join(summary_lines) + "\n", encoding="utf-8", newline="\n")
 
     print(
         f"\n=== Whole-Binary Contracts Built in {time.time() - t0:.2f}s ===\n"

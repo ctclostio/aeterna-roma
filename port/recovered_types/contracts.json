@@ -23979,6 +23979,342 @@
         "address": "116c80e9",
         "iat_slot": "1172f82c"
       }
+    },
+    {
+      "address": "100d2690",
+      "bytes": 79,
+      "sha256": "afd32940a7037f4c482a2664f6911eb191edaad20901a4e25f44f724df0dab52",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX void* pod48_copy_assign(const void* src48); pops 4 (ret 4)",
+      "scope": "copies twelve dwords [src+0x00..0x2c] into [ecx] and returns ecx",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100d26dc"
+      ]
+    },
+    {
+      "address": "100d6910",
+      "bytes": 81,
+      "sha256": "6c7fb899c841a95989d06900e4032ad8309e0a34999a80cb174b03b4f0e57259",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "stdcall",
+      "ordinary_return": "void pod48_copy(void* dst48, const void* src48); pops 8 (ret 8)",
+      "scope": "loads dst from [esp+4] into ecx and src from [esp+8], then copies twelve dwords; the incoming ecx is not read",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100d695e"
+      ]
+    },
+    {
+      "address": "100d7b80",
+      "bytes": 143,
+      "sha256": "db4873fe8899ec5459cfef7c184ce507bb984d084f5f0072d261b3d6b1121ab4",
+      "receiver_register": "none",
+      "stack_argument_bytes": 96,
+      "callee_pop_bytes": 96,
+      "calling_convention": "stdcall",
+      "ordinary_return": "ST0 float32 touch_pair_span_delta(touch48 a, touch48 b); pops 96 (ret 0x60)",
+      "scope": "two 48B by-value records: |a.cur_1c - b.cur_1c| - |a.prev_10 - b.prev_10| over three floats each via SQRTSS, returned through FLD",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100d7c0c"
+      ]
+    },
+    {
+      "address": "100d7f30",
+      "bytes": 315,
+      "sha256": "87c34100d8ac93a3d9ebf9c3b1ab05a8efd482435487925041d39853a7f80503",
+      "receiver_register": "none",
+      "stack_argument_bytes": 96,
+      "callee_pop_bytes": 96,
+      "calling_convention": "stdcall",
+      "ordinary_return": "ST0 float32 touch_pair_signed_angle(touch48 a, touch48 b); pops 96 (ret 0x60)",
+      "scope": "normalizes (a.cur_1c - b.cur_1c) and (a.prev_10 - b.prev_10) by their three-float lengths, clamps the xy dot to [0,1], calls 0x1168cad5 and scales by +/-57.288353 [0x1173e2f0/0x1173e2f8] chosen from the xy cross sign",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100d8068"
+      ]
+    },
+    {
+      "address": "100d8430",
+      "bytes": 1382,
+      "sha256": "6e96d1d1fa4088b48542bc5220ca4458d717d02b8c5daa84780fa209d2ad1a4f",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void touch_gesture_ingest_raw(const frame* f); pops 4 (ret 4)",
+      "scope": "walks 24B raw touch records [ecx+0x88] x [ecx+0x84]: a matching 48B tracked point gets age_28 += f[+8], flags_2c and cur_1c; an unmatched record is considered only while the done byte [ecx] is clear and either points are tracked or its flag 0x10 is set: flag 0x10 zeroes inertia [ecx+0x58], pushes a tag-0 64B record and, if the tap timer [ecx+0x20] < its window [ecx+0x1c], a tag-10 record that latches the done byte; with done still clear and cooldown [ecx+0x64] <= 0 it starts a point via 0x100da3f0 and queues a kind-0xc 44B event at [ecx+0xcc]; clears the raw count",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100d8993"
+      ]
+    },
+    {
+      "address": "100d89a0",
+      "bytes": 3539,
+      "sha256": "0c2af098f6600fdf93b275c3ccb39ac007be48c7277891652ef3d17edc3cf991",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void touch_gesture_state_step(const frame* f); pops 4 (ret 4; ten RET 4 exits)",
+      "scope": "advances the tap timer [ecx+0x20] toward its window [ecx+0x1c] (tag-6 record on expiry), then classifies tracked points [ecx+0x94] by state [ecx+4]: -1 idle (a short press arms the tap timer), 9 long press, 5 pending pan, 1/2 single drag, 7 two-point parallel pan, 0xb pinch/rotate via 0x100d7b80/0x100d7f30, 0xc three-point swipe; queues 64B records via 0x100da2b0 and 44B events via 0x100d9f80",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100d8b4a",
+        "100d8b7d",
+        "100d8ca5",
+        "100d8d16",
+        "100d8d88",
+        "100d90b0",
+        "100d945c",
+        "100d9470",
+        "100d967b",
+        "100d9770"
+      ]
+    },
+    {
+      "address": "100d9880",
+      "bytes": 1223,
+      "sha256": "4c443ac99ca39e53ef7b46d93817476fabf16f186a9a6f5a31ddc948a447d988",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void touch_gesture_replay_records_as_events()",
+      "scope": "for each 64B record [ecx+0xa0] x [ecx+0x9c] whose code at +0x34 is 0..0xe, copies xy from +0x38/+0x3c into the 40B state at [ecx+0xa4], toggles button bytes [ecx+0xb4]/[+0xb5]/[+0xb6]/[+0xb8] and pushes one or two 44B events of kind 0..9/0xc to [ecx+0xcc] via 0x100d9f80; code -1 skips the record",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100d9d46"
+      ]
+    },
+    {
+      "address": "100d9e40",
+      "bytes": 317,
+      "sha256": "1c872f40c2f763d6f18c2b09f0a6acf39f58f0f629baf7a9ed0682cf3b340947",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void vec48_push_back(const void* elem48); pops 4 (ret 4; two RET 4 exits)",
+      "scope": "{capacity, count, data} vector of 0x30B elements copied as three XMM words; grows 0 -> 1 or doubles via 0x100fcc80, re-reads an element aliasing the old buffer from the new one and frees the old buffer via 0x100fcc50",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100d9e98",
+        "100d9f7a"
+      ]
+    },
+    {
+      "address": "100d9f80",
+      "bytes": 333,
+      "sha256": "07bd70002c5d1900edbc69f17bdbe572ad580dec617387903be53458e975d5cc",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void vec44_push_back(const void* elem44); pops 4 (ret 4; two RET 4 exits)",
+      "scope": "{capacity, count, data} vector of 0x2cB elements copied as two XMM words, one qword and one dword; grows 0 -> 1 or doubles via 0x100fcc80, re-reads an element aliasing the old buffer from the new one and frees the old buffer via 0x100fcc50",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100d9fd8",
+        "100da0ca"
+      ]
+    },
+    {
+      "address": "100da2b0",
+      "bytes": 318,
+      "sha256": "4156b431a1069f9954f815aa9ce6234e6d58f9b5e974f7671048f6723b7217aa",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void vec64_push_back(const void* elem64); pops 4 (ret 4; two RET 4 exits)",
+      "scope": "{capacity, count, data} vector of 0x40B elements copied as four XMM words; grows 0 -> 1 or doubles via 0x100fcc80, re-reads an element aliasing the old buffer from the new one and frees the old buffer via 0x100fcc50",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100da30a",
+        "100da3eb"
+      ]
+    },
+    {
+      "address": "100da3f0",
+      "bytes": 548,
+      "sha256": "b0c30ddf645fb88a1446c0e0978699dee90c996816bf580a9eb6f3a7790ea4c7",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void vec48_push_back_dwords(const void* elem48); pops 4 (ret 4; three RET 4 exits)",
+      "scope": "{capacity, count, data} vector of 0x30B elements copied as twelve dwords (the first allocation copies through 0x100d6910); grows 0 -> 1 or doubles via 0x100fcc80, re-reads an element aliasing the old buffer from the new one and frees the old buffer via 0x100fcc50",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100da453",
+        "100da489",
+        "100da611"
+      ]
+    },
+    {
+      "address": "100da620",
+      "bytes": 629,
+      "sha256": "aa400b6baaaff8f99d719bd2812efc2de8a52662b7a471401726cc0575d83751",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void touch_gesture_emit_pinch_rotate(uint8_t ending); pops 4 (ret 4)",
+      "scope": "builds a tag-0xb 64B record from points [ecx+0x94]: angle from 0x100d7f30 scaled by [0x119331d8], span delta scaled by [0x119331dc], one of the two multiplied by 0.25 [0x1173e2c0]; ending or point flag 4 sets the +0x30 byte; pushes to [ecx+0x98] via 0x100da2b0 and rolls each point's prev_10 forward to cur_1c",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100da892"
+      ]
+    },
+    {
+      "address": "100dcfe0",
+      "bytes": 660,
+      "sha256": "b4a3a1df89dbe5bd5d8ee26a7795d60aa7f281b61580bb3a91fdf8c168120a94",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void touch_gesture_tick(const frame* f); pops 4 (ret 4)",
+      "scope": "decays peak speed [ecx+0x34] by f[+8]*[0x119331e0] and cooldown [ecx+0x64], clears the record/event/aux counts, steps flick inertia [ecx+0x58] into a tag-[ecx+0x3c] record (or a tag-0 end record below 0.001 [0x1173e2b8]), runs 0x100d8430 and 0x100d89a0, erases points flagged 4 and on the last release emits a tag-0 record, re-arms cooldown [ecx+0x64] = [ecx+0x60] and sets state -1",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100dd271"
+      ]
+    },
+    {
+      "address": "100dd280",
+      "bytes": 562,
+      "sha256": "c5b08e736033991c5d6fd77b54ccdab676cfbb0a91f74086ef4122b6abbb7e3d",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void input_mgr_dispatch_primary_handlers(void* ctx); pops 4 (ret 4)",
+      "scope": "queries the top modal entry's vtable slot +0x28, then for each enabled handler in [ecx+0x54] x [ecx+0x50] (byte +0x10 == 1) dispatches 48B records [ecx+0x7c] through slot +0x10, [ecx+0xac] through +0x18, the 44B event copy [ecx+0xa0] (refreshed from [ecx+0x94]) through +0x14 and, unless the modal query was true, a 0x100f1160 snapshot through +0x1c; clears byte [ecx+0xd2]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100dd4af"
+      ]
+    },
+    {
+      "address": "100dd7a0",
+      "bytes": 1317,
+      "sha256": "8e76466a24a97f59295079ec22fb3916945411b39a7a603d3b40fed11dc7403e",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void input_mgr_update(void* ctx); pops 4 (ret 4)",
+      "scope": "reads the gesture recognizer at [0x100e8240()+8], runs 0x100dcfe0, forwards its 64B records to enabled handlers (list [ecx+0x64] slot +0x24, list [ecx+0x54] slot +0x20), runs 0x100d9880, then rebuilds [ecx+0x94] from the recognizer's 44B events with x/y clamped to [0,1] (publishing each through 0x100f1100) and [ecx+0x7c] from its 48B records",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100ddcc2"
+      ]
+    },
+    {
+      "address": "100ddcd0",
+      "bytes": 626,
+      "sha256": "61774e399172993349d72e87edf0674a43834206737fc3f2992f47e68bcffeb8",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void input_mgr_dispatch_secondary_handlers(void* ctx); pops 4 (ret 4)",
+      "scope": "skipped while byte [0x119f30a0] is set; for each enabled handler in [ecx+0x64] x [ecx+0x60] dispatches 48B [ecx+0x7c] via slot +0x14, 44B [ecx+0x88] via +0x18, 48B [ecx+0xac] via +0x20 (state from 0x100f1090), the event copy [ecx+0xa0] via +0x1c and a 0x100f1160 snapshot via +0x28",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100ddf3f"
+      ]
+    },
+    {
+      "address": "100f1090",
+      "bytes": 111,
+      "sha256": "c5ff545337200f434d8374ef85e93440c2433cc72b9a7c404dfada1e04b66963",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX input_state88* input_state_init_from_record48(const void* rec48); pops 4 (ret 4)",
+      "scope": "zeroes [ecx+0x00..0x26] with [ecx+0x0c] = 0x7f7fffff, copies 48B to [ecx+0x28] and clears the mouse-valid byte 0x11933c7c",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100f10fc"
+      ]
+    },
+    {
+      "address": "100f1100",
+      "bytes": 84,
+      "sha256": "1a2c079e93131234254aaee7f35c1291a7dd42fd9ba4c0e5c410e28efb7599e0",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX void* mouse_state40_set_and_publish(const void* state40); pops 4 (ret 4)",
+      "scope": "copies 40B to [ecx] and to the global mouse state 0x119344c0, sets valid byte 0x11933c7c = 1 and dword 0x119f3d90 = 0xffffffff",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100f1151"
+      ]
+    },
+    {
+      "address": "100f1160",
+      "bytes": 70,
+      "sha256": "420551841a1d0091a7bb1880d226f0d37468cdffe447ea5649f9921ccfd36e90",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX input_state88* input_state_snapshot()",
+      "scope": "copies the 40B global mouse state 0x119344c0 to [ecx] and 48B from 0x119f3d90 to [ecx+0x28]; returns ecx",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100f11a5"
+      ]
+    },
+    {
+      "address": "10103c50",
+      "bytes": 12,
+      "sha256": "74e0b427bbf7b04104a5744b795558674fa1ef6a2ef4a6d6ae71e13ba39eae93",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX void* mouse_state_ptr_if_valid()",
+      "scope": "returns ecx when byte 0x11933c7c is nonzero, else 0 (xor/cmp/cmovnz)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10103c5b"
+      ]
+    },
+    {
+      "address": "1168cad5",
+      "bytes": 989,
+      "sha256": "34c39c4ffce1d7b4742f16c596a4a2d5fddfe83c7b46f798553fc1408461dc4e",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "XMM0 float32 libm_sse2_acosf(XMM0 x) register-argument helper",
+      "scope": "table-driven SSE2 arccosine over tables 0x1190ed40/0x11914e40 with pi/2 and pi constants 0x1190f540..0x1190f564; |x| == 1 returns 0 or pi, |x| > 1 returns NaN from 0*inf and NaN inputs propagate",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "1168cbc1",
+        "1168ccbf",
+        "1168cd33",
+        "1168ce22",
+        "1168ce51",
+        "1168ce80",
+        "1168ce88",
+        "1168ceb1"
+      ]
     }
   ],
   "globals": [
@@ -30917,6 +31253,134 @@
       "width": 16,
       "kind": "16-byte MSVC ThrowInfo descriptor for char* exception in .rdata referenced by 0x10cba590",
       "initial_hex_le": "000000000000000000000000c0479211",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1173e2b4",
+      "width": 4,
+      "kind": "binary32 0.0 in .rdata compared against the inertia speed by 0x100dcfe0",
+      "initial_hex_le": "00000000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1173e2c0",
+      "width": 4,
+      "kind": "binary32 0.25 pinch/rotate damping factor in .rdata read by 0x100da620",
+      "initial_hex_le": "0000803e",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1173e2c4",
+      "width": 4,
+      "kind": "binary32 0.5 threshold in .rdata read by 0x100d89a0",
+      "initial_hex_le": "0000003f",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1173e2f0",
+      "width": 4,
+      "kind": "binary32 57.288353 positive angle scale in .rdata read by 0x100d7f30",
+      "initial_hex_le": "46276542",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1173e2f8",
+      "width": 4,
+      "kind": "binary32 -57.288353 negative angle scale in .rdata read by 0x100d7f30",
+      "initial_hex_le": "462765c2",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1190ed40",
+      "width": 64,
+      "kind": "first 64 bytes (four 16B entries) of the libm acosf interval table in .rdata indexed by 0x1168cad5",
+      "initial_hex_le": "1a532e31e015813de2579333e016833d08865234e017853d674c1e340019873d07042e34201a893d4e822c31601b8b3db55b1d34801c8d3df30cfe33c01d8f3d",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1190f540",
+      "width": 16,
+      "kind": "16B libm vector {pi/2 low -1.6292068e-07, pi/2 high 1.5707964, 0, 0} in .rdata read by 0x1168cad5",
+      "initial_hex_le": "4cef2eb4dc0fc93f0000000000000000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1190f550",
+      "width": 16,
+      "kind": "16B libm vector {8.742278e-08, -pi, 0, 0} in .rdata ANDed by 0x1168cad5",
+      "initial_hex_le": "2ebdbb33db0f49c00000000000000000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1190f560",
+      "width": 16,
+      "kind": "16B libm vector {-8.742278e-08, pi, 0, 0} in .rdata read by 0x1168cad5",
+      "initial_hex_le": "2ebdbbb3db0f49400000000000000000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11914e40",
+      "width": 64,
+      "kind": "first 64 bytes (sixteen binary32 entries) of the libm acosf slope table in .rdata indexed by 0x1168cad5",
+      "initial_hex_le": "dd7d7f3fcb797f3fa9757f3f76717f3f346d7f3fe1687f3f7f647f3f0c607f3f895b7f3ff6567f3f53527f3fa04d7f3fdc487f3f09447f3f253f7f3f323a7f3f",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "119331d8",
+      "width": 4,
+      "kind": "binary32 -0.1 rotate angle scale in .data read by 0x100da620",
+      "initial_hex_le": "cdccccbd",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "119331dc",
+      "width": 4,
+      "kind": "binary32 100.0 pinch span scale in .data read by 0x100da620",
+      "initial_hex_le": "0000c842",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "119331e0",
+      "width": 4,
+      "kind": "binary32 8.0 peak-speed decay rate in .data read by 0x100dcfe0",
+      "initial_hex_le": "00000041",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11933c7c",
+      "width": 1,
+      "kind": "1-byte mouse-state-valid flag (initial 1) in .data written by 0x100f1090/0x100f1100 and tested by 0x10103c50",
+      "initial_hex_le": "01",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "119344c0",
+      "width": 16,
+      "kind": "first 16 bytes of the 40B global mouse state in .data (float +0x0c initial 0x7f7fffff) written by 0x100f1100 and read by 0x100f1160",
+      "initial_hex_le": "000000000000000000000000ffff7f7f",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "119344d0",
+      "width": 8,
+      "kind": "bytes 0x10..0x17 of the 40B global mouse state in .data; bytes 0x18..0x27 lie in the previously pinned 0x119344d8",
+      "initial_hex_le": "0000000000000000",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
     }
@@ -38608,6 +39072,111 @@
       "address": "116c80e9",
       "hex": "ff252cf87211",
       "purpose": "0x116c80e9 executes IAT JMP dword ptr [0x1172f82c] (WS2_32!ntohs)"
+    },
+    {
+      "address": "100d2690",
+      "hex": "8b542404",
+      "purpose": "0x100d2690 loads the 48B source pointer [esp+4]"
+    },
+    {
+      "address": "100d6910",
+      "hex": "8b542408",
+      "purpose": "0x100d6910 loads the 48B source pointer [esp+8] before overwriting ecx from [esp+4]"
+    },
+    {
+      "address": "100d7b80",
+      "hex": "f30f104c2420",
+      "purpose": "0x100d7b80 loads a.cur_1c x from the by-value record at [esp+0x20]"
+    },
+    {
+      "address": "100d7f30",
+      "hex": "f30f10642420",
+      "purpose": "0x100d7f30 loads a.cur_1c x from the by-value record at [esp+0x20]"
+    },
+    {
+      "address": "100d8430",
+      "hex": "81ecb0000000",
+      "purpose": "0x100d8430 reserves a 0xb0B frame for the raw touch ingest loop"
+    },
+    {
+      "address": "100d89a0",
+      "hex": "81ecc8000000",
+      "purpose": "0x100d89a0 reserves a 0xc8B frame for the gesture state step"
+    },
+    {
+      "address": "100d9880",
+      "hex": "83ec2c",
+      "purpose": "0x100d9880 reserves one 0x2cB event on the stack"
+    },
+    {
+      "address": "100d9e40",
+      "hex": "56",
+      "purpose": "0x100d9e40 preserves esi before the 0x30B vector push"
+    },
+    {
+      "address": "100d9f80",
+      "hex": "56",
+      "purpose": "0x100d9f80 preserves esi before the 0x2cB vector push"
+    },
+    {
+      "address": "100da2b0",
+      "hex": "56",
+      "purpose": "0x100da2b0 preserves esi before the 0x40B vector push"
+    },
+    {
+      "address": "100da3f0",
+      "hex": "57",
+      "purpose": "0x100da3f0 preserves edi before the dword-wise 0x30B vector push"
+    },
+    {
+      "address": "100da620",
+      "hex": "83ec40",
+      "purpose": "0x100da620 reserves one 0x40B gesture record on the stack"
+    },
+    {
+      "address": "100dcfe0",
+      "hex": "83ec40",
+      "purpose": "0x100dcfe0 reserves one 0x40B gesture record on the stack"
+    },
+    {
+      "address": "100dd280",
+      "hex": "83ec68",
+      "purpose": "0x100dd280 reserves a 0x68B frame holding the 88B input state"
+    },
+    {
+      "address": "100dd7a0",
+      "hex": "83ec64",
+      "purpose": "0x100dd7a0 reserves a 0x64B frame for the input manager update"
+    },
+    {
+      "address": "100ddcd0",
+      "hex": "83ec64",
+      "purpose": "0x100ddcd0 reserves a 0x64B frame holding the 88B input state"
+    },
+    {
+      "address": "100f1090",
+      "hex": "8b442404",
+      "purpose": "0x100f1090 loads the 48B record pointer [esp+4]"
+    },
+    {
+      "address": "100f1100",
+      "hex": "8b442404",
+      "purpose": "0x100f1100 loads the 40B mouse state pointer [esp+4]"
+    },
+    {
+      "address": "100f1160",
+      "hex": "0f1005c0449311",
+      "purpose": "0x100f1160 loads the first 16B of the global mouse state 0x119344c0"
+    },
+    {
+      "address": "10103c50",
+      "hex": "33c0",
+      "purpose": "0x10103c50 zeroes eax before the mouse-valid cmovnz"
+    },
+    {
+      "address": "1168cad5",
+      "hex": "660f7ec0",
+      "purpose": "0x1168cad5 moves the XMM0 argument bits into eax"
     }
   ],
   "ownership": {
@@ -57960,6 +58529,336 @@
     "limitations": [
       "Layer 69 extends Partition 8 (extending_layer68_batched_p8: 112 reused + 46 new = 158 Partition 8 records) alongside sealed Partitions 1-7 (2,118 prior; 2,276 cumulative)",
       "9 inline UTF-16LE copy sub-offsets (11741ea8/eac, 11741ec0, 11741ecc, 11741ed8, 11741ee4/ee8, 11741efc/f00) inside base strings 11741ea0..11741eec are retained in rea_layer69_evidence while contracts.json pins the 6 non-overlapping base strings; clean_eng=0, clean_crt=0, noret_or_thunk=0 at 1,525 functions"
+    ]
+  },
+  "rea_layer70_evidence": {
+    "scope": "21 Layer 70 Partition 8 touch-gesture recognizer / input-handler dispatch / mouse-state / 48B-44B-64B vector push / libm acosf functions (0x100d2690..0x1168cad5), preserving 100% transitive closure at 1,546 functions",
+    "snapshot_mode": "extending_layer69_batched_p8",
+    "new_records": [
+      {
+        "evidence_id": "ev_607dbb43d9beefdb7ea1d4fdd3896250a5c891fc2e24a2da90ef1a2ec3afe84c",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100d2690.json",
+        "retained_record_sha256": "1e943e9562ff2d05e577451f9c07baa64367f86292e65878ab483f2c8ac3fe25",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_bd717825c709ce87a9ef0d027b588cf2f50db9eb1d9909540276e382fb619139",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100d6910.json",
+        "retained_record_sha256": "44da66aae570f3f65cc1f572dfe817352f6fb31d2bb8e6b86f69f18b1014e7b3",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_ab13a4627aa79e02685fcd8aca43a48aa913e5c86a708e819f72158105ae64af",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100d7b80.json",
+        "retained_record_sha256": "e6a212a6993c00219a279fc43325742745c7914f2f2d9a9ae06c926759f72897",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_fd14cf15337506591ab58d9b58ddf3ef08ebe8d25b0bdb8abb5605736e21b16a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100d7f30.json",
+        "retained_record_sha256": "521d6af5ab91e84ca99fbc6a46cc6fb5615557f0344e43b7e1f7c8fc3ebf8645",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c0b15b141675fa26cde17fae05baa08b3442fac0381e9471f61f2503640a2847",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100d8430.json",
+        "retained_record_sha256": "26f8fe13f2afce0ec0c187e8157f97f4b78275ff69c3a94eb58af35eecfa84f8",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c22f47118f0464bf452b6504943d6827333b4dd64b3e07b813fca0800dff48a9",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100d89a0.json",
+        "retained_record_sha256": "42e24d5b988f6e15e822de77a699cfde4eecc52d48777c14bcdef0e102d9d121",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7901fb7cd29e5c75a1d588f4b26f030739d058aa366e8e8c93f31792c6357c44",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100d9880.json",
+        "retained_record_sha256": "1665763875feb1d4ec2792ce970e07c23335610a7ec910dfa68c26f9095b5ac9",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5447130496e9ec4ed32610ffe1a93a714cebad75c99d730bcd64dfec44ac20cc",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100d9e40.json",
+        "retained_record_sha256": "9059f1f309e429939b0a5484508d60e7bc1f998451ffc3350ce9b54b648defdc",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_f33461bcd001cc967422a2bc23dd7428b2df1ea6163271ec09cd1306b0d47ab0",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100d9f80.json",
+        "retained_record_sha256": "3029980684e4b974d663439f6a6381a01f45b40c8edf5c3458341dec06e2b8a8",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_12a5433bdeb32e936bfa6f60b38754f9505ae42cc48cfcf77fac287a2b693ba7",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100da2b0.json",
+        "retained_record_sha256": "d7d3071ed1c1f4e8b0e6d6ea30034a28202598dd5d30f16d9c760c38ee786863",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_9364653fec4abda36cd6584f4cb244edeedcd4c181f738493c68b314bbfe48fc",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100da3f0.json",
+        "retained_record_sha256": "ae3d3acd9819195e828cc891673790de1d8f6513cf4a96b9ad1e02900c96f632",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_603f47492baa0e459ada2afea6766af49de843ddfcac20db068966c9db172ee9",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100da620.json",
+        "retained_record_sha256": "a3a44203c50cc3b4a7718d29634d70c0f81127b0ab7c2eb3ffeae43df47f65c7",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_e300a03477969aed8436671880b3949cf147ff53f6d8796a35cf6b5b4aaad3aa",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100dcfe0.json",
+        "retained_record_sha256": "87db1ba7b1be4f13561df77689cf00fa15582ad76ec57f822704952027bbc2e6",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_2a0a6bdbd5f0944dbaba5481378b1a94b73b0ed7b3ab8643a384fbc048cc175e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100dd280.json",
+        "retained_record_sha256": "67677ecb3ac09f0a656c73a678ac1788897deeb89619bbc93e3428ca8f999ddf",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_dc75d403600129a78d4e011650d53177f7040cfec0b6336a942104125afb16f0",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100dd7a0.json",
+        "retained_record_sha256": "51a11457dd07067a933dc6bf3a1acb1056907f1666fcb51085b43aeef170f7ef",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_798dca4192bf67af433782b28ab676053494553182d390002779c2e4e6112e38",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100ddcd0.json",
+        "retained_record_sha256": "01cf5feb8dccd9d16373bd814f919cca6ba8ca5ec5d7c755f5e398a12f945536",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_4979c0e67c4d20a77cbf0e51f4cf156368df03c878443cc7017ed77dd9af2577",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100f1090.json",
+        "retained_record_sha256": "b952c0f15e6d000dcd291477a5228c4f7a1cb38859c1e36ab2e2a67d1a291cea",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5a417628b6c3691aa414cc201c68e1fdcdf54def452ef9c9d765f596afc12b5b",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100f1100.json",
+        "retained_record_sha256": "3fde2776d47fd998b5a5bdb2b8a827c8f899b53c9e303ce578d1809ad7530db1",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7f52366e8a6f0e8952603d84b645d574ccdb944a43cef32903aea0149f649b2b",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-100f1160.json",
+        "retained_record_sha256": "3314e1f3b807c0b6720a5304ea8f23637a68f10f113a8258c091b0526f9e53a6",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_f397fd31f3ddf7bb79fac7fa1de21c97f913b9e5a79740eeaa8653237c282246",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-10103c50.json",
+        "retained_record_sha256": "17a1e0e9b254026c2f33521419a7100c3622afed2e73ced18a169f7dd51fd02f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_178955f683741c0aa0adbd88b0d657cdebac37f53a914b9c89758cfc60116b42",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer70-20261124/fn-1168cad5.json",
+        "retained_record_sha256": "80bc3a7231639e3e824cd2c6531d4f17892b1b017bbc3bb83882baa5db0eae5a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_face8984fdc51a389481dc8900ea6c6e23be7e55fa30229b47f144cb86d45dbb",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-1173e2b4.json",
+        "retained_record_sha256": "a3dbc6fe9700180d119520d46e05c56f5a78062db4d3d02126ea81f216fccbe2",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7a4a8926fa93e4266ada012ea8040fbbf24a2b031bf8a656d332af87686d1798",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-1173e2c0.json",
+        "retained_record_sha256": "b3f4b5bf29d19fdc4b6873d1ce6d08518f645a06e44baaed873fb146d74eab3a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_b1a43eb7e26b1cc26f98736ae6bdc108b21a16e44bfc333dd2c175f4990d5b3c",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-1173e2c4.json",
+        "retained_record_sha256": "38257abfcd898abd19160dc53c71e3dd2e270d4dc812105c220a4127b67b813b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_149a2f5fdfde429ae3d72db599f12ce05b2cee5f045a42d1e9779673b7691edf",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-1173e2f0.json",
+        "retained_record_sha256": "18c957f25c442524461658258ba1e6937802e7c3d820db0971b9d0b10b960914",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5630d39a781b69eb79b88998f67ef5900e94c3a7639c38004b5f56522ec68024",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-1173e2f8.json",
+        "retained_record_sha256": "3851a2ea646939bc3acfcbaaf0d07be0e38b469b9455add5e5d17140404f08f9",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_dd3746c1f10c1262d5d55030e305011b1d0998728bd152d111a8934a454c0ed6",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-1190ed40.json",
+        "retained_record_sha256": "58250c9c6b03cdb9b22c92c501fc1c345c205299c59e283940982bc9a3e25002",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5ba4c1cf1b250f5c2c899b62d47bf9caa0a43d892e46d8ee0f60ac662a11f86e",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-1190f540.json",
+        "retained_record_sha256": "4aaf398c0ea51b29d36e6b70aa8f06c914475801982a7f4f39c648eb7e4aed23",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_18780d9d6444d31c268340145adf2d85459c4231f0e606d90d25dcd1f6aa47ad",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-1190f544.json",
+        "retained_record_sha256": "64d099b1df38ffe9b352c8cbd8bd2e78296c166c593b0f2f428eff88ffa03eda",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_30ed9d46b54bf04315a3560449b9fd955a02770d7329e0c7f241bd57c89670bf",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-1190f550.json",
+        "retained_record_sha256": "39559f903239ade0e8b6856aa5fe135c8c2dac779b50a3da95baf3b28598dc6b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_f81f6690f6479ff53805f188ce94815765112e76e4973a93ab139bf426316ebd",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-1190f560.json",
+        "retained_record_sha256": "1da39f8559b5a9424b4b89eeafec9e82c83efcf0f77506a6d64ee6e7cf7a6cba",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_a8b266c59e076ae7fda0f8d9df871d5428a4320f22104ceccda886632f6ce387",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-1190f564.json",
+        "retained_record_sha256": "8c4896018453e0d81ed3afc4a8e900dae4cec7b7fb5721c866501b407f22cfe8",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c4ebfdd6560c9e93ced9c2155fef7b09485a0bb13e0c0cfbe91b8781adf07349",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-11914e40.json",
+        "retained_record_sha256": "5816bbc468f5121f326e4ae25e5fa4adcd1f9e37138438812bebea8815a1c64a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_4773304dfc913b4ca330a5bd2072b607ac6e2670f81a0b67a38d9699c3a1f897",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-119331d8.json",
+        "retained_record_sha256": "b857a526ed53e8b3934a6a2971e1c2eecde622bf6b9bd58654f756846d46fdf3",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5771343c41b37466b0864dd9b24f3475c85a5c684a4b6f8399dc8022d203882c",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-119331dc.json",
+        "retained_record_sha256": "7c42e754f3387de0ae7c8806af2425ef21b2eecbfca92ab56dd89d8511d65469",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_bd7c53039208660907badff5693803bacd050cee1588c4c6fa0d8a587d24980c",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-119331e0.json",
+        "retained_record_sha256": "bdf3cbfe3b7456425c30a6cb1c6ca2445e1bcdadfbb0c41529fcbcacf9c98c94",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7f4695b1771b5e6b94038f4835bac2879bfe5cd0df1634d857054d4cac60c837",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-11933c7c.json",
+        "retained_record_sha256": "bcad96044e6248ae2a263905640cf346fbe3f8a9fabdf963a2c002ba02a593ac",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_1e9e95eef0b79f40e6d71c89cf7adb90cfe2dfb7879cdd9d16e604b3e5be3e6d",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-119344c0.json",
+        "retained_record_sha256": "a7adba8266dc457d3422b9a9a7b5bc8ec909c147568d6314519d58bfab848c9c",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_a66cf52bcd10fdcc2b7cbb85a13e8501ca8de7e25cd887992817ef18d75d894b",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-119344d0.json",
+        "retained_record_sha256": "42e9dba156f29dc35fee0c83eaba26e870ba6a61c2939e54de3ba3f6f5a31884",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_ddc731564c372072e6801f696ff5445a32976648cb4a5b418f034632ae54da7d",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer70-20261124/extra-119344e0.json",
+        "retained_record_sha256": "7a8fcb778c93e57816f112cc6128792c9206af5a2b203bfd4f3043844c538ebf",
+        "retained_record_format": "original MCP result envelope"
+      }
+    ],
+    "closed_snapshot_local_path": "out/startup-layer71-20261124/session.rea.json",
+    "closed_snapshot_sha256": "19261c2e0ae8d1f75f5328bd2bcf364117e470e8f7e892ae29496af406936e00",
+    "closed_evidence_records": 198,
+    "new_evidence_records": 40,
+    "retained_operation_envelopes": 198,
+    "reused_layer69_evidence_records": 158,
+    "extra_evidence_views_count": 0,
+    "validated_bundle_local_path": "out/startup-layer70-20261124/validated-evidence-bundle.json",
+    "validated_bundle_sha256": "78b04418c2eff5f57bcf8efc40d0643df1fbd9cf6556dbba5a2662bda1ef1b63",
+    "cumulative_validated_bundle_local_path": "out/startup-layer70-20261124/cumulative-validated-evidence-bundle.json",
+    "cumulative_validated_bundle_sha256": "78b04418c2eff5f57bcf8efc40d0643df1fbd9cf6556dbba5a2662bda1ef1b63",
+    "cumulative_validated_bundle_records": 198,
+    "partition1_validated_bundle_local_path": "out/vfs-layer24-20261114/validated-evidence-bundle.json",
+    "partition1_validated_bundle_sha256": "475ab7199d42e3cb2a866a007302f7868344303e3bfda6f975c2e19ae2040a0e",
+    "partition1_validated_bundle_records": 367,
+    "partition2_validated_bundle_local_path": "out/vfs-layer41-20261115/cumulative-validated-evidence-bundle.json",
+    "partition2_validated_bundle_sha256": "691eee5f4134ecfe5fa9ace57f78daead53f4c917e0aa4db243de429f03b0a7c",
+    "partition2_validated_bundle_records": 743,
+    "partition3_validated_bundle_local_path": "out/vfs-layer49-20261115/cumulative-validated-evidence-bundle.json",
+    "partition3_validated_bundle_sha256": "1fd402dd9c34d773769dcdb3f634bda90c0947c76f316a09467979c24c3459f6",
+    "partition3_validated_bundle_records": 264,
+    "partition4_validated_bundle_local_path": "out/vfs-layer55-20261115/cumulative-validated-evidence-bundle.json",
+    "partition4_validated_bundle_sha256": "b58b048ddae09bcbfb1c517792a7160c07bb1b1a0c2683464ead236f63eda3b0",
+    "partition4_validated_bundle_records": 181,
+    "partition5_validated_bundle_local_path": "out/vfs-layer58-20261115/validated-evidence-bundle.json",
+    "partition5_validated_bundle_sha256": "f8a0cfd64b101c746df29ef4cd126b4b610b618e63163255feebce22c81c258a",
+    "partition5_validated_bundle_records": 118,
+    "partition6_validated_bundle_local_path": "out/startup-layer62-20261119/cumulative-validated-evidence-bundle.json",
+    "partition6_validated_bundle_sha256": "da0f43dcf31accf01b85e3d85679908e2f930b4f9b68e0bc5dcf59769935a53a",
+    "partition6_validated_bundle_records": 252,
+    "partition7_validated_bundle_local_path": "out/startup-layer66-20261124/cumulative-validated-evidence-bundle.json",
+    "partition7_validated_bundle_sha256": "de90311e12db70e6ac2aae91c0523ea76e8fbbaae414e652e6a2665aaff44741",
+    "partition7_validated_bundle_records": 193,
+    "prior_partitions_validated_records": 2118,
+    "cumulative_all_partitions_records": 2316,
+    "non_proc_slots": [],
+    "resource_constrained_slots": [],
+    "limitations": [
+      "Layer 70 extends Partition 8 (extending_layer69_batched_p8: 158 reused + 40 new = 198 Partition 8 records) alongside sealed Partitions 1-7 (2,118 prior; 2,316 cumulative)",
+      "3 read_bytes records are retained in rea_layer70_evidence without a contracts.json global: 1190f544 and 1190f564 are inline sub-offsets of the pinned 16B vectors 1190f540/1190f560, and 119344e0 lies inside the previously pinned 119344d8; clean_eng=0, clean_crt=0, noret_or_thunk=0 at 1,546 functions",
+      "Data operands without a retained read_bytes record stay unpinned: .rdata 1173e2cc, 1173e2f4, 1173e310 and .data 119331d4 read by 0x100d89a0, and the uninitialized .data cells 119f30a0 and 119f3d90..119f3dbf",
+      "The two acosf tables are pinned only for the 64 bytes each read_bytes record returned, not for their full indexed extent",
+      "The batched Partition 8 snapshot is the single file out/startup-layer71-20261124/session.rea.json shared by Layers 67-71"
     ]
   }
 }
