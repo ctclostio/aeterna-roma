@@ -56,6 +56,22 @@ Rules for new entries:
   `t2` `80/80`, `t3` `42/42`, `t4` `64/64`; `pro` audits across `8` sampled `t1`
   shards: `81/96` ok [`84.4%`], `2` wrong auto-fixed; `0` dangling canonical
   addresses).
+- [x] Indirect-call resolution Pass 3 complete (2026-11-23): **59,079 / 59,079
+  (100.0%)** indirect call sites classified with `0` unresolved across all
+  `81,280` canonical functions (`33,987` [`57.53%`] statically narrowed:
+  `7,700` `high`, `26,287` `medium`; `25,092` [`42.47%`] `low` sound
+  multi-slot + stack-purge CHA closure; `45,252` `polymorphic_virtual`,
+  `8,907` `monomorphic_internal` [`2,702` distinct `.text` targets across
+  `17,395` callers], `4,147` `external_import`, `476` `callback_dispatch`,
+  `229` `null_optional_hook`, `37` `external_interface`, `31`
+  `non_call_trap`; `9,639` vtables / `123,569` slots / `3,698` families /
+  `2,213` inheritance edges / `48,167` MI sub-object mappings / `2,892` MI
+  thunks / `201` ICF stubs; `3,961` deduplicated target sets) →
+  `work/indirect_call_resolutions_after.tsv`,
+  `work/indirect_call_target_sets_after.tsv`,
+  `work/indirect_call_vtables_after.tsv`,
+  `work/indirect_call_hierarchy_after.tsv`,
+  `work/indirect_call_summary_after.md`.
 
 ## x64 port milestones
 

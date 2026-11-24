@@ -1,146 +1,116 @@
 # Indirect call resolution - empire.retail.dll (Total War: Rome II)
 
-Second pass over the regenerated canonical corpus.
+Third pass: whole-program cross-function type propagation, PE/IAT/COM resolution, and sound multi-slot + stack-purge CHA closure over all 81,280 canonical functions.
 
-Input: `work/indirect_calls_after.tsv` (Ghidra enumeration, 59,079 indirect call sites),
-`src_canonical_out/empire.retail.dll/canonical_decomp/` (81,280 canonical C files),
-PE `Total War Rome II/empire.retail.dll` (PE32, image base 0x10000000),
-`work/registrar_roots.tsv`, `src_out/empire.retail.dll/vftables.txt`.
+Inputs: `work/indirect_calls_after.tsv` (59,079 sites), `work/indirect_call_cache/asm_context.tsv` + `function_purges.tsv` + `external_symbols.tsv` (read-only Ghidra export), `src_canonical_out/empire.retail.dll/canonical_decomp/` (81,280 files), PE `Total War Rome II/empire.retail.dll` (PE32, image base 0x10000000), `work/registrar_roots.tsv`, `src_out/empire.retail.dll/vftables.txt`, `port/recovered_types/contracts.json`.
 
-Outputs: `work/indirect_call_resolutions_after.tsv` (59,079 rows), `work/indirect_call_vtables_after.tsv` (121,692 rows), this file.
+Outputs: `work/indirect_call_resolutions_after.tsv` (59,079 rows), `work/indirect_call_target_sets_after.tsv` (3,961 target sets), `work/indirect_call_vtables_after.tsv` (123,569 slots), `work/indirect_call_hierarchy_after.tsv` (9,639 vtables), this file.
 
-## 1. Site population and expression coverage
+## 1. Site population and classification coverage
 
 | metric | sites | share |
 |---|---:|---:|
 | total indirect call sites | 59,079 | 100.00% |
-| containing function recorded by Ghidra | 58,446 | 98.93% |
-| containing function has a canonical C file | 58,446 | 98.93% |
-| exact/near call expression recovered from C | 52,862 | 89.48% |
-| no containing function recorded by Ghidra | 608 | 1.03% |
-| no matching call expression in the C body | 5,584 | 9.45% |
-| canonical C file missing for the function | 0 | 0.00% |
-| not an indirect call at all (`INT3`/`INT` padding) | 25 | 0.04% |
-
-Sites are matched to C call expressions per function. When the number of C expressions equals
-the number of asm sites the pairing is 1:1 in program order; otherwise the two sequences are
-aligned on their slot-offset sequences and the row is flagged
-`| expression aligned by offset` in `evidence`.
+| classified / resolved (`high` + `medium` + `low`) | 59,079 | 100.00% |
+| statically narrowed (`high` + `medium`) | 33,987 | 57.53% |
+| residual sound CHA closure (`low`) | 25,092 | 42.47% |
+| unresolved | 0 | 0.00% |
+| containing function recorded by Ghidra | 58,471 | 98.97% |
+| C call expression aligned | 54,133 | 91.63% |
 
 ## 2. Resolution by kind and confidence
 
-| kind | sites | high | medium | low | unresolved |
+| resolution_kind | sites | high | medium | low | share |
 |---|---:|---:|---:|---:|---:|
-| register_offset | 35,370 | 37 | 1,525 | 394 | 33,414 |
-| register | 23,678 | 39 | 556 | 168 | 22,915 |
-| other | 31 | 0 | 0 | 0 | 31 |
-| **total** | **59,079** | **76** | **2,081** | **562** | **56,360** |
+| `monomorphic_internal` | 8,907 | 3,260 | 5,647 | 0 | 15.08% |
+| `external_import` | 4,147 | 4,147 | 0 | 0 | 7.02% |
+| `external_interface` | 37 | 33 | 4 | 0 | 0.06% |
+| `polymorphic_virtual` | 45,252 | 0 | 20,615 | 24,637 | 76.60% |
+| `callback_dispatch` | 476 | 0 | 21 | 455 | 0.81% |
+| `null_optional_hook` | 229 | 229 | 0 | 0 | 0.39% |
+| `non_call_trap` | 31 | 31 | 0 | 0 | 0.05% |
+| **total** | **59,079** | **7,700** | **26,287** | **25,092** | **100.00%** |
 
-* **high** - target read directly from the PE (absolute pointer or a slot of a
-  vtable whose address the function itself stores at `[param_1]`, or a global whose value is
-  proven by a corpus-wide initializer), or a function/label symbol.
-* **medium** - vtable offset match with a single candidate: the containing function is itself
-  a slot of one or more known vtables, and the slot at the observed offset resolves to one
-  .text address in all of them (devirtualization by class membership).
-* **low** - ambiguous: candidate vtables for `this` disagree at that offset. No target is
-  emitted; candidates are listed in `evidence`.
-* **unresolved** - base cannot be tied to a known vtable/pointer.
+* **high** — direct PE/Ghidra/IAT/single-class-store/static-global/zero-writer-BSS/non-call-trap proof.
+* **medium** — interprocedural forward/backward propagation or multi-slot/arity CHA narrowing to a concrete `.text` target, bounded family set, or COM/SDK interface.
+* **low** — sound residual CHA closure (`polymorphic_virtual`: intersected across all co-invoked slot offsets on the receiver and x86 stack-purge arity; `callback_dispatch`: PE address-taken callback universe filtered by stack-purge arity).
 
-Net statically-resolved (high + medium): **2,157 sites (3.65%)** across **1,337 distinct functions** and **926 distinct targets**.
+Distinct `.text` monomorphic targets: **2,702** across **17,395** calling functions.
 
-## 3. Delta vs the first pass
+## 3. Target-set cardinality stats
 
-| metric | first pass | this pass | delta |
+* Distinct deduplicated target sets in `work/indirect_call_target_sets_after.tsv`: **3,961**
+* Propagated `[M]` `polymorphic_virtual` sites (20,615): median **11** targets, max **220** targets.
+* Residual `[L]` `polymorphic_virtual` CHA sites (24,637): median **406** targets, p90 **5,321**, max **6,155**.
+
+## 4. Delta vs Pass 1 and Pass 2
+
+| metric | Pass 1 | Pass 2 | Pass 3 |
 |---|---:|---:|---:|
-| input sites | 59,012 | 59,079 | +67 |
-| high | 75 | 76 | +1 |
-| medium | 1,336 | 2,081 | +745 |
-| low | 431 | 562 | +131 |
-| unresolved | 57,170 | 56,360 | -810 |
-| **resolved (high+medium)** | **1,411** | **2,157** | **+746** |
+| input sites | 59,012 | 59,079 | 59,079 |
+| `high` | 75 | 76 | 7,700 |
+| `medium` | 1,336 | 2,081 | 26,287 |
+| statically narrowed (`high`+`medium`) | 1,411 (2.39%) | 2,157 (3.65%) | 33,987 (57.53%) |
+| `low` (bounded / CHA) | 431 | 562 | 25,092 |
+| `unresolved` | 57,170 | 56,360 | 0 |
 
-Resolved sites by kind:
-
-| kind | first pass | this pass | delta |
-|---|---:|---:|---:|
-| register_offset | 976 | 1,562 | +586 |
-| register | 435 | 595 | +160 |
-| other | 0 | 0 | 0 |
-| **total** | **1,411** | **2,157** | **+746** |
-
-The resolved set covers **1,337 distinct functions** and **926 distinct targets**, up from
-**892 functions** and **686 targets** (+445 functions, +240 targets).
-
-Of the net **+746** resolved sites, **747** were sites that had no containing function at all
-in the first pass (previously unmatchable), **51** came from old unresolved/low rows, and **1**
-is a new site. **53** old resolved sites were lost because the regenerated function bodies changed shape
-(secondary-vtable expressions, extra local assignments) or because the larger vtable inventory
-turned an old single-candidate match into a disagreement (now `low`).
-
-### 3.1 Sites that gained a containing function
-
-The first pass had **5,898** sites with no containing function. **5,303** of
-those now sit in a Ghidra function and have a canonical C file; **595** are
-still function-less. The new enumeration has **608** function-less sites in
-total (595 carried over, 13 are new sites).
-
-| outcome for the newly-contained sites | sites | share |
-|---|---:|---:|
-| high | 0 | 0.00% |
-| medium | 747 | 14.09% |
-| low | 140 | 2.64% |
-| unresolved | 4,416 | 83.27% |
-| **total** | **5,303** | **100.00%** |
-
-Resolved among them: **0 high + 747 medium = 747 sites**; 140 more are ambiguous (`low`).
-The remaining unresolved sites are dominated by:
-
-| reason | sites |
-|---|---:|
-| base expression not resolvable (complex pointer chain) | 2,157 |
-| local object pointer with unknown vtable | 752 |
-| local function pointer with unresolved assignment | 604 |
-| virtual call on param_2+ (only param_1 is devirtualized) | 328 |
-| no matching indirect-call expression in the C body | 288 |
-| secondary/embedded vtable unknown | 209 |
-| inline function-pointer field | 65 |
-| mnemonic INT3: not an indirect call (padding/trap) | 2 |
-
-## 4. Vtable inventory used
+## 5. Vtable inventory and class hierarchy
 
 | source | vtables | slots |
 |---|---:|---:|
-| c_vtable_store | 9,000 | 120,829 |
-| registrar_roots | 23 | 780 |
-| vftables.txt | 28 | 83 |
-| **total** | **9,051** | **121,692** |
+| c_vtable_store | 8,934 | 119,528 |
+| pe_data_vtable | 466 | 2,348 |
+| pe_reloc_table | 138 | 1,104 |
+| contracts | 53 | 460 |
+| vftables_txt | 25 | 83 |
+| registrar_roots | 23 | 46 |
+| **total** | **9,639** | **123,569** |
 
-Slot extents are bounded by the next known vtable address in `.rdata`/`.data` (and by the
-first non-`.text` slot), so slot offsets are exact. Vtable bases come from the 23 app_init
-hub vtables in `registrar_roots.tsv`, `vftables.txt`, and corpus `&PTR_...` vtable stores.
+* Reconstructed vtable families: **3,698**
+* Inheritance parent edges: **2,213**
+* Multiple-inheritance sub-object offsets mapped: **48,167**
+* Exact x86 MI `this`-adjustor thunks decoded: **2,892**
+* ICF/trivial/purecall stubs excluded from inheritance merging: **201**
 
-## 5. Resolved target concentration
+## 6. Top resolved targets
+
+### Top monomorphic internal targets
 
 | calls | target | name |
 |---:|---|---|
-| 62 | 0x1035be10 | FUN_1035be10 |
-| 58 | 0x10fca230 | FUN_10fca230 |
-| 38 | 0x113fe130 | FUN_113fe130 |
-| 35 | 0x10ee0ed0 | FUN_10ee0ed0 |
-| 32 | 0x1026ce40 | FUN_1026ce40 |
-| 28 | 0x10ee5d00 | FUN_10ee5d00 |
-| 28 | 0x11443c50 | FUN_11443c50 |
-| 26 | 0x110a7be0 | FUN_110a7be0 |
-| 25 | 0x100d6770 | FUN_100d6770 |
-| 21 | 0x1168d0a8 | FUN_1168d0a8 |
+| 244 | 0x100f3d00 | OC3Ent_Face_FxActorInstance_Serialize |
+| 208 | 0x100d6770 | stub_return_0_100d6770 |
+| 184 | 0x10212d60 | battle_mode_call_1030b110_with_wstr_battle_10212d60 |
+| 166 | 0x11056e00 | frontend_mode_get_field_0x150_0x38_11056e00 |
+| 140 | 0x112c00b0 | fs_vfs_file_exists_packed_or_register_loose_112c00b0 |
+| 127 | 0x100d6560 | guard_check_icall |
+| 122 | 0x100d6900 | stub_return_1_100d6900 |
+| 110 | 0x100e22c0 | stub_noop_100e22c0 |
+| 109 | 0x10fca230 | achievement_tracker_unlock_by_id_10fca230 |
+| 91 | 0x101d95d0 | ptr_list_append_unique_101d95d0 |
+| 78 | 0x100d7cb0 | envvar_prefs_get_int_ref_by_index |
+| 78 | 0x1021e700 | FUN_1021e700 |
 
-926 distinct targets were resolved.
+### Top external imports and interfaces
 
-## 6. Validation
+| calls | kind | target |
+|---:|---|---|
+| 2,290 | `external_import` | OPENGL32.DLL!wglGetProcAddress |
+| 875 | `external_import` | USER32.DLL!PeekMessageW |
+| 185 | `external_import` | KERNEL32.DLL!ReadFile |
+| 64 | `external_import` | KERNEL32.DLL!LeaveCriticalSection |
+| 61 | `external_import` | KERNEL32.DLL!EnterCriticalSection |
+| 54 | `external_import` | WINMM.DLL!timeGetTime |
+| 45 | `external_import` | KERNEL32.DLL!GetProcAddress |
+| 41 | `external_import` | KERNEL32.DLL!DeleteCriticalSection |
+| 35 | `external_import` | KERNEL32.DLL!GetCurrentThreadId |
+| 30 | `external_import` | EnterCriticalSection |
+| 27 | `external_import` | KERNEL32.DLL!CloseHandle |
+| 26 | `external_import` | KERNEL32.DLL!InitializeCriticalSection |
 
-* `work/indirect_call_resolutions_after.tsv`: 59,079 data rows + header, one per input site;
-  site IDs match the input set exactly (asserted).
-* `work/indirect_call_vtables_after.tsv`: 121,692 data rows + header; 9,051 distinct vtables; every target is a `.text` address (asserted).
-* Confidence labels are mutually exclusive and exhaustive; `low` and `unresolved` rows never
-  carry a `resolved_target`; every emitted target is inside `.text`.
+## 7. Validation
 
+* `work/indirect_call_resolutions_after.tsv`: 59,079 data rows + header, 1:1 with `work/indirect_calls_after.tsv` site IDs (asserted).
+* Zero `unresolved` rows; every `.text` address verified inside `.text` (`0x10001000..0x1172e4ea`).
+* `work/indirect_call_target_sets_after.tsv`: 3,961 deduplicated target sets with exact matching `target_count`.
+* `work/indirect_call_vtables_after.tsv`: 123,569 slots across 9,639 vtables.
