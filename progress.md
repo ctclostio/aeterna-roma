@@ -72,6 +72,21 @@ Rules for new entries:
   `work/indirect_call_vtables_after.tsv`,
   `work/indirect_call_hierarchy_after.tsv`,
   `work/indirect_call_summary_after.md`.
+- [x] Decompiler-warning triage complete (2026-11-23): **9,856 / 9,856 (100.0%)**
+  decompiler warning rows across all `6,765` affected canonical functions
+  classified at `high` confidence with `0` untriaged (`9,724` benign:
+  `4,348` `global_overlap`, `1,959` `unreachable_block`, `1,698` virtual + `450`
+  IAT + `10` register + `4` `.data` callback tail calls, `584` `noreturn_call`,
+  `331` `type_propagation`, `276` `injection`, `41` `restart_deadcode`, `8`
+  `inlined`, `6` `readonly_write` PE-verified read-only SSE `.rdata` loads, `4`
+  `heritage_dead_removal`, `2` `switch_case_unlabeled`, `2` `switch_degraded`,
+  `1` `infinite_loop_block`; `73` `spacebase` stack-frame + `2` clean-exported
+  `restart_limit` flagged for port verification; `57` switch-table warnings
+  resolved via all **47** PE `.reloc`-verified code jump tables recovered
+  across all **16** switch functions [`21` addressed + `26` selector-norm])
+  → `work/decomp_defects_triaged_after.tsv`,
+  `work/switch_tables_recovered_after.tsv`,
+  `work/decomp_defects_triage_summary_after.md`.
 
 ## x64 port milestones
 
