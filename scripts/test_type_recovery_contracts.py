@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 1546)
-        self.assertEqual(result["globals"], 889)
+        self.assertEqual(result["functions"], 1563)
+        self.assertEqual(result["globals"], 922)
         self.assertEqual(result["vtables"], 85)
-        self.assertEqual(result["instruction_witnesses"], 1473)
+        self.assertEqual(result["instruction_witnesses"], 1495)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -820,10 +820,11 @@ class TypeContractProvenanceTests(unittest.TestCase):
                 "1168bcc3", "11695540", "11696308", "11696528", "11699af7", "11699b02",
                 "1169b820", "1169e653", "1169ecd8", "116a1729", "116a511c", "116a5864", "116a586f", "116ade23", "116ae58e", "116afb0a",
                 "116b4b50", "116b56b1", "116b5f67", "116bd8d0", "116bde50",
-            } | {"116b0517", "116aaee6", "1168d030", "116adaed"},
+            } | {"116b0517", "116aaee6", "1168d030", "116adaed"} | {"100edd70"},
         )
         base, sections = contracts.parse_pe32(self.image)
         expected_gaps = {
+            "100edd70": [41],
             "100f38b0": [7],
             "10123e40": [4, 6],
             "10fb2fb0": [9],
@@ -3934,6 +3935,117 @@ class TypeContractProvenanceTests(unittest.TestCase):
         }.items():
             self.assertEqual(by_g[addr]["width"], width)
             self.assertEqual(by_g[addr]["storage"], "file")
+
+    def test_layer71_startup_entry_frame_loop_contracts(self):
+        ev = self.registry["rea_layer71_evidence"]
+        self.assertEqual(ev["snapshot_mode"], "extending_layer70_batched_p8")
+        self.assertEqual(ev["closed_evidence_records"], 257)
+        self.assertEqual(ev["new_evidence_records"], 59)
+        self.assertEqual(ev["reused_layer70_evidence_records"], 198)
+        self.assertEqual(ev["retained_operation_envelopes"], 257)
+        self.assertEqual(ev["extra_evidence_views_count"], 0)
+        self.assertEqual(ev["non_proc_slots"], [])
+        self.assertEqual(ev["resource_constrained_slots"], [])
+        self.assertEqual(ev["cumulative_validated_bundle_records"], 257)
+        self.assertEqual(ev["prior_partitions_validated_records"], 2118)
+        self.assertEqual(ev["cumulative_all_partitions_records"], 2375)
+        self.assertEqual(
+            ev["closed_snapshot_sha256"],
+            "19261c2e0ae8d1f75f5328bd2bcf364117e470e8f7e892ae29496af406936e00",
+        )
+        self.assertEqual(
+            ev["validated_bundle_sha256"],
+            "d1e0cc84583aad43fe0757bc525b609c1558a1bb786b80d4c599b26d386e2541",
+        )
+        ops = {}
+        for rec in ev["new_records"]:
+            ops[rec["operation"]] = ops.get(rec["operation"], 0) + 1
+        self.assertEqual(ops, {"analyze_function": 17, "read_bytes": 42})
+        self.assertEqual(len(ev["limitations"]), 10)
+
+        by_fn = {item["address"]: item for item in self.registry["functions"]}
+        layer71_thiscall = {
+            "100d6cc0": 4, "100d9d90": 4, "100dbf80": 0, "100ec5c0": 0,
+            "104274b0": 8, "10c8fff0": 0, "10c914d0": 0, "10cb8420": 8,
+            "10cb8450": 8, "10cb8480": 8, "112e2bf0": 4,
+        }
+        for addr, pop in layer71_thiscall.items():
+            self.assertEqual(by_fn[addr]["calling_convention"], "thiscall")
+            self.assertEqual(by_fn[addr]["receiver_register"], "ECX")
+            self.assertEqual(by_fn[addr]["callee_pop_bytes"], pop)
+            self.assertEqual(by_fn[addr]["stack_argument_bytes"], pop)
+        layer71_cdecl = {
+            "100ed3c0": 12, "100edd70": 32, "100f6940": 0, "10114ee0": 8,
+            "10cb0440": 4, "112ac410": 12,
+        }
+        for addr, stack in layer71_cdecl.items():
+            self.assertEqual(by_fn[addr]["calling_convention"], "cdecl")
+            self.assertEqual(by_fn[addr]["callee_pop_bytes"], 0)
+            self.assertEqual(by_fn[addr]["stack_argument_bytes"], stack)
+
+        entry = by_fn["100edd70"]
+        self.assertEqual(entry["bytes"], 535)
+        self.assertEqual(entry["body_ranges"], [
+            {"start": "100edd70", "end": "100edf49"},
+            {"start": "100edf73", "end": "100edfaf"},
+        ])
+        self.assertEqual(entry["return_instruction_addresses"], ["100edec8", "100edfaf"])
+
+        by_g = {item["address"]: item for item in self.registry["globals"]}
+        expected_globals = {
+            "1173dd3c": "5549732f00", "1173f838": "90a95e9a34306f4d912801f3c61022bc",
+            "1173f848": "72fbb2e728d7b349a5f218ebf5f1349e", "11740128": "0d0a00",
+            "11923d98": "ffffffff4adf0e1067df0e10", "11933190": "00000100",
+            "11933ad0": "01", "11934468": "10270000", "119ef0c8": "00000000",
+        }
+        for addr, initial in expected_globals.items():
+            self.assertEqual(by_g[addr]["initial_hex_le"], initial)
+            self.assertEqual(by_g[addr]["storage"], "file")
+        scope = bytes.fromhex(by_g["11923d98"]["initial_hex_le"])
+        filt, handler = struct.unpack_from("<II", scope, 4)
+        gap = (int(entry["body_ranges"][0]["end"], 16), int(entry["body_ranges"][1]["start"], 16))
+        self.assertTrue(gap[0] < filt < handler < gap[1])
+
+        by_w = {item["address"]: item for item in self.registry["instruction_witnesses"]}
+        self.assertEqual(by_w["10cb045e"]["hex"], "0f85bc600000")
+        self.assertEqual(by_w["100edd7a"]["hex"], "68d8e36b11")
+        self.assertEqual(by_w["100edf05"]["hex"], "68d0e50e10")
+
+        # Independent decode of every audited jump edge that leaves the recovered bodies.
+        base, sections = contracts.parse_pe32(self.image)[:2]
+        ranges = []
+        for fn in self.registry["functions"]:
+            if "body_ranges" in fn:
+                ranges.extend((int(r["start"], 16), int(r["end"], 16)) for r in fn["body_ranges"])
+            else:
+                start = int(fn["address"], 16)
+                ranges.append((start, start + fn["bytes"] - 1))
+
+        def recovered(address):
+            return any(start <= address <= end for start, end in ranges)
+
+        audit = ev["closure_audit"]
+        self.assertEqual(audit["recovered_functions"], 1563)
+        self.assertEqual(audit["open_direct_call_edges"], 0)
+        edges = audit["direct_jump_edges_leaving_recovered_bodies"]
+        self.assertEqual(len(edges), 12)
+        self.assertEqual(len({edge["target"] for edge in edges}), 9)
+        self.assertEqual([edge["instruction"] for edge in edges if edge["layer"] == "layer71"], ["10cb045e"])
+        for edge in edges:
+            at = int(edge["instruction"], 16)
+            raw = contracts.image_bytes(self.image, base, sections, at, 6)[0]
+            if raw[0] == 0xeb or 0x70 <= raw[0] <= 0x7f:
+                target = at + 2 + struct.unpack_from("<b", raw, 1)[0]
+            elif raw[0] == 0xe9:
+                target = at + 5 + struct.unpack_from("<i", raw, 1)[0]
+            else:
+                self.assertEqual(raw[0], 0x0f)
+                self.assertTrue(0x80 <= raw[1] <= 0x8f)
+                target = at + 6 + struct.unpack_from("<i", raw, 2)[0]
+            self.assertEqual(target, int(edge["target"], 16))
+            self.assertTrue(recovered(at))
+            self.assertFalse(recovered(target))
+            self.assertNotIn(edge["target"], by_fn)
 
     def test_direct_jmp_short_mismatch_rejected(self):
         registry = copy.deepcopy(self.registry)

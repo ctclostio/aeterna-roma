@@ -2257,3 +2257,70 @@ callees.
   `clean_crt=0`, `noret_or_thunk=0` across **1,546** functions; remaining `17`
   `entry_point` spine functions in Layer 71 Partition 8 and live runtime
   execution remain open).
+
+### Layer 71 — Partition 8 sealed: entry_point, application run loop, frame step & per-frame screen-manager update (2026-11-24)
+- Sealed Partition 8 (`extending_layer70_batched_p8`) by closing the last
+  **17** functions of the `entry_point` spine: `0x100edd70` `entry_point`
+  (two body ranges around its SEH funclets, GameExplorer access check,
+  `-no_exception_handler` switch), `0x100ed3c0` application run loop,
+  `0x100ec5c0` frame step (frame-rate cap, frames-per-second log lines,
+  time-to-first-frame log), `0x100dbf80` per-frame screen-manager update
+  (frame clock, 300 ms clamp, time scale, 50-entry frame-time ring, handler
+  step loop with transition codes 1–6, render and present), `0x100d6cc0`
+  name-prefix entry removal, `0x100d9d90` pointer-vector push, `0x10cb0440`
+  advice enable, the interface tail calls `0x10c8fff0`/`0x10c914d0`, the time
+  accumulators `0x10cb8420`/`0x10cb8450`/`0x10cb8480`, the 64-bit helpers
+  `0x104274b0`/`0x112ac410`/`0x112e2bf0`, the `0x100f6940` FP control-word
+  check and the `0x10114ee0` wait-parameter setter, growing
+  [contracts.json](port/recovered_types/contracts.json) to **1,563** functions,
+  **922** globals (`33` Layer 71 non-overlapping globals: seven IAT slots for
+  `QueryPerformanceCounter`, `IsWindow`, `SysAllocString`, `SysFreeString`,
+  `CoInitialize`, `CoCreateInstance` and `CoUninitialize`, ten `.rdata`
+  strings, the GameExplorer class and interface GUIDs `0x1173f838`/`0x1173f848`,
+  the `0x11923d98` SEH scope record, and thirteen `.data` cells: the
+  `0x11933188..0x11933198` counter-sample vector, the `0x11933ad0`
+  first-frame flag, `0x11934468`, `0x1196fc24` and `0x119ef0c8..0x119ef0cf`),
+  **85** vtables (none new), and **1,495** instruction witnesses (`257`
+  Partition 8 validated REA records: `59` new + `198` reused Layer 70,
+  `non_proc_slots=[]`, `resource_constrained_slots=[]`; **2,375** cumulative
+  across Partitions 1–8; `123,442,666B` snapshot).
+- Closure is stated for what was measured. A linear sweep of all **1,563**
+  recovered bodies, recorded as `closure_audit` in `rea_layer71_evidence` and
+  re-decoded from the image by the contract tests, finds **0** direct CALL
+  edges leaving the recovered set. Jump edges do not all close: **12** direct
+  JMP/Jcc edges (**9** targets) leave the recovered bodies. One is new:
+  `0x10cb0440` leaves through `JNZ` at `0x10cb045e` into the 716-byte
+  `0x10cb6520`, which has no retained evidence and is not recovered; the port
+  models it as a callback. Eleven predate this layer (`0x100d2c80` into the
+  2,569-byte `0x100dacb0`, `0x10fd9500` into its SEH epilogue, and CRT tails
+  from `0x11695ee2`, `0x116b82f0`, `0x116b8348` and `0x116b856e`).
+  `entry_point` also takes two unrecovered code addresses as operands, the SEH
+  frame handler `0x116be3d8` and the invalid-parameter handler `0x100ee5d0`;
+  both are pinned as witnesses. "Sealed" therefore means the CALL-edge metric
+  this registry has used throughout, not that every reachable instruction is
+  recovered.
+- `0x100ec5c0` returns only `0` or `2`, so the restart branch of `0x100ed3c0`
+  (taken on `1`) is unreachable with this body. Six strings longer than their
+  24-byte `read_bytes` record are pinned as prefixes, and the uninitialized
+  `.data` operands listed in `rea_layer71_evidence` stay unpinned.
+- Locked 7 fixed-width [guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  layouts (`rome2_startup_u64_pair8_32`, `rome2_startup_ptr_vec16_32`,
+  `rome2_startup_frame_time12_32`, `rome2_startup_frame_time16_32`,
+  `rome2_startup_handler_step24_32`, `rome2_startup_ui_entry12_32`,
+  `rome2_startup_seh_scope12_32`) and added bounded C17 reconstruction and
+  **161 checks** in
+  [startup_entry_frame_loop_ops.h](port/recovered_types/startup_entry_frame_loop_ops.h),
+  [startup_entry_frame_loop_ops.c](port/recovered_types/startup_entry_frame_loop_ops.c),
+  and [test_startup_entry_frame_loop_ops.c](port/recovered_types/test_startup_entry_frame_loop_ops.c).
+  Virtual slots, Win32/COM/CRT calls and already-recovered callees are
+  injected callbacks; the frames-per-second line uses host `snprintf` and is
+  not claimed digit-identical to the original hand-laid `_fcvt_s` output on
+  ties; a null top handler is skipped where the original would fault.
+- Verified **128/128** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
+  and ASan, **111** contract tests on Python 3.14 and 3.15 (`10,995` PE-verified
+  whole-binary globals in [manifest.json](work/binary_contracts/manifest.json)),
+  and **974** clean-public Python tests (**340** skipped) on Python 3.14 and 3.15
+  without touching the shared Ghidra project or canonical exports (`clean_eng=0`,
+  `clean_crt=0`, `noret_or_thunk=0` across **1,563** functions; no `entry_point`
+  spine function remains; the `0x10cb6520` tail-jump edge, live runtime
+  execution and whole-engine recovery remain open).

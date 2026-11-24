@@ -3678,5 +3678,82 @@ ROME2_LAYOUT_ASSERT(rome2_startup_gesture_record64_32, ended_30, 0x30);
 ROME2_LAYOUT_ASSERT(rome2_startup_gesture_record64_32, code_34, 0x34);
 ROME2_LAYOUT_ASSERT(rome2_startup_gesture_record64_32, code_xy_38, 0x38);
 
+/* Layer 71 Partition 8: entry_point, application run loop and per-frame update views. */
+typedef struct rome2_startup_u64_pair8_32 {
+    uint32_t lo_00;                              /* 00 low dword */
+    uint32_t hi_04;                              /* 04 high dword */
+} rome2_startup_u64_pair8_32;
+_Static_assert(sizeof(rome2_startup_u64_pair8_32) == 0x08, "startup u64 pair8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_u64_pair8_32, hi_04, 0x04);
+
+typedef struct rome2_startup_ptr_vec16_32 {
+    uint32_t unread_00;                          /* 00 not read by 0x100d9d90 */
+    uint32_t capacity_04;                        /* 04 capacity in dwords */
+    uint32_t count_08;                           /* 08 used dwords */
+    uint32_t data_0c;                            /* 0c guest pointer to the dword buffer */
+} rome2_startup_ptr_vec16_32;
+_Static_assert(sizeof(rome2_startup_ptr_vec16_32) == 0x10, "startup ptr vec16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_ptr_vec16_32, capacity_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_ptr_vec16_32, count_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_ptr_vec16_32, data_0c, 0x0c);
+
+typedef struct rome2_startup_frame_time12_32 {
+    uint32_t total_ms_00;                        /* 00 accumulated frame time [mgr+0xc0] */
+    uint32_t dt_ms_04;                           /* 04 this frame in ms */
+    float dt_s_08;                               /* 08 this frame in seconds */
+} rome2_startup_frame_time12_32;
+_Static_assert(sizeof(rome2_startup_frame_time12_32) == 0x0c, "startup frame time12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_frame_time12_32, dt_ms_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_frame_time12_32, dt_s_08, 0x08);
+
+typedef struct rome2_startup_frame_time16_32 {
+    uint32_t total_ms_00;                        /* 00 accumulated ms */
+    uint32_t dt_ms_04;                           /* 04 step ms */
+    float total_s_08;                            /* 08 accumulated seconds */
+    float dt_s_0c;                               /* 0c step seconds */
+} rome2_startup_frame_time16_32;
+_Static_assert(sizeof(rome2_startup_frame_time16_32) == 0x10, "startup frame time16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_frame_time16_32, total_s_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_frame_time16_32, dt_s_0c, 0x0c);
+
+typedef struct rome2_startup_handler_step24_32 {
+    uint8_t advanced_00;                         /* 00 nonzero: ms_04 is added to [handler+4] */
+    uint8_t pad_01[3];                           /* 01..03 */
+    uint32_t ms_04;                              /* 04 step ms */
+    uint8_t again_08;                            /* 08 nonzero: run another step this frame */
+    uint8_t pad_09[3];                           /* 09..0b */
+    uint32_t factory_0c;                         /* 0c guest pointer to the next-handler factory */
+    int32_t code_10;                             /* 10 transition code 0..6 */
+    uint8_t leave_ui_14;                         /* 14 nonzero: drop 'UIs/' entries, call slot +0x10 */
+    uint8_t notify_15;                           /* 15 nonzero: notify listeners before slot +0x64 */
+    uint8_t pad_16[2];                           /* 16..17 */
+} rome2_startup_handler_step24_32;
+_Static_assert(sizeof(rome2_startup_handler_step24_32) == 0x18, "startup handler step24 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_handler_step24_32, ms_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_handler_step24_32, again_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_handler_step24_32, factory_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_startup_handler_step24_32, code_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_startup_handler_step24_32, leave_ui_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_startup_handler_step24_32, notify_15, 0x15);
+
+typedef struct rome2_startup_ui_entry12_32 {
+    uint8_t wanted_00;                           /* 00 requested enable state */
+    uint8_t pad_01[3];                           /* 01..03 */
+    uint32_t handler_04;                         /* 04 guest pointer; enabled byte at [handler+0x10] */
+    uint32_t owner_08;                           /* 08 guest pointer; name string at [owner+8] */
+} rome2_startup_ui_entry12_32;
+_Static_assert(sizeof(rome2_startup_ui_entry12_32) == 0x0c, "startup ui entry12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_ui_entry12_32, handler_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_ui_entry12_32, owner_08, 0x08);
+
+typedef struct rome2_startup_seh_scope12_32 {
+    int32_t enclosing_level_00;                  /* 00 -1 at 0x11923d98 */
+    uint32_t filter_04;                          /* 04 filter funclet 0x100edf4a */
+    uint32_t handler_08;                         /* 08 handler funclet 0x100edf67 */
+} rome2_startup_seh_scope12_32;
+_Static_assert(sizeof(rome2_startup_seh_scope12_32) == 0x0c, "startup seh scope12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_seh_scope12_32, filter_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_seh_scope12_32, handler_08, 0x08);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif
