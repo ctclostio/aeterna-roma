@@ -87,6 +87,29 @@ Rules for new entries:
   → `work/decomp_defects_triaged_after.tsv`,
   `work/switch_tables_recovered_after.tsv`,
   `work/decomp_defects_triage_summary_after.md`.
+- [x] Whole-binary ABI & type contracts complete (2026-11-23): **81,280 / 81,280
+  (100.0%)** canonical functions (`+31` curated non-index vtable slots)
+  SHA-256 and exit-opcode pinned against `empire.retail.dll` (`74,884` `ret`,
+  `7` `bnd_ret`, `5,746` `tail_jmp_rel32`, `375` `tail_jmp_indirect`, `208`
+  `tail_jmp_iat`, `33` `noreturn_call_rel32`, `12` `tail_jmp_rel8`, `9`
+  `fallthrough_stub`, `3` `noreturn_call_iat`, `3` `trap_int3`; `405` unique
+  exported code targets pinned), plus all **9,639 / 9,639 (100.0%)** PE-hashed
+  vtables (`6,281` with recovered member/ctor fields totaling `95,747`
+  `(vtable, offset)` entries and `278` constructor `alloc` size hints), **181**
+  MSVC RTTI `TypeDescriptor`s (**15** `.rdata` `CompleteObjectLocator`s), and
+  **10,829** PE-verified static globals (`739` curated, `495` additional IAT
+  slots, `29` data exports, `181` RTTI TDs, `9,385` `.data` reloc pointers),
+  reconciled `100%` against separate curated C17 Layer 62
+  `port/recovered_types/contracts.json` (`1,315` functions, `739` globals, `76`
+  vtables) → `work/binary_contracts/manifest.json`,
+  `work/binary_contracts/function_contracts_part1.tsv`,
+  `work/binary_contracts/function_contracts_part2.tsv`,
+  `work/binary_contracts/non_proc_curated_slots.tsv`,
+  `work/binary_contracts/vtable_class_contracts.tsv`,
+  `work/binary_contracts/class_field_layouts.tsv`,
+  `work/binary_contracts/rtti_contracts.tsv`,
+  `work/binary_contracts/global_contracts.tsv`,
+  `work/binary_contracts/summary.md`.
 
 ## x64 port milestones
 
