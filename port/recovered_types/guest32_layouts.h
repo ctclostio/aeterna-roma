@@ -3477,5 +3477,43 @@ ROME2_LAYOUT_ASSERT(rome2_startup_fiopen_entry12_32, valid_flag_00, 0x00);
 ROME2_LAYOUT_ASSERT(rome2_startup_fiopen_entry12_32, mode_bits_04, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_startup_fiopen_entry12_32, wmode_ptr_08, 0x08);
 
+typedef struct rome2_startup_db_hash_bucket12_32 {
+    uint32_t head_00;                            /* 00 bucket node head */
+    uint32_t sentinel_04;                        /* 04 bucket sentinel marker */
+    uint32_t reserved_08;                        /* 08 link/pad word */
+} rome2_startup_db_hash_bucket12_32;
+_Static_assert(sizeof(rome2_startup_db_hash_bucket12_32) == 0x0c, "startup db hash bucket12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_db_hash_bucket12_32, head_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_db_hash_bucket12_32, sentinel_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_db_hash_bucket12_32, reserved_08, 0x08);
+
+typedef struct rome2_startup_db_hash_iter12_32 {
+    uint32_t table_ptr_00;                       /* 00 owner hash bucket descriptor */
+    uint32_t bucket_ptr_04;                      /* 04 current bucket pointer */
+    uint32_t node_ptr_08;                        /* 08 matched or end node pointer */
+} rome2_startup_db_hash_iter12_32;
+_Static_assert(sizeof(rome2_startup_db_hash_iter12_32) == 0x0c, "startup db hash iter12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_db_hash_iter12_32, table_ptr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_db_hash_iter12_32, bucket_ptr_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_db_hash_iter12_32, node_ptr_08, 0x08);
+
+typedef struct rome2_startup_db_desc_entry28_32 {
+    uint32_t key_words_00[3];                    /* 00..0b 12-byte name/string key */
+    uint32_t col0_0c;                            /* 0c primary handle/word */
+    uint32_t col1_10;                            /* 10 secondary word */
+    uint8_t b14;                                 /* 14 flag byte 0 */
+    uint8_t b15;                                 /* 15 flag byte 1 */
+    uint8_t b16;                                 /* 16 flag byte 2 */
+    uint8_t b17;                                 /* 17 flag byte 3 */
+    uint32_t tail_18;                            /* 18 trailing word */
+} rome2_startup_db_desc_entry28_32;
+_Static_assert(sizeof(rome2_startup_db_desc_entry28_32) == 0x1c, "startup db desc entry28 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_db_desc_entry28_32, key_words_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_db_desc_entry28_32, col0_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_startup_db_desc_entry28_32, col1_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_startup_db_desc_entry28_32, b14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_startup_db_desc_entry28_32, b17, 0x17);
+ROME2_LAYOUT_ASSERT(rome2_startup_db_desc_entry28_32, tail_18, 0x18);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

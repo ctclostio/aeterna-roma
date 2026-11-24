@@ -2100,3 +2100,32 @@ callees.
   `clean_crt=0`, `noret_or_thunk=0` across **1,448** functions; remaining `115`
   `entry_point` spine functions across Layers 67–71 Partition 8 and live runtime
   execution remain open).
+
+### Layer 67 — Partition 8 start: engine DB, EMPIRE_APP teardown, Warscape open_handler & CRT x87/SSE2 FP cluster (2026-11-24)
+- Opened fresh Partition 8 (`fresh_partition_p8`) closing **24** engine DB,
+  `EMPIRE_APP` destructor (`0x100e0650`), Warscape `open_handler` (`0x100d81c0`),
+  `la_gioconda` UI, hash-map/slab-pool (`0x106d1a90`..`0x112bb3f0`, `direct_jmp`
+  `0x10ca3810 -> 0x10ca3740`), and CRT x87/SSE2 FP control-word
+  (`0x101150a0`, `0x11698a7c`..two-part SEH4 `0x116adaed`) functions, growing
+  [contracts.json](port/recovered_types/contracts.json) to **1,472** functions,
+  **818** globals (`17` Layer 67 non-overlapping globals), **79** vtables
+  (`0x1173f200 -> 0x100e11e0`), and **1,399** instruction witnesses (`41`
+  Partition 8 validated REA records: `24` `analyze_function` + `17`
+  `read_bytes`, `reused_layer66_evidence_records=0`, `non_proc_slots=[]`,
+  `resource_constrained_slots=[]`; **2,159** cumulative across Partitions 1–8;
+  `123,442,666B` snapshot; `0` unpinned internal callees).
+- Locked 3 fixed-width [guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  layouts (`rome2_startup_db_hash_bucket12_32`,
+  `rome2_startup_db_hash_iter12_32`, `rome2_startup_db_desc_entry28_32`) and
+  added bounded C17 reconstruction and **33 checks** in
+  [startup_engine_db_fp_ops.h](port/recovered_types/startup_engine_db_fp_ops.h),
+  [startup_engine_db_fp_ops.c](port/recovered_types/startup_engine_db_fp_ops.c),
+  and [test_startup_engine_db_fp_ops.c](port/recovered_types/test_startup_engine_db_fp_ops.c).
+- Verified **124/124** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
+  and ASan, **106** contract tests on Python 3.14 and 3.15 (`10,902` PE-verified
+  whole-binary globals in [manifest.json](work/binary_contracts/manifest.json)),
+  and **969** clean-public Python tests (**336** skipped) on Python 3.14 and 3.15
+  without touching the shared Ghidra project or canonical exports (`clean_eng=0`,
+  `clean_crt=0`, `noret_or_thunk=0` across **1,472** functions; remaining `91`
+  `entry_point` spine functions across Layers 68–71 Partition 8 and live runtime
+  execution remain open).

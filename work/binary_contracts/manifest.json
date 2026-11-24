@@ -13,7 +13,7 @@
     "class_field_entries": 95747,
     "rtti_type_descriptors": 181,
     "rtti_complete_object_locators": 15,
-    "globals": 10885,
+    "globals": 10902,
     "exported_code_targets_pinned": 405
   },
   "distributions": {
@@ -193,6 +193,16 @@
       "12-slot active std::basic_stringbuf<wchar_t> vtable in .rdata bound by 0x100d2740/0x100d3790": 1,
       "5-dword wstringstream vbtable/vtable descriptors in .rdata bound by 0x100d2740/0x100d3790": 1,
       "15-slot base stream adapter vtable 0x1173db9c restored by 0x112ad1e0": 1,
+      "NUL-terminated ASCII log string 'At start of open_handler' in .rdata for 0x100d81c0": 1,
+      "NUL-terminated ASCII log string 'About to create controllers' in .rdata for 0x100d81c0": 1,
+      "NUL-terminated ASCII log string 'After creating controllers' in .rdata for 0x100d81c0": 1,
+      "NUL-terminated ASCII log string 'About to create views' in .rdata for 0x100d81c0": 1,
+      "NUL-terminated ASCII log string 'After creating views' in .rdata for 0x100d81c0": 1,
+      "NUL-terminated ASCII log string 'About to create UIs' in .rdata for 0x100d81c0": 1,
+      "NUL-terminated ASCII log string 'After creating UIs' in .rdata for 0x100d81c0": 1,
+      "NUL-terminated ASCII log string 'After Warscape registration end' in .rdata for 0x100d81c0": 1,
+      "NUL-terminated ASCII log string 'After open_handler' in .rdata for 0x100d81c0": 1,
+      "NUL-terminated UTF-16LE string L'preferences' in .rdata": 1,
       "NUL-terminated UTF-16LE string L'user' in .rdata pushed by 0x100ddfc0": 1,
       "NUL-terminated ASCII prefix 'Warscape/Reload ' in .rdata used by 0x100d2860": 1,
       "NUL-terminated ASCII string 'Warscape/Show profiler' in .rdata used by 0x100d2860": 1,
@@ -207,6 +217,7 @@
       "4-byte IEEE-754 float 0.001f (0x3a83126f) in .rdata multiplied by 0x112e2b00": 1,
       "Unsigned-to-double conversion bias pair referenced by float load-factor computation in 0x112cbe10": 1,
       "VFS trace/format descriptor {'*', 10, 10, \"%s\"} passed by 0x112b5730 to 0x112a4e10": 1,
+      "4-byte 1-slot base vtable {0x100e11e0} in .rdata installed by 0x100e0650": 1,
       "NUL-terminated UTF-16LE string L'w' in .rdata for 0x100e2980": 1,
       "NUL-terminated UTF-16LE string L'Mutex error' in .rdata used by 0x100df270": 1,
       "NUL-terminated UTF-16LE string L'r' in .rdata for 0x100e2980": 1,
@@ -304,6 +315,7 @@
       "NUL-terminated ASCII OOM literal 'VirtualAlloc (at place 1) returned NULL!' in .rdata": 1,
       "NUL-terminated ASCII OOM literal 'VirtualAlloc (at place 2) returned NULL!' in .rdata": 1,
       "NUL-terminated string literal 'dlmalloc returned NULL!' in .rdata passed to MessageBoxA in 0x101254a0": 1,
+      "NUL-terminated ASCII UI style key 'la_gioconda' in .rdata for 0x10c8f760/0x10c8f8c0/0x10cb8f90": 1,
       "6-slot primary channel/socket adapter base vtable prefix [0x101d27c0, 0x116bd8af, 0x101d95d0, 0x101d32b0, 0x101d3ab0, 0x101d7700] in .rdata bound by 0x10fd6850": 1,
       "Static ASCII \"map/set<T> too long\" error literal pushed by 0x112a3320": 1,
       "NUL-terminated UTF-16 closing paren literal u')' in .rdata used by math formatters": 1,
@@ -477,6 +489,7 @@
       "16-byte MSVC SEH4 scope table in .rdata for 0x116aa1b7": 1,
       "16-byte MSVC SEH4 scope table in .rdata for 0x116aaee6 (immediately preceding 0x119259d0)": 1,
       "MSVC SEH4 scope table descriptor in .rdata pushed by 0x116ab53f": 1,
+      "16-byte MSVC SEH4 scope table in .rdata referenced by 0x116adaed": 1,
       "16-byte MSVC SEH4 scope table in .rdata for 0x116ae8b5": 1,
       "16-byte MSVC SEH4 scope table in .rdata for 0x116aeb77": 1,
       "16-byte MSVC SEH4 scope table in .rdata for 0x116aec38": 1,
@@ -514,6 +527,9 @@
       "Initial image prefix of thread-quota bucket map singleton returned by 0x112e3db0": 1,
       "0x124f8-bucket hash table header {bucket_count=0x124f8, count=0, ptr=NULL} initialized by 0x112d2910": 1,
       "static 28-byte VFS stream-registry sentinel/object header in .data (self+4 dword 0x119e1234) returned by 0x112b3270": 1,
+      "8-byte DB bucket descriptor header/sentinel in .data referenced by 0x112bb3f0": 1,
+      "4-byte DB bucket count (initial 4) in .data read by 0x112bb3f0": 1,
+      "4-byte DB bucket array pointer slot in .data initialized by 0x112bb3f0": 1,
       "60-byte MSVC _Fiopen wide mode string pointer table in .rdata indexed by 0x113471f0": 1,
       "4-byte CRT MSVC TLS initialization epoch (0x80000000) in .data read by 0x11683a32": 1,
       "4-byte CRT __isa_available CPU feature flags in .data tested by 0x116be510": 1,
@@ -546,6 +562,7 @@
       "4-byte CRT 'C' locale category string sentinel in .data compared by 0x116b5c9e..0x116b5ee6": 1,
       "56-byte CRT __badioinfo fallback ioinfo struct in .data referenced by 0x116a66d3 (_fputwc_nolock)": 1,
       "256-byte CRT _lookuptrailbytes UTF-8 lead-byte trail-count table in .data indexed by 0x116a49a3": 1,
+      "4-byte CRT _dazflush flag (initial 1) in .data read by 0x116adaed": 1,
       "12-byte CRT DST start transition cache {yr, yd, ms} in .data read/updated by 0x116afbdc/0x116b026c": 1,
       "12-byte CRT DST end transition cache {yr, yd, ms} in .data read/updated by 0x116afbdc/0x116b026c": 1,
       "4-byte CRT locale per-thread mask constant (0xfffffffe) in .data tested by 0x116a5cc3/0x116a5cf0": 1,
@@ -799,24 +816,24 @@
     }
   },
   "curated_reconciliation": {
-    "curated_functions_total": 1448,
-    "curated_in_canonical_index": 1417,
-    "curated_exact_body_sha256_match": 1399,
+    "curated_functions_total": 1472,
+    "curated_in_canonical_index": 1441,
+    "curated_exact_body_sha256_match": 1423,
     "curated_multi_range_expanded": 18,
     "curated_non_proc_slots": 31,
-    "curated_globals_matched": 801,
-    "curated_vtables_matched": 78
+    "curated_globals_matched": 818,
+    "curated_vtables_matched": 79
   },
   "files": {
     "function_contracts_part1.tsv": {
       "rows": 40640,
-      "bytes": 9392119,
-      "sha256": "9b1528836aadb903fee7298702583311b1fe0feec460a006bfb47093294aacf4"
+      "bytes": 9392272,
+      "sha256": "cc95e46b30071420c882ca9dc1567fe9aa546969417bfa6543bbe5d3288f8170"
     },
     "function_contracts_part2.tsv": {
       "rows": 40640,
-      "bytes": 9470612,
-      "sha256": "ada8fa9e516dba9d7a3107434dba8bc41f7df2efbde409bd874083a7c6c9b18d"
+      "bytes": 9470867,
+      "sha256": "0c953699b45209d2f39f8daa086577fbe34f604bedf15ab5d9e44b313e4051ad"
     },
     "non_proc_curated_slots.tsv": {
       "rows": 31,
@@ -830,8 +847,8 @@
     },
     "vtable_class_contracts.tsv": {
       "rows": 9639,
-      "bytes": 2806466,
-      "sha256": "bcd6438100504bd81ad5bfd8d07f8e42d3280825d87f3347e1b6f9aa47e95e73"
+      "bytes": 2806465,
+      "sha256": "3eea8e98aa7da3d54d60f8ea7ca765de8add404a715bdfc5218fc9d9842bcd50"
     },
     "class_field_layouts.tsv": {
       "rows": 95747,
@@ -839,9 +856,9 @@
       "sha256": "534964ec1fa25fd15189a0fd007ba1412fe7fe339981ade410ca82a303f8e912"
     },
     "global_contracts.tsv": {
-      "rows": 10885,
-      "bytes": 930520,
-      "sha256": "41a166ad78be1186f84fc77ce959d0af81a794510621b09003db05c22cd2d54d"
+      "rows": 10902,
+      "bytes": 934221,
+      "sha256": "023953e4aa22b13095f56073c0470d98f8bfb81880494d7a29b3fe51e6164b8b"
     }
   }
 }

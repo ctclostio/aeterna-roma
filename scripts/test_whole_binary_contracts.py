@@ -71,7 +71,7 @@ class PublicWholeBinaryContractTests(unittest.TestCase):
         self.assertEqual(res["non_proc_curated_slots"], 31)
         self.assertEqual(res["vtables"], 9639)
         self.assertEqual(res["rtti_type_descriptors"], 181)
-        self.assertEqual(res["globals"], 10885)
+        self.assertEqual(res["globals"], 10902)
 
         for p in vwc.CONTRACTS_DIR.iterdir():
             self.assertLess(p.stat().st_size, MAX_FILE_BYTES, msg=p.name)
@@ -177,7 +177,7 @@ class WholeBinaryContractPEProvenanceTests(unittest.TestCase):
         shutil.copytree(self.base_copy, dst)
         return dst
 
-    def test_full_pe_validation_all_81280_functions_9639_vtables_181_rtti_10885_globals(self) -> None:
+    def test_full_pe_validation_all_81280_functions_9639_vtables_181_rtti_10902_globals(self) -> None:
         res = vwc.validate_all(vwc.CONTRACTS_DIR, image_bytes_data=self.image)
         self.assertTrue(res["verified"])
         self.assertTrue(res["pe_verified"])
