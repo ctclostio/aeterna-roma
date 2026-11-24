@@ -2129,3 +2129,36 @@ callees.
   `clean_crt=0`, `noret_or_thunk=0` across **1,472** functions; remaining `91`
   `entry_point` spine functions across Layers 68–71 Partition 8 and live runtime
   execution remain open).
+
+### Layer 68 — Partition 8 video overlay, cursor, DB reader/loader & RB-tree/FxName cluster (2026-11-24)
+- Extended Partition 8 (`extending_layer67_batched_p8`) closing **30** video
+  overlay & `ShowCursor` controls (`0x100dd4c0`, `0x10115370`, `0x10ca63f0`,
+  `0x10c8a0b0`, `0x10ce6120`), `videos_tables` / `subtitle_timings_tables`
+  database readers/loaders/parsers (`0x10c99c60`, `0x10cc18c0`..`0x10ce6120`,
+  `0x10d33170`..`0x10de06e0`), and `FxName` / RB-tree join/lookup helpers
+  (`0x110e2700`..`0x112d9960`), growing
+  [contracts.json](port/recovered_types/contracts.json) to **1,502** functions,
+  **859** globals (`41` Layer 68 non-overlapping globals including `0x1172f764`
+  `USER32!ShowCursor`, `1B` cursor flags `0x11970645`/`0x11970646`, and `16`
+  video enum mode strings), **85** vtables (`6` new 2-slot vtables
+  `0x11768574`, `0x117e2588`, `0x117e29fc`, `0x117e2a04`, `0x117ee52c`,
+  `0x117ff0d0`), and **1,429** instruction witnesses (`112` Partition 8 validated
+  REA records: `71` new + `41` reused Layer 67, `non_proc_slots=[]`,
+  `resource_constrained_slots=[]`; **2,230** cumulative across Partitions 1–8;
+  `123,442,666B` snapshot; `0` unpinned internal callees).
+- Locked 4 fixed-width [guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  layouts (`rome2_startup_video_overlay_req20_32`,
+  `rome2_startup_video_play_opts36_32`, `rome2_startup_db_record_base24_32`,
+  `rome2_startup_subtitle_row68_32`) and added bounded C17 reconstruction and
+  **30 checks** in
+  [startup_video_device_cfg_ops.h](port/recovered_types/startup_video_device_cfg_ops.h),
+  [startup_video_device_cfg_ops.c](port/recovered_types/startup_video_device_cfg_ops.c),
+  and [test_startup_video_device_cfg_ops.c](port/recovered_types/test_startup_video_device_cfg_ops.c).
+- Verified **125/125** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
+  and ASan, **107** contract tests on Python 3.14 and 3.15 (`10,942` PE-verified
+  whole-binary globals in [manifest.json](work/binary_contracts/manifest.json)),
+  and **970** clean-public Python tests (**337** skipped) on Python 3.14 and 3.15
+  without touching the shared Ghidra project or canonical exports (`clean_eng=0`,
+  `clean_crt=0`, `noret_or_thunk=0` across **1,502** functions; remaining `61`
+  `entry_point` spine functions across Layers 69–71 Partition 8 and live runtime
+  execution remain open).

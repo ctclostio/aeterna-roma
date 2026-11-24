@@ -13,7 +13,7 @@
     "class_field_entries": 95747,
     "rtti_type_descriptors": 181,
     "rtti_complete_object_locators": 15,
-    "globals": 10902,
+    "globals": 10942,
     "exported_code_targets_pinned": 405
   },
   "distributions": {
@@ -40,7 +40,7 @@
       "static_rdata_ptr": 7912,
       "static_fn_ptr": 888,
       "static_vptr_instance": 584,
-      "pe_iat_slot": 490,
+      "pe_iat_slot": 489,
       "msvc_rtti_type_descriptor": 181,
       "curated": 46,
       "pe_data_export": 29,
@@ -166,6 +166,7 @@
       "IAT slot in .rdata (USER32.dll!DispatchMessageW) called by 0x101061b0": 1,
       "IAT slot in .rdata (USER32.dll!GetActiveWindow) called by 0x101032a0": 1,
       "IAT slot in .rdata (USER32.dll!MessageBoxA) called by 0x101254a0": 1,
+      "4-byte PE IAT slot for USER32.dll!ShowCursor called by 0x10115370": 1,
       "IAT slot in .rdata (WINMM.dll!timeBeginPeriod) called by 0x10115800": 1,
       "IAT slot in .rdata (WINMM.dll!timeEndPeriod) called by 0x10115810": 1,
       "IAT slot in .rdata (WINMM.dll!timeGetTime) called by 0x10f7c1a0": 1,
@@ -215,6 +216,11 @@
       "NUL-terminated ASCII string 'Warscape/TexelDensity' in .rdata used by 0x100d2860": 1,
       "static path-separator string \"\\\" (0x5c,0x00,0x00,0x00) followed by version string \"1.21\"": 1,
       "4-byte IEEE-754 float 0.001f (0x3a83126f) in .rdata multiplied by 0x112e2b00": 1,
+      "4-byte float aspect-ratio crop scale 0.5625f (9/16) in .rdata for 0x100dd4c0": 1,
+      "4-byte float 4:3 aspect-ratio factor 1.3333334f in .rdata for 0x100dd4c0": 1,
+      "4-byte float aspect-ratio lower bound 1.4f in .rdata for 0x100dd4c0": 1,
+      "4-byte float aspect-ratio upper bound 1.7f in .rdata for 0x100dd4c0": 1,
+      "4-byte float 16:9 aspect-ratio factor 1.7777778f in .rdata for 0x100dd4c0": 1,
       "Unsigned-to-double conversion bias pair referenced by float load-factor computation in 0x112cbe10": 1,
       "VFS trace/format descriptor {'*', 10, 10, \"%s\"} passed by 0x112b5730 to 0x112a4e10": 1,
       "4-byte 1-slot base vtable {0x100e11e0} in .rdata installed by 0x100e0650": 1,
@@ -317,12 +323,43 @@
       "NUL-terminated string literal 'dlmalloc returned NULL!' in .rdata passed to MessageBoxA in 0x101254a0": 1,
       "NUL-terminated ASCII UI style key 'la_gioconda' in .rdata for 0x10c8f760/0x10c8f8c0/0x10cb8f90": 1,
       "6-slot primary channel/socket adapter base vtable prefix [0x101d27c0, 0x116bd8af, 0x101d95d0, 0x101d32b0, 0x101d3ab0, 0x101d7700] in .rdata bound by 0x10fd6850": 1,
+      "8-byte 2-slot DB table base vtable {0x1033d400, 0x116bd8af} in .rdata": 1,
       "Static ASCII \"map/set<T> too long\" error literal pushed by 0x112a3320": 1,
       "NUL-terminated UTF-16 closing paren literal u')' in .rdata used by math formatters": 1,
       "NUL-terminated UTF-16 comma literal u',' in .rdata used by math formatters": 1,
+      "NUL-terminated UTF-16LE locale string L'PO' in .rdata for 0x10c8a0b0": 1,
+      "NUL-terminated UTF-16LE locale string L'PL' in .rdata for 0x10c8a0b0": 1,
       "UTF-16LE literal key L\"vfs_log_level\" at 117df544..117df55f": 1,
+      "NUL-terminated UTF-16LE DB folder prefix L'db\\\\' in .rdata": 1,
+      "8-byte 2-slot videos reader const vtable {0x10c9fd40, 0x10b98df0} in .rdata": 1,
+      "8-byte 2-slot anim vtable {0x10ccb320, 0x101920c0} in .rdata": 1,
+      "8-byte 2-slot videos loader const vtable {0x10c9fd40, 0x10b8ea90} in .rdata": 1,
+      "NUL-terminated UTF-16LE table folder L'videos_tables' in .rdata": 1,
+      "NUL-terminated ASCII key 'CAMPAIGN_DUEL' in .rdata for 0x10ce6120": 1,
+      "NUL-terminated ASCII key 'CAMPAIGN_DUEL_RESULT' in .rdata for 0x10ce6120": 1,
+      "NUL-terminated ASCII key 'CAMPAIGN_INTRO' in .rdata for 0x10ce6120": 1,
+      "NUL-terminated ASCII key 'CAMPAIGN_LOSE' in .rdata for 0x10ce6120": 1,
+      "NUL-terminated ASCII key 'CAMPAIGN_OUTRO' in .rdata for 0x10ce6120": 1,
+      "NUL-terminated ASCII key 'CAMPAIGN_WIN' in .rdata for 0x10ce6120": 1,
+      "NUL-terminated ASCII key 'FULLSCREEN_BATTLE_INTRO' in .rdata for 0x10ce6120": 1,
+      "NUL-terminated ASCII key 'FULLSCREEN_FRONTEND' in .rdata for 0x10ce6120": 1,
+      "NUL-terminated ASCII key 'FULLSCREEN_INTRO' in .rdata for 0x10ce6120": 1,
+      "NUL-terminated ASCII key 'WINDOWED_BATTLE_INTRO' in .rdata for 0x10ce6120": 1,
+      "NUL-terminated ASCII key 'CAMPAIGN_ASSASSINATION' in .rdata for 0x10ce6120": 1,
+      "NUL-terminated ASCII key 'CAMPAIGN_ESTABLISH' in .rdata for 0x10ce6120": 1,
+      "NUL-terminated ASCII key 'CAMPAIGN_INFILTRATION' in .rdata for 0x10ce6120": 1,
+      "NUL-terminated ASCII key 'CAMPAIGN_ESCAPE' in .rdata for 0x10ce6120": 1,
+      "NUL-terminated ASCII key 'CAMPAIGN_SABOTAGE' in .rdata for 0x10ce6120": 1,
+      "NUL-terminated ASCII key 'VIDEO_TUTORIAL' in .rdata for 0x10ce6120": 1,
       "NUL-terminated ASCII HKCU path 'Software\\The Creative Assembly\\Launcher\\214950' in .rdata queried by 0x11302cc0/0x11303db0/0x113048b0": 1,
       "NUL-terminated ASCII HKCU path 'Software\\The Creative Assembly\\Rome2' in .rdata fallback for 0x11302cc0/0x11303db0/0x113048b0": 1,
+      "NUL-terminated ASCII format string 'Loading database: %s\\n' in .rdata": 1,
+      "NUL-terminated ASCII format string ' (%d records) ' in .rdata": 1,
+      "NUL-terminated ASCII name 'subtitle_timings_table' in .rdata": 1,
+      "NUL-terminated ASCII name 'videos_table' in .rdata": 1,
+      "8-byte 2-slot subtitle timings vtable {0x10c9fd40, 0x10b908d0} in .rdata": 1,
+      "8-byte 2-slot anim vtable {0x10de3460, 0x101920c0} in .rdata": 1,
+      "NUL-terminated UTF-16LE table folder L'subtitle_timings_tables' in .rdata": 1,
       "7-byte ASCII '(null)' literal in .rdata emitted by 0x1168af61 (%Z) and 0x1168b78e (%s)": 1,
       "8-slot _purecall base vtable stored prior to teardown destruction by 0x112ad6a0/0x112ad6d0": 1,
       "3-slot primary channel/stream adapter vtable prefix [0x10f6cb40, 0x10fd80f0, 0x101d95d0] in .rdata bound by 0x10fd6c90": 1,
@@ -361,6 +398,7 @@
       "NUL-terminated ASCII string '%s: Done %s' in .rdata formatted by 0x112dcaf0": 1,
       "NUL-terminated ASCII suffix '%dms delta, ... UniStrings:%d)\\n' in .rdata formatted by 0x112dcaf0": 1,
       "NUL-terminated ASCII string '%s: Done %s (%dms delta, ... UniStrings:%d)\\n' in .rdata formatted by 0x112dcaf0": 1,
+      "NUL-terminated UTF-16LE diagnostic format string for invalid DB table key in .rdata": 1,
       "full 4-slot std::tr1::_Ref_count_base vtable 0x1189a520 in .rdata": 1,
       "16-byte aligned interface template block in .rdata copied to 0x12032b50 by 0x112c21f0": 1,
       "16-byte aligned interface template block in .rdata copied to 0x12032b3c by 0x112c2190": 1,
@@ -501,6 +539,7 @@
       "16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x116b46d2": 1,
       "16-byte SEH scope table descriptor in .rdata pushed by 0x116b5824 (_query_new_handler)": 1,
       "16-byte SEH scope table descriptor in .rdata pushed by 0x116b5f67 (update_thread_locale_data_internal)": 1,
+      "4-byte initialized video letterbox enable flag (initial 1) in .data written by 0x100dd4c0": 1,
       "4-byte socket failure message pointer [0x11741d2c 'Could not create socket.'] in .data loaded by 0x10fd6d80": 1,
       "default heap fill byte constant (0xca) in .data passed by 0x100fcc80 to memset when [0x119f3f57] != 0": 1,
       "16-byte initialized DirectInput mouse state block {dx, -dy, -dz, btns} in .data written by 0x1010eda0": 1,
@@ -512,6 +551,8 @@
       "4-byte initialized column-0 user-folder prefix pointer in .data table indexed by 0x10122e40": 1,
       "588-byte (49 x 12B) initialized user-folder category table in .data indexed by 0x10122e30": 1,
       "4-byte initialized game-folder wide literal pointer (-> L'Rome2\\\\') in .data copied by 0x101016c0": 1,
+      "1-byte cursor visibility cache flag in .data updated by 0x10ca63f0": 1,
+      "1-byte cursor visibility allow flag in .data checked by 0x10ca63f0": 1,
       "Steam internal context callback/slot word [0x10fde1a0] in .data passed by 0x10fe4780": 1,
       "atomic/monotonic dynamic mount and pack ID counter seeded at 0x80000001 and incremented by 0x112c00b0 / read by 0x112c9430": 1,
       "4-byte initialized section timing label pointer in .data written by 0x112dc9f0": 1,
@@ -816,24 +857,24 @@
     }
   },
   "curated_reconciliation": {
-    "curated_functions_total": 1472,
-    "curated_in_canonical_index": 1441,
-    "curated_exact_body_sha256_match": 1423,
+    "curated_functions_total": 1502,
+    "curated_in_canonical_index": 1471,
+    "curated_exact_body_sha256_match": 1453,
     "curated_multi_range_expanded": 18,
     "curated_non_proc_slots": 31,
-    "curated_globals_matched": 818,
-    "curated_vtables_matched": 79
+    "curated_globals_matched": 859,
+    "curated_vtables_matched": 85
   },
   "files": {
     "function_contracts_part1.tsv": {
       "rows": 40640,
-      "bytes": 9392272,
-      "sha256": "cc95e46b30071420c882ca9dc1567fe9aa546969417bfa6543bbe5d3288f8170"
+      "bytes": 9392374,
+      "sha256": "85f45fb6254b5966c16d5891c8472073b3738e2455776a7c21bd08f0de71540e"
     },
     "function_contracts_part2.tsv": {
       "rows": 40640,
-      "bytes": 9470867,
-      "sha256": "0c953699b45209d2f39f8daa086577fbe34f604bedf15ab5d9e44b313e4051ad"
+      "bytes": 9471275,
+      "sha256": "0afd36da1a83e62cf4845d894bafbfc1ee55b3f9da7bf66ef7678ecbc3e1baca"
     },
     "non_proc_curated_slots.tsv": {
       "rows": 31,
@@ -847,8 +888,8 @@
     },
     "vtable_class_contracts.tsv": {
       "rows": 9639,
-      "bytes": 2806465,
-      "sha256": "3eea8e98aa7da3d54d60f8ea7ca765de8add404a715bdfc5218fc9d9842bcd50"
+      "bytes": 2806459,
+      "sha256": "8ea40913ab23a3e39947646c08bb517bf68fad402cdf224dda31e3e1540b8e21"
     },
     "class_field_layouts.tsv": {
       "rows": 95747,
@@ -856,9 +897,9 @@
       "sha256": "534964ec1fa25fd15189a0fd007ba1412fe7fe339981ade410ca82a303f8e912"
     },
     "global_contracts.tsv": {
-      "rows": 10902,
-      "bytes": 934221,
-      "sha256": "023953e4aa22b13095f56073c0470d98f8bfb81880494d7a29b3fe51e6164b8b"
+      "rows": 10942,
+      "bytes": 942341,
+      "sha256": "94113d1f2ee4c554a61b9e01b56b14db005ff9ac6fafa224d5b229b996c5e57c"
     }
   }
 }

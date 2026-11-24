@@ -3515,5 +3515,54 @@ ROME2_LAYOUT_ASSERT(rome2_startup_db_desc_entry28_32, b14, 0x14);
 ROME2_LAYOUT_ASSERT(rome2_startup_db_desc_entry28_32, b17, 0x17);
 ROME2_LAYOUT_ASSERT(rome2_startup_db_desc_entry28_32, tail_18, 0x18);
 
+typedef struct rome2_startup_video_overlay_req20_32 {
+    uint32_t key_words_00[3];                    /* 00..0b 12-byte UTF-16 name slice */
+    int32_t scale_mode_0c;                       /* 0c 0=4:3 crop, 1=16:9 crop */
+    uint8_t flag_10;                             /* 10 playback byte option */
+    uint8_t flag_11;                             /* 11 sets DAT_119f308d on pop */
+    uint8_t flag_12;                             /* 12 sets DAT_119f308c on pop */
+    uint8_t flag_13;                             /* 13 !flag_13 -> DAT_11933000 */
+} rome2_startup_video_overlay_req20_32;
+_Static_assert(sizeof(rome2_startup_video_overlay_req20_32) == 0x14, "startup video overlay req20 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_video_overlay_req20_32, key_words_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_video_overlay_req20_32, scale_mode_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_startup_video_overlay_req20_32, flag_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_startup_video_overlay_req20_32, flag_13, 0x13);
+
+typedef struct rome2_startup_video_play_opts36_32 {
+    uint32_t mode_flags_00;                      /* 00 packed playback flags (0x10001) */
+    uint8_t b04;                                 /* 04 req flag_10 */
+    uint8_t b05;                                 /* 05 flag 0 */
+    uint8_t b06;                                 /* 06 flag 1 */
+    uint8_t b07;                                 /* 07 queue < 2 flag */
+    int32_t crop_left_08;                        /* 08 left letterbox offset */
+    int32_t crop_top_0c;                         /* 0c top letterbox offset */
+    int32_t crop_w_10;                           /* 10 active viewport width */
+    int32_t crop_h_14;                           /* 14 active viewport height */
+    float f18;                                   /* 18 width/param */
+    float f1c;                                   /* 1c height/param */
+    uint32_t aux_20;                             /* 20 reserved */
+} rome2_startup_video_play_opts36_32;
+_Static_assert(sizeof(rome2_startup_video_play_opts36_32) == 0x24, "startup video play opts36 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_video_play_opts36_32, mode_flags_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_video_play_opts36_32, crop_left_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_video_play_opts36_32, aux_20, 0x20);
+
+typedef struct rome2_startup_db_record_base24_32 {
+    uint32_t words_00[4];                        /* 00..0f header & name words */
+    uint32_t mode_10;                            /* 10 enum video mode / count */
+    uint32_t flags_14;                           /* 14 stream/record handle */
+} rome2_startup_db_record_base24_32;
+_Static_assert(sizeof(rome2_startup_db_record_base24_32) == 0x18, "startup db record base24 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_db_record_base24_32, words_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_db_record_base24_32, mode_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_startup_db_record_base24_32, flags_14, 0x14);
+
+typedef struct rome2_startup_subtitle_row68_32 {
+    uint32_t words_00[17];                       /* 00..43 68-byte parsed subtitle row */
+} rome2_startup_subtitle_row68_32;
+_Static_assert(sizeof(rome2_startup_subtitle_row68_32) == 0x44, "startup subtitle row68 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_subtitle_row68_32, words_00, 0x00);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

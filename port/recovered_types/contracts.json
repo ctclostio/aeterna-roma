@@ -23154,6 +23154,471 @@
           "end": "116adb6c"
         }
       ]
+    },
+    {
+      "address": "100dd4c0",
+      "bytes": 722,
+      "sha256": "07f169c2c4ba91b3d33f56733a40dd8aa519a72c46248fbd5e515376d1d4caa2",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void video_overlay_pop_and_apply()",
+      "scope": "pops queued video overlay, computes 16:9/4:3 viewport letterboxing, starts video playback via 0x10c8a0b0, updates DAT_11933000",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100dd739",
+        "100dd791"
+      ]
+    },
+    {
+      "address": "100efd80",
+      "bytes": 257,
+      "sha256": "7c8219661daa3996cb05f2afc284aca12da835b26c0200ba19c58cc10961825f",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void db_resolve_table_path(void* out, const char* name)",
+      "scope": "resolves database table resource path and logs loaded descriptor strings",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100efe80"
+      ]
+    },
+    {
+      "address": "100f2960",
+      "bytes": 69,
+      "sha256": "d6771f6e04dc9c8a36e06a22522cc8d32a9efec635f931e5105f7e307020789c",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "AL bool wslice_eq_cstr(void* slice12, const uint16_t* cstr)",
+      "scope": "compares UTF-16LE string slice against NUL-terminated wide string",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100f299f",
+        "100f29a4"
+      ]
+    },
+    {
+      "address": "10115370",
+      "bytes": 45,
+      "sha256": "961394517a18c5473dca7509b6ef10991ba3bbc983dac0f104a6dceafe8f0105",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void win32_show_cursor_loop(uint8_t show)",
+      "scope": "loops USER32!ShowCursor until display count crosses <0 (hide) or >=0 (show)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "1011538c",
+        "1011539c"
+      ]
+    },
+    {
+      "address": "101223e0",
+      "bytes": 59,
+      "sha256": "d25b25beeb69577183023d16e2aceaa741c1b5b4ae9f2f0a0031ec9eed569ae5",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX void* wstr_strip_dot_suffix(void* out, void* src)",
+      "scope": "strips filename extension after last '.' via rfind(0x2e)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10122406",
+        "1012241a"
+      ]
+    },
+    {
+      "address": "102b4f20",
+      "bytes": 82,
+      "sha256": "27b1579717cf1ceaa37e50056ee61627730c2ae02ce8374e13daedebf8111140",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void u32_vec_reserve(uint32_t new_cap); pops 4 (ret 4)",
+      "scope": "reallocates/grows DWORD array buffer [ecx+8] to new_cap",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "102b4f6f"
+      ]
+    },
+    {
+      "address": "10c84040",
+      "bytes": 43,
+      "sha256": "270c3ab4b6fa17532546dfc70d372cf5b10d4ed9df8d94624ce1ddc64e7423f7",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "AL bool video_device_is_playing()",
+      "scope": "queries [ecx+0x14] vtable slots +0x2c and +0x24 to report active video state",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10c84066",
+        "10c8406a"
+      ]
+    },
+    {
+      "address": "10c8a0b0",
+      "bytes": 1081,
+      "sha256": "66c7d9a50c1a17387b9ebbe387b6194cc7c59c49a0c99aa57b9b3f3b792759ca",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX bool video_play_from_db(void* name, void* opts); pops 8 (ret 8)",
+      "scope": "resolves video in videos_table & subtitle_timings_table, maps locale PO->PL, starts Bink playback",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10c8a4e6"
+      ]
+    },
+    {
+      "address": "10c8b3a0",
+      "bytes": 389,
+      "sha256": "337e82d1383a22786cd9c3b9cb4dbf09c01e6073daf2c6923db7febe279b8661",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void video_req_vec_push_back(const void* elem20); pops 4 (ret 4)",
+      "scope": "capacity-doubling vector push_back for 20-byte video overlay request",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10c8b3dd",
+        "10c8b428",
+        "10c8b522"
+      ]
+    },
+    {
+      "address": "10c99c60",
+      "bytes": 270,
+      "sha256": "0dec6bd84390cccf8c488beba9cab77527054466701c0d4b331b6354db2fa6f5",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void db_table_base_init(void* name); pops 4 (ret 4)",
+      "scope": "initializes 4-bucket base DB reader object with vftable 0x11768574 and locale 1.0f",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10c99d6b"
+      ]
+    },
+    {
+      "address": "10ca63f0",
+      "bytes": 53,
+      "sha256": "eb0f4ec13dd44e1508edb6a1359017700678d4e8f8c3b819a541821d181abbd3",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void set_cursor_visible_cached(uint8_t visible)",
+      "scope": "updates cached cursor byte [0x11970645] & calls 0x10115370 gated by [0x11970646]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ca6424"
+      ]
+    },
+    {
+      "address": "10cc18c0",
+      "bytes": 104,
+      "sha256": "bedf353ff798a6326cd1f6a624c2d8a9f549c991fa04e50cd0ab59e9f5f7e600",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void videos_reader_init(void* arg); pops 4 (ret 4)",
+      "scope": "constructs 'db\\\\videos_tables' reader with vftable 0x117e2588",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10cc1925"
+      ]
+    },
+    {
+      "address": "10cc4b50",
+      "bytes": 155,
+      "sha256": "269f3819a5f189c8740bad357d949b223d2027c78265d02374680ffd9fcdfa4b",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 16,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void videos_loader_exec(int a, void* b, void* c, void* d); pops 16 (ret 0x10)",
+      "scope": "loads 'videos_tables' header and invokes 0x10cc9090 parser with vftable 0x117e2a04",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10cc4be8"
+      ]
+    },
+    {
+      "address": "10cc9090",
+      "bytes": 955,
+      "sha256": "c90448a3295b947016eb3585ae5b8527486de40479e6dad6e025d933f890ffed",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 16,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX int videos_parse_rows(void* hdr, void* a, int b, void* c); pops 16 (ret 0x10)",
+      "scope": "allocates 24B/row array and maps video mode enum names via 0x10ce6120 and 0x112bdc00",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10cc9424",
+        "10cc9448"
+      ]
+    },
+    {
+      "address": "10ce6120",
+      "bytes": 483,
+      "sha256": "ed6e970287484047373076128eb78f49a87000e70cd85f42e7129fff956908fa",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX int video_mode_from_name(void* out, int row)",
+      "scope": "maps 16 video enum ASCII literals ('CAMPAIGN_DUEL'..'VIDEO_TUTORIAL') via 0x100f28e0",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ce6302"
+      ]
+    },
+    {
+      "address": "10d33170",
+      "bytes": 7,
+      "sha256": "de2eb89233fc9be6ca805466cf2af6baf48757877f5c3715d87c23e97b90bf7e",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX uint32_t db_get_locale_id()",
+      "scope": "returns [ecx+0x174c] locale/device config word",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10d33176"
+      ]
+    },
+    {
+      "address": "10d33280",
+      "bytes": 228,
+      "sha256": "550ac3467b4608055ae0fa95b2a6604017a2bdcb276cb3056bcd852709de325d",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX void* get_subtitles_table()",
+      "scope": "lazily loads/caches 'subtitle_timings_table' at [ecx+0x1198]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10d33363"
+      ]
+    },
+    {
+      "address": "10d39b50",
+      "bytes": 228,
+      "sha256": "3200578aaf88abd85cb0e08d9c9d16bc9ca2333063943b15800aba7f9e2a704d",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX void* get_videos_table()",
+      "scope": "lazily loads/caches 'videos_table' at [ecx+0x1360]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10d39c33"
+      ]
+    },
+    {
+      "address": "10dd83c0",
+      "bytes": 104,
+      "sha256": "05a95b7c2fdde6b8f48deb3811dd41b22ff35a1af85d952c4a5d64151f864cb7",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void subtitles_reader_init(void* arg); pops 4 (ret 4)",
+      "scope": "constructs 'db\\\\subtitle_timings_tables' reader with vftable 0x117ee52c",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10dd8425"
+      ]
+    },
+    {
+      "address": "10ddb580",
+      "bytes": 155,
+      "sha256": "c7756cfc44c99dd2feb16f9c9492f041a363c05c5d2a9cfb12b93e1155109ff6",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 16,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void subtitles_loader_exec(int a, void* b, void* c, void* d); pops 16 (ret 0x10)",
+      "scope": "loads 'subtitle_timings_tables' header and invokes 0x10de06e0 parser with vftable 0x117ee52c",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ddb618"
+      ]
+    },
+    {
+      "address": "10de06e0",
+      "bytes": 940,
+      "sha256": "c02d74b647a4831199bffaf0efab69f6bc56e5f61cfd49bd4fce1e98c8b11fcb",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 16,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX int subtitles_parse_rows(void* hdr, void* a, int b, void* c); pops 16 (ret 0x10)",
+      "scope": "allocates 68B/row subtitle timing vector and validates keys via 0x112bdc00",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10de0a89"
+      ]
+    },
+    {
+      "address": "110e2700",
+      "bytes": 190,
+      "sha256": "ce74ad8159e66735df98ca376415176ab83aee23f06e01bcaaed6281c23663da",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX void* fx_name_map_find(void* out_iter, void* fx_name); pops 8 (ret 8)",
+      "scope": "hashes FxActor key mod bucket count [ecx+8] and searches bucket chain via 0x100f28a0",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "110e27a5",
+        "110e27bb"
+      ]
+    },
+    {
+      "address": "112a4ae0",
+      "bytes": 116,
+      "sha256": "5f2590a9a2522db5acdc9256d54cf9662ce57a6f46fe9d8b3f7baa5e22897323",
+      "receiver_register": "none",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "EAX void* rb_tree_iter_find_u32(void* out, void* it, void* end, uint32_t* key)",
+      "scope": "walks RB-tree in-order from it to end matching node[4] == *key",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "112a4b4a",
+        "112a4b53"
+      ]
+    },
+    {
+      "address": "112a58b0",
+      "bytes": 267,
+      "sha256": "a3305bbf742b269f1e14a03b4fde2f027d77a004cf7e8a0a9822a1bac38fa0b6",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void rb_tree_insert_unique(void* out_pair, uint32_t* key); pops 8 (ret 8)",
+      "scope": "inserts unique node into RB-tree using comparator [ecx] and allocator 0x112a30b0",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "112a5922",
+        "112a59a5",
+        "112a59b8"
+      ]
+    },
+    {
+      "address": "112a5af0",
+      "bytes": 352,
+      "sha256": "4bda607ef64a9f055450bfaad33d5e7c25bdba9e94d13327e3ffa1958b99ba67",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void utf16_log_fmt(void* dst, void* tbl, uint32_t key)",
+      "scope": "formats 'In table %S: \\'%s\\' is not a valid key...' message into wide string",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "112a5c4f"
+      ]
+    },
+    {
+      "address": "112ab5e0",
+      "bytes": 165,
+      "sha256": "76e000f4880ebd90b62a68c7d2a4a7e3b8543853b4fa473a37a8aafd480e3e2d",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void db_table_parsed_dtor()",
+      "scope": "restores base vftable 0x11768574 and frees parsed row vectors",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "112ab684"
+      ]
+    },
+    {
+      "address": "112bb070",
+      "bytes": 894,
+      "sha256": "b183acc64e54ff51b9e5d8dfdda16621810cc18304c0e85c6c584d370a5cff47",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "AL bool db_validate_join_keys()",
+      "scope": "builds RB-tree set via 0x112a58b0 and validates join key membership via 0x112a4ae0",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "112bb3cb"
+      ]
+    },
+    {
+      "address": "112bdc00",
+      "bytes": 169,
+      "sha256": "c6907b63870b448706b42df05f1defa5e3db74074278db6641f444f6f3577e42",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX uint32_t db_table_lookup_payload(void* fx_name); pops 4 (ret 4)",
+      "scope": "looks up FxName key via 0x110e2700 and logs warning on miss via 0x112a5af0",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "112bdc60",
+        "112bdca6"
+      ]
+    },
+    {
+      "address": "112d9900",
+      "bytes": 83,
+      "sha256": "49bbb0c3cdd720e2a369b873cfb3cd34e209204d90f8d4e59da74dbbebf03f9d",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX void* db_table_lookup_row_by_name(void* name); pops 4 (ret 4)",
+      "scope": "converts name via 0x10103d10, looks up index via 0x112d9960, returns row pointer or null",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "112d993c",
+        "112d9950"
+      ]
+    },
+    {
+      "address": "112d9960",
+      "bytes": 176,
+      "sha256": "26be987e8be0b5ca77e16ec7508bdf88d875adf5f4e30abf42a5ae4afbf6353b",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 12,
+      "calling_convention": "thiscall",
+      "ordinary_return": "EAX uint32_t db_table_lookup_by_fxname(void* fx, void* u, uint8_t warn); pops 12 (ret 0xc)",
+      "scope": "looks up row index in FxName map or returns fallback table count [ecx+0x10]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "112d99bf",
+        "112d9a0d"
+      ]
     }
   ],
   "globals": [
@@ -29654,6 +30119,334 @@
       "initial_hex_le": "01000000",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1172f764",
+      "width": 4,
+      "kind": "4-byte PE IAT slot for USER32.dll!ShowCursor called by 0x10115370",
+      "initial_hex_le": "d0189301",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1173e2c8",
+      "width": 4,
+      "kind": "4-byte float aspect-ratio crop scale 0.5625f (9/16) in .rdata for 0x100dd4c0",
+      "initial_hex_le": "0000103f",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1173e2d4",
+      "width": 4,
+      "kind": "4-byte float 4:3 aspect-ratio factor 1.3333334f in .rdata for 0x100dd4c0",
+      "initial_hex_le": "abaaaa3f",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1173e2d8",
+      "width": 4,
+      "kind": "4-byte float aspect-ratio lower bound 1.4f in .rdata for 0x100dd4c0",
+      "initial_hex_le": "3333b33f",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1173e2dc",
+      "width": 4,
+      "kind": "4-byte float aspect-ratio upper bound 1.7f in .rdata for 0x100dd4c0",
+      "initial_hex_le": "9a99d93f",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1173e2e0",
+      "width": 4,
+      "kind": "4-byte float 16:9 aspect-ratio factor 1.7777778f in .rdata for 0x100dd4c0",
+      "initial_hex_le": "398ee33f",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11768574",
+      "width": 8,
+      "kind": "8-byte 2-slot DB table base vtable {0x1033d400, 0x116bd8af} in .rdata",
+      "initial_hex_le": "00d43310afd86b11",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117d9270",
+      "width": 6,
+      "kind": "NUL-terminated UTF-16LE locale string L'PO' in .rdata for 0x10c8a0b0",
+      "initial_hex_le": "50004f000000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117d9278",
+      "width": 6,
+      "kind": "NUL-terminated UTF-16LE locale string L'PL' in .rdata for 0x10c8a0b0",
+      "initial_hex_le": "50004c000000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e193c",
+      "width": 8,
+      "kind": "NUL-terminated UTF-16LE DB folder prefix L'db\\\\' in .rdata",
+      "initial_hex_le": "640062005c000000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2588",
+      "width": 8,
+      "kind": "8-byte 2-slot videos reader const vtable {0x10c9fd40, 0x10b98df0} in .rdata",
+      "initial_hex_le": "40fdc910f08db910",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e29fc",
+      "width": 8,
+      "kind": "8-byte 2-slot anim vtable {0x10ccb320, 0x101920c0} in .rdata",
+      "initial_hex_le": "20b3cc10c0201910",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2a04",
+      "width": 8,
+      "kind": "8-byte 2-slot videos loader const vtable {0x10c9fd40, 0x10b8ea90} in .rdata",
+      "initial_hex_le": "40fdc91090eab810",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2a0c",
+      "width": 28,
+      "kind": "NUL-terminated UTF-16LE table folder L'videos_tables' in .rdata",
+      "initial_hex_le": "76006900640065006f0073005f007400610062006c00650073000000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2a28",
+      "width": 14,
+      "kind": "NUL-terminated ASCII key 'CAMPAIGN_DUEL' in .rdata for 0x10ce6120",
+      "initial_hex_le": "43414d504149474e5f4455454c00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2a38",
+      "width": 21,
+      "kind": "NUL-terminated ASCII key 'CAMPAIGN_DUEL_RESULT' in .rdata for 0x10ce6120",
+      "initial_hex_le": "43414d504149474e5f4455454c5f524553554c5400",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2a50",
+      "width": 15,
+      "kind": "NUL-terminated ASCII key 'CAMPAIGN_INTRO' in .rdata for 0x10ce6120",
+      "initial_hex_le": "43414d504149474e5f494e54524f00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2a60",
+      "width": 14,
+      "kind": "NUL-terminated ASCII key 'CAMPAIGN_LOSE' in .rdata for 0x10ce6120",
+      "initial_hex_le": "43414d504149474e5f4c4f534500",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2a70",
+      "width": 15,
+      "kind": "NUL-terminated ASCII key 'CAMPAIGN_OUTRO' in .rdata for 0x10ce6120",
+      "initial_hex_le": "43414d504149474e5f4f5554524f00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2a80",
+      "width": 13,
+      "kind": "NUL-terminated ASCII key 'CAMPAIGN_WIN' in .rdata for 0x10ce6120",
+      "initial_hex_le": "43414d504149474e5f57494e00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2a90",
+      "width": 24,
+      "kind": "NUL-terminated ASCII key 'FULLSCREEN_BATTLE_INTRO' in .rdata for 0x10ce6120",
+      "initial_hex_le": "46554c4c53435245454e5f424154544c455f494e54524f00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2aa8",
+      "width": 20,
+      "kind": "NUL-terminated ASCII key 'FULLSCREEN_FRONTEND' in .rdata for 0x10ce6120",
+      "initial_hex_le": "46554c4c53435245454e5f46524f4e54454e4400",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2abc",
+      "width": 17,
+      "kind": "NUL-terminated ASCII key 'FULLSCREEN_INTRO' in .rdata for 0x10ce6120",
+      "initial_hex_le": "46554c4c53435245454e5f494e54524f00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2ad0",
+      "width": 22,
+      "kind": "NUL-terminated ASCII key 'WINDOWED_BATTLE_INTRO' in .rdata for 0x10ce6120",
+      "initial_hex_le": "57494e444f5745445f424154544c455f494e54524f00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2ae8",
+      "width": 23,
+      "kind": "NUL-terminated ASCII key 'CAMPAIGN_ASSASSINATION' in .rdata for 0x10ce6120",
+      "initial_hex_le": "43414d504149474e5f415353415353494e4154494f4e00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2b00",
+      "width": 19,
+      "kind": "NUL-terminated ASCII key 'CAMPAIGN_ESTABLISH' in .rdata for 0x10ce6120",
+      "initial_hex_le": "43414d504149474e5f45535441424c49534800",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2b14",
+      "width": 22,
+      "kind": "NUL-terminated ASCII key 'CAMPAIGN_INFILTRATION' in .rdata for 0x10ce6120",
+      "initial_hex_le": "43414d504149474e5f494e46494c54524154494f4e00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2b2c",
+      "width": 16,
+      "kind": "NUL-terminated ASCII key 'CAMPAIGN_ESCAPE' in .rdata for 0x10ce6120",
+      "initial_hex_le": "43414d504149474e5f45534341504500",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2b3c",
+      "width": 18,
+      "kind": "NUL-terminated ASCII key 'CAMPAIGN_SABOTAGE' in .rdata for 0x10ce6120",
+      "initial_hex_le": "43414d504149474e5f5341424f5441474500",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e2b50",
+      "width": 15,
+      "kind": "NUL-terminated ASCII key 'VIDEO_TUTORIAL' in .rdata for 0x10ce6120",
+      "initial_hex_le": "564944454f5f5455544f5249414c00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e4da8",
+      "width": 22,
+      "kind": "NUL-terminated ASCII format string 'Loading database: %s\\n' in .rdata",
+      "initial_hex_le": "4c6f6164696e672064617461626173653a2025730a00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e4dc0",
+      "width": 15,
+      "kind": "NUL-terminated ASCII format string ' (%d records) ' in .rdata",
+      "initial_hex_le": "20282564207265636f726473292000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e8094",
+      "width": 23,
+      "kind": "NUL-terminated ASCII name 'subtitle_timings_table' in .rdata",
+      "initial_hex_le": "7375627469746c655f74696d696e67735f7461626c6500",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e9250",
+      "width": 13,
+      "kind": "NUL-terminated ASCII name 'videos_table' in .rdata",
+      "initial_hex_le": "766964656f735f7461626c6500",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117ee52c",
+      "width": 8,
+      "kind": "8-byte 2-slot subtitle timings vtable {0x10c9fd40, 0x10b908d0} in .rdata",
+      "initial_hex_le": "40fdc910d008b910",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117ff0d0",
+      "width": 8,
+      "kind": "8-byte 2-slot anim vtable {0x10de3460, 0x101920c0} in .rdata",
+      "initial_hex_le": "6034de10c0201910",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117ff0d8",
+      "width": 48,
+      "kind": "NUL-terminated UTF-16LE table folder L'subtitle_timings_tables' in .rdata",
+      "initial_hex_le": "7300750062007400690074006c0065005f00740069006d0069006e00670073005f007400610062006c00650073000000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11899d90",
+      "width": 106,
+      "kind": "NUL-terminated UTF-16LE diagnostic format string for invalid DB table key in .rdata",
+      "initial_hex_le": "49006e0020007400610062006c0065002000250053003a002000270025007300270020006900730020006e006f007400200061002000760061006c006900640020006b0065007900200066006f0072002000740068006900730020007400610062006c0065000a000000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11933000",
+      "width": 4,
+      "kind": "4-byte initialized video letterbox enable flag (initial 1) in .data written by 0x100dd4c0",
+      "initial_hex_le": "01000000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11970645",
+      "width": 1,
+      "kind": "1-byte cursor visibility cache flag in .data updated by 0x10ca63f0",
+      "initial_hex_le": "01",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11970646",
+      "width": 1,
+      "kind": "1-byte cursor visibility allow flag in .data checked by 0x10ca63f0",
+      "initial_hex_le": "01",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
     }
   ],
   "vtables": [
@@ -30051,6 +30844,36 @@
       "address": "1173f200",
       "first_slot_code_identity": "100e11e0",
       "scope": "1-slot base sub-vtable installed at end of 0x100e0650 EMPIRE_APP destructor"
+    },
+    {
+      "address": "11768574",
+      "first_slot_code_identity": "1033d400",
+      "scope": "2-slot DB table base vtable installed in 0x10c99c60/0x112ab5e0"
+    },
+    {
+      "address": "117e2588",
+      "first_slot_code_identity": "10c9fd40",
+      "scope": "2-slot videos reader const vtable installed in 0x10cc18c0"
+    },
+    {
+      "address": "117e29fc",
+      "first_slot_code_identity": "10ccb320",
+      "scope": "2-slot anim vtable in .rdata"
+    },
+    {
+      "address": "117e2a04",
+      "first_slot_code_identity": "10c9fd40",
+      "scope": "2-slot videos loader const vtable installed in 0x10cc4b50"
+    },
+    {
+      "address": "117ee52c",
+      "first_slot_code_identity": "10c9fd40",
+      "scope": "2-slot subtitle timings vtable installed in 0x10dd83c0/0x10ddb580"
+    },
+    {
+      "address": "117ff0d0",
+      "first_slot_code_identity": "10de3460",
+      "scope": "2-slot anim vtable in .rdata"
     }
   ],
   "instruction_witnesses": [
@@ -37048,6 +37871,156 @@
       "address": "116adaed",
       "hex": "6a08",
       "purpose": "0x116adaed pushes 8B SEH4 local frame size before push 0x11925a18"
+    },
+    {
+      "address": "100dd4c0",
+      "hex": "83ec3c",
+      "purpose": "0x100dd4c0 reserves 0x3cB frame for video overlay pop"
+    },
+    {
+      "address": "100efd80",
+      "hex": "83ec28",
+      "purpose": "0x100efd80 reserves 0x28B frame for db path resolution"
+    },
+    {
+      "address": "100f2960",
+      "hex": "8b4c2404",
+      "purpose": "0x100f2960 loads UTF-16 slice pointer from [esp+4]"
+    },
+    {
+      "address": "10115370",
+      "hex": "8a442404",
+      "purpose": "0x10115370 loads boolean show byte from [esp+4]"
+    },
+    {
+      "address": "101223e0",
+      "hex": "56",
+      "purpose": "0x101223e0 preserves esi before dot-suffix search"
+    },
+    {
+      "address": "102b4f20",
+      "hex": "56",
+      "purpose": "0x102b4f20 preserves esi before dword vector reserve"
+    },
+    {
+      "address": "10c84040",
+      "hex": "56",
+      "purpose": "0x10c84040 preserves esi before querying [ecx+0x14] vtable"
+    },
+    {
+      "address": "10c8a0b0",
+      "hex": "81ec94000000",
+      "purpose": "0x10c8a0b0 reserves 0x94B frame for video DB playback"
+    },
+    {
+      "address": "10c8b3a0",
+      "hex": "83ec08",
+      "purpose": "0x10c8b3a0 reserves 8B frame for 20B request push_back"
+    },
+    {
+      "address": "10c99c60",
+      "hex": "83ec0c",
+      "purpose": "0x10c99c60 reserves 12B frame for base DB reader init"
+    },
+    {
+      "address": "10ca63f0",
+      "hex": "8a442404",
+      "purpose": "0x10ca63f0 loads cursor flag argument from [esp+4]"
+    },
+    {
+      "address": "10cc18c0",
+      "hex": "83ec18",
+      "purpose": "0x10cc18c0 reserves 0x18B frame for videos reader init"
+    },
+    {
+      "address": "10cc4b50",
+      "hex": "83ec1c",
+      "purpose": "0x10cc4b50 reserves 0x1cB frame for videos loader exec"
+    },
+    {
+      "address": "10cc9090",
+      "hex": "83ec64",
+      "purpose": "0x10cc9090 reserves 0x64B frame for videos row parsing"
+    },
+    {
+      "address": "10ce6120",
+      "hex": "53",
+      "purpose": "0x10ce6120 preserves ebx before comparing 16 enum strings"
+    },
+    {
+      "address": "10d33170",
+      "hex": "8b814c170000",
+      "purpose": "0x10d33170 loads [ecx+0x174c] locale id"
+    },
+    {
+      "address": "10d33280",
+      "hex": "83ec6c",
+      "purpose": "0x10d33280 reserves 0x6cB frame for subtitle_timings_table cache"
+    },
+    {
+      "address": "10d39b50",
+      "hex": "83ec6c",
+      "purpose": "0x10d39b50 reserves 0x6cB frame for videos_table cache"
+    },
+    {
+      "address": "10dd83c0",
+      "hex": "83ec18",
+      "purpose": "0x10dd83c0 reserves 0x18B frame for subtitles reader init"
+    },
+    {
+      "address": "10ddb580",
+      "hex": "83ec1c",
+      "purpose": "0x10ddb580 reserves 0x1cB frame for subtitles loader exec"
+    },
+    {
+      "address": "10de06e0",
+      "hex": "83ec64",
+      "purpose": "0x10de06e0 reserves 0x64B frame for subtitles row parsing"
+    },
+    {
+      "address": "110e2700",
+      "hex": "83ec0c",
+      "purpose": "0x110e2700 reserves 12B frame for FxName bucket lookup"
+    },
+    {
+      "address": "112a4ae0",
+      "hex": "8b442408",
+      "purpose": "0x112a4ae0 loads RB-tree iterator arg from [esp+8]"
+    },
+    {
+      "address": "112a58b0",
+      "hex": "51",
+      "purpose": "0x112a58b0 allocates stack slot at start of rb_tree_insert_unique"
+    },
+    {
+      "address": "112a5af0",
+      "hex": "83ec34",
+      "purpose": "0x112a5af0 reserves 0x34B frame for invalid DB key formatter"
+    },
+    {
+      "address": "112ab5e0",
+      "hex": "56",
+      "purpose": "0x112ab5e0 preserves esi before DB table teardown"
+    },
+    {
+      "address": "112bb070",
+      "hex": "83ec30",
+      "purpose": "0x112bb070 reserves 0x30B frame for RB-tree join validation"
+    },
+    {
+      "address": "112bdc00",
+      "hex": "83ec0c",
+      "purpose": "0x112bdc00 reserves 12B frame for DB table payload lookup"
+    },
+    {
+      "address": "112d9900",
+      "hex": "83ec0c",
+      "purpose": "0x112d9900 reserves 12B frame for lookup by wide name"
+    },
+    {
+      "address": "112d9960",
+      "hex": "83ec0c",
+      "purpose": "0x112d9960 reserves 12B frame for lookup by FxName"
     }
   ],
   "ownership": {
@@ -55487,6 +56460,550 @@
     "limitations": [
       "Layer 67 seals Partition 7 (193 records) and opens fresh Partition 8 (fresh_partition_p8: 41 records) alongside sealed Partitions 1-7 (2,118 prior; 2,159 cumulative)",
       "Closes all 24 engine DB / EMPIRE_APP destructor / Warscape open_handler / la_gioconda UI / CRT x87+SSE2 FP control-word functions with clean_eng=0, clean_crt=0, noret_or_thunk=0 at 1,472 functions"
+    ]
+  },
+  "rea_layer68_evidence": {
+    "scope": "30 Layer 68 Partition 8 video / cursor / database-table (videos_tables, subtitle_timings_tables) / RB-tree & FxName lookup functions (0x100dd4c0..0x112d9960), preserving 100% transitive closure at 1,502 functions",
+    "snapshot_mode": "extending_layer67_batched_p8",
+    "new_records": [
+      {
+        "evidence_id": "ev_afa011b0172c3c250e261a0979faf0bd60f4961f18580d65e074fb7f2685d666",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-100dd4c0.json",
+        "retained_record_sha256": "f9d6be427df71bc1ed146db0064801056ffdd4906eacae9eec18dc30ec5a830e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_13f4f1e344852cc92c5d3941b384aa6b47c24168b618d85f4ff50253fa9059cf",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-100efd80.json",
+        "retained_record_sha256": "a787bd9056b489cd7dbaa1db1daebba32a230fbb5d3a5449fd034a7d58839d8f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c4b624d9381411abdf3776ca869e1df0de95d32f37b2dd96bc303678dff861dc",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-100f2960.json",
+        "retained_record_sha256": "4280a6e76f1c5e3871010fd89a37bf8bc97710034a9587cb51e9bd6557665bb0",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_edcb5100a929bf7ff9a679358078efd4203a2e27dc9039bdba8dac62d320bfd5",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-10115370.json",
+        "retained_record_sha256": "9c0650ad76574dbc88370e0e07464e34cc24d6ecf7b299ad3d4350756010ce5f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_74e3837e041e772cac67c049d6a80b8669b5f1fb626265b9abbf2441c39926d8",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-101223e0.json",
+        "retained_record_sha256": "a5630c62186a235b2d1d95cf2f5f286e7dd93fc288cd6ca51841360ea894385b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_55ce3d39861ff9d8dd572e19e2fb4609ad0f252797ff737663f3007371f53c45",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-102b4f20.json",
+        "retained_record_sha256": "cad7868b6ca832dd90ef975654c33484f33837ea26d2ec2aaeb6e824218d9dda",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c6f8b642ec04e093b5c59d6c5c3a484d959812afd5618a5b3d4c95b0d6171f98",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-10c84040.json",
+        "retained_record_sha256": "8160e531c92f33c96ab67e5d040e80c35bfe7e7b148d20802f74f99edbda509e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_46311741d68d363ddf0ae852afe20ce587f14fc931dfe9ccf5337eaad4a5a531",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-10c8a0b0.json",
+        "retained_record_sha256": "cacbefbcf6a5f2141798b2c6d656cc4017c1c4f331b411807ce2bf9c5a1154d1",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_d7aac236707e6388e7e92d5efa32d2fd1923cd04fd2dc6c807a2abddac7f5592",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-10c8b3a0.json",
+        "retained_record_sha256": "274920a2c4b4faebd78fc8304c4430d4f646d08df9eb01ee04ecbddc8d5964ae",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_2cff271247675259637e5a18a8eee792a04cb6bae75514077c3b15360418e40e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-10c99c60.json",
+        "retained_record_sha256": "54093514fbc0f32c33072cff807b7cc047d288c53ae5bfa96e6048b0eee8026a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_ba1cb728d8317f761caeeef883c732eda4a0c4d0236e8bc3d77b2063862f7285",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-10ca63f0.json",
+        "retained_record_sha256": "dd38f5233f8166460de218951363445b82f47d9bf6433d6aa228beaa7d95ec9e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_6c2521ad8facac354c9156c3d26b04fe5c9b49c07ccd8124dcde87d39836ad43",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-10cc18c0.json",
+        "retained_record_sha256": "06db3df54a57828c0d55bb64dc30059a4e45415f15a3c1813068df33f4c7b75a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5676abd3aa73eb015ce364767a68e9e40b3fc1b2cef8c0c8cf268e36cb6a1e6c",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-10cc4b50.json",
+        "retained_record_sha256": "064cd3b0b13f7a7a2768f8cc3260a12265ea3bbc2382dd2561cbbc3e2865c42d",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_03a7d6d74af6e699c556ee1b5c21392c3840d270b1be90f69b6a9a0618d40b09",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-10cc9090.json",
+        "retained_record_sha256": "f6a3e12228e701da12b84b26975498c5bbcdd2cf7c54e7d9b318e8fe01fba248",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_726dd70c754f9bf3dc7d0d5f920a63659d78ab3c26105414dc7986719b4aeb4f",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-10ce6120.json",
+        "retained_record_sha256": "994e82959b1f1c834ed775bc1d73cbfde63db1e25b14853040d60e9f1ae9a622",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_3d82e87f2fe4f7a71c3436a71993043cc5cf4361c7db1df6dcb6911c84da248e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-10d33170.json",
+        "retained_record_sha256": "d157fac1f3e04f3b61ca9329f2bfb09d347f72f81fec7294bb54d2648a64568f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_15da819223b98737c2e8e2dfe78e1516f0103ba338afd16a8c5d94bbb84ccd72",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-10d33280.json",
+        "retained_record_sha256": "64130cf3a1ac7959f1b7361bd38e816f98e8124b0ca4d67fe1c0fad9b0638374",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_187ded159cb40f5121cc4f6258b73bcfb932ffc0c11a0c84a8f5e3086c087855",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-10d39b50.json",
+        "retained_record_sha256": "9564cfa32f108a674d46882ef2e863c81feac717c7c40393b631263ded98baf1",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_dea39389eb0cc58aa0901ead322a2ac4e9dee97cb2fc79146777a2f8348c2e66",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-10dd83c0.json",
+        "retained_record_sha256": "ada80af07af2eb241e40d25ca5871f0860ba96387ce4a2be5c11f1e510b80b00",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_0b5c9230bca1cc15027d6521ab42457a43bddd5bd2b71afd3d12cd62ee25eb2e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-10ddb580.json",
+        "retained_record_sha256": "3e84ba2484caf780f333eb163bf5b2cd815bdae55e82d45daa40d7c550d57c4a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_0373c002825154823ffeed34adee8d6256bfb058fb416c4621632531794e184d",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-10de06e0.json",
+        "retained_record_sha256": "847462780b7f00ccff2fa41fea9529144c0c073553d876199f47ae2a160d3bef",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c5bb88ec54789a02809bf092c08302c8fbf90913ed65d8b49fc14a3bba387597",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-110e2700.json",
+        "retained_record_sha256": "26b005a4a36a1f87005c7dc2370a0da9d2b5100e825e68a00ff85cb981a49b7d",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_d6d358c3ed23690ac475bf791eea2296c41fa85f9e3a8104273dc4250b1ea86a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-112a4ae0.json",
+        "retained_record_sha256": "b24e39b39488ccb8f04d84b3ee52e5eee01ec414506fc737010c67f5af6e5e9a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_cf81a2ce0998358054db5cd5e1c131be232bcfcf33ee3e1f7bf35c42ac17f39c",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-112a58b0.json",
+        "retained_record_sha256": "56456457fdf07c3cf38d44653a0223f49b406b6a65c0a7aee51b9fedd8cc6399",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_6d3eda1c4210efc652e4f47e789ac767348d4efb2435d8039a7434567e0d98cc",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-112a5af0.json",
+        "retained_record_sha256": "08ef8f451ced6b90d83bd62bb753965dfff61d890b80e2f1c5218dfb6b365f63",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_f45c53b9f6974b832a3b528b6e907a5d754a1be05d17c2d35ea04ce2dc701c48",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-112ab5e0.json",
+        "retained_record_sha256": "973e74437068b03d4805c8394ddeda84195a9675a1889bd3851d081fa81f93a5",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_200b8871a80a78c76d1159ab0576484415855ccc5b9a67fd8f20afd371f99e0a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-112bb070.json",
+        "retained_record_sha256": "eb317167f819d5bd464f9c99a549fb6cedcc2877341740e79dc88818ebc1e309",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_e8ac3c17c314e48df546cd3f3accba0371c2d7ff045b0106ad2157bd48230c20",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-112bdc00.json",
+        "retained_record_sha256": "30d763c3476f480552a70dd64e7ec514cac540ea4fd90ab848b1ea625cf34cee",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_966f4ecfb6c4efca43b442798aa36af60a30d417c3835629c564a0d992b30263",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-112d9900.json",
+        "retained_record_sha256": "4259c756a19fc1b375cb21f0822107adde98467997c82a3bfdb9743d0e947412",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_62b214b78a5902b453f2918508e1edb6a3dbe2ee97a8e82dfb7e2bfc86b24044",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer68-20261124/fn-112d9960.json",
+        "retained_record_sha256": "ee9811bb39f73d475d9f56514eb5bc9e8c9c01229fda617cfb3183a2680eb08f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_336af4d8800e929ebf5d180668ba8ebd98ec32018c1c3cf89515fbbd84b163e9",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-1172f764.json",
+        "retained_record_sha256": "91b350843806b2860132a996dd3e0f932a614a382a4bd9a74fd3fd2a8281a309",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_f894de34af9446e32c519bdc3141a6d29935895fe6cc088e9aae0f986893372e",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-1173e2c8.json",
+        "retained_record_sha256": "8a5f37bfae2af3c47b3dd4e1fd3514ce1c7b065a2d22a0095b471f82b08bdfc6",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_a4b17ce921a29d7aa6ec2555d13e4a824914716a4a1c8e2fe5148cbcb894611e",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-1173e2d4.json",
+        "retained_record_sha256": "75310e726be5705ac27af3e5e3e2e46294e9972501105c2aab9181ccfe3fe127",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5f30330076522376605fd8662107a952b43437cfe12f64ca8b940cde631ab1fa",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-1173e2d8.json",
+        "retained_record_sha256": "aa4d87a946649ecd7d61de7a437c9a9c0f8988844359b4cd00a3fa961ddd98e4",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7d2763b10c245375621085edad9c89641d1e73efb164910b2c34db3e326863f2",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-1173e2dc.json",
+        "retained_record_sha256": "22bb36db81286bd0b6f07b886acfe641d7db4ed9e5733b2f8c86645c67a59edb",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_f34a0192a0dc92832be5ec88283d9eb7275c9426f544b2f26f9c491bfbe02889",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-1173e2e0.json",
+        "retained_record_sha256": "1df49dd78d711fb487aa4fb6483f7f6846d3ed9eb054e05248c96e8c0aa08067",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_531cf8492ecf2429da4b585b5fd0b071dd6a4c1836a1237d9379a1b45d81825f",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-11768574.json",
+        "retained_record_sha256": "128ab24ebd41641eeaedefbffd3f826a0b33312a6aba120165095dde43197cf8",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_1ab7a115a872266b12d2b547e20fe62b0fea22542df23802d558bf625978bdbf",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117d9270.json",
+        "retained_record_sha256": "d117608e6802bc44112916994c00f572759c67c7934f3f1a79e6f35f18ec48fb",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_11fdd7144877932626572f84416d3633a495a0a4ec302e6b641e9d88bdd25501",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117d9278.json",
+        "retained_record_sha256": "7739497a2f32b6050a386e5776be703bd88013c4b15e6ae8f69e5dbf84be87e7",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_e7660e44fa9ab6090b11b970b0e932a26b9168b64ebbad2249ef94b7a864b6fc",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e193c.json",
+        "retained_record_sha256": "a65dc8d2d02cff71bcbf05a64be8a27be21406a3ddcf1756fc2c60bab64019d0",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c9719b4834443b9cea7a8325130e51f31431652907e062c0ec8b9791b5d2a09f",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2588.json",
+        "retained_record_sha256": "fb26e70f6c663444bd7bb40708d67d6f23ebcfcd99777ec053f04d1e72379ad9",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_17b1e5a37003a12cdbba6c6d093ea4b847a25fbe9066ad7ac7e300cf877aced0",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e29fc.json",
+        "retained_record_sha256": "c6e5eae0c82e303ce6a911f6577ff0076a30231448e410673ab2ab904174ae7a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_1c04d250945a71b66371950bbeb6a072292cc146b6c5506b5ab871936ccc27e4",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2a04.json",
+        "retained_record_sha256": "a0307b3463806b9f82188716267c98197aa3b28a6bc22767c922dae47af66bc2",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_1fc6f79e0d8d86433d74564983e7eba8f9c18c3a93204d2ad03ce1f2c54e4143",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2a0c.json",
+        "retained_record_sha256": "f32e3176092db9c404a8df4b71cf66f91cb06d1db8783e16c8299796504bcf68",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_69d3c0638c2ba0f968e11e815021c69ee86a86911685872b330769abdf66bf8a",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2a28.json",
+        "retained_record_sha256": "2a7c3b7f61eedb2cb540e5a784a15ee3f52cdb6d07561851222a79446feb8ba6",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_9dada5955c18dce5a25a28111632a6d4608d725fc46eb1fe825b4a1ec9edab51",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2a38.json",
+        "retained_record_sha256": "fbef0e7e371dfdee10e9a5cd3341d2c00e511af8c163455d1ff04bb528cea004",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_8f34d5aa8c70eb293f561b911838db24f93ec9449f015faf7efdf9ed56c99518",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2a50.json",
+        "retained_record_sha256": "eb0fc6def4e12ee606d415a524e35062a667c29955e4efbee9fc62860fb82647",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_967eb9eb0ddb2d6e5aadb88164ea12cac204aae0787b81284ca55bef911f6ae2",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2a60.json",
+        "retained_record_sha256": "9bd131db2b01fd584c5b90c385a1a114a148f8c5a79b5922217f868d59047872",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_fefc223334662f7b91216f6e3c986ff3fa97b1904bba7abc5e64d2385f4f31a3",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2a70.json",
+        "retained_record_sha256": "8b8d64eba615b3a50e6bb8e1b89fbbab25e52a63c41b36b96b0597dc975e144b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_853e97e1edd60a7e80bf94658f0e9669d4dc06190f6d4c508123a6074a27c309",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2a80.json",
+        "retained_record_sha256": "c7a5ebd970e5d178c57e1db98ad93bf945a27201872e35ce2567bddec357f977",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_bfbdd0c4469f21a5ac6aeb2e19a98e4d7f0ef2f6c567a520e04736d7b033e142",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2a90.json",
+        "retained_record_sha256": "2af92b92867f3cc4d9f91a61f208ce83971e90563e65dce8bf3193a52c139b6a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_ede03759ad0dfca9d34662cd6e32eaccb004aa58bc57b219da34bf62cf17ba7b",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2aa8.json",
+        "retained_record_sha256": "ca90081f8aaad95bbc32523548df6aac37591a1cd472bff099d19da2f648c63c",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_4c274347ae5952d341293a6d128b63a046a2f2a5bc02bfeffd2390f8957e5541",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2abc.json",
+        "retained_record_sha256": "3053e8dfe8398e532b5b8ab8375ac8e7698ed41416010257f0a8908057aee853",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_527399becbec47f19c147ef3d96c410e225afc462e1258149a0f3ce47fe59d7b",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2ad0.json",
+        "retained_record_sha256": "f70a67d6390636e2c3970ce0eaabe2cd1fb239bdfc4ab7e577da5fd87753a49b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_bc8787678e1560e9ef9c2d6c0ee810e928212d1e0e2ce0359c60cbb77a65c410",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2ae8.json",
+        "retained_record_sha256": "0f86e3f24b0393b5eea29c96605455215ca7a08facccc04ee6e1add8cca38fdd",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7703bbb9c9c5e36fdd9081b1e32ceb864ba57023878d0538cf7444d7a108f90f",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2b00.json",
+        "retained_record_sha256": "4c259c312322e7ea6ee1193343934c88e6b907b48e0dffea0366b6cf96cb2d4b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_b77d441207a1d426e72226dd7c13fb28e0ebdd2d34423bce31b36ec1b9069eb2",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2b14.json",
+        "retained_record_sha256": "1ab6050756d2d2dfd1031fe97bdd929d02a959805831bf2d64926c2d359b21a1",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_b217b1e0d2345960a1b8e2efb498e6bd758c08e045d974d3d4ed45cb975356f0",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2b2c.json",
+        "retained_record_sha256": "ad5a16487d55ad9cf62385a47cdf1a642c3150a8b1f8ca83ea437824a52153e2",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_2da65409741ac3e6b515f67126ee230c55d0ef92432958f23151eeed86799930",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2b3c.json",
+        "retained_record_sha256": "dbbdf9f77fca0ec59d00e70dc799fc42cf04ce2b9047184453df0c0230281ef9",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_ef01d8290abbe534a381fa1cfee7db1d24e2bdfed3229ea647c218d6c62dc3a0",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e2b50.json",
+        "retained_record_sha256": "cc5d99c57e4d87d015ab60f92dc8f4d6488fafc99783a2671cb3b2a1fe17d9c0",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_9889ef8fa3ebd5a7c7a992a362520adb24256b0219889813d36e0b2f108b6207",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e4da8.json",
+        "retained_record_sha256": "894ba8862592dadab7d473ea9c6e22c6a18899c38366644735bd12adb6a147de",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_cfcb54df428b655a1e72f5360f4254d7190c30dcf6ea9d7110b16145ee3d5b7c",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e4dc0.json",
+        "retained_record_sha256": "81033c5e3e6cbf0ad0889c7597e00bed1e3382eb872daf4684e28a2bcbc2dd03",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7bfef84cf34df95bee2dc95e43d5ae15135214ecd66a06f5e2ab427daf151c97",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e8094.json",
+        "retained_record_sha256": "45864e9cd91057fdba0c1250931a32e5c90fac7fdc2733e5ba620af65c625927",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_dd170b1d7e2a3678e7876b7ccd5bb7bf34c784563ed32ab71bcafd5d4bef72a6",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117e9250.json",
+        "retained_record_sha256": "6008d22826ec86fb884ea36331693659d34e6b1dd460ac039d78c703ed8dd395",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c918b6968c6d1d6367a89a9fef1dfedd80881f5a4b1fe49ca316f470e07514ea",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117ee52c.json",
+        "retained_record_sha256": "1a88c075627196021fe64eedb1594268914c08b45f08fb5a0a09ea402b554179",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_bc3c8cdd32ab99ee293674eb059c86d2343e579d252d07f5822b6d0e40bb764d",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117ff0d0.json",
+        "retained_record_sha256": "34f8883858192d1703f5afd3c22f498a8aa141ba8a44cca2dd2cf851422c6062",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_4411798c6df9f4c76c3e742f2929b3cdd46eeeae1f9479f03355ed8bfdb3427c",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-117ff0d8.json",
+        "retained_record_sha256": "d8f68bace6eb7c78023a5d3350d08f100e807f9f5beb60cbae1513d2cb9fb841",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c349b4a231d61cb9501854a2f3fa29e8f304db0b36b265fcd65f20eb2432ff01",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-11899d90.json",
+        "retained_record_sha256": "6781e339fe2896c89ae9eea40f745d5603a7f315ac7559ee50b033dae02bbeba",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_fcdf522bf0dadeede7d29231fb882cbe34a752a7e7e92ecbd6ef16ea4e52bf7d",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-11933000.json",
+        "retained_record_sha256": "583db4994753af6b61cdba2517c2ee6c3e868560675844cf7a6718fdb080e435",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_2cfe6e0a48a6f756c84d4df9b13a9bd16d3a8bdb35b7368047cf0fa45b86986d",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-11970645.json",
+        "retained_record_sha256": "17f3f55d9ec1722366a067942c8ad810a68acac1ccd52ef6d14f84d0b08e6e5e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_2a9e04da476af4f7ee1399b1a23386ed8333f8be5f50692b8391d079e70b074f",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer68-20261124/extra-11970646.json",
+        "retained_record_sha256": "d02d0ffbacdf39406dd18947375fd61a6ceb0a956140ad2c8b929ded85bca803",
+        "retained_record_format": "original MCP result envelope"
+      }
+    ],
+    "closed_snapshot_local_path": "out/startup-layer68-20261124/session.rea.json",
+    "closed_snapshot_sha256": "19261c2e0ae8d1f75f5328bd2bcf364117e470e8f7e892ae29496af406936e00",
+    "closed_evidence_records": 112,
+    "new_evidence_records": 71,
+    "retained_operation_envelopes": 112,
+    "reused_layer67_evidence_records": 41,
+    "extra_evidence_views_count": 0,
+    "validated_bundle_local_path": "out/startup-layer68-20261124/validated-evidence-bundle.json",
+    "validated_bundle_sha256": "98bab55dd163c0e8a6d9dcf1ac0f9d286fd082a88baae01a87c685b619a1c8eb",
+    "cumulative_validated_bundle_local_path": "out/startup-layer68-20261124/cumulative-validated-evidence-bundle.json",
+    "cumulative_validated_bundle_sha256": "98bab55dd163c0e8a6d9dcf1ac0f9d286fd082a88baae01a87c685b619a1c8eb",
+    "cumulative_validated_bundle_records": 112,
+    "partition1_validated_bundle_local_path": "out/vfs-layer24-20261114/validated-evidence-bundle.json",
+    "partition1_validated_bundle_sha256": "475ab7199d42e3cb2a866a007302f7868344303e3bfda6f975c2e19ae2040a0e",
+    "partition1_validated_bundle_records": 367,
+    "partition2_validated_bundle_local_path": "out/vfs-layer41-20261115/cumulative-validated-evidence-bundle.json",
+    "partition2_validated_bundle_sha256": "691eee5f4134ecfe5fa9ace57f78daead53f4c917e0aa4db243de429f03b0a7c",
+    "partition2_validated_bundle_records": 743,
+    "partition3_validated_bundle_local_path": "out/vfs-layer49-20261115/cumulative-validated-evidence-bundle.json",
+    "partition3_validated_bundle_sha256": "1fd402dd9c34d773769dcdb3f634bda90c0947c76f316a09467979c24c3459f6",
+    "partition3_validated_bundle_records": 264,
+    "partition4_validated_bundle_local_path": "out/vfs-layer55-20261115/cumulative-validated-evidence-bundle.json",
+    "partition4_validated_bundle_sha256": "b58b048ddae09bcbfb1c517792a7160c07bb1b1a0c2683464ead236f63eda3b0",
+    "partition4_validated_bundle_records": 181,
+    "partition5_validated_bundle_local_path": "out/vfs-layer58-20261115/validated-evidence-bundle.json",
+    "partition5_validated_bundle_sha256": "f8a0cfd64b101c746df29ef4cd126b4b610b618e63163255feebce22c81c258a",
+    "partition5_validated_bundle_records": 118,
+    "partition6_validated_bundle_local_path": "out/startup-layer62-20261119/cumulative-validated-evidence-bundle.json",
+    "partition6_validated_bundle_sha256": "da0f43dcf31accf01b85e3d85679908e2f930b4f9b68e0bc5dcf59769935a53a",
+    "partition6_validated_bundle_records": 252,
+    "partition7_validated_bundle_local_path": "out/startup-layer66-20261124/cumulative-validated-evidence-bundle.json",
+    "partition7_validated_bundle_sha256": "de90311e12db70e6ac2aae91c0523ea76e8fbbaae414e652e6a2665aaff44741",
+    "partition7_validated_bundle_records": 193,
+    "prior_partitions_validated_records": 2118,
+    "cumulative_all_partitions_records": 2230,
+    "non_proc_slots": [],
+    "resource_constrained_slots": [],
+    "limitations": [
+      "Layer 68 extends Partition 8 (extending_layer67_batched_p8: 41 reused + 71 new = 112 Partition 8 records) alongside sealed Partitions 1-7 (2,118 prior; 2,230 cumulative)",
+      "Closes all 30 video overlay / ShowCursor / DB reader-loader-parser / RB-tree & FxName lookup functions with clean_eng=0, clean_crt=0, noret_or_thunk=0 at 1,502 functions"
     ]
   }
 }

@@ -464,7 +464,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1172f758	4	file	9e189301	.rdata	pe_iat_slot	USER32.dll!GetWindowRect	false
 1172f75c	4	file	ae189301	.rdata	pe_iat_slot	USER32.dll!AdjustWindowRect	false
 1172f760	4	file	c2189301	.rdata	IAT slot in .rdata (USER32.dll!MessageBoxA) called by 0x101254a0	IAT slot in .rdata (USER32.dll!MessageBoxA) called by 0x101254a0	true
-1172f764	4	file	d0189301	.rdata	pe_iat_slot	USER32.dll!ShowCursor	false
+1172f764	4	file	d0189301	.rdata	4-byte PE IAT slot for USER32.dll!ShowCursor called by 0x10115370	4-byte PE IAT slot for USER32.dll!ShowCursor called by 0x10115370	true
 1172f768	4	file	de189301	.rdata	pe_iat_slot	USER32.dll!SetCursor	false
 1172f76c	4	file	ea189301	.rdata	pe_iat_slot	USER32.dll!GetCursorPos	false
 1172f770	4	file	fa189301	.rdata	pe_iat_slot	USER32.dll!SetWindowLongW	false
@@ -658,7 +658,12 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1173dfac	8	file	5c000000312e3231	.rdata	"static path-separator string ""\"" (0x5c,0x00,0x00,0x00) followed by version string ""1.21"""	"static path-separator string ""\"" (0x5c,0x00,0x00,0x00) followed by version string ""1.21"""	true
 1173e2b8	4	file	6f12833a	.rdata	4-byte IEEE-754 float 0.001f (0x3a83126f) in .rdata multiplied by 0x112e2b00	4-byte IEEE-754 float 0.001f (0x3a83126f) in .rdata multiplied by 0x112e2b00	true
 1173e2bc	4	file	cdcccc3d	.rdata	curated	curated	true
+1173e2c8	4	file	0000103f	.rdata	4-byte float aspect-ratio crop scale 0.5625f (9/16) in .rdata for 0x100dd4c0	4-byte float aspect-ratio crop scale 0.5625f (9/16) in .rdata for 0x100dd4c0	true
 1173e2d0	4	file	0000803f	.rdata	curated	curated	true
+1173e2d4	4	file	abaaaa3f	.rdata	4-byte float 4:3 aspect-ratio factor 1.3333334f in .rdata for 0x100dd4c0	4-byte float 4:3 aspect-ratio factor 1.3333334f in .rdata for 0x100dd4c0	true
+1173e2d8	4	file	3333b33f	.rdata	4-byte float aspect-ratio lower bound 1.4f in .rdata for 0x100dd4c0	4-byte float aspect-ratio lower bound 1.4f in .rdata for 0x100dd4c0	true
+1173e2dc	4	file	9a99d93f	.rdata	4-byte float aspect-ratio upper bound 1.7f in .rdata for 0x100dd4c0	4-byte float aspect-ratio upper bound 1.7f in .rdata for 0x100dd4c0	true
+1173e2e0	4	file	398ee33f	.rdata	4-byte float 16:9 aspect-ratio factor 1.7777778f in .rdata for 0x100dd4c0	4-byte float 16:9 aspect-ratio factor 1.7777778f in .rdata for 0x100dd4c0	true
 1173e300	16	file	0000000000000000000000000000f041	.rdata	Unsigned-to-double conversion bias pair referenced by float load-factor computation in 0x112cbe10	Unsigned-to-double conversion bias pair referenced by float load-factor computation in 0x112cbe10	true
 1173f1f0	16	file	2a0000000a0000000a00000025730000	.rdata	"VFS trace/format descriptor {'*', 10, 10, ""%s""} passed by 0x112b5730 to 0x112a4e10"	"VFS trace/format descriptor {'*', 10, 10, ""%s""} passed by 0x112b5730 to 0x112a4e10"	true
 1173f200	4	file	e0110e10	.rdata	4-byte 1-slot base vtable {0x100e11e0} in .rdata installed by 0x100e0650	4-byte 1-slot base vtable {0x100e11e0} in .rdata installed by 0x100e0650	true
@@ -803,13 +808,44 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1174eaa8	48	file	5300630072006900700074002f006600610075006e0061005f0063006f006e006600690067002e0078006d006c000000	.rdata	curated	curated	true
 1175612c	12	file	6c615f67696f636f6e646100	.rdata	NUL-terminated ASCII UI style key 'la_gioconda' in .rdata for 0x10c8f760/0x10c8f8c0/0x10cb8f90	NUL-terminated ASCII UI style key 'la_gioconda' in .rdata for 0x10c8f760/0x10c8f8c0/0x10cb8f90	true
 11756480	24	file	c0271d10afd86b11d0951d10b0321d10b03a1d1000771d10	.rdata	6-slot primary channel/socket adapter base vtable prefix [0x101d27c0, 0x116bd8af, 0x101d95d0, 0x101d32b0, 0x101d3ab0, 0x101d7700] in .rdata bound by 0x10fd6850	6-slot primary channel/socket adapter base vtable prefix [0x101d27c0, 0x116bd8af, 0x101d95d0, 0x101d32b0, 0x101d3ab0, 0x101d7700] in .rdata bound by 0x10fd6850	true
+11768574	8	file	00d43310afd86b11	.rdata	8-byte 2-slot DB table base vtable {0x1033d400, 0x116bd8af} in .rdata	8-byte 2-slot DB table base vtable {0x1033d400, 0x116bd8af} in .rdata	true
 1177ddbc	20	file	6d61702f7365743c543e20746f6f206c6f6e6700	.rdata	"Static ASCII ""map/set<T> too long"" error literal pushed by 0x112a3320"	"Static ASCII ""map/set<T> too long"" error literal pushed by 0x112a3320"	true
 1177f34c	4	file	25660000	.rdata	curated	curated	true
 11794918	4	file	29000000	.rdata	NUL-terminated UTF-16 closing paren literal u')' in .rdata used by math formatters	NUL-terminated UTF-16 closing paren literal u')' in .rdata used by math formatters	true
 117a4c74	4	file	2c000000	.rdata	NUL-terminated UTF-16 comma literal u',' in .rdata used by math formatters	NUL-terminated UTF-16 comma literal u',' in .rdata used by math formatters	true
+117d9270	6	file	50004f000000	.rdata	NUL-terminated UTF-16LE locale string L'PO' in .rdata for 0x10c8a0b0	NUL-terminated UTF-16LE locale string L'PO' in .rdata for 0x10c8a0b0	true
+117d9278	6	file	50004c000000	.rdata	NUL-terminated UTF-16LE locale string L'PL' in .rdata for 0x10c8a0b0	NUL-terminated UTF-16LE locale string L'PL' in .rdata for 0x10c8a0b0	true
 117df544	28	file	7600660073005f006c006f0067005f006c006500760065006c000000	.rdata	"UTF-16LE literal key L""vfs_log_level"" at 117df544..117df55f"	"UTF-16LE literal key L""vfs_log_level"" at 117df544..117df55f"	true
+117e193c	8	file	640062005c000000	.rdata	NUL-terminated UTF-16LE DB folder prefix L'db\\' in .rdata	NUL-terminated UTF-16LE DB folder prefix L'db\\' in .rdata	true
+117e2588	8	file	40fdc910f08db910	.rdata	8-byte 2-slot videos reader const vtable {0x10c9fd40, 0x10b98df0} in .rdata	8-byte 2-slot videos reader const vtable {0x10c9fd40, 0x10b98df0} in .rdata	true
+117e29fc	8	file	20b3cc10c0201910	.rdata	8-byte 2-slot anim vtable {0x10ccb320, 0x101920c0} in .rdata	8-byte 2-slot anim vtable {0x10ccb320, 0x101920c0} in .rdata	true
+117e2a04	8	file	40fdc91090eab810	.rdata	8-byte 2-slot videos loader const vtable {0x10c9fd40, 0x10b8ea90} in .rdata	8-byte 2-slot videos loader const vtable {0x10c9fd40, 0x10b8ea90} in .rdata	true
+117e2a0c	28	file	76006900640065006f0073005f007400610062006c00650073000000	.rdata	NUL-terminated UTF-16LE table folder L'videos_tables' in .rdata	NUL-terminated UTF-16LE table folder L'videos_tables' in .rdata	true
+117e2a28	14	file	43414d504149474e5f4455454c00	.rdata	NUL-terminated ASCII key 'CAMPAIGN_DUEL' in .rdata for 0x10ce6120	NUL-terminated ASCII key 'CAMPAIGN_DUEL' in .rdata for 0x10ce6120	true
+117e2a38	21	file	43414d504149474e5f4455454c5f524553554c5400	.rdata	NUL-terminated ASCII key 'CAMPAIGN_DUEL_RESULT' in .rdata for 0x10ce6120	NUL-terminated ASCII key 'CAMPAIGN_DUEL_RESULT' in .rdata for 0x10ce6120	true
+117e2a50	15	file	43414d504149474e5f494e54524f00	.rdata	NUL-terminated ASCII key 'CAMPAIGN_INTRO' in .rdata for 0x10ce6120	NUL-terminated ASCII key 'CAMPAIGN_INTRO' in .rdata for 0x10ce6120	true
+117e2a60	14	file	43414d504149474e5f4c4f534500	.rdata	NUL-terminated ASCII key 'CAMPAIGN_LOSE' in .rdata for 0x10ce6120	NUL-terminated ASCII key 'CAMPAIGN_LOSE' in .rdata for 0x10ce6120	true
+117e2a70	15	file	43414d504149474e5f4f5554524f00	.rdata	NUL-terminated ASCII key 'CAMPAIGN_OUTRO' in .rdata for 0x10ce6120	NUL-terminated ASCII key 'CAMPAIGN_OUTRO' in .rdata for 0x10ce6120	true
+117e2a80	13	file	43414d504149474e5f57494e00	.rdata	NUL-terminated ASCII key 'CAMPAIGN_WIN' in .rdata for 0x10ce6120	NUL-terminated ASCII key 'CAMPAIGN_WIN' in .rdata for 0x10ce6120	true
+117e2a90	24	file	46554c4c53435245454e5f424154544c455f494e54524f00	.rdata	NUL-terminated ASCII key 'FULLSCREEN_BATTLE_INTRO' in .rdata for 0x10ce6120	NUL-terminated ASCII key 'FULLSCREEN_BATTLE_INTRO' in .rdata for 0x10ce6120	true
+117e2aa8	20	file	46554c4c53435245454e5f46524f4e54454e4400	.rdata	NUL-terminated ASCII key 'FULLSCREEN_FRONTEND' in .rdata for 0x10ce6120	NUL-terminated ASCII key 'FULLSCREEN_FRONTEND' in .rdata for 0x10ce6120	true
+117e2abc	17	file	46554c4c53435245454e5f494e54524f00	.rdata	NUL-terminated ASCII key 'FULLSCREEN_INTRO' in .rdata for 0x10ce6120	NUL-terminated ASCII key 'FULLSCREEN_INTRO' in .rdata for 0x10ce6120	true
+117e2ad0	22	file	57494e444f5745445f424154544c455f494e54524f00	.rdata	NUL-terminated ASCII key 'WINDOWED_BATTLE_INTRO' in .rdata for 0x10ce6120	NUL-terminated ASCII key 'WINDOWED_BATTLE_INTRO' in .rdata for 0x10ce6120	true
+117e2ae8	23	file	43414d504149474e5f415353415353494e4154494f4e00	.rdata	NUL-terminated ASCII key 'CAMPAIGN_ASSASSINATION' in .rdata for 0x10ce6120	NUL-terminated ASCII key 'CAMPAIGN_ASSASSINATION' in .rdata for 0x10ce6120	true
+117e2b00	19	file	43414d504149474e5f45535441424c49534800	.rdata	NUL-terminated ASCII key 'CAMPAIGN_ESTABLISH' in .rdata for 0x10ce6120	NUL-terminated ASCII key 'CAMPAIGN_ESTABLISH' in .rdata for 0x10ce6120	true
+117e2b14	22	file	43414d504149474e5f494e46494c54524154494f4e00	.rdata	NUL-terminated ASCII key 'CAMPAIGN_INFILTRATION' in .rdata for 0x10ce6120	NUL-terminated ASCII key 'CAMPAIGN_INFILTRATION' in .rdata for 0x10ce6120	true
+117e2b2c	16	file	43414d504149474e5f45534341504500	.rdata	NUL-terminated ASCII key 'CAMPAIGN_ESCAPE' in .rdata for 0x10ce6120	NUL-terminated ASCII key 'CAMPAIGN_ESCAPE' in .rdata for 0x10ce6120	true
+117e2b3c	18	file	43414d504149474e5f5341424f5441474500	.rdata	NUL-terminated ASCII key 'CAMPAIGN_SABOTAGE' in .rdata for 0x10ce6120	NUL-terminated ASCII key 'CAMPAIGN_SABOTAGE' in .rdata for 0x10ce6120	true
+117e2b50	15	file	564944454f5f5455544f5249414c00	.rdata	NUL-terminated ASCII key 'VIDEO_TUTORIAL' in .rdata for 0x10ce6120	NUL-terminated ASCII key 'VIDEO_TUTORIAL' in .rdata for 0x10ce6120	true
 117e2e7c	47	file	536f6674776172655c54686520437265617469766520417373656d626c795c4c61756e636865725c32313439353000	.rdata	NUL-terminated ASCII HKCU path 'Software\The Creative Assembly\Launcher\214950' in .rdata queried by 0x11302cc0/0x11303db0/0x113048b0	NUL-terminated ASCII HKCU path 'Software\The Creative Assembly\Launcher\214950' in .rdata queried by 0x11302cc0/0x11303db0/0x113048b0	true
 117e2eac	37	file	536f6674776172655c54686520437265617469766520417373656d626c795c526f6d653200	.rdata	NUL-terminated ASCII HKCU path 'Software\The Creative Assembly\Rome2' in .rdata fallback for 0x11302cc0/0x11303db0/0x113048b0	NUL-terminated ASCII HKCU path 'Software\The Creative Assembly\Rome2' in .rdata fallback for 0x11302cc0/0x11303db0/0x113048b0	true
+117e4da8	22	file	4c6f6164696e672064617461626173653a2025730a00	.rdata	NUL-terminated ASCII format string 'Loading database: %s\n' in .rdata	NUL-terminated ASCII format string 'Loading database: %s\n' in .rdata	true
+117e4dc0	15	file	20282564207265636f726473292000	.rdata	NUL-terminated ASCII format string ' (%d records) ' in .rdata	NUL-terminated ASCII format string ' (%d records) ' in .rdata	true
+117e8094	23	file	7375627469746c655f74696d696e67735f7461626c6500	.rdata	NUL-terminated ASCII name 'subtitle_timings_table' in .rdata	NUL-terminated ASCII name 'subtitle_timings_table' in .rdata	true
+117e9250	13	file	766964656f735f7461626c6500	.rdata	NUL-terminated ASCII name 'videos_table' in .rdata	NUL-terminated ASCII name 'videos_table' in .rdata	true
+117ee52c	8	file	40fdc910d008b910	.rdata	8-byte 2-slot subtitle timings vtable {0x10c9fd40, 0x10b908d0} in .rdata	8-byte 2-slot subtitle timings vtable {0x10c9fd40, 0x10b908d0} in .rdata	true
+117ff0d0	8	file	6034de10c0201910	.rdata	8-byte 2-slot anim vtable {0x10de3460, 0x101920c0} in .rdata	8-byte 2-slot anim vtable {0x10de3460, 0x101920c0} in .rdata	true
+117ff0d8	48	file	7300750062007400690074006c0065005f00740069006d0069006e00670073005f007400610062006c00650073000000	.rdata	NUL-terminated UTF-16LE table folder L'subtitle_timings_tables' in .rdata	NUL-terminated UTF-16LE table folder L'subtitle_timings_tables' in .rdata	true
 1183a4c8	4	file	ff030000	.rdata	pe_data_export	?_maxLen@FxLogStream@Logging@Face@OC3Ent@@0IB	false
 1183a4cc	4	file	20000000	.rdata	pe_data_export	?_maxListeners@FxLog@Logging@Face@OC3Ent@@1IB	false
 1183a4d0	4	file	503eed10	.rdata	pe_data_export	??_7?$FxSingleton@VFxLogManager@Logging@Face@OC3Ent@@@Face@OC3Ent@@6B@	false
@@ -862,6 +898,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 11898960	12	file	25733a20446f6e6520257300	.rdata	NUL-terminated ASCII string '%s: Done %s' in .rdata formatted by 0x112dcaf0	NUL-terminated ASCII string '%s: Done %s' in .rdata formatted by 0x112dcaf0	true
 11898970	94	file	25646d732064656c74612c2025646d7320746f74616c2c2025644d4220616c6c6f636174656420746f74616c2c2025642062797465732064656c746120616c6c6f63617465642c20746f74616c20556e69537472696e67733a2564290a00	.rdata	NUL-terminated ASCII suffix '%dms delta, ... UniStrings:%d)\n' in .rdata formatted by 0x112dcaf0	NUL-terminated ASCII suffix '%dms delta, ... UniStrings:%d)\n' in .rdata formatted by 0x112dcaf0	true
 118989d0	107	file	25733a20446f6e65202573202825646d732064656c74612c2025646d7320746f74616c2c2025644d4220616c6c6f636174656420746f74616c2c2025642062797465732064656c746120616c6c6f63617465642c20746f74616c20556e69537472696e67733a2564290a00	.rdata	NUL-terminated ASCII string '%s: Done %s (%dms delta, ... UniStrings:%d)\n' in .rdata formatted by 0x112dcaf0	NUL-terminated ASCII string '%s: Done %s (%dms delta, ... UniStrings:%d)\n' in .rdata formatted by 0x112dcaf0	true
+11899d90	106	file	49006e0020007400610062006c0065002000250053003a002000270025007300270020006900730020006e006f007400200061002000760061006c006900640020006b0065007900200066006f0072002000740068006900730020007400610062006c0065000a000000	.rdata	NUL-terminated UTF-16LE diagnostic format string for invalid DB table key in .rdata	NUL-terminated UTF-16LE diagnostic format string for invalid DB table key in .rdata	true
 1189a520	16	file	90fc2a1110bb9010b0cc2a11508c1210	.rdata	full 4-slot std::tr1::_Ref_count_base vtable 0x1189a520 in .rdata	full 4-slot std::tr1::_Ref_count_base vtable 0x1189a520 in .rdata	true
 1189a630	16	file	000000000000000000000000c5c50d03	.rdata	16-byte aligned interface template block in .rdata copied to 0x12032b50 by 0x112c21f0	16-byte aligned interface template block in .rdata copied to 0x12032b50 by 0x112c21f0	true
 1189a640	16	file	000000000000000000000000c8c50d03	.rdata	16-byte aligned interface template block in .rdata copied to 0x12032b3c by 0x112c2190	16-byte aligned interface template block in .rdata copied to 0x12032b3c by 0x112c2190	true
@@ -1004,6 +1041,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 11925be8	16	file	feffffff00000000d8ffffff00000000	.rdata	16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x116b46d2	16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x116b46d2	true
 11925c08	16	file	feffffff00000000d4ffffff00000000	.rdata	16-byte SEH scope table descriptor in .rdata pushed by 0x116b5824 (_query_new_handler)	16-byte SEH scope table descriptor in .rdata pushed by 0x116b5824 (_query_new_handler)	true
 11925c28	16	file	feffffff00000000d4ffffff00000000	.rdata	16-byte SEH scope table descriptor in .rdata pushed by 0x116b5f67 (update_thread_locale_data_internal)	16-byte SEH scope table descriptor in .rdata pushed by 0x116b5f67 (update_thread_locale_data_internal)	true
+11933000	4	file	01000000	.data	4-byte initialized video letterbox enable flag (initial 1) in .data written by 0x100dd4c0	4-byte initialized video letterbox enable flag (initial 1) in .data written by 0x100dd4c0	true
 11933184	4	file	78d27311	.data	static_rdata_ptr	ptr_0x1173d278	false
 119331a0	4	file	98d27311	.data	static_rdata_ptr	ptr_0x1173d298	false
 119331e8	4	file	20e37311	.data	static_rdata_ptr	ptr_0x1173e320	false
@@ -6356,6 +6394,8 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 119705f0	4	file	b0b27911	.data	static_rdata_ptr	ptr_0x1179b2b0	false
 119705f4	4	file	38b77d11	.data	static_rdata_ptr	ptr_0x117db738	false
 119705f8	4	file	28fd7311	.data	static_rdata_ptr	ptr_0x1173fd28	false
+11970645	1	file	01	.data	1-byte cursor visibility cache flag in .data updated by 0x10ca63f0	1-byte cursor visibility cache flag in .data updated by 0x10ca63f0	true
+11970646	1	file	01	.data	1-byte cursor visibility allow flag in .data checked by 0x10ca63f0	1-byte cursor visibility allow flag in .data checked by 0x10ca63f0	true
 11970648	4	file	c8db7311	.data	static_vptr_instance	ptr_0x1173dbc8	false
 11970b88	4	file	24f37d11	.data	static_rdata_ptr	ptr_0x117df324	false
 11970b8c	4	file	34f37d11	.data	static_rdata_ptr	ptr_0x117df334	false
