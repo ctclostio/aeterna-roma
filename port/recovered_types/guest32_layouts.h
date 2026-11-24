@@ -3298,5 +3298,55 @@ ROME2_LAYOUT_ASSERT(rome2_startup_console_node_prefix64_32, index_34, 0x34);
 ROME2_LAYOUT_ASSERT(rome2_startup_console_node_prefix64_32, flag_38, 0x38);
 ROME2_LAYOUT_ASSERT(rome2_startup_console_node_prefix64_32, tag_or_slot_3c, 0x3c);
 
+/* 64B (0x40) Win32 MEMORYSTATUSEX stack record populated by GlobalMemoryStatusEx inside 0x112f6190. */
+typedef struct rome2_startup_memory_status_ex64_32 {
+    uint32_t dw_length_00;                       /* 00 (0x40) */
+    uint32_t dw_memory_load_04;                  /* 04 */
+    uint32_t total_phys_lo_08;                   /* 08 */
+    uint32_t total_phys_hi_0c;                   /* 0c */
+    uint32_t avail_phys_lo_10;                   /* 10 */
+    uint32_t avail_phys_hi_14;                   /* 14 */
+    uint32_t total_page_file_lo_18;              /* 18 */
+    uint32_t total_page_file_hi_1c;              /* 1c */
+    uint32_t avail_page_file_lo_20;              /* 20 */
+    uint32_t avail_page_file_hi_24;              /* 24 */
+    uint32_t total_virtual_lo_28;                /* 28 */
+    uint32_t total_virtual_hi_2c;                /* 2c */
+    uint32_t avail_virtual_lo_30;                /* 30 */
+    uint32_t avail_virtual_hi_34;                /* 34 */
+    uint32_t avail_ext_virtual_lo_38;            /* 38 */
+    uint32_t avail_ext_virtual_hi_3c;            /* 3c */
+} rome2_startup_memory_status_ex64_32;
+_Static_assert(sizeof(rome2_startup_memory_status_ex64_32) == 0x40, "startup memory status ex64 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_memory_status_ex64_32, dw_length_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_memory_status_ex64_32, total_phys_lo_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_memory_status_ex64_32, total_page_file_lo_18, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_startup_memory_status_ex64_32, total_virtual_lo_28, 0x28);
+
+/* 16B (0x10) UCRT string_output_adapter_data<char> target buffer state driven by 0x1168859a/0x1168b92d/0x1168bcef. */
+typedef struct rome2_startup_narrow_printf_adapter16_32 {
+    uint32_t buffer_cursor_00;                   /* 00 */
+    uint32_t max_chars_04;                       /* 04 */
+    uint32_t written_chars_08;                   /* 08 */
+    uint8_t continue_on_truncation_0c;           /* 0c */
+    uint8_t pad_0d[3];                           /* 0d..0f */
+} rome2_startup_narrow_printf_adapter16_32;
+_Static_assert(sizeof(rome2_startup_narrow_printf_adapter16_32) == 0x10, "startup narrow printf adapter16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_narrow_printf_adapter16_32, buffer_cursor_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_narrow_printf_adapter16_32, max_chars_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_narrow_printf_adapter16_32, written_chars_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_narrow_printf_adapter16_32, continue_on_truncation_0c, 0x0c);
+
+/* 1100B (0x44c) UCRT __crt_stdio_output::output_processor<char> state initialized by 0x11688e5c/0x11688eeb. */
+typedef struct rome2_startup_narrow_printf_processor1100_32 {
+    rome2_vfs_crt_wprintf_state64_32 core_00;    /* 00..3f */
+    rome2_vfs_crt_formatting_buffer1032_32 fmt_buf_40; /* 40..447 (+0x404 = 0x444 dynamic heap ptr) */
+    uint32_t adapter_ptr_448;                    /* 448 */
+} rome2_startup_narrow_printf_processor1100_32;
+_Static_assert(sizeof(rome2_startup_narrow_printf_processor1100_32) == 0x44c, "startup narrow printf processor1100 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_narrow_printf_processor1100_32, core_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_narrow_printf_processor1100_32, fmt_buf_40, 0x40);
+ROME2_LAYOUT_ASSERT(rome2_startup_narrow_printf_processor1100_32, adapter_ptr_448, 0x448);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

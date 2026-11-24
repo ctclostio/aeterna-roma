@@ -13,7 +13,7 @@
     "class_field_entries": 95747,
     "rtti_type_descriptors": 181,
     "rtti_complete_object_locators": 15,
-    "globals": 10829,
+    "globals": 10838,
     "exported_code_targets_pinned": 405
   },
   "distributions": {
@@ -40,7 +40,7 @@
       "static_rdata_ptr": 7913,
       "static_fn_ptr": 888,
       "static_vptr_instance": 584,
-      "pe_iat_slot": 495,
+      "pe_iat_slot": 493,
       "msvc_rtti_type_descriptor": 181,
       "curated": 46,
       "pe_data_export": 29,
@@ -82,6 +82,7 @@
       "IAT slot in .rdata called by 0x100f2230, 0x100f12c0, 0x100f2170, 0x100f2350, and 0x10104b60 (KERNEL32.dll!CloseHandle)": 1,
       "IAT slot in .rdata (KERNEL32.dll!CreateMutexW) called by 0x100df270": 1,
       "IAT slot in .rdata called indirectly by 0x112a7860 and 0x10102f90 (KERNEL32!CloseHandle)": 1,
+      "4-byte IAT slot in .rdata importing KERNEL32.DLL!GetModuleFileNameA called by 0x112f6190": 1,
       "IAT slot in .rdata (KERNEL32.dll!GetModuleFileNameW) called by 0x101015c0": 1,
       "IAT slot in .rdata (KERNEL32.dll!RaiseException) called by 0x100f38b0": 1,
       "IAT slot in .rdata (KERNEL32.dll!GetCommandLineA) called by 0x101016c0": 1,
@@ -130,6 +131,7 @@
       "IAT slot in .rdata (KERNEL32.dll!WideCharToMultiByte) called by 0x116a816e": 1,
       "IAT slot in .rdata called indirectly by 0x112badd0, 0x112e17e0, and 0x112e19b0 (KERNEL32!TlsGetValue)": 1,
       "IAT slot in .rdata called indirectly by 0x112e1780, 0x112e17e0, 0x112e1960, and 0x112e19b0 (KERNEL32!TlsSetValue)": 1,
+      "4-byte IAT slot in .rdata importing KERNEL32.DLL!GetLocaleInfoA called by 0x112f6190": 1,
       "IAT slot in .rdata (KERNEL32.dll!GetCommandLineW) called by 0x11302c40": 1,
       "IAT slot in .rdata (KERNEL32.dll!WriteFile) called by 0x116a520e (_write_nolock)": 1,
       "IAT slot in .rdata (KERNEL32.dll!ExitProcess) called by 0x1168d26c": 1,
@@ -242,6 +244,8 @@
       "NUL-terminated UTF-16LE string L'_autotest\\\\' in .rdata appended by 0x101016c0": 1,
       "NUL-terminated UTF-16LE string L'The Creative Assembly\\\\' in .rdata appended by 0x101016c0": 1,
       "NUL-terminated UTF-16LE string L'*' in .rdata passed by 0x101046d0": 1,
+      "2-byte NUL-terminated ANSI string '.' in .rdata compared by 0x112f6190 data-dir walk": 1,
+      "3-byte NUL-terminated ANSI string '..' in .rdata compared by 0x112f6190 data-dir walk": 1,
       "NUL-terminated ASCII Winsock diagnostic literal 'Authoritative answer host not found.' in .rdata": 1,
       "NUL-terminated ASCII Winsock diagnostic literal 'Valid name, no data record of requested type.' in .rdata": 1,
       "NUL-terminated ASCII Winsock diagnostic literal 'A nonrecoverable error occurred.' in .rdata": 1,
@@ -329,6 +333,10 @@
       "16-byte aligned interface template block in .rdata copied to 0x12032b3c by 0x112c2190": 1,
       "16-byte aligned interface/GUID template block in .rdata copied to 0x12032b64 by 0x112a56d0": 1,
       "16-byte aligned interface/GUID template block in .rdata copied to 0x12032b8c by 0x112c8ca0": 1,
+      "61-byte ANSI format string 'Total Phys Mem %u MB, Total Page File %u MB, Total Vrt Mem %u MB' in .rdata used by 0x112f6190": 1,
+      "7-byte ANSI suffix string 'data\\\\*' in .rdata appended by 0x112f6190": 1,
+      "15-byte ANSI format suffix ', data dirs: %d' in .rdata used by 0x112f6190": 1,
+      "21-byte ANSI suffix ', data dir not found' in .rdata used by 0x112f6190": 1,
       "NUL-terminated mod banner prefix 'mods: ' in .rdata formatted by 0x11300140": 1,
       "NUL-terminated ASCII string 'allow_unknown_movie_packs' in .rdata queried/written by 0x11304980": 1,
       "NUL-terminated ASCII string 'allow_user_script_packs' in .rdata queried/written by 0x11304980": 1,
@@ -663,7 +671,10 @@
       "MSVC TLS init guard in .bss for 0x12032b8c in 0x112c8ca0": 1,
       "36-byte global UTF-16LE registry hash map {buckets, bucket_count, removed_key, unused_key, reserved_020} returned by 112e32b0": 1,
       "Singleton pointer slot in .data zero-fill tail storing 0x6cB pack telemetry manager constructed by 0x112e1830": 1,
+      "1024-byte zero-fill ANSI memory summary buffer in .data populated by 0x112f6190": 1,
+      "1024-byte zero-fill ANSI executable path + data-dirs summary buffer in .data populated by 0x112f6190 (immediately preceding 0x12034668)": 1,
       "mod banner string buffer ('no mods' / 'mods: ...') in .bss populated by 0x11300140": 1,
+      "256-byte zero-fill ANSI locale name buffer in .data populated by GetLocaleInfoA in 0x112f6190": 1,
       "4-byte zero-fill cached HKCU mod-options subkey path pointer in .data used by 0x11302cc0/0x11303db0/0x113048b0": 1,
       "once-initialized flag byte in .bss set by 0x11302c40 command-line probe": 1,
       "cached bool result byte in .bss indicating presence of 'process_campaign_startpos' on command line": 1,
@@ -737,24 +748,24 @@
     }
   },
   "curated_reconciliation": {
-    "curated_functions_total": 1315,
-    "curated_in_canonical_index": 1284,
-    "curated_exact_body_sha256_match": 1266,
+    "curated_functions_total": 1347,
+    "curated_in_canonical_index": 1316,
+    "curated_exact_body_sha256_match": 1298,
     "curated_multi_range_expanded": 18,
     "curated_non_proc_slots": 31,
-    "curated_globals_matched": 739,
+    "curated_globals_matched": 750,
     "curated_vtables_matched": 76
   },
   "files": {
     "function_contracts_part1.tsv": {
       "rows": 40640,
-      "bytes": 9391983,
-      "sha256": "ba8f57610fea67ae077743cda8ebec8a2ffac1a6a2c792a4cf010c796aaf3910"
+      "bytes": 9392000,
+      "sha256": "5a84ed885494e79b3d1318e213af35478d3ca7a17f1ccec37fba152a90a5b087"
     },
     "function_contracts_part2.tsv": {
       "rows": 40640,
-      "bytes": 9468487,
-      "sha256": "83d8c5758dfed4d2b635ec867503ec6b8cf48fff1cb95b1829ac2abeb58f5f5f"
+      "bytes": 9469014,
+      "sha256": "1dc9a27b89bcb01ab13efb3fbb4abca7519e9817431ca41d0fa213ad842372fa"
     },
     "non_proc_curated_slots.tsv": {
       "rows": 31,
@@ -777,9 +788,9 @@
       "sha256": "534964ec1fa25fd15189a0fd007ba1412fe7fe339981ade410ca82a303f8e912"
     },
     "global_contracts.tsv": {
-      "rows": 10829,
-      "bytes": 913141,
-      "sha256": "0da0cda030ff5d68d6d84c9658d313300707817f0f289c0669453872f1fdf251"
+      "rows": 10838,
+      "bytes": 920151,
+      "sha256": "92b3be62656264205f688a5eb3517279459a2ae16a405b8ca28a2e506f91579d"
     }
   }
 }

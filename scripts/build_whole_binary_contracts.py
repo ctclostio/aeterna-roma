@@ -908,21 +908,25 @@ def main() -> int:
     (OUT_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
     # Write concise summary.md
+    curated_layer = max(
+        (int(m.group(1)) for k in curated if (m := re.match(r"rea_layer(\d+)_evidence$", k))),
+        default=62,
+    )
     summary_lines = [
         "# Whole-binary static ABI & type-layout contracts - empire.retail.dll",
         "",
-        f"Complete PE-verified static contract pinning across all **81,280 / 81,280 (100.0%)** canonical functions, all **9,639 / 9,639 (100.0%)** inventoried vtables, all **181** MSVC RTTI `TypeDescriptor`s (**{rtti_with_col}** `.rdata` `CompleteObjectLocator`s), static member/constructor class field layouts (**{len(class_field_rows):,}** entries across **{vt_with_fields:,}** vtables), and **{len(global_rows):,}** PE-verified static global records (`port/recovered_types/contracts.json` curated C17 Layer 62 kept independent and untouched).",
+        f"Complete PE-verified static contract pinning across all **81,280 / 81,280 (100.0%)** canonical functions, all **9,639 / 9,639 (100.0%)** inventoried vtables, all **181** MSVC RTTI `TypeDescriptor`s (**{rtti_with_col}** `.rdata` `CompleteObjectLocator`s), static member/constructor class field layouts (**{len(class_field_rows):,}** entries across **{vt_with_fields:,}** vtables), and **{len(global_rows):,}** PE-verified static global records (`port/recovered_types/contracts.json` curated C17 Layer {curated_layer} kept independent and untouched).",
         "",
         "## 1. Contract coverage",
         "",
         "| contract artifact | entries | file size | verification scope |",
         "|---|---:|---:|---|",
         f"| `function_contracts_part1.tsv` + `part2.tsv` | {len(fn_contracts):,} | {(file_meta['function_contracts_part1.tsv']['bytes'] + file_meta['function_contracts_part2.tsv']['bytes']) / 1048576:.2f} MB | PE `body_ranges` SHA-256, Capstone exit opcode, CC/stack purge, export & vtable flags |",
-        f"| `non_proc_curated_slots.tsv` | {len(non_proc_rows):,} | {file_meta['non_proc_curated_slots.tsv']['bytes'] / 1024:.1f} KB | Curated Layer 1-62 vtable-slot entries absent from canonical function index |",
+        f"| `non_proc_curated_slots.tsv` | {len(non_proc_rows):,} | {file_meta['non_proc_curated_slots.tsv']['bytes'] / 1024:.1f} KB | Curated Layer 1-{curated_layer} vtable-slot entries absent from canonical function index |",
         f"| `vtable_class_contracts.tsv` | {len(vtable_contract_rows):,} | {file_meta['vtable_class_contracts.tsv']['bytes'] / 1048576:.2f} MB | PE `.rdata` slot-table SHA-256, hierarchy, RTTI link, observed field extent & alloc hints |",
         f"| `class_field_layouts.tsv` | {len(class_field_rows):,} | {file_meta['class_field_layouts.tsv']['bytes'] / 1048576:.2f} MB | `+0x0` vptr (`9,639`), MI subobjects, member/ctor `this+off` widths & read/write access |",
         f"| `rtti_contracts.tsv` | {len(rtti_rows):,} ({rtti_with_col} COLs) | {file_meta['rtti_contracts.tsv']['bytes'] / 1024:.1f} KB | PE `.data` `TypeDescriptor` SHA-256 + `.rdata` `CompleteObjectLocator` / `CHD` / bases |",
-        f"| `global_contracts.tsv` | {len(global_rows):,} | {file_meta['global_contracts.tsv']['bytes'] / 1048576:.2f} MB | Curated globals (`739`), IAT (`615`), data exports (`29`), RTTI, `.data` reloc ptrs |",
+        f"| `global_contracts.tsv` | {len(global_rows):,} | {file_meta['global_contracts.tsv']['bytes'] / 1048576:.2f} MB | Curated globals (`{len(curated_globals):,}`), IAT (`{len(pe.iat_map):,}`), data exports (`{len(export_data_targets):,}`), RTTI, `.data` reloc ptrs |",
         "",
         "## 2. Function exit & calling-convention breakdown (`81,280` functions)",
         "",
@@ -941,11 +945,11 @@ def main() -> int:
 
     summary_lines += [
         "",
-        "## 3. Class field layouts, RTTI & curated Layer 62 reconciliation",
+        f"## 3. Class field layouts, RTTI & curated Layer {curated_layer} reconciliation",
         "",
         f"* Vtables with member/ctor fields recovered beyond `+0x0` vptr: **{vt_with_fields:,} / {len(vtable_contract_rows):,}** ({100.0 * vt_with_fields / len(vtable_contract_rows):.2f}%), totaling **{len(class_field_rows):,}** `(vtable, offset)` entries.",
         f"* Vtables with direct constructor `alloc(size)` hint (`decomp_fn_100d12b0`): **{vt_with_alloc:,}**.",
-        f"* Curated Layer 62 reconciliation (`port/recovered_types/contracts.json`): **{len(curated_fns):,} / {len(curated_fns):,}** functions (`{curated_exact_sha:,}` exact SHA match, `{(len(curated_fns) - len(non_proc_rows)) - curated_exact_sha}` merged tail-jump expanded in Layer 47-56 vs canonical boundaries, `{len(non_proc_rows)}` non-proc slots), **{len(curated_globals)} / {len(curated_globals)}** globals, and **{len(curated_vts)} / {len(curated_vts)}** vtables matched.",
+        f"* Curated Layer {curated_layer} reconciliation (`port/recovered_types/contracts.json`): **{len(curated_fns):,} / {len(curated_fns):,}** functions (`{curated_exact_sha:,}` exact SHA match, `{(len(curated_fns) - len(non_proc_rows)) - curated_exact_sha}` merged tail-jump expanded in Layer 47-56 vs canonical boundaries, `{len(non_proc_rows)}` non-proc slots), **{len(curated_globals)} / {len(curated_globals)}** globals, and **{len(curated_vts)} / {len(curated_vts)}** vtables matched.",
         "",
         "## 4. Boundary & honesty note",
         "",

@@ -1986,3 +1986,30 @@ callees.
   shared Ghidra project or canonical exports (`clean_eng=0`, `clean_crt=0`,
   `noret_or_thunk=0` across **1,315** functions; remaining startup/handler roots and
   live runtime execution remain open).
+
+### Layer 63 — Partition 7 narrow vsprintf/sprintf & engine system-info builder cluster (2026-11-24)
+- Sealed Partition 6 (`252` records) and opened fresh Partition 7 (`fresh_partition_p7`)
+  closing **32** single-part `RET`-bearing engine & CRT functions (`0x112f6190`
+  `os_build_system_info_string`, `0x10126cd0` `crt_sprintf`, `0x1168c0d8`
+  `___stdio_common_vsprintf`, `0x1168859a` `common_vsprintf<char>`, all 27
+  `output_processor<char>` / `string_output_adapter<char>` helpers
+  `0x11688abd..0x1168bcef`, and `0x1169de89` `_strtol`), growing
+  [contracts.json](port/recovered_types/contracts.json) to **1,347 functions,
+  750 globals, 76 vtables, and 1,274 instruction witnesses** over **40**
+  Partition 7 validated REA records (`32` `analyze_function` + `8` `read_bytes`;
+  `non_proc_slots=[]`, `resource_constrained_slots=[]`; **1,965** cumulative across
+  Partitions 1–7; `9,880,571B` snapshot; `0` Ghidra mismatches).
+- Locked 3 fixed-width [guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  layouts (`rome2_startup_memory_status_ex64_32`,
+  `rome2_startup_narrow_printf_adapter16_32`,
+  `rome2_startup_narrow_printf_processor1100_32`) and added bounded C17
+  reconstruction and **62 checks** in
+  [startup_sysinfo_vsprintf_ops.h](port/recovered_types/startup_sysinfo_vsprintf_ops.h),
+  [startup_sysinfo_vsprintf_ops.c](port/recovered_types/startup_sysinfo_vsprintf_ops.c),
+  and [test_startup_sysinfo_vsprintf_ops.c](port/recovered_types/test_startup_sysinfo_vsprintf_ops.c).
+- Verified **120/120** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
+  and ASan, **102** contract tests on Python 3.14 and 3.15, and **965** clean-public
+  Python tests (**332** skipped) on Python 3.14 and 3.15 without touching the
+  shared Ghidra project or canonical exports (`clean_eng=0`, `clean_crt=0`,
+  `noret_or_thunk=0` across **1,347** functions; remaining `entry_point` spine
+  roots across Layers 64–71 and live runtime execution remain open).
