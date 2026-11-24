@@ -13,7 +13,7 @@
     "class_field_entries": 95747,
     "rtti_type_descriptors": 181,
     "rtti_complete_object_locators": 15,
-    "globals": 10858,
+    "globals": 10885,
     "exported_code_targets_pinned": 405
   },
   "distributions": {
@@ -37,7 +37,7 @@
       "stdcall": 47
     },
     "global_kinds": {
-      "static_rdata_ptr": 7913,
+      "static_rdata_ptr": 7912,
       "static_fn_ptr": 888,
       "static_vptr_instance": 584,
       "pe_iat_slot": 490,
@@ -188,6 +188,8 @@
       "Static \"true\" descriptor literal passed by 0x112b5730 and 0x112a4e10": 1,
       "12-slot std::basic_stringbuf<wchar_t> base vtable in .rdata restored by 0x100d3790": 1,
       "4-slot wios/wiostream subobject vtable pointers in .rdata written by 0x100d2740/0x100d3790": 1,
+      "48-byte MSVC basic_filebuf<wchar_t> vtable in .rdata referenced by 0x100e2980": 1,
+      "12-byte MSVC basic_ifstream<wchar_t> vftable/vbtable in .rdata referenced by 0x100e2980": 1,
       "12-slot active std::basic_stringbuf<wchar_t> vtable in .rdata bound by 0x100d2740/0x100d3790": 1,
       "5-dword wstringstream vbtable/vtable descriptors in .rdata bound by 0x100d2740/0x100d3790": 1,
       "15-slot base stream adapter vtable 0x1173db9c restored by 0x112ad1e0": 1,
@@ -205,7 +207,9 @@
       "4-byte IEEE-754 float 0.001f (0x3a83126f) in .rdata multiplied by 0x112e2b00": 1,
       "Unsigned-to-double conversion bias pair referenced by float load-factor computation in 0x112cbe10": 1,
       "VFS trace/format descriptor {'*', 10, 10, \"%s\"} passed by 0x112b5730 to 0x112a4e10": 1,
+      "NUL-terminated UTF-16LE string L'w' in .rdata for 0x100e2980": 1,
       "NUL-terminated UTF-16LE string L'Mutex error' in .rdata used by 0x100df270": 1,
+      "NUL-terminated UTF-16LE string L'r' in .rdata for 0x100e2980": 1,
       "NUL-terminated UTF-16LE string L'%s instance verification mutex' in .rdata used by 0x100df270": 1,
       "NUL-terminated UTF-16LE string L'Another instance of %s is running.\\nThis instance will terminate.' in .rdata used by 0x100df270": 1,
       "NUL-terminated UTF-16LE string L'\\\\*' in .rdata passed by 0x100e3360": 1,
@@ -223,11 +227,23 @@
       "NUL-terminated UTF-16LE string L'blood.pack' in .rdata excluded by 0x100e3360": 1,
       "NUL-terminated UTF-16LE string L'blood_rome2.pack' in .rdata excluded by 0x100e3360": 1,
       "NUL-terminated UTF-16LE string L'\\\\binaries' in .rdata searched by 0x101016c0": 1,
+      "NUL-terminated UTF-16LE string L'\\\\retail\\\\data' in .rdata for 0x100e2980": 1,
+      "NUL-terminated UTF-16LE string L'\\\\data' in .rdata for 0x100e2980": 1,
+      "NUL-terminated UTF-16LE string L'modified.log' in .rdata for 0x100e2980": 1,
+      "NUL-terminated UTF-16LE string L'/manifest.txt' in .rdata for 0x100e2980": 1,
+      "NUL-terminated UTF-16LE string L'\\\\manifest.txt for reading!\\n' in .rdata for 0x100e2980": 1,
+      "NUL-terminated UTF-16LE string L'Failed to open ' in .rdata for 0x100e2980": 1,
+      "NUL-terminated ASCII format string 'Error while reading the manifest file (line: %d)\\n' in .rdata for 0x100e2980": 1,
+      "NUL-terminated ASCII format string '%s missing\\n' in .rdata for 0x100e2980": 1,
+      "NUL-terminated ASCII format string '%s size mismatch\\n' in .rdata for 0x100e2980": 1,
+      "NUL-terminated ASCII format string '%s unknown file\\n' in .rdata for 0x100e2980": 1,
+      "NUL-terminated ASCII format string '%s user script existing\\n' in .rdata for 0x100e2980": 1,
       "NUL-terminated ASCII string 'VFS started' in .rdata logged by 0x100e9230": 1,
       "NUL-terminated ASCII string 'Finished VFS load_release' in .rdata logged by 0x100e8e50": 1,
       "NUL-terminated UTF-16LE string L'Crash.stack' in .rdata used by 0x100e8240": 1,
       "NUL-terminated UTF-16LE string L'Crash.dmp' in .rdata used by 0x100e8240": 1,
       "NUL-terminated ASCII string 'POST_DB_APP_INIT' in .rdata passed by 0x100ea060": 1,
+      "NUL-terminated ASCII format string '%d' in .rdata for 0x100edcd0": 1,
       "NUL-terminated ASCII string 'End Logging\\r\\n' in .rdata written by 0x100e32e0": 1,
       "16-byte aligned interface/GUID template block in .rdata copied to 0x119f3868 by 0x112c2370": 1,
       "16-byte aligned interface/GUID template block in .rdata copied to 0x119f387c by 0x112c8ca0": 1,
@@ -249,6 +265,8 @@
       "NUL-terminated UTF-16LE string L'*' in .rdata passed by 0x101046d0": 1,
       "2-byte NUL-terminated ANSI string '.' in .rdata compared by 0x112f6190 data-dir walk": 1,
       "3-byte NUL-terminated ANSI string '..' in .rdata compared by 0x112f6190 data-dir walk": 1,
+      "NUL-terminated ASCII open mode 'abS' in .rdata for 0x10104a70": 1,
+      "NUL-terminated ASCII open mode 'wbS' in .rdata for 0x10104a70": 1,
       "NUL-terminated ASCII Winsock diagnostic literal 'Authoritative answer host not found.' in .rdata": 1,
       "NUL-terminated ASCII Winsock diagnostic literal 'Valid name, no data record of requested type.' in .rdata": 1,
       "NUL-terminated ASCII Winsock diagnostic literal 'A nonrecoverable error occurred.' in .rdata": 1,
@@ -345,6 +363,7 @@
       "NUL-terminated ASCII string 'allow_user_script_packs' in .rdata queried/written by 0x11304980": 1,
       "NUL-terminated ASCII string 'show_new_options_notification' in .rdata queried/written by 0x113048b0": 1,
       "NUL-terminated ASCII hex digit LUT '0123456789abcdefABCDEF' in .rdata indexed by 0x11348d50": 1,
+      "60-byte MSVC _Fiopen valid/mode bit table in .rdata searched by 0x113471f0": 1,
       "NUL-terminated ASCII math function name 'log' in .rdata set by 0x116b0763": 1,
       "NUL-terminated ASCII math function name 'exp' in .rdata set by 0x116b0763": 1,
       "NUL-terminated ASCII math function name 'pow' in .rdata set by 0x116b0763": 1,
@@ -443,7 +462,11 @@
       "16-byte MSVC SEH4 scope table in .rdata for 0x1168809c": 1,
       "16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x1168d11b": 1,
       "16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x1168d0ce": 1,
+      "16-byte MSVC SEH4 scope table in .rdata for 0x1168e7d7": 1,
+      "16-byte MSVC SEH4 scope table in .rdata for 0x1168e88e": 1,
+      "16-byte MSVC SEH4 scope table in .rdata for 0x1168ec03": 1,
       "MSVC SEH4 scope table descriptor in .rdata pushed by 0x1168ed98": 1,
+      "16-byte MSVC SEH4 scope table in .rdata for 0x1169a031": 1,
       "16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x1169e653 (common_lseek<int64>)": 1,
       "16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x1169ecd8 (0x1169ea8b common_getenv_s)": 1,
       "16-byte MSVC SEH scope descriptor in .rdata pushed by 0x116a17ca": 1,
@@ -451,6 +474,7 @@
       "16-byte MSVC SEH scope descriptor in .rdata pushed by 0x116a42c8": 1,
       "16-byte MSVC SEH scope descriptor in .rdata pushed by 0x116a43da": 1,
       "16-byte SEH scope table descriptor in .rdata pushed by 0x116a511c (__write)": 1,
+      "16-byte MSVC SEH4 scope table in .rdata for 0x116aa1b7": 1,
       "16-byte MSVC SEH4 scope table in .rdata for 0x116aaee6 (immediately preceding 0x119259d0)": 1,
       "MSVC SEH4 scope table descriptor in .rdata pushed by 0x116ab53f": 1,
       "16-byte MSVC SEH4 scope table in .rdata for 0x116ae8b5": 1,
@@ -490,6 +514,7 @@
       "Initial image prefix of thread-quota bucket map singleton returned by 0x112e3db0": 1,
       "0x124f8-bucket hash table header {bucket_count=0x124f8, count=0, ptr=NULL} initialized by 0x112d2910": 1,
       "static 28-byte VFS stream-registry sentinel/object header in .data (self+4 dword 0x119e1234) returned by 0x112b3270": 1,
+      "60-byte MSVC _Fiopen wide mode string pointer table in .rdata indexed by 0x113471f0": 1,
       "4-byte CRT MSVC TLS initialization epoch (0x80000000) in .data read by 0x11683a32": 1,
       "4-byte CRT __isa_available CPU feature flags in .data tested by 0x116be510": 1,
       "4-byte CRT __security_cookie default seed in .data loaded by 0x1168e713 (_ecvt_s)": 1,
@@ -532,6 +557,7 @@
       "4-byte CRT __dcrt_lowio_console_output_handle in .data (init -2) tested by 0x116bd4f2 and 0x116bd528": 1,
       "4-byte zero-fill context word in .data returned by 0x100de0d0": 1,
       "4-byte zero-fill EMPIRE_APP* singleton pointer in .data written by 0x100df270": 1,
+      "4-byte telemetry filename wrapper global in .bss referenced by 0x100edcd0": 1,
       "4-byte zero-fill SPI_GETMOUSETRAILS UINT value in .data populated by 0x100df270": 1,
       "4-byte zero-fill singleton pointer in .data destroyed and cleared by 0x100e14d0": 1,
       "4-byte VFS sentinel state word in .data zero-fill tail returned by 0x100edd60": 1,
@@ -713,6 +739,8 @@
       "4-byte zero-fill CRT _C_Termination_Done atomic flag in .data set by 0x1168d11b": 1,
       "4-byte zero-fill CRT encoded pre-exit callback pointer in .data invoked by 0x1168d11b": 1,
       "1-byte zero-fill CRT _exit_complete flag in .data set by 0x1168d11b": 1,
+      "4-byte CRT __nstream count global in .bss read by 0x116aa25b": 1,
+      "4-byte CRT __piob table base global in .bss read by 0x116aa25b": 1,
       "4-byte zero-fill CRT stdio _cflush temporary-buffering counter incremented by 0x116a587a": 1,
       "4-byte zero-fill CRT narrow environment array pointer (_environ) in .data read/written by 0x116a131d and 0x116a1729": 1,
       "4-byte zero-fill CRT wide environment array pointer (_wenviron) in .data read by 0x116a15ca and 0x116a1729": 1,
@@ -771,24 +799,24 @@
     }
   },
   "curated_reconciliation": {
-    "curated_functions_total": 1411,
-    "curated_in_canonical_index": 1380,
-    "curated_exact_body_sha256_match": 1362,
+    "curated_functions_total": 1448,
+    "curated_in_canonical_index": 1417,
+    "curated_exact_body_sha256_match": 1399,
     "curated_multi_range_expanded": 18,
     "curated_non_proc_slots": 31,
-    "curated_globals_matched": 773,
-    "curated_vtables_matched": 76
+    "curated_globals_matched": 801,
+    "curated_vtables_matched": 78
   },
   "files": {
     "function_contracts_part1.tsv": {
       "rows": 40640,
-      "bytes": 9392017,
-      "sha256": "06b418894b8131e66a9f20da6ab946065198d9523d282a81353d188340f2e01e"
+      "bytes": 9392119,
+      "sha256": "9b1528836aadb903fee7298702583311b1fe0feec460a006bfb47093294aacf4"
     },
     "function_contracts_part2.tsv": {
       "rows": 40640,
-      "bytes": 9470085,
-      "sha256": "caea3373b675e4b3c23a3b4123cedc6bd042a82bbea451819787c72d9c40ba24"
+      "bytes": 9470612,
+      "sha256": "ada8fa9e516dba9d7a3107434dba8bc41f7df2efbde409bd874083a7c6c9b18d"
     },
     "non_proc_curated_slots.tsv": {
       "rows": 31,
@@ -802,8 +830,8 @@
     },
     "vtable_class_contracts.tsv": {
       "rows": 9639,
-      "bytes": 2806468,
-      "sha256": "00fc708eb01d2864956ceee5ca7484b57b45d22b623c497e9d0dc75a56ed0579"
+      "bytes": 2806466,
+      "sha256": "bcd6438100504bd81ad5bfd8d07f8e42d3280825d87f3347e1b6f9aa47e95e73"
     },
     "class_field_layouts.tsv": {
       "rows": 95747,
@@ -811,9 +839,9 @@
       "sha256": "534964ec1fa25fd15189a0fd007ba1412fe7fe339981ade410ca82a303f8e912"
     },
     "global_contracts.tsv": {
-      "rows": 10858,
-      "bytes": 924570,
-      "sha256": "1911d2e3ea84e622b2032cba5f867530597effbc1ee5a1da48bc40d57c0b0db8"
+      "rows": 10885,
+      "bytes": 930520,
+      "sha256": "41a166ad78be1186f84fc77ce959d0af81a794510621b09003db05c22cd2d54d"
     }
   }
 }

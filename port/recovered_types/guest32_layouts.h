@@ -3436,5 +3436,46 @@ ROME2_LAYOUT_ASSERT(rome2_startup_crt_seek_guard28_32, end_pos_lo_08, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_startup_crt_seek_guard28_32, extend_delta_lo_10, 0x10);
 ROME2_LAYOUT_ASSERT(rome2_startup_crt_seek_guard28_32, fh_18, 0x18);
 
+/* 8B (0x08) Engine stdio FILE* wrapper initialized/closed by 0x1011fee0/0x100f21a0/0x10104a70/0x100edc70. */
+typedef struct rome2_startup_engine_file_box8_32 {
+    uint32_t fp_00;                              /* 00 (FILE_32*) */
+    uint32_t status_04;                          /* 04 (3=closed/init, 6=reset, 0=ok, 0x26=EOF) */
+} rome2_startup_engine_file_box8_32;
+_Static_assert(sizeof(rome2_startup_engine_file_box8_32) == 0x08, "startup engine file box8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_engine_file_box8_32, fp_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_engine_file_box8_32, status_04, 0x04);
+
+/* 56B (0x38) Full UCRT __crt_stdio_stream_data layout allocated by 0x116aa25b and read by fread/fseek/ftell. */
+typedef struct rome2_startup_crt_iobuf_full56_32 {
+    uint32_t ptr_00;                             /* 00 (_ptr current buffer cursor) */
+    uint32_t base_04;                            /* 04 (_base buffer start) */
+    int32_t cnt_08;                              /* 08 (_cnt remaining buffered bytes) */
+    uint32_t flag_0c;                            /* 0c (_flag stream state bits; 0x2000=_IOALLOCATED) */
+    int32_t file_10;                             /* 10 (_file lowio handle or -1) */
+    uint32_t charbuf_14;                         /* 14 (_charbuf) */
+    int32_t bufsiz_18;                           /* 18 (_bufsiz buffer capacity) */
+    uint32_t tmpfname_1c;                        /* 1c (_tmpfname) */
+    uint32_t lock_cs_20[6];                      /* 20..37 (CRITICAL_SECTION initialized 4000,0) */
+} rome2_startup_crt_iobuf_full56_32;
+_Static_assert(sizeof(rome2_startup_crt_iobuf_full56_32) == 0x38, "startup crt iobuf full56 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_iobuf_full56_32, ptr_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_iobuf_full56_32, base_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_iobuf_full56_32, cnt_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_iobuf_full56_32, flag_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_iobuf_full56_32, file_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_iobuf_full56_32, bufsiz_18, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_iobuf_full56_32, lock_cs_20, 0x20);
+
+/* 12B (0x0c) Paired _Fiopen mode-table entry linking 0x118a13d8 and 0x119e255c searched by 0x113471f0. */
+typedef struct rome2_startup_fiopen_entry12_32 {
+    uint32_t valid_flag_00;                      /* 00 (0x118a13d8+4*i) */
+    uint32_t mode_bits_04;                       /* 04 (0x118a13dc+4*i) */
+    uint32_t wmode_ptr_08;                       /* 08 (0x119e255c+4*i wide mode string ptr) */
+} rome2_startup_fiopen_entry12_32;
+_Static_assert(sizeof(rome2_startup_fiopen_entry12_32) == 0x0c, "startup fiopen entry12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_fiopen_entry12_32, valid_flag_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_fiopen_entry12_32, mode_bits_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_fiopen_entry12_32, wmode_ptr_08, 0x08);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

@@ -630,6 +630,8 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1173dad0	12	file	000000007472756500000000	.rdata	"Static ""true"" descriptor literal passed by 0x112b5730 and 0x112a4e10"	"Static ""true"" descriptor literal passed by 0x112b5730 and 0x112a4e10"	true
 1173dadc	48	file	c03a0d1020840d1020840d1000bc0d1050bf0d1020bf0d10e0a23411a0a33411c0b60d10e0b60d1090bb0d1000bc0d10	.rdata	12-slot std::basic_stringbuf<wchar_t> base vtable in .rdata restored by 0x100d3790	12-slot std::basic_stringbuf<wchar_t> base vtable in .rdata restored by 0x100d3790	true
 1173db0c	16	file	40390d10903a0d10603a0d10103a0d10	.rdata	4-slot wios/wiostream subobject vtable pointers in .rdata written by 0x100d2740/0x100d3790	4-slot wios/wiostream subobject vtable pointers in .rdata written by 0x100d2740/0x100d3790	true
+1173db1c	48	file	70390d1020943411a096341100bc0d1020a13411c0a03411e0a23411a0a33411709a3411c09c3411b09e3411b0bc0d10	.rdata	48-byte MSVC basic_filebuf<wchar_t> vtable in .rdata referenced by 0x100e2980	48-byte MSVC basic_filebuf<wchar_t> vtable in .rdata referenced by 0x100e2980	true
+1173db4c	12	file	b0390d10000000004c000000	.rdata	12-byte MSVC basic_ifstream<wchar_t> vftable/vbtable in .rdata referenced by 0x100e2980	12-byte MSVC basic_ifstream<wchar_t> vftable/vbtable in .rdata referenced by 0x100e2980	true
 1173db58	48	file	f03a0d10b09434113097341100bc0d1060a1341120bf0d10e0a23411a0a33411309b3411a09d341190bb0d1000bc0d10	.rdata	12-slot active std::basic_stringbuf<wchar_t> vtable in .rdata bound by 0x100d2740/0x100d3790	12-slot active std::basic_stringbuf<wchar_t> vtable in .rdata bound by 0x100d2740/0x100d3790	true
 1173db88	20	file	203b0d10000000004c0000000000000044000000	.rdata	5-dword wstringstream vbtable/vtable descriptors in .rdata bound by 0x100d2740/0x100d3790	5-dword wstringstream vbtable/vtable descriptors in .rdata bound by 0x100d2740/0x100d3790	true
 1173db9c	60	file	b0380d10afd86b11503b0d1000690d10afd86b1130700d1050380d1000b70d1080670d10e0380d10306e0d1010380d1010390d10205f0d10b0aa0d10	.rdata	15-slot base stream adapter vtable 0x1173db9c restored by 0x112ad1e0	15-slot base stream adapter vtable 0x1173db9c restored by 0x112ad1e0	true
@@ -649,7 +651,9 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1173e2d0	4	file	0000803f	.rdata	curated	curated	true
 1173e300	16	file	0000000000000000000000000000f041	.rdata	Unsigned-to-double conversion bias pair referenced by float load-factor computation in 0x112cbe10	Unsigned-to-double conversion bias pair referenced by float load-factor computation in 0x112cbe10	true
 1173f1f0	16	file	2a0000000a0000000a00000025730000	.rdata	"VFS trace/format descriptor {'*', 10, 10, ""%s""} passed by 0x112b5730 to 0x112a4e10"	"VFS trace/format descriptor {'*', 10, 10, ""%s""} passed by 0x112b5730 to 0x112a4e10"	true
+1173f204	4	file	77000000	.rdata	NUL-terminated UTF-16LE string L'w' in .rdata for 0x100e2980	NUL-terminated UTF-16LE string L'w' in .rdata for 0x100e2980	true
 1173f440	24	file	4d00750074006500780020006500720072006f0072000000	.rdata	NUL-terminated UTF-16LE string L'Mutex error' in .rdata used by 0x100df270	NUL-terminated UTF-16LE string L'Mutex error' in .rdata used by 0x100df270	true
+1173f458	4	file	72000000	.rdata	NUL-terminated UTF-16LE string L'r' in .rdata for 0x100e2980	NUL-terminated UTF-16LE string L'r' in .rdata for 0x100e2980	true
 1173f460	62	file	25007300200069006e007300740061006e0063006500200076006500720069006600690063006100740069006f006e0020006d0075007400650078000000	.rdata	NUL-terminated UTF-16LE string L'%s instance verification mutex' in .rdata used by 0x100df270	NUL-terminated UTF-16LE string L'%s instance verification mutex' in .rdata used by 0x100df270	true
 1173f4a0	130	file	41006e006f007400680065007200200069006e007300740061006e006300650020006f0066002000250073002000690073002000720075006e006e0069006e0067002e000a005400680069007300200069006e007300740061006e00630065002000770069006c006c0020007400650072006d0069006e006100740065002e000000	.rdata	NUL-terminated UTF-16LE string L'Another instance of %s is running.\nThis instance will terminate.' in .rdata used by 0x100df270	NUL-terminated UTF-16LE string L'Another instance of %s is running.\nThis instance will terminate.' in .rdata used by 0x100df270	true
 1173f524	6	file	5c002a000000	.rdata	NUL-terminated UTF-16LE string L'\\*' in .rdata passed by 0x100e3360	NUL-terminated UTF-16LE string L'\\*' in .rdata passed by 0x100e3360	true
@@ -667,6 +671,17 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1173f6ac	22	file	62006c006f006f0064002e007000610063006b000000	.rdata	NUL-terminated UTF-16LE string L'blood.pack' in .rdata excluded by 0x100e3360	NUL-terminated UTF-16LE string L'blood.pack' in .rdata excluded by 0x100e3360	true
 1173f6c4	34	file	62006c006f006f0064005f0072006f006d00650032002e007000610063006b000000	.rdata	NUL-terminated UTF-16LE string L'blood_rome2.pack' in .rdata excluded by 0x100e3360	NUL-terminated UTF-16LE string L'blood_rome2.pack' in .rdata excluded by 0x100e3360	true
 1173f6e8	20	file	5c00620069006e00610072006900650073000000	.rdata	NUL-terminated UTF-16LE string L'\\binaries' in .rdata searched by 0x101016c0	NUL-terminated UTF-16LE string L'\\binaries' in .rdata searched by 0x101016c0	true
+1173f6fc	26	file	5c00720065007400610069006c005c0064006100740061000000	.rdata	NUL-terminated UTF-16LE string L'\\retail\\data' in .rdata for 0x100e2980	NUL-terminated UTF-16LE string L'\\retail\\data' in .rdata for 0x100e2980	true
+1173f718	12	file	5c0064006100740061000000	.rdata	NUL-terminated UTF-16LE string L'\\data' in .rdata for 0x100e2980	NUL-terminated UTF-16LE string L'\\data' in .rdata for 0x100e2980	true
+1173f724	26	file	6d006f006400690066006900650064002e006c006f0067000000	.rdata	NUL-terminated UTF-16LE string L'modified.log' in .rdata for 0x100e2980	NUL-terminated UTF-16LE string L'modified.log' in .rdata for 0x100e2980	true
+1173f740	28	file	2f006d0061006e00690066006500730074002e007400780074000000	.rdata	NUL-terminated UTF-16LE string L'/manifest.txt' in .rdata for 0x100e2980	NUL-terminated UTF-16LE string L'/manifest.txt' in .rdata for 0x100e2980	true
+1173f75c	56	file	5c006d0061006e00690066006500730074002e00740078007400200066006f0072002000720065006100640069006e00670021000a000000	.rdata	NUL-terminated UTF-16LE string L'\\manifest.txt for reading!\n' in .rdata for 0x100e2980	NUL-terminated UTF-16LE string L'\\manifest.txt for reading!\n' in .rdata for 0x100e2980	true
+1173f794	32	file	4600610069006c0065006400200074006f0020006f00700065006e0020000000	.rdata	NUL-terminated UTF-16LE string L'Failed to open ' in .rdata for 0x100e2980	NUL-terminated UTF-16LE string L'Failed to open ' in .rdata for 0x100e2980	true
+1173f7b4	50	file	4572726f72207768696c652072656164696e6720746865206d616e69666573742066696c6520286c696e653a202564290a00	.rdata	NUL-terminated ASCII format string 'Error while reading the manifest file (line: %d)\n' in .rdata for 0x100e2980	NUL-terminated ASCII format string 'Error while reading the manifest file (line: %d)\n' in .rdata for 0x100e2980	true
+1173f7e8	12	file	2573206d697373696e670a00	.rdata	NUL-terminated ASCII format string '%s missing\n' in .rdata for 0x100e2980	NUL-terminated ASCII format string '%s missing\n' in .rdata for 0x100e2980	true
+1173f7f4	18	file	25732073697a65206d69736d617463680a00	.rdata	NUL-terminated ASCII format string '%s size mismatch\n' in .rdata for 0x100e2980	NUL-terminated ASCII format string '%s size mismatch\n' in .rdata for 0x100e2980	true
+1173f808	17	file	257320756e6b6e6f776e2066696c650a00	.rdata	NUL-terminated ASCII format string '%s unknown file\n' in .rdata for 0x100e2980	NUL-terminated ASCII format string '%s unknown file\n' in .rdata for 0x100e2980	true
+1173f81c	25	file	2573207573657220736372697074206578697374696e670a00	.rdata	NUL-terminated ASCII format string '%s user script existing\n' in .rdata for 0x100e2980	NUL-terminated ASCII format string '%s user script existing\n' in .rdata for 0x100e2980	true
 1173f984	5	file	736e6f7700	.rdata	curated	curated	true
 1173f9e0	4	file	64727900	.rdata	curated	curated	true
 1173f9e4	5	file	7261696e00	.rdata	curated	curated	true
@@ -679,6 +694,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 11740044	24	file	430072006100730068002e0073007400610063006b000000	.rdata	NUL-terminated UTF-16LE string L'Crash.stack' in .rdata used by 0x100e8240	NUL-terminated UTF-16LE string L'Crash.stack' in .rdata used by 0x100e8240	true
 1174005c	20	file	430072006100730068002e0064006d0070000000	.rdata	NUL-terminated UTF-16LE string L'Crash.dmp' in .rdata used by 0x100e8240	NUL-terminated UTF-16LE string L'Crash.dmp' in .rdata used by 0x100e8240	true
 11740070	17	file	504f53545f44425f4150505f494e495400	.rdata	NUL-terminated ASCII string 'POST_DB_APP_INIT' in .rdata passed by 0x100ea060	NUL-terminated ASCII string 'POST_DB_APP_INIT' in .rdata passed by 0x100ea060	true
+11740124	3	file	256400	.rdata	NUL-terminated ASCII format string '%d' in .rdata for 0x100edcd0	NUL-terminated ASCII format string '%d' in .rdata for 0x100edcd0	true
 117401dc	14	file	456e64204c6f6767696e670d0a00	.rdata	NUL-terminated ASCII string 'End Logging\r\n' in .rdata written by 0x100e32e0	NUL-terminated ASCII string 'End Logging\r\n' in .rdata written by 0x100e32e0	true
 117402b0	16	file	0000000000000000000000002dce2f35	.rdata	16-byte aligned interface/GUID template block in .rdata copied to 0x119f3868 by 0x112c2370	16-byte aligned interface/GUID template block in .rdata copied to 0x119f3868 by 0x112c2370	true
 117402c0	16	file	0000000000000000000000002ece2f35	.rdata	16-byte aligned interface/GUID template block in .rdata copied to 0x119f387c by 0x112c8ca0	16-byte aligned interface/GUID template block in .rdata copied to 0x119f387c by 0x112c8ca0	true
@@ -700,6 +716,8 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 117420a0	4	file	2a000000	.rdata	NUL-terminated UTF-16LE string L'*' in .rdata passed by 0x101046d0	NUL-terminated UTF-16LE string L'*' in .rdata passed by 0x101046d0	true
 117420a4	2	file	2e00	.rdata	2-byte NUL-terminated ANSI string '.' in .rdata compared by 0x112f6190 data-dir walk	2-byte NUL-terminated ANSI string '.' in .rdata compared by 0x112f6190 data-dir walk	true
 117420a8	3	file	2e2e00	.rdata	3-byte NUL-terminated ANSI string '..' in .rdata compared by 0x112f6190 data-dir walk	3-byte NUL-terminated ANSI string '..' in .rdata compared by 0x112f6190 data-dir walk	true
+117420ac	4	file	61625300	.rdata	NUL-terminated ASCII open mode 'abS' in .rdata for 0x10104a70	NUL-terminated ASCII open mode 'abS' in .rdata for 0x10104a70	true
+117420b0	4	file	77625300	.rdata	NUL-terminated ASCII open mode 'wbS' in .rdata for 0x10104a70	NUL-terminated ASCII open mode 'wbS' in .rdata for 0x10104a70	true
 11744d14	37	file	417574686f726974617469766520616e7377657220686f7374206e6f7420666f756e642e00	.rdata	NUL-terminated ASCII Winsock diagnostic literal 'Authoritative answer host not found.' in .rdata	NUL-terminated ASCII Winsock diagnostic literal 'Authoritative answer host not found.' in .rdata	true
 11744d3c	46	file	56616c6964206e616d652c206e6f2064617461207265636f7264206f662072657175657374656420747970652e00	.rdata	NUL-terminated ASCII Winsock diagnostic literal 'Valid name, no data record of requested type.' in .rdata	NUL-terminated ASCII Winsock diagnostic literal 'Valid name, no data record of requested type.' in .rdata	true
 11744d6c	33	file	41206e6f6e7265636f76657261626c65206572726f72206f636375727265642e00	.rdata	NUL-terminated ASCII Winsock diagnostic literal 'A nonrecoverable error occurred.' in .rdata	NUL-terminated ASCII Winsock diagnostic literal 'A nonrecoverable error occurred.' in .rdata	true
@@ -846,6 +864,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1189bc44	24	file	616c6c6f775f757365725f7363726970745f7061636b7300	.rdata	NUL-terminated ASCII string 'allow_user_script_packs' in .rdata queried/written by 0x11304980	NUL-terminated ASCII string 'allow_user_script_packs' in .rdata queried/written by 0x11304980	true
 1189bc5c	30	file	73686f775f6e65775f6f7074696f6e735f6e6f74696669636174696f6e00	.rdata	NUL-terminated ASCII string 'show_new_options_notification' in .rdata queried/written by 0x113048b0	NUL-terminated ASCII string 'show_new_options_notification' in .rdata queried/written by 0x113048b0	true
 118a12c4	24	file	303132333435363738396162636465664142434445460000	.rdata	NUL-terminated ASCII hex digit LUT '0123456789abcdefABCDEF' in .rdata indexed by 0x11348d50	NUL-terminated ASCII hex digit LUT '0123456789abcdefABCDEF' in .rdata indexed by 0x11348d50	true
+118a13d8	60	file	0100000002000000120000000a0000002100000022000000320000002a00000003000000130000000b00000023000000330000002b00000000000000	.rdata	60-byte MSVC _Fiopen valid/mode bit table in .rdata searched by 0x113471f0	60-byte MSVC _Fiopen valid/mode bit table in .rdata searched by 0x113471f0	true
 118a1414	4	file	97bfd633	.rdata	curated	curated	true
 118a1418	4	file	8096184b	.rdata	curated	curated	true
 118d4af0	4	file	6c6f6700	.rdata	NUL-terminated ASCII math function name 'log' in .rdata set by 0x116b0763	NUL-terminated ASCII math function name 'log' in .rdata set by 0x116b0763	true
@@ -946,7 +965,11 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 11925428	16	file	feffffff00000000d4ffffff00000000	.rdata	16-byte MSVC SEH4 scope table in .rdata for 0x1168809c	16-byte MSVC SEH4 scope table in .rdata for 0x1168809c	true
 11925448	16	file	feffffff00000000d8ffffff00000000	.rdata	16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x1168d11b	16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x1168d11b	true
 11925468	16	file	feffffff00000000d8ffffff00000000	.rdata	16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x1168d0ce	16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x1168d0ce	true
+11925488	16	file	feffffff00000000d0ffffff00000000	.rdata	16-byte MSVC SEH4 scope table in .rdata for 0x1168e7d7	16-byte MSVC SEH4 scope table in .rdata for 0x1168e7d7	true
+119254a8	16	file	feffffff00000000d0ffffff00000000	.rdata	16-byte MSVC SEH4 scope table in .rdata for 0x1168e88e	16-byte MSVC SEH4 scope table in .rdata for 0x1168e88e	true
+119254c8	16	file	feffffff00000000d4ffffff00000000	.rdata	16-byte MSVC SEH4 scope table in .rdata for 0x1168ec03	16-byte MSVC SEH4 scope table in .rdata for 0x1168ec03	true
 119254e8	16	file	feffffff00000000d0ffffff00000000	.rdata	MSVC SEH4 scope table descriptor in .rdata pushed by 0x1168ed98	MSVC SEH4 scope table descriptor in .rdata pushed by 0x1168ed98	true
+11925588	16	file	feffffff00000000d4ffffff00000000	.rdata	16-byte MSVC SEH4 scope table in .rdata for 0x1169a031	16-byte MSVC SEH4 scope table in .rdata for 0x1169a031	true
 11925670	16	file	feffffff00000000c8ffffff00000000	.rdata	16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x1169e653 (common_lseek<int64>)	16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x1169e653 (common_lseek<int64>)	true
 119256b0	16	file	feffffff00000000d4ffffff00000000	.rdata	16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x1169ecd8 (0x1169ea8b common_getenv_s)	16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x1169ecd8 (0x1169ea8b common_getenv_s)	true
 119257d0	16	file	feffffff00000000d4ffffff00000000	.rdata	16-byte MSVC SEH scope descriptor in .rdata pushed by 0x116a17ca	16-byte MSVC SEH scope descriptor in .rdata pushed by 0x116a17ca	true
@@ -954,6 +977,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 11925830	16	file	feffffff00000000d8ffffff00000000	.rdata	16-byte MSVC SEH scope descriptor in .rdata pushed by 0x116a42c8	16-byte MSVC SEH scope descriptor in .rdata pushed by 0x116a42c8	true
 11925850	16	file	feffffff00000000d8ffffff00000000	.rdata	16-byte MSVC SEH scope descriptor in .rdata pushed by 0x116a43da	16-byte MSVC SEH scope descriptor in .rdata pushed by 0x116a43da	true
 119258d0	16	file	feffffff00000000d0ffffff00000000	.rdata	16-byte SEH scope table descriptor in .rdata pushed by 0x116a511c (__write)	16-byte SEH scope table descriptor in .rdata pushed by 0x116a511c (__write)	true
+11925990	16	file	feffffff00000000d4ffffff00000000	.rdata	16-byte MSVC SEH4 scope table in .rdata for 0x116aa1b7	16-byte MSVC SEH4 scope table in .rdata for 0x116aa1b7	true
 119259b0	16	file	feffffff00000000d0ffffff00000000	.rdata	16-byte MSVC SEH4 scope table in .rdata for 0x116aaee6 (immediately preceding 0x119259d0)	16-byte MSVC SEH4 scope table in .rdata for 0x116aaee6 (immediately preceding 0x119259d0)	true
 119259d0	16	file	feffffff00000000d4ffffff00000000	.rdata	MSVC SEH4 scope table descriptor in .rdata pushed by 0x116ab53f	MSVC SEH4 scope table descriptor in .rdata pushed by 0x116ab53f	true
 11925a38	16	file	feffffff00000000c4ffffff00000000	.rdata	16-byte MSVC SEH4 scope table in .rdata for 0x116ae8b5	16-byte MSVC SEH4 scope table in .rdata for 0x116ae8b5	true
@@ -8720,7 +8744,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 119e1944	4	file	e8be8911	.data	static_rdata_ptr	ptr_0x1189bee8	false
 119e2550	4	file	d4da7311	.data	static_rdata_ptr	ptr_0x1173dad4	false
 119e2554	4	file	a03d7511	.data	static_rdata_ptr	ptr_0x11753da0	false
-119e255c	4	file	f4128a11	.data	static_rdata_ptr	ptr_0x118a12f4	false
+119e255c	60	file	f4128a1110138a1110138a112c138a1148138a1150138a1150138a1158138a1160138a1180138a11a0138a11c0138a11c8138a11d0138a1100000000	.data	60-byte MSVC _Fiopen wide mode string pointer table in .rdata indexed by 0x113471f0	60-byte MSVC _Fiopen wide mode string pointer table in .rdata indexed by 0x113471f0	true
 119e2560	4	file	10138a11	.data	static_rdata_ptr	ptr_0x118a1310	false
 119e2564	4	file	10138a11	.data	static_rdata_ptr	ptr_0x118a1310	false
 119e2568	4	file	2c138a11	.data	static_rdata_ptr	ptr_0x118a132c	false
@@ -10604,6 +10628,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 119ef06c	32	file	50bb9011000000002e3f41566261645f657863657074696f6e40737464404000	.data	msvc_rtti_type_descriptor	.?AVbad_exception@std@@	false
 119f3078	4	zero_fill	00000000	.data	4-byte zero-fill context word in .data returned by 0x100de0d0	4-byte zero-fill context word in .data returned by 0x100de0d0	true
 119f3140	4	zero_fill	00000000	.data	4-byte zero-fill EMPIRE_APP* singleton pointer in .data written by 0x100df270	4-byte zero-fill EMPIRE_APP* singleton pointer in .data written by 0x100df270	true
+119f3174	4	zero_fill	00000000	.data	4-byte telemetry filename wrapper global in .bss referenced by 0x100edcd0	4-byte telemetry filename wrapper global in .bss referenced by 0x100edcd0	true
 119f3854	4	zero_fill	00000000	.data	4-byte zero-fill SPI_GETMOUSETRAILS UINT value in .data populated by 0x100df270	4-byte zero-fill SPI_GETMOUSETRAILS UINT value in .data populated by 0x100df270	true
 119f385c	4	zero_fill	00000000	.data	4-byte zero-fill singleton pointer in .data destroyed and cleared by 0x100e14d0	4-byte zero-fill singleton pointer in .data destroyed and cleared by 0x100e14d0	true
 119f3860	4	zero_fill	00000000	.data	4-byte VFS sentinel state word in .data zero-fill tail returned by 0x100edd60	4-byte VFS sentinel state word in .data zero-fill tail returned by 0x100edd60	true
@@ -10802,6 +10827,8 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 12125c28	4	zero_fill	00000000	.data	4-byte zero-fill CRT _C_Termination_Done atomic flag in .data set by 0x1168d11b	4-byte zero-fill CRT _C_Termination_Done atomic flag in .data set by 0x1168d11b	true
 12125c2c	4	zero_fill	00000000	.data	4-byte zero-fill CRT encoded pre-exit callback pointer in .data invoked by 0x1168d11b	4-byte zero-fill CRT encoded pre-exit callback pointer in .data invoked by 0x1168d11b	true
 12125c30	1	zero_fill	00	.data	1-byte zero-fill CRT _exit_complete flag in .data set by 0x1168d11b	1-byte zero-fill CRT _exit_complete flag in .data set by 0x1168d11b	true
+12125c34	4	zero_fill	00000000	.data	4-byte CRT __nstream count global in .bss read by 0x116aa25b	4-byte CRT __nstream count global in .bss read by 0x116aa25b	true
+12125c38	4	zero_fill	00000000	.data	4-byte CRT __piob table base global in .bss read by 0x116aa25b	4-byte CRT __piob table base global in .bss read by 0x116aa25b	true
 12125c3c	4	zero_fill	00000000	.data	4-byte zero-fill CRT stdio _cflush temporary-buffering counter incremented by 0x116a587a	4-byte zero-fill CRT stdio _cflush temporary-buffering counter incremented by 0x116a587a	true
 12125d80	4	zero_fill	00000000	.data	4-byte zero-fill CRT narrow environment array pointer (_environ) in .data read/written by 0x116a131d and 0x116a1729	4-byte zero-fill CRT narrow environment array pointer (_environ) in .data read/written by 0x116a131d and 0x116a1729	true
 12125d84	4	zero_fill	00000000	.data	4-byte zero-fill CRT wide environment array pointer (_wenviron) in .data read by 0x116a15ca and 0x116a1729	4-byte zero-fill CRT wide environment array pointer (_wenviron) in .data read by 0x116a15ca and 0x116a1729	true
