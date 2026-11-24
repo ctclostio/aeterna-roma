@@ -2162,3 +2162,42 @@ callees.
   `clean_crt=0`, `noret_or_thunk=0` across **1,502** functions; remaining `61`
   `entry_point` spine functions across Layers 69–71 Partition 8 and live runtime
   execution remain open).
+
+### Layer 69 — Partition 8 remote-assert socket, WS2_32 thunk, assert dialog & wide-formatter cluster (2026-11-24)
+- Extended Partition 8 (`extending_layer68_batched_p8`) closing **23** remote-assert
+  socket accept/recv/poll functions (`0x100f3b40`, `0x10113510`, `0x10cba480`,
+  `0x10cba4c0`, `0x10cba590` → `0x10cba7a0`, `0x10cbae00`), two WS2_32 IAT JMP
+  thunks (`0x116c80b9` `accept`, `0x116c80e9` `ntohs`), the assert `DLGTEMPLATEW`
+  dialog builders (`0x100f6220`, `0x10101e30`), wide format/radix helpers
+  (`0x100eeb50`, `0x100f5630`, `0x10100700`), byte/UTF-16 buffer helpers
+  (`0x100f1bf0`, `0x100ffa10`, `0x10106230`, `0x10115e10`), and the `FxName`
+  rolling hash and open-addressed insert (`0x11370160`, `0x10cbaf70`), growing
+  [contracts.json](port/recovered_types/contracts.json) to **1,525** functions,
+  **873** globals (`14` Layer 69 non-overlapping globals including IAT slots
+  `0x1172f6f0` `USER32!DialogBoxIndirectParamW`, `0x1172f82c` `WS2_32!ntohs` and
+  `0x1172f878` `WS2_32!accept`, six UTF-16LE dialog strings and the
+  `0x117e1a08` remote-assert banner), **85** vtables (none new), and **1,452**
+  instruction witnesses (`158` Partition 8 validated REA records: `46` new +
+  `112` reused Layer 68, `non_proc_slots=[]`, `resource_constrained_slots=[]`;
+  **2,276** cumulative across Partitions 1–8; `123,442,666B` snapshot; `0`
+  unpinned internal callees).
+- Admitted the `direct_jmp_short` tail-exit kind in
+  [type_recovery_contracts.py](scripts/type_recovery_contracts.py): `0x10cba590`
+  leaves through the two-byte `EB 1E` at `0x10cba780` into the separately
+  indexed continuation `0x10cba7a0`. The validator checks the opcode, the
+  rel8 target and the stack-pop agreement, and a mismatched target is rejected.
+- Locked 3 fixed-width [guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  layouts (`rome2_startup_remote_socket_entry24_32`,
+  `rome2_startup_assert_dlg_hdr24_32`, `rome2_startup_fx_name_bucket20_32`) and
+  added bounded C17 reconstruction and **20 checks** in
+  [startup_remote_socket_net_ops.h](port/recovered_types/startup_remote_socket_net_ops.h),
+  [startup_remote_socket_net_ops.c](port/recovered_types/startup_remote_socket_net_ops.c),
+  and [test_startup_remote_socket_net_ops.c](port/recovered_types/test_startup_remote_socket_net_ops.c).
+- Verified **126/126** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
+  and ASan, **109** contract tests on Python 3.14 and 3.15 (`10,953` PE-verified
+  whole-binary globals in [manifest.json](work/binary_contracts/manifest.json)),
+  and **972** clean-public Python tests (**338** skipped) on Python 3.14 and 3.15
+  without touching the shared Ghidra project or canonical exports (`clean_eng=0`,
+  `clean_crt=0`, `noret_or_thunk=0` across **1,525** functions; remaining `38`
+  `entry_point` spine functions across Layers 70–71 Partition 8 and live runtime
+  execution remain open).

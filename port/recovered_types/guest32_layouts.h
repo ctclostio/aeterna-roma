@@ -3564,5 +3564,43 @@ typedef struct rome2_startup_subtitle_row68_32 {
 _Static_assert(sizeof(rome2_startup_subtitle_row68_32) == 0x44, "startup subtitle row68 32 size");
 ROME2_LAYOUT_ASSERT(rome2_startup_subtitle_row68_32, words_00, 0x00);
 
+typedef struct rome2_startup_remote_socket_entry24_32 {
+    uint32_t sock_fd_00;                         /* 00 Win32 SOCKET handle (0xffffffff invalid) */
+    uint32_t peer_words_04[4];                   /* 04..13 peer ip/port/metadata */
+    uint8_t active_14;                           /* 14 closesocket guard flag */
+    uint8_t pad_15[3];                           /* 15..17 trailing alignment */
+} rome2_startup_remote_socket_entry24_32;
+_Static_assert(sizeof(rome2_startup_remote_socket_entry24_32) == 0x18, "startup remote socket entry24 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_remote_socket_entry24_32, sock_fd_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_remote_socket_entry24_32, peer_words_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_remote_socket_entry24_32, active_14, 0x14);
+
+typedef struct rome2_startup_assert_dlg_hdr24_32 {
+    uint32_t style_00;                           /* 00 DLGTEMPLATE style */
+    uint32_t ex_style_04;                        /* 04 extended style */
+    uint16_t cdit_08;                            /* 08 control item count */
+    int16_t x_0a;                                /* 0a X position */
+    int16_t y_0c;                                /* 0c Y position */
+    int16_t cx_0e;                               /* 0e width */
+    int16_t cy_10;                               /* 10 height */
+    uint16_t menu_12;                            /* 12 menu ord */
+    uint16_t wndcls_14;                          /* 14 window class ord */
+    uint16_t title_nul_16;                       /* 16 NUL title word */
+} rome2_startup_assert_dlg_hdr24_32;
+_Static_assert(sizeof(rome2_startup_assert_dlg_hdr24_32) == 0x18, "startup assert dlg hdr24 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_assert_dlg_hdr24_32, style_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_assert_dlg_hdr24_32, cdit_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_assert_dlg_hdr24_32, title_nul_16, 0x16);
+
+typedef struct rome2_startup_fx_name_bucket20_32 {
+    uint32_t name_words_00[3];                   /* 00..0b FxName handle words */
+    uint32_t hash_0c;                            /* 0c rolling hash */
+    uint32_t value_10;                           /* 10 mapped value slot */
+} rome2_startup_fx_name_bucket20_32;
+_Static_assert(sizeof(rome2_startup_fx_name_bucket20_32) == 0x14, "startup fx name bucket20 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_fx_name_bucket20_32, name_words_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_fx_name_bucket20_32, hash_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_startup_fx_name_bucket20_32, value_10, 0x10);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

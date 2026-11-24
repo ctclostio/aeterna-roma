@@ -139,11 +139,25 @@ def validate_contracts(image: bytes, registry: dict) -> dict:
             if returns is not None:
                 raise ValueError(f"tail_exit and return_instruction_addresses are mutually exclusive: {function['address']}")
             kind = tail_exit.get("kind") if isinstance(tail_exit, dict) else None
-            if kind not in ("direct_jmp", "iat_jmp", "noreturn_call", "noreturn_iat_call") or not isinstance(tail_exit.get("address"), str):
+            if kind not in ("direct_jmp", "direct_jmp_short", "iat_jmp", "noreturn_call", "noreturn_iat_call") or not isinstance(tail_exit.get("address"), str):
                 raise ValueError(f"invalid tail_exit contract: {function['address']}")
             pc = int(tail_exit["address"], 16)
             last_start, last_data = parts[-1]
-            if kind in ("direct_jmp", "noreturn_call"):
+            if kind == "direct_jmp_short":
+                if pc < last_start or pc + 2 != last_start + len(last_data):
+                    raise ValueError(f"tail_exit {kind} address disagrees: {function['address']}")
+                insn = last_data[pc - last_start:pc - last_start + 2]
+                if insn[0] != 0xEB:
+                    raise ValueError(f"tail_exit {kind} opcode disagrees: {function['address']}")
+                actual_target = (pc + 2 + struct.unpack_from("<b", insn, 1)[0]) & 0xFFFFFFFF
+                target = tail_exit.get("target")
+                if target != f"{actual_target:08x}" or target not in functions_by_addr:
+                    raise ValueError(f"tail_exit {kind} target disagrees: {function['address']}")
+                target_fn = functions_by_addr[target]
+                target_pop = target_fn.get("callee_pop_bytes", target_fn["stack_argument_bytes"])
+                if target_pop != pop:
+                    raise ValueError(f"tail_exit stack pop disagrees: {function['address']}")
+            elif kind in ("direct_jmp", "noreturn_call"):
                 expected_op = 0xE9 if kind == "direct_jmp" else 0xE8
                 if pc < last_start or pc + 5 != last_start + len(last_data):
                     raise ValueError(f"tail_exit {kind} address disagrees: {function['address']}")

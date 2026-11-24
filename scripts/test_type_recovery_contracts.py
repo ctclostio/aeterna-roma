@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 1502)
-        self.assertEqual(result["globals"], 859)
+        self.assertEqual(result["functions"], 1525)
+        self.assertEqual(result["globals"], 873)
         self.assertEqual(result["vtables"], 85)
-        self.assertEqual(result["instruction_witnesses"], 1429)
+        self.assertEqual(result["instruction_witnesses"], 1452)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -3813,6 +3813,76 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual(by_g["11970645"]["width"], 1)
         self.assertEqual(by_g["11970646"]["width"], 1)
         self.assertEqual(by_g["1172f764"]["width"], 4)
+
+    def test_layer69_startup_remote_socket_net_contracts(self):
+        ev = self.registry["rea_layer69_evidence"]
+        self.assertEqual(ev["snapshot_mode"], "extending_layer68_batched_p8")
+        self.assertEqual(ev["closed_evidence_records"], 158)
+        self.assertEqual(ev["new_evidence_records"], 46)
+        self.assertEqual(ev["reused_layer68_evidence_records"], 112)
+        self.assertEqual(ev["retained_operation_envelopes"], 158)
+        self.assertEqual(ev["extra_evidence_views_count"], 0)
+        self.assertEqual(ev["non_proc_slots"], [])
+        self.assertEqual(ev["resource_constrained_slots"], [])
+        self.assertEqual(ev["cumulative_validated_bundle_records"], 158)
+        self.assertEqual(ev["prior_partitions_validated_records"], 2118)
+        self.assertEqual(ev["cumulative_all_partitions_records"], 2276)
+        self.assertEqual(
+            ev["closed_snapshot_sha256"],
+            "19261c2e0ae8d1f75f5328bd2bcf364117e470e8f7e892ae29496af406936e00",
+        )
+        self.assertEqual(
+            ev["validated_bundle_sha256"],
+            "d54a59fa912eb685d07f4c5152b1f56598b8331be8424b7d623019942803994a",
+        )
+        ops = {}
+        for rec in ev["new_records"]:
+            ops[rec["operation"]] = ops.get(rec["operation"], 0) + 1
+        self.assertEqual(ops, {"analyze_function": 23, "read_bytes": 23})
+
+        by_fn = {item["address"]: item for item in self.registry["functions"]}
+        layer69_addrs = [
+            "100eeb50", "100f1bf0", "100f3b40", "100f5630", "100f6220", "100ffa10",
+            "10100700", "10100e20", "10101e30", "10106230", "10113510", "10115e10",
+            "10924df0", "10c93c00", "10cba480", "10cba4c0", "10cba590", "10cba7a0",
+            "10cbae00", "10cbaf70", "11370160", "116c80b9", "116c80e9",
+        ]
+        for addr in layer69_addrs:
+            self.assertIn(addr, by_fn)
+        self.assertEqual(
+            by_fn["10cba590"]["tail_exit"],
+            {"kind": "direct_jmp_short", "address": "10cba780", "target": "10cba7a0"},
+        )
+        self.assertEqual(
+            by_fn["116c80b9"]["tail_exit"],
+            {"kind": "iat_jmp", "address": "116c80b9", "iat_slot": "1172f878"},
+        )
+        self.assertEqual(
+            by_fn["116c80e9"]["tail_exit"],
+            {"kind": "iat_jmp", "address": "116c80e9", "iat_slot": "1172f82c"},
+        )
+        self.assertEqual(by_fn["10113510"]["callee_pop_bytes"], 12)
+        self.assertEqual(by_fn["10cba480"]["callee_pop_bytes"], 12)
+
+        by_g = {item["address"]: item for item in self.registry["globals"]}
+        expected_globals = {
+            "1172f6f0": 4, "1172f82c": 4, "1172f878": 4, "11741db0": 7,
+            "11741ea0": 14, "11741eb0": 20, "11741ec4": 12, "11741ed0": 12,
+            "11741edc": 14, "11741eec": 22, "11753f98": 3, "117e19e0": 17,
+            "117e1a08": 76, "119247b0": 16,
+        }
+        for addr, width in expected_globals.items():
+            self.assertEqual(by_g[addr]["width"], width)
+            self.assertEqual(by_g[addr]["storage"], "file")
+
+    def test_direct_jmp_short_mismatch_rejected(self):
+        registry = copy.deepcopy(self.registry)
+        for fn in registry["functions"]:
+            if fn["address"] == "10cba590":
+                fn["tail_exit"]["target"] = "100f1bf0"
+                break
+        with self.assertRaisesRegex(ValueError, "target disagrees"):
+            contracts.validate_contracts(self.image, registry)
 
     def test_dropped_registry_category_rejected(self):
         registry = copy.deepcopy(self.registry)

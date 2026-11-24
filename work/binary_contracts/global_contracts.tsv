@@ -435,7 +435,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1172f6e4	4	file	ac169301	.rdata	pe_iat_slot	USER32.dll!IsIconic	false
 1172f6e8	4	file	b8169301	.rdata	pe_iat_slot	USER32.dll!BringWindowToTop	false
 1172f6ec	4	file	cc169301	.rdata	pe_iat_slot	USER32.dll!CreateDialogIndirectParamW	false
-1172f6f0	4	file	ea169301	.rdata	pe_iat_slot	USER32.dll!DialogBoxIndirectParamW	false
+1172f6f0	4	file	ea169301	.rdata	4-byte PE IAT slot for USER32.dll!DialogBoxIndirectParamW called by 0x100f6220	4-byte PE IAT slot for USER32.dll!DialogBoxIndirectParamW called by 0x100f6220	true
 1172f6f4	4	file	04179301	.rdata	pe_iat_slot	USER32.dll!EndDialog	false
 1172f6f8	4	file	10179301	.rdata	pe_iat_slot	USER32.dll!OpenClipboard	false
 1172f6fc	4	file	20179301	.rdata	pe_iat_slot	USER32.dll!CloseClipboard	false
@@ -510,7 +510,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1172f820	4	file	09000080	.rdata	IAT slot in .rdata (WS2_32.dll!#9 htons) jumped to by 0x116c80d7	IAT slot in .rdata (WS2_32.dll!#9 htons) jumped to by 0x116c80d7	true
 1172f824	4	file	0b000080	.rdata	pe_iat_slot	WS2_32.dll!Ordinal_11	false
 1172f828	4	file	0d000080	.rdata	pe_iat_slot	WS2_32.dll!Ordinal_13	false
-1172f82c	4	file	0f000080	.rdata	pe_iat_slot	WS2_32.dll!Ordinal_15	false
+1172f82c	4	file	0f000080	.rdata	4-byte PE IAT slot for WS2_32.dll!ord_15 (ntohs) jumped to by 0x116c80e9	4-byte PE IAT slot for WS2_32.dll!ord_15 (ntohs) jumped to by 0x116c80e9	true
 1172f830	4	file	10000080	.rdata	IAT slot in .rdata (WS2_32.dll!#16 recv) jumped to by 0x116c80ef	IAT slot in .rdata (WS2_32.dll!#16 recv) jumped to by 0x116c80ef	true
 1172f834	4	file	11000080	.rdata	pe_iat_slot	WS2_32.dll!Ordinal_17	false
 1172f838	4	file	13000080	.rdata	IAT slot in .rdata (WS2_32.dll!#19 send) jumped to by 0x116c80fb	IAT slot in .rdata (WS2_32.dll!#19 send) jumped to by 0x116c80fb	true
@@ -529,7 +529,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1172f86c	4	file	70000080	.rdata	pe_iat_slot	WS2_32.dll!Ordinal_112	false
 1172f870	4	file	281c9301	.rdata	pe_iat_slot	WS2_32.dll!getaddrinfo	false
 1172f874	4	file	361c9301	.rdata	pe_iat_slot	WS2_32.dll!freeaddrinfo	false
-1172f878	4	file	01000080	.rdata	pe_iat_slot	WS2_32.dll!Ordinal_1	false
+1172f878	4	file	01000080	.rdata	4-byte PE IAT slot for WS2_32.dll!ord_1 (accept) jumped to by 0x116c80b9	4-byte PE IAT slot for WS2_32.dll!ord_1 (accept) jumped to by 0x116c80b9	true
 1172f87c	4	file	02000080	.rdata	pe_iat_slot	WS2_32.dll!Ordinal_2	false
 1172f880	4	file	03000080	.rdata	IAT slot in .rdata (WS2_32.dll!#3 closesocket) jumped to by 0x116c80c5	IAT slot in .rdata (WS2_32.dll!#3 closesocket) jumped to by 0x116c80c5	true
 1172f884	4	file	04000080	.rdata	pe_iat_slot	WS2_32.dll!Ordinal_4	false
@@ -720,9 +720,16 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 11741d64	18	file	756e6b6e6f776e20657863657074696f6e00	.rdata	"NUL-terminated ASCII fallback string ""unknown exception"" returned by 0x10115df0"	"NUL-terminated ASCII fallback string ""unknown exception"" returned by 0x10115df0"	true
 11741d78	12	file	20380f10f05d1110103b0f10	.rdata	full 3-slot std::bad_alloc vtable in .rdata (0x100f3820, 0x10115df0, 0x100f3b10)	full 3-slot std::bad_alloc vtable in .rdata (0x100f3820, 0x10115df0, 0x100f3b10)	true
 11741d84	15	file	62616420616c6c6f636174696f6e00	.rdata	"NUL-terminated ASCII literal ""bad allocation"" in .rdata stored at +0x04 by 0x100f1c50"	"NUL-terminated ASCII literal ""bad allocation"" in .rdata stored at +0x04 by 0x100f1c50"	true
+11741db0	7	file	63617264333200	.rdata	NUL-terminated ASCII font/style label 'card32' in .rdata	NUL-terminated ASCII font/style label 'card32' in .rdata	true
 11741dcc	8	file	666c6f6174333200	.rdata	NUL-terminated ASCII type literal 'float32' in .rdata pushed by 0x100f5860	NUL-terminated ASCII type literal 'float32' in .rdata pushed by 0x100f5860	true
 11741e28	30	file	4c0061007300740020006300680061006e00630065002e002e002e000000	.rdata	NUL-terminated UTF-16LE string L'Last chance...' in .rdata used by 0x101032a0	NUL-terminated UTF-16LE string L'Last chance...' in .rdata used by 0x101032a0	true
 11741e48	88	file	410072006500200079006f00750020007300750072006500200079006f0075002000770061006e007400200074006f002000610062006f007200740020007400680065002000700072006f0063006500730073003f000000	.rdata	NUL-terminated UTF-16LE string L'Are you sure you want to abort the process?' in .rdata used by 0x101032a0	NUL-terminated UTF-16LE string L'Are you sure you want to abort the process?' in .rdata used by 0x101032a0	true
+11741ea0	14	file	5400610068006f006d0061000000	.rdata	NUL-terminated UTF-16LE dialog font L'Tahoma' (includes inline +8/+12 tail copy offsets) in .rdata	NUL-terminated UTF-16LE dialog font L'Tahoma' (includes inline +8/+12 tail copy offsets) in .rdata	true
+11741eb0	20	file	43006f0070007900200054006500780074000000	.rdata	NUL-terminated UTF-16LE dialog button L'Copy Text' (includes inline +16 offset) in .rdata	NUL-terminated UTF-16LE dialog button L'Copy Text' (includes inline +16 offset) in .rdata	true
+11741ec4	12	file	410062006f00720074000000	.rdata	NUL-terminated UTF-16LE dialog button L'Abort' (includes inline +8 offset) in .rdata	NUL-terminated UTF-16LE dialog button L'Abort' (includes inline +8 offset) in .rdata	true
+11741ed0	12	file	520065007400720079000000	.rdata	NUL-terminated UTF-16LE dialog button L'Retry' (includes inline +8 offset) in .rdata	NUL-terminated UTF-16LE dialog button L'Retry' (includes inline +8 offset) in .rdata	true
+11741edc	14	file	490067006e006f00720065000000	.rdata	NUL-terminated UTF-16LE dialog button L'Ignore' (includes inline +8/+12 offsets) in .rdata	NUL-terminated UTF-16LE dialog button L'Ignore' (includes inline +8/+12 offsets) in .rdata	true
+11741eec	22	file	490067006e006f0072006500200041006c006c000000	.rdata	NUL-terminated UTF-16LE dialog button L'Ignore All' (includes inline +16/+20 offsets) in .rdata	NUL-terminated UTF-16LE dialog button L'Ignore All' (includes inline +16/+20 offsets) in .rdata	true
 1174202c	15	file	6272616e63685f70726f66696c6500	.rdata	NUL-terminated ASCII string 'branch_profile' in .rdata queried on command line by 0x101016c0	NUL-terminated ASCII string 'branch_profile' in .rdata queried on command line by 0x101016c0	true
 1174203c	16	file	5c007300720063005c002e002e000000	.rdata	NUL-terminated UTF-16LE string L'\\src\\..' in .rdata searched by 0x101016c0	NUL-terminated UTF-16LE string L'\\src\\..' in .rdata searched by 0x101016c0	true
 1174204c	4	file	5f000000	.rdata	NUL-terminated UTF-16LE string L'_' in .rdata inserted by 0x101016c0	NUL-terminated UTF-16LE string L'_' in .rdata inserted by 0x101016c0	true
@@ -806,6 +813,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1174e430	28	file	700072006500630069007000690074006100740069006f006e000000	.rdata	curated	curated	true
 1174e7d0	26	file	6600610075006e0061005f0063006f006e006600690067000000	.rdata	curated	curated	true
 1174eaa8	48	file	5300630072006900700074002f006600610075006e0061005f0063006f006e006600690067002e0078006d006c000000	.rdata	curated	curated	true
+11753f98	3	file	257500	.rdata	NUL-terminated ASCII format string '%u' in .rdata for 0x10cba4c0	NUL-terminated ASCII format string '%u' in .rdata for 0x10cba4c0	true
 1175612c	12	file	6c615f67696f636f6e646100	.rdata	NUL-terminated ASCII UI style key 'la_gioconda' in .rdata for 0x10c8f760/0x10c8f8c0/0x10cb8f90	NUL-terminated ASCII UI style key 'la_gioconda' in .rdata for 0x10c8f760/0x10c8f8c0/0x10cb8f90	true
 11756480	24	file	c0271d10afd86b11d0951d10b0321d10b03a1d1000771d10	.rdata	6-slot primary channel/socket adapter base vtable prefix [0x101d27c0, 0x116bd8af, 0x101d95d0, 0x101d32b0, 0x101d3ab0, 0x101d7700] in .rdata bound by 0x10fd6850	6-slot primary channel/socket adapter base vtable prefix [0x101d27c0, 0x116bd8af, 0x101d95d0, 0x101d32b0, 0x101d3ab0, 0x101d7700] in .rdata bound by 0x10fd6850	true
 11768574	8	file	00d43310afd86b11	.rdata	8-byte 2-slot DB table base vtable {0x1033d400, 0x116bd8af} in .rdata	8-byte 2-slot DB table base vtable {0x1033d400, 0x116bd8af} in .rdata	true
@@ -817,6 +825,8 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 117d9278	6	file	50004c000000	.rdata	NUL-terminated UTF-16LE locale string L'PL' in .rdata for 0x10c8a0b0	NUL-terminated UTF-16LE locale string L'PL' in .rdata for 0x10c8a0b0	true
 117df544	28	file	7600660073005f006c006f0067005f006c006500760065006c000000	.rdata	"UTF-16LE literal key L""vfs_log_level"" at 117df544..117df55f"	"UTF-16LE literal key L""vfs_log_level"" at 117df544..117df55f"	true
 117e193c	8	file	640062005c000000	.rdata	NUL-terminated UTF-16LE DB folder prefix L'db\\' in .rdata	NUL-terminated UTF-16LE DB folder prefix L'db\\' in .rdata	true
+117e19e0	17	file	62756666657220746f6f20736d616c6c00	.rdata	NUL-terminated ASCII exception message 'buffer too small' in .rdata thrown by 0x10cba590	NUL-terminated ASCII exception message 'buffer too small' in .rdata thrown by 0x10cba590	true
+117e1a08	76	file	520045004d004f005400450020004100530053004500520054002000660072006f006d00200028006e0061006d0065003a002000250053002900200028004900500020002500780029000000	.rdata	NUL-terminated UTF-16LE remote assert banner L'REMOTE ASSERT from (name: %S) (IP %x)' in .rdata	NUL-terminated UTF-16LE remote assert banner L'REMOTE ASSERT from (name: %S) (IP %x)' in .rdata	true
 117e2588	8	file	40fdc910f08db910	.rdata	8-byte 2-slot videos reader const vtable {0x10c9fd40, 0x10b98df0} in .rdata	8-byte 2-slot videos reader const vtable {0x10c9fd40, 0x10b98df0} in .rdata	true
 117e29fc	8	file	20b3cc10c0201910	.rdata	8-byte 2-slot anim vtable {0x10ccb320, 0x101920c0} in .rdata	8-byte 2-slot anim vtable {0x10ccb320, 0x101920c0} in .rdata	true
 117e2a04	8	file	40fdc91090eab810	.rdata	8-byte 2-slot videos loader const vtable {0x10c9fd40, 0x10b8ea90} in .rdata	8-byte 2-slot videos loader const vtable {0x10c9fd40, 0x10b8ea90} in .rdata	true
@@ -1007,6 +1017,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1191fd50	32	file	63736de001000000000000000000000003000000200593190000000000000000	.rdata	32-byte MSVC C++ exception template [0xe06d7363, 1, 0, 0, 3, 0x19930520, 0, 0] copied by 0x116bebf1	32-byte MSVC C++ exception template [0xe06d7363, 1, 0, 0, 3, 0x19930520, 0, 0] copied by 0x116bebf1	true
 11923da8	12	file	ffffffff0c390f1010390f10	.rdata	12-byte MSVC SEH __except scope table entry [-1, 0x100f390c, 0x100f3910] in .rdata referenced by 0x100f38b0	12-byte MSVC SEH __except scope table entry [-1, 0x100f390c, 0x100f3910] in .rdata referenced by 0x100f38b0	true
 11923db4	16	file	00000000801c0f1000000000c43d9211	.rdata	16-byte MSVC _s__ThrowInfo descriptor [0, 0x100f1c80, 0, 0x11923dc4] in .rdata passed by 0x10114f60	16-byte MSVC _s__ThrowInfo descriptor [0, 0x100f1c80, 0, 0x11923dc4] in .rdata passed by 0x10114f60	true
+119247b0	16	file	000000000000000000000000c0479211	.rdata	16-byte MSVC ThrowInfo descriptor for char* exception in .rdata referenced by 0x10cba590	16-byte MSVC ThrowInfo descriptor for char* exception in .rdata referenced by 0x10cba590	true
 11924804	16	file	010000000000000000000000c0479211	.rdata	16-byte MSVC _s__ThrowInfo descriptor [1, 0, 0, 0x119247c0] in .rdata thrown on socket error by 0x10fd6d80	16-byte MSVC _s__ThrowInfo descriptor [1, 0, 0, 0x119247c0] in .rdata thrown on socket error by 0x10fd6d80	true
 11925254	16	file	000000001a6168110000000064529211	.rdata	16-byte MSVC _ThrowInfo descriptor for std::length_error in .rdata pushed by 0x11686192	16-byte MSVC _ThrowInfo descriptor for std::length_error in .rdata pushed by 0x11686192	true
 119253c8	16	file	feffffff00000000d4ffffff00000000	.rdata	MSVC SEH4 scope table descriptor in .rdata pushed by 0x11687e1a	MSVC SEH4 scope table descriptor in .rdata pushed by 0x11687e1a	true

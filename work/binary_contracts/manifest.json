@@ -13,7 +13,7 @@
     "class_field_entries": 95747,
     "rtti_type_descriptors": 181,
     "rtti_complete_object_locators": 15,
-    "globals": 10942,
+    "globals": 10953,
     "exported_code_targets_pinned": 405
   },
   "distributions": {
@@ -40,7 +40,7 @@
       "static_rdata_ptr": 7912,
       "static_fn_ptr": 888,
       "static_vptr_instance": 584,
-      "pe_iat_slot": 489,
+      "pe_iat_slot": 486,
       "msvc_rtti_type_descriptor": 181,
       "curated": 46,
       "pe_data_export": 29,
@@ -164,6 +164,7 @@
       "IAT slot in .rdata (USER32.dll!SystemParametersInfoW) called by 0x100df270": 1,
       "IAT slot in .rdata (USER32.dll!TranslateMessage) called by 0x101061b0": 1,
       "IAT slot in .rdata (USER32.dll!DispatchMessageW) called by 0x101061b0": 1,
+      "4-byte PE IAT slot for USER32.dll!DialogBoxIndirectParamW called by 0x100f6220": 1,
       "IAT slot in .rdata (USER32.dll!GetActiveWindow) called by 0x101032a0": 1,
       "IAT slot in .rdata (USER32.dll!MessageBoxA) called by 0x101254a0": 1,
       "4-byte PE IAT slot for USER32.dll!ShowCursor called by 0x10115370": 1,
@@ -172,10 +173,12 @@
       "IAT slot in .rdata (WINMM.dll!timeGetTime) called by 0x10f7c1a0": 1,
       "IAT slot in .rdata (WS2_32.dll!#10 ioctlsocket) jumped to by 0x116c80d1": 1,
       "IAT slot in .rdata (WS2_32.dll!#9 htons) jumped to by 0x116c80d7": 1,
+      "4-byte PE IAT slot for WS2_32.dll!ord_15 (ntohs) jumped to by 0x116c80e9": 1,
       "IAT slot in .rdata (WS2_32.dll!#16 recv) jumped to by 0x116c80ef": 1,
       "IAT slot in .rdata (WS2_32.dll!#19 send) jumped to by 0x116c80fb": 1,
       "IAT slot in .rdata (WS2_32.dll!#23 socket) jumped to by 0x116c810d": 1,
       "IAT slot in .rdata (WS2_32.dll!#111 WSAGetLastError) jumped to by 0x116c8125": 1,
+      "4-byte PE IAT slot for WS2_32.dll!ord_1 (accept) jumped to by 0x116c80b9": 1,
       "IAT slot in .rdata (WS2_32.dll!#3 closesocket) jumped to by 0x116c80c5": 1,
       "IAT slot in .rdata (steam_api.dll!SteamInternal_ContextInit) called by 0x10fe4780": 1,
       "default _purecall target slot in .rdata holding 0x100d6560 called by 0x116bd8af": 1,
@@ -270,9 +273,16 @@
       "NUL-terminated ASCII fallback string \"unknown exception\" returned by 0x10115df0": 1,
       "full 3-slot std::bad_alloc vtable in .rdata (0x100f3820, 0x10115df0, 0x100f3b10)": 1,
       "NUL-terminated ASCII literal \"bad allocation\" in .rdata stored at +0x04 by 0x100f1c50": 1,
+      "NUL-terminated ASCII font/style label 'card32' in .rdata": 1,
       "NUL-terminated ASCII type literal 'float32' in .rdata pushed by 0x100f5860": 1,
       "NUL-terminated UTF-16LE string L'Last chance...' in .rdata used by 0x101032a0": 1,
       "NUL-terminated UTF-16LE string L'Are you sure you want to abort the process?' in .rdata used by 0x101032a0": 1,
+      "NUL-terminated UTF-16LE dialog font L'Tahoma' (includes inline +8/+12 tail copy offsets) in .rdata": 1,
+      "NUL-terminated UTF-16LE dialog button L'Copy Text' (includes inline +16 offset) in .rdata": 1,
+      "NUL-terminated UTF-16LE dialog button L'Abort' (includes inline +8 offset) in .rdata": 1,
+      "NUL-terminated UTF-16LE dialog button L'Retry' (includes inline +8 offset) in .rdata": 1,
+      "NUL-terminated UTF-16LE dialog button L'Ignore' (includes inline +8/+12 offsets) in .rdata": 1,
+      "NUL-terminated UTF-16LE dialog button L'Ignore All' (includes inline +16/+20 offsets) in .rdata": 1,
       "NUL-terminated ASCII string 'branch_profile' in .rdata queried on command line by 0x101016c0": 1,
       "NUL-terminated UTF-16LE string L'\\\\src\\\\..' in .rdata searched by 0x101016c0": 1,
       "NUL-terminated UTF-16LE string L'_' in .rdata inserted by 0x101016c0": 1,
@@ -321,6 +331,7 @@
       "NUL-terminated ASCII OOM literal 'VirtualAlloc (at place 1) returned NULL!' in .rdata": 1,
       "NUL-terminated ASCII OOM literal 'VirtualAlloc (at place 2) returned NULL!' in .rdata": 1,
       "NUL-terminated string literal 'dlmalloc returned NULL!' in .rdata passed to MessageBoxA in 0x101254a0": 1,
+      "NUL-terminated ASCII format string '%u' in .rdata for 0x10cba4c0": 1,
       "NUL-terminated ASCII UI style key 'la_gioconda' in .rdata for 0x10c8f760/0x10c8f8c0/0x10cb8f90": 1,
       "6-slot primary channel/socket adapter base vtable prefix [0x101d27c0, 0x116bd8af, 0x101d95d0, 0x101d32b0, 0x101d3ab0, 0x101d7700] in .rdata bound by 0x10fd6850": 1,
       "8-byte 2-slot DB table base vtable {0x1033d400, 0x116bd8af} in .rdata": 1,
@@ -331,6 +342,8 @@
       "NUL-terminated UTF-16LE locale string L'PL' in .rdata for 0x10c8a0b0": 1,
       "UTF-16LE literal key L\"vfs_log_level\" at 117df544..117df55f": 1,
       "NUL-terminated UTF-16LE DB folder prefix L'db\\\\' in .rdata": 1,
+      "NUL-terminated ASCII exception message 'buffer too small' in .rdata thrown by 0x10cba590": 1,
+      "NUL-terminated UTF-16LE remote assert banner L'REMOTE ASSERT from (name: %S) (IP %x)' in .rdata": 1,
       "8-byte 2-slot videos reader const vtable {0x10c9fd40, 0x10b98df0} in .rdata": 1,
       "8-byte 2-slot anim vtable {0x10ccb320, 0x101920c0} in .rdata": 1,
       "8-byte 2-slot videos loader const vtable {0x10c9fd40, 0x10b8ea90} in .rdata": 1,
@@ -505,6 +518,7 @@
       "32-byte MSVC C++ exception template [0xe06d7363, 1, 0, 0, 3, 0x19930520, 0, 0] copied by 0x116bebf1": 1,
       "12-byte MSVC SEH __except scope table entry [-1, 0x100f390c, 0x100f3910] in .rdata referenced by 0x100f38b0": 1,
       "16-byte MSVC _s__ThrowInfo descriptor [0, 0x100f1c80, 0, 0x11923dc4] in .rdata passed by 0x10114f60": 1,
+      "16-byte MSVC ThrowInfo descriptor for char* exception in .rdata referenced by 0x10cba590": 1,
       "16-byte MSVC _s__ThrowInfo descriptor [1, 0, 0, 0x119247c0] in .rdata thrown on socket error by 0x10fd6d80": 1,
       "16-byte MSVC _ThrowInfo descriptor for std::length_error in .rdata pushed by 0x11686192": 1,
       "MSVC SEH4 scope table descriptor in .rdata pushed by 0x11687e1a": 1,
@@ -857,24 +871,24 @@
     }
   },
   "curated_reconciliation": {
-    "curated_functions_total": 1502,
-    "curated_in_canonical_index": 1471,
-    "curated_exact_body_sha256_match": 1453,
+    "curated_functions_total": 1525,
+    "curated_in_canonical_index": 1494,
+    "curated_exact_body_sha256_match": 1476,
     "curated_multi_range_expanded": 18,
     "curated_non_proc_slots": 31,
-    "curated_globals_matched": 859,
+    "curated_globals_matched": 873,
     "curated_vtables_matched": 85
   },
   "files": {
     "function_contracts_part1.tsv": {
       "rows": 40640,
-      "bytes": 9392374,
-      "sha256": "85f45fb6254b5966c16d5891c8472073b3738e2455776a7c21bd08f0de71540e"
+      "bytes": 9392595,
+      "sha256": "ef4e15fed9752b75a966194e52cbb1f1d119aee1a1d4bbf34a0586d6de2c9462"
     },
     "function_contracts_part2.tsv": {
       "rows": 40640,
-      "bytes": 9471275,
-      "sha256": "0afd36da1a83e62cf4845d894bafbfc1ee55b3f9da7bf66ef7678ecbc3e1baca"
+      "bytes": 9471445,
+      "sha256": "1236aa4424e4bd2a5df00a02f865552dff902aa41352f369507dd008c8a39c3d"
     },
     "non_proc_curated_slots.tsv": {
       "rows": 31,
@@ -897,9 +911,9 @@
       "sha256": "534964ec1fa25fd15189a0fd007ba1412fe7fe339981ade410ca82a303f8e912"
     },
     "global_contracts.tsv": {
-      "rows": 10942,
-      "bytes": 942341,
-      "sha256": "94113d1f2ee4c554a61b9e01b56b14db005ff9ac6fafa224d5b229b996c5e57c"
+      "rows": 10953,
+      "bytes": 945312,
+      "sha256": "a3e7cec68546d0dc49e11347f5b42bcda5ed68292c60cab9b01c495bae6d6100"
     }
   }
 }
