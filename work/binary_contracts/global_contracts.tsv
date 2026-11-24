@@ -67,7 +67,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1172f104	4	file	f81f9301	.rdata	IAT slot in .rdata (KERNEL32.dll!GetEnvironmentStringsW) called by 0x116b4efd	IAT slot in .rdata (KERNEL32.dll!GetEnvironmentStringsW) called by 0x116b4efd	true
 1172f108	4	file	12209301	.rdata	IAT slot in .rdata (KERNEL32.dll!FreeEnvironmentStringsW) called by 0x116b4efd	IAT slot in .rdata (KERNEL32.dll!FreeEnvironmentStringsW) called by 0x116b4efd	true
 1172f10c	4	file	2c209301	.rdata	IAT slot in .rdata (KERNEL32.dll!HeapSize) called by 0x116b58d9 (__msize_base)	IAT slot in .rdata (KERNEL32.dll!HeapSize) called by 0x116b58d9 (__msize_base)	true
-1172f110	4	file	38209301	.rdata	pe_iat_slot	KERNEL32.dll!SetEndOfFile	false
+1172f110	4	file	38209301	.rdata	4-byte IAT slot in .rdata importing KERNEL32.dll!SetEndOfFile called by 0x116bc827	4-byte IAT slot in .rdata importing KERNEL32.dll!SetEndOfFile called by 0x116bc827	true
 1172f114	4	file	48209301	.rdata	IAT slot in .rdata (KERNEL32.dll!WriteConsoleW) called by 0x116bd528	IAT slot in .rdata (KERNEL32.dll!WriteConsoleW) called by 0x116bd528	true
 1172f118	4	file	58209301	.rdata	pe_iat_slot	KERNEL32.dll!RtlUnwind	false
 1172f11c	4	file	64209301	.rdata	pe_iat_slot	KERNEL32.dll!InterlockedFlushSList	false
@@ -857,6 +857,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1190bbf4	8	file	2b616811f8616811	.rdata	8-byte 2-slot vtable prefix [0x1168612b, 0x116861f8] for std::length_error in .rdata stored by 0x1168606c	8-byte 2-slot vtable prefix [0x1168612b, 0x116861f8] for std::length_error in .rdata stored by 0x1168606c	true
 1190c774	12	file	466c7347657456616c756500	.rdata	NUL-terminated ASCII string 'FlsGetValue' in .rdata queried by 0x116a8723 (___acrt_FlsGetValue@4)	NUL-terminated ASCII string 'FlsGetValue' in .rdata queried by 0x116a8723 (___acrt_FlsGetValue@4)	true
 1190c780	12	file	466c7353657456616c756500	.rdata	NUL-terminated ASCII string 'FlsSetValue' in .rdata queried by 0x116a8762 (___acrt_FlsSetValue@8)	NUL-terminated ASCII string 'FlsSetValue' in .rdata queried by 0x116a8762 (___acrt_FlsSetValue@8)	true
+1190c78c	28	file	496e697469616c697a65437269746963616c53656374696f6e457800	.rdata	NUL-terminated ASCII string 'InitializeCriticalSectionEx' in .rdata for 0x116a896e	NUL-terminated ASCII string 'InitializeCriticalSectionEx' in .rdata for 0x116a896e	true
 1190ca78	16	file	436f6d70617265537472696e67457800	.rdata	NUL-terminated ASCII string 'CompareStringEx' in .rdata queried by 0x116a82ed	NUL-terminated ASCII string 'CompareStringEx' in .rdata queried by 0x116a82ed	true
 1190ca98	14	file	4c434d6170537472696e67457800	.rdata	NUL-terminated ASCII string 'LCMapStringEx' in .rdata queried by 0x116a83bd	NUL-terminated ASCII string 'LCMapStringEx' in .rdata queried by 0x116a83bd	true
 1190ec70	91	file	06000006000100001000030600060210044545450505050505353000500000000028203850580708003730305750070000202008070000000860686060606000007870787878780807080700070008080800000807080007080007	.rdata	91-byte packed printf format-char state transition table in .rdata indexed by 0x1168934e ([ch+0x1190ec50] & 0xf row, [prev_state + row*8 + 0x1190ec70] >> 4)	91-byte packed printf format-char state transition table in .rdata indexed by 0x1168934e ([ch+0x1190ec50] & 0xf row, [prev_state + row*8 + 0x1190ec70] >> 4)	true
@@ -901,6 +902,8 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 11914c88	8	file	0100000010000000	.rdata	8-byte Win32 API descriptor record (0x1, 0x10) in .rdata passed by 0x116a8723 for FlsGetValue	8-byte Win32 API descriptor record (0x1, 0x10) in .rdata passed by 0x116a8723 for FlsGetValue	true
 11914c90	8	file	0100000010000000	.rdata	8-byte Win32 API descriptor record (0x1, 0x10) in .rdata bounded by 0x116a8723/0x116a8762	8-byte Win32 API descriptor record (0x1, 0x10) in .rdata bounded by 0x116a8723/0x116a8762	true
 11914c98	8	file	0000000010000000	.rdata	8-byte Win32 API descriptor end sentinel (0x0, 0x10) in .rdata passed by 0x116a8762 for FlsSetValue	8-byte Win32 API descriptor end sentinel (0x0, 0x10) in .rdata passed by 0x116a8762 for FlsSetValue	true
+11914d3c	8	file	0700000010000000	.rdata	8-byte try_get_function module candidate entry in .rdata for 0x116a896e	8-byte try_get_function module candidate entry in .rdata for 0x116a896e	true
+11914d44	8	file	0300000010000000	.rdata	8-byte try_get_function module candidate end entry in .rdata for 0x116a896e	8-byte try_get_function module candidate end entry in .rdata for 0x116a896e	true
 11914d60	8	file	0300000010000000	.rdata	8-byte Win32 API module descriptor record (0x3, 0x10) in .rdata passed by 0x116a83bd for LCMapStringEx	8-byte Win32 API module descriptor record (0x3, 0x10) in .rdata passed by 0x116a83bd for LCMapStringEx	true
 11914d68	8	file	0400000010000000	.rdata	8-byte Win32 API module descriptor end sentinel (0x4, 0x10) in .rdata bounding 0x116a83bd for LCMapStringEx	8-byte Win32 API module descriptor end sentinel (0x4, 0x10) in .rdata bounding 0x116a83bd for LCMapStringEx	true
 11914d84	8	file	0300000010000000	.rdata	8-byte Win32 API module descriptor record (0x3, 0x10) in .rdata passed by 0x116a83d7 for LocaleNameToLCID	8-byte Win32 API module descriptor record (0x3, 0x10) in .rdata passed by 0x116a83d7 for LocaleNameToLCID	true
@@ -911,6 +914,14 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 119152e0	7	file	3123514e414e00	.rdata	NUL-terminated ASCII special float string '1#QNAN' in .rdata formatted by $I10_OUTPUT 0x116a8e6d	NUL-terminated ASCII special float string '1#QNAN' in .rdata formatted by $I10_OUTPUT 0x116a8e6d	true
 119152e8	7	file	3123534e414e00	.rdata	NUL-terminated ASCII special float string '1#SNAN' in .rdata formatted by $I10_OUTPUT 0x116a8e6d	NUL-terminated ASCII special float string '1#SNAN' in .rdata formatted by $I10_OUTPUT 0x116a8e6d	true
 119152f0	6	file	3123494e4400	.rdata	NUL-terminated ASCII special float string '1#IND' in .rdata formatted by $I10_OUTPUT 0x116a8e6d	NUL-terminated ASCII special float string '1#IND' in .rdata formatted by $I10_OUTPUT 0x116a8e6d	true
+119152f8	4	file	63637300	.rdata	NUL-terminated ASCII string 'ccs' in .rdata for 0x116aa31d	NUL-terminated ASCII string 'ccs' in .rdata for 0x116aa31d	true
+119152fc	6	file	5554462d3800	.rdata	NUL-terminated ASCII string 'UTF-8' in .rdata for 0x116aa31d	NUL-terminated ASCII string 'UTF-8' in .rdata for 0x116aa31d	true
+11915304	8	file	5554462d31364c45	.rdata	8-byte ASCII prefix 'UTF-16LE' in .rdata immediately preceding 'UNICODE' for 0x116aa31d	8-byte ASCII prefix 'UTF-16LE' in .rdata immediately preceding 'UNICODE' for 0x116aa31d	true
+1191530c	8	file	554e49434f444500	.rdata	NUL-terminated ASCII string 'UNICODE' in .rdata for 0x116aa31d	NUL-terminated ASCII string 'UNICODE' in .rdata for 0x116aa31d	true
+11915314	8	file	6300630073000000	.rdata	NUL-terminated UTF-16LE string L'ccs' in .rdata for 0x116aa547	NUL-terminated UTF-16LE string L'ccs' in .rdata for 0x116aa547	true
+1191531c	12	file	5500540046002d0038000000	.rdata	NUL-terminated UTF-16LE string L'UTF-8' in .rdata for 0x116aa547	NUL-terminated UTF-16LE string L'UTF-8' in .rdata for 0x116aa547	true
+11915328	16	file	5500540046002d00310036004c004500	.rdata	16-byte UTF-16LE prefix L'UTF-16LE' in .rdata immediately preceding L'UNICODE' for 0x116aa547	16-byte UTF-16LE prefix L'UTF-16LE' in .rdata immediately preceding L'UNICODE' for 0x116aa547	true
+11915338	16	file	55004e00490043004f00440045000000	.rdata	NUL-terminated UTF-16LE string L'UNICODE' in .rdata for 0x116aa547	NUL-terminated UTF-16LE string L'UNICODE' in .rdata for 0x116aa547	true
 11915f18	8	file	000000000000f07f	.rdata	8-byte IEEE-754 float64 +inf constant in .rdata loaded by 0x116a1e0d (__handle_exc)	8-byte IEEE-754 float64 +inf constant in .rdata loaded by 0x116a1e0d (__handle_exc)	true
 11915f28	8	file	ffffffffffffef7f	.rdata	8-byte IEEE-754 float64 DBL_MAX constant in .rdata loaded by 0x116a1e0d (__handle_exc)	8-byte IEEE-754 float64 DBL_MAX constant in .rdata loaded by 0x116a1e0d (__handle_exc)	true
 11915f38	10	file	00000000000000801044	.rdata	10-byte x87 extended real constant in .rdata loaded by 0x116adba8 to raise IE/OE FP status	10-byte x87 extended real constant in .rdata loaded by 0x116adba8 to raise IE/OE FP status	true
@@ -945,6 +956,9 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 119258d0	16	file	feffffff00000000d0ffffff00000000	.rdata	16-byte SEH scope table descriptor in .rdata pushed by 0x116a511c (__write)	16-byte SEH scope table descriptor in .rdata pushed by 0x116a511c (__write)	true
 119259b0	16	file	feffffff00000000d0ffffff00000000	.rdata	16-byte MSVC SEH4 scope table in .rdata for 0x116aaee6 (immediately preceding 0x119259d0)	16-byte MSVC SEH4 scope table in .rdata for 0x116aaee6 (immediately preceding 0x119259d0)	true
 119259d0	16	file	feffffff00000000d4ffffff00000000	.rdata	MSVC SEH4 scope table descriptor in .rdata pushed by 0x116ab53f	MSVC SEH4 scope table descriptor in .rdata pushed by 0x116ab53f	true
+11925a38	16	file	feffffff00000000c4ffffff00000000	.rdata	16-byte MSVC SEH4 scope table in .rdata for 0x116ae8b5	16-byte MSVC SEH4 scope table in .rdata for 0x116ae8b5	true
+11925a98	16	file	feffffff00000000d0ffffff00000000	.rdata	16-byte MSVC SEH4 scope table in .rdata for 0x116aeb77	16-byte MSVC SEH4 scope table in .rdata for 0x116aeb77	true
+11925ab8	16	file	feffffff00000000d0ffffff00000000	.rdata	16-byte MSVC SEH4 scope table in .rdata for 0x116aec38	16-byte MSVC SEH4 scope table in .rdata for 0x116aec38	true
 11925af8	16	file	feffffff00000000d4ffffff00000000	.rdata	16-byte MSVC SEH scope table descriptor in .rdata pushed by 0x116b03a7 (__isindst)	16-byte MSVC SEH scope table descriptor in .rdata pushed by 0x116b03a7 (__isindst)	true
 11925b18	16	file	feffffff00000000d8ffffff00000000	.rdata	16-byte MSVC SEH scope table descriptor in .rdata pushed by 0x116b034a (__tzset)	16-byte MSVC SEH scope table descriptor in .rdata pushed by 0x116b034a (__tzset)	true
 11925b38	16	file	feffffff00000000b8ffffff00000000	.rdata	16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x116b0517	16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x116b0517	true
@@ -10826,6 +10840,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 121262dc	4	zero_fill	00000000	.data	4-byte zero-fill CRT term_action (SIGTERM) encoded handler slot in .data returned by 0x116b045f	4-byte zero-fill CRT term_action (SIGTERM) encoded handler slot in .data returned by 0x116b045f	true
 121262e0	4	zero_fill	00000000	.data	4-byte zero-fill CRT matherr user handler flag in .data tested by 0x116b0763	4-byte zero-fill CRT matherr user handler flag in .data tested by 0x116b0763	true
 121262ec	8	zero_fill	0000000000000000	.data	8-byte zero-fill CRT internal mbstate_t fallback in .data used when ps==NULL by 0x116b15ac	8-byte zero-fill CRT internal mbstate_t fallback in .data used when ps==NULL by 0x116b15ac	true
+121262f4	4	zero_fill	00000000	.data	4-byte CRT _commode global in .bss read by 0x116aa31d/0x116aa547	4-byte CRT _commode global in .bss read by 0x116aa31d/0x116aa547	true
 121262f8	4	zero_fill	00000000	.data	4-byte zero-fill CRT libm exception flag in .data tested by 0x116b8348	4-byte zero-fill CRT libm exception flag in .data tested by 0x116b8348	true
 121262fc	4	zero_fill	00000000	.data	4-byte zero-fill CRT global _mbctype table pointer in .data set to 0x119ec430 by 0x116b4bf0	4-byte zero-fill CRT global _mbctype table pointer in .data set to 0x119ec430 by 0x116b4bf0	true
 12126300	4	zero_fill	00000000	.data	4-byte zero-fill CRT global _mbcasemap table pointer in .data set to 0x119ec538 by 0x116b4bf0	4-byte zero-fill CRT global _mbcasemap table pointer in .data set to 0x119ec538 by 0x116b4bf0	true
@@ -10837,6 +10852,8 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 12126330	4	zero_fill	00000000	.data	4-byte zero-fill CRT encoded user matherr pointer (__pusermatherr) decoded by 0x116b5880	4-byte zero-fill CRT encoded user matherr pointer (__pusermatherr) decoded by 0x116b5880	true
 12126334	4	zero_fill	00000000	.data	4-byte zero-fill CRT _newmode global flag in .data returned by 0x116b60c0	4-byte zero-fill CRT _newmode global flag in .data returned by 0x116b60c0	true
 12126338	4	zero_fill	00000000	.data	4-byte zero-fill CRT std-handle release policy flag in .data read by 0x116bc6d8	4-byte zero-fill CRT std-handle release policy flag in .data read by 0x116bc6d8	true
+1212633c	4	zero_fill	00000000	.data	4-byte CRT _umaskval global in .bss read by 0x116aefe1	4-byte CRT _umaskval global in .bss read by 0x116aefe1	true
+12126340	4	zero_fill	00000000	.data	4-byte CRT __fmode global in .bss read by 0x116bc6de	4-byte CRT __fmode global in .bss read by 0x116bc6de	true
 12126348	4	zero_fill	00000000	.data	custom _purecall handler pointer in .data read by 0x116bd8af	custom _purecall handler pointer in .data read by 0x116bd8af	true
 12126c38	4	zero_fill	00000000	.data	4-byte zero-fill CRT encoded __matherr callback slot in .data decoded by 0x116b0763	4-byte zero-fill CRT encoded __matherr callback slot in .data decoded by 0x116b0763	true
 12126c3c	4	zero_fill	00000000	.data	4-byte zero-fill CRT SSE2 availability flag in .data tested by 0x1169b820 (floor)	4-byte zero-fill CRT SSE2 availability flag in .data tested by 0x1169b820 (floor)	true

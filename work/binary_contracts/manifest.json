@@ -13,7 +13,7 @@
     "class_field_entries": 95747,
     "rtti_type_descriptors": 181,
     "rtti_complete_object_locators": 15,
-    "globals": 10841,
+    "globals": 10858,
     "exported_code_targets_pinned": 405
   },
   "distributions": {
@@ -40,7 +40,7 @@
       "static_rdata_ptr": 7913,
       "static_fn_ptr": 888,
       "static_vptr_instance": 584,
-      "pe_iat_slot": 491,
+      "pe_iat_slot": 490,
       "msvc_rtti_type_descriptor": 181,
       "curated": 46,
       "pe_data_export": 29,
@@ -72,6 +72,7 @@
       "IAT slot in .rdata (KERNEL32.dll!GetEnvironmentStringsW) called by 0x116b4efd": 1,
       "IAT slot in .rdata (KERNEL32.dll!FreeEnvironmentStringsW) called by 0x116b4efd": 1,
       "IAT slot in .rdata (KERNEL32.dll!HeapSize) called by 0x116b58d9 (__msize_base)": 1,
+      "4-byte IAT slot in .rdata importing KERNEL32.dll!SetEndOfFile called by 0x116bc827": 1,
       "IAT slot in .rdata (KERNEL32.dll!WriteConsoleW) called by 0x116bd528": 1,
       "IAT slot in .rdata (KERNEL32.dll!SleepEx) called by 0x10123e00": 1,
       "IAT slot in .rdata (KERNEL32.dll!GlobalMemoryStatusEx) called by 0x10103220": 1,
@@ -353,6 +354,7 @@
       "8-byte 2-slot vtable prefix [0x1168612b, 0x116861f8] for std::length_error in .rdata stored by 0x1168606c": 1,
       "NUL-terminated ASCII string 'FlsGetValue' in .rdata queried by 0x116a8723 (___acrt_FlsGetValue@4)": 1,
       "NUL-terminated ASCII string 'FlsSetValue' in .rdata queried by 0x116a8762 (___acrt_FlsSetValue@8)": 1,
+      "NUL-terminated ASCII string 'InitializeCriticalSectionEx' in .rdata for 0x116a896e": 1,
       "NUL-terminated ASCII string 'CompareStringEx' in .rdata queried by 0x116a82ed": 1,
       "NUL-terminated ASCII string 'LCMapStringEx' in .rdata queried by 0x116a83bd": 1,
       "91-byte packed printf format-char state transition table in .rdata indexed by 0x1168934e ([ch+0x1190ec50] & 0xf row, [prev_state + row*8 + 0x1190ec70] >> 4)": 1,
@@ -397,6 +399,8 @@
       "8-byte Win32 API descriptor record (0x1, 0x10) in .rdata passed by 0x116a8723 for FlsGetValue": 1,
       "8-byte Win32 API descriptor record (0x1, 0x10) in .rdata bounded by 0x116a8723/0x116a8762": 1,
       "8-byte Win32 API descriptor end sentinel (0x0, 0x10) in .rdata passed by 0x116a8762 for FlsSetValue": 1,
+      "8-byte try_get_function module candidate entry in .rdata for 0x116a896e": 1,
+      "8-byte try_get_function module candidate end entry in .rdata for 0x116a896e": 1,
       "8-byte Win32 API module descriptor record (0x3, 0x10) in .rdata passed by 0x116a83bd for LCMapStringEx": 1,
       "8-byte Win32 API module descriptor end sentinel (0x4, 0x10) in .rdata bounding 0x116a83bd for LCMapStringEx": 1,
       "8-byte Win32 API module descriptor record (0x3, 0x10) in .rdata passed by 0x116a83d7 for LocaleNameToLCID": 1,
@@ -407,6 +411,14 @@
       "NUL-terminated ASCII special float string '1#QNAN' in .rdata formatted by $I10_OUTPUT 0x116a8e6d": 1,
       "NUL-terminated ASCII special float string '1#SNAN' in .rdata formatted by $I10_OUTPUT 0x116a8e6d": 1,
       "NUL-terminated ASCII special float string '1#IND' in .rdata formatted by $I10_OUTPUT 0x116a8e6d": 1,
+      "NUL-terminated ASCII string 'ccs' in .rdata for 0x116aa31d": 1,
+      "NUL-terminated ASCII string 'UTF-8' in .rdata for 0x116aa31d": 1,
+      "8-byte ASCII prefix 'UTF-16LE' in .rdata immediately preceding 'UNICODE' for 0x116aa31d": 1,
+      "NUL-terminated ASCII string 'UNICODE' in .rdata for 0x116aa31d": 1,
+      "NUL-terminated UTF-16LE string L'ccs' in .rdata for 0x116aa547": 1,
+      "NUL-terminated UTF-16LE string L'UTF-8' in .rdata for 0x116aa547": 1,
+      "16-byte UTF-16LE prefix L'UTF-16LE' in .rdata immediately preceding L'UNICODE' for 0x116aa547": 1,
+      "NUL-terminated UTF-16LE string L'UNICODE' in .rdata for 0x116aa547": 1,
       "8-byte IEEE-754 float64 +inf constant in .rdata loaded by 0x116a1e0d (__handle_exc)": 1,
       "8-byte IEEE-754 float64 DBL_MAX constant in .rdata loaded by 0x116a1e0d (__handle_exc)": 1,
       "10-byte x87 extended real constant in .rdata loaded by 0x116adba8 to raise IE/OE FP status": 1,
@@ -441,6 +453,9 @@
       "16-byte SEH scope table descriptor in .rdata pushed by 0x116a511c (__write)": 1,
       "16-byte MSVC SEH4 scope table in .rdata for 0x116aaee6 (immediately preceding 0x119259d0)": 1,
       "MSVC SEH4 scope table descriptor in .rdata pushed by 0x116ab53f": 1,
+      "16-byte MSVC SEH4 scope table in .rdata for 0x116ae8b5": 1,
+      "16-byte MSVC SEH4 scope table in .rdata for 0x116aeb77": 1,
+      "16-byte MSVC SEH4 scope table in .rdata for 0x116aec38": 1,
       "16-byte MSVC SEH scope table descriptor in .rdata pushed by 0x116b03a7 (__isindst)": 1,
       "16-byte MSVC SEH scope table descriptor in .rdata pushed by 0x116b034a (__tzset)": 1,
       "16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x116b0517": 1,
@@ -736,6 +751,7 @@
       "4-byte zero-fill CRT term_action (SIGTERM) encoded handler slot in .data returned by 0x116b045f": 1,
       "4-byte zero-fill CRT matherr user handler flag in .data tested by 0x116b0763": 1,
       "8-byte zero-fill CRT internal mbstate_t fallback in .data used when ps==NULL by 0x116b15ac": 1,
+      "4-byte CRT _commode global in .bss read by 0x116aa31d/0x116aa547": 1,
       "4-byte zero-fill CRT libm exception flag in .data tested by 0x116b8348": 1,
       "4-byte zero-fill CRT global _mbctype table pointer in .data set to 0x119ec430 by 0x116b4bf0": 1,
       "4-byte zero-fill CRT global _mbcasemap table pointer in .data set to 0x119ec538 by 0x116b4bf0": 1,
@@ -747,18 +763,20 @@
       "4-byte zero-fill CRT encoded user matherr pointer (__pusermatherr) decoded by 0x116b5880": 1,
       "4-byte zero-fill CRT _newmode global flag in .data returned by 0x116b60c0": 1,
       "4-byte zero-fill CRT std-handle release policy flag in .data read by 0x116bc6d8": 1,
+      "4-byte CRT _umaskval global in .bss read by 0x116aefe1": 1,
+      "4-byte CRT __fmode global in .bss read by 0x116bc6de": 1,
       "custom _purecall handler pointer in .data read by 0x116bd8af": 1,
       "4-byte zero-fill CRT encoded __matherr callback slot in .data decoded by 0x116b0763": 1,
       "4-byte zero-fill CRT SSE2 availability flag in .data tested by 0x1169b820 (floor)": 1
     }
   },
   "curated_reconciliation": {
-    "curated_functions_total": 1374,
-    "curated_in_canonical_index": 1343,
-    "curated_exact_body_sha256_match": 1325,
+    "curated_functions_total": 1411,
+    "curated_in_canonical_index": 1380,
+    "curated_exact_body_sha256_match": 1362,
     "curated_multi_range_expanded": 18,
     "curated_non_proc_slots": 31,
-    "curated_globals_matched": 755,
+    "curated_globals_matched": 773,
     "curated_vtables_matched": 76
   },
   "files": {
@@ -769,8 +787,8 @@
     },
     "function_contracts_part2.tsv": {
       "rows": 40640,
-      "bytes": 9469456,
-      "sha256": "048681203dc0045fe6349489d2fe6cd0772d0049a6d6779bcaf1e41f24158c98"
+      "bytes": 9470085,
+      "sha256": "caea3373b675e4b3c23a3b4123cedc6bd042a82bbea451819787c72d9c40ba24"
     },
     "non_proc_curated_slots.tsv": {
       "rows": 31,
@@ -793,9 +811,9 @@
       "sha256": "534964ec1fa25fd15189a0fd007ba1412fe7fe339981ade410ca82a303f8e912"
     },
     "global_contracts.tsv": {
-      "rows": 10841,
-      "bytes": 921309,
-      "sha256": "6e9b9f31a4cf4b1bddd87c63a4771aad41fbd278e0e604ed78d311058ec65d2a"
+      "rows": 10858,
+      "bytes": 924570,
+      "sha256": "1911d2e3ea84e622b2032cba5f867530597effbc1ee5a1da48bc40d57c0b0db8"
     }
   }
 }

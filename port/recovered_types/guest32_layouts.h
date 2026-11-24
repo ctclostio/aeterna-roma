@@ -3390,5 +3390,51 @@ ROME2_LAYOUT_ASSERT(rome2_startup_crt_ioinfo_read56_32, textmode_29, 0x29);
 ROME2_LAYOUT_ASSERT(rome2_startup_crt_ioinfo_read56_32, pipech2_2a, 0x2a);
 ROME2_LAYOUT_ASSERT(rome2_startup_crt_ioinfo_read56_32, utf8_crlf_flags_2d, 0x2d);
 
+/* 12B (0x0c) UCRT __acrt_stdio_stream_mode parsed by 0x116aa31d / 0x116aa547. */
+typedef struct rome2_startup_crt_stdio_mode12_32 {
+    uint32_t lowio_mode_00;                      /* 00 (_O_* flags) */
+    uint32_t stdio_mode_04;                      /* 04 (_IOREAD/_IOWRT/_IORW/_IOCOMMIT...) */
+    uint8_t ok_08;                               /* 08 */
+    uint8_t pad_09[3];                           /* 09..0b */
+} rome2_startup_crt_stdio_mode12_32;
+_Static_assert(sizeof(rome2_startup_crt_stdio_mode12_32) == 0x0c, "startup crt stdio mode12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_stdio_mode12_32, lowio_mode_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_stdio_mode12_32, stdio_mode_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_stdio_mode12_32, ok_08, 0x08);
+
+/* 24B (0x18) UCRT lowio open `file_options` produced by 0x116aefe1 for 0x116aef4c / 0x116aecf9. */
+typedef struct rome2_startup_crt_file_options24_32 {
+    uint8_t osfile_flags_00;                     /* 00 (_FNOINHERIT=0x10, _FTEXT=0x80) */
+    uint8_t pad_01[3];                           /* 01..03 */
+    uint32_t access_04;                          /* 04 (GENERIC_READ/WRITE/DELETE) */
+    uint32_t disposition_08;                     /* 08 (CREATE_NEW..TRUNCATE_EXISTING) */
+    uint32_t share_0c;                           /* 0c (FILE_SHARE_*) */
+    uint32_t attributes_10;                      /* 10 (FILE_ATTRIBUTE_*) */
+    uint32_t flags_14;                           /* 14 (FILE_FLAG_*) */
+} rome2_startup_crt_file_options24_32;
+_Static_assert(sizeof(rome2_startup_crt_file_options24_32) == 0x18, "startup crt file options24 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_file_options24_32, osfile_flags_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_file_options24_32, access_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_file_options24_32, disposition_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_file_options24_32, share_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_file_options24_32, attributes_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_file_options24_32, flags_14, 0x14);
+
+/* 28B (0x1c) UCRT __crt_seek_guard frame initialized by 0x116bc7da for 0x116bc827 (_chsize_nolock). */
+typedef struct rome2_startup_crt_seek_guard28_32 {
+    uint32_t saved_pos_lo_00;                    /* 00..03 */
+    int32_t saved_pos_hi_04;                     /* 04..07 */
+    uint32_t end_pos_lo_08;                      /* 08..0b */
+    int32_t end_pos_hi_0c;                       /* 0c..0f */
+    uint32_t extend_delta_lo_10;                 /* 10..13 */
+    int32_t extend_delta_hi_14;                  /* 14..17 */
+    int32_t fh_18;                               /* 18..1b */
+} rome2_startup_crt_seek_guard28_32;
+_Static_assert(sizeof(rome2_startup_crt_seek_guard28_32) == 0x1c, "startup crt seek guard28 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_seek_guard28_32, saved_pos_lo_00, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_seek_guard28_32, end_pos_lo_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_seek_guard28_32, extend_delta_lo_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_seek_guard28_32, fh_18, 0x18);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

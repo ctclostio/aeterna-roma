@@ -2040,3 +2040,35 @@ callees.
   shared Ghidra project or canonical exports (`clean_eng=0`, `clean_crt=0`,
   `noret_or_thunk=0` across **1,374** functions; remaining `entry_point` spine
   roots across Layers 65–71 and live runtime execution remain open).
+
+### Layer 65 — Partition 7 stdio openfile, parse_mode, _sopen & lowio handle cluster (2026-11-24)
+- Extended Partition 7 (`extending_layer63_batched_p7`) closing **37** CRT stdio open,
+  mode-parser, `_sopen`, lowio handle-array/allocator, `_wcsnicmp`, `_setmode`,
+  and `_chsize` functions (two-part `0x1168d030` `_strncmp`, `0x116a896e`
+  `InitializeCriticalSectionEx` loader, `0x116aa31d..0x116aa9ac`
+  `__acrt_stdio_parse_mode<char/wchar_t>` + 8 flag helpers,
+  `0x116aa7b2`/`0x116aa835` `common_openfile<char/wchar_t>`,
+  `0x116ae68f..0x116ae9bf` lowio handle pages & `_alloc_osfhnd`,
+  `0x116aeb77..0x116af5f4` `common_sopen_dispatch<char/wchar_t>` / `decode_options`
+  / `configure_text_mode` / `truncate_ctrl_z_if_present`, `0x116b844f`/`0x116b849b`
+  `__wcsnicmp`/`_l`, and `0x116bc6de..0x116bc827` `_get_fmode`/`_setmode_nolock`/
+  `__crt_seek_guard`/`_chsize_nolock`), growing
+  [contracts.json](port/recovered_types/contracts.json) to **1,411 functions,
+  773 globals, 76 vtables, and 1,338 instruction witnesses** over **127**
+  Partition 7 validated REA records (`55` new = `37` `analyze_function` +
+  `18` `read_bytes`; `72` reused Layer 64; `non_proc_slots=[]`,
+  `resource_constrained_slots=[]`; **2,052** cumulative across Partitions 1–7;
+  `48,909,660B` shared Partition 7 snapshot; `0` Ghidra mismatches).
+- Locked 3 fixed-width [guest32_layouts.h](port/recovered_types/guest32_layouts.h)
+  layouts (`rome2_startup_crt_stdio_mode12_32`,
+  `rome2_startup_crt_file_options24_32`,
+  `rome2_startup_crt_seek_guard28_32`) and added bounded C17 reconstruction and
+  **64 checks** in [startup_stdio_stream_ops.h](port/recovered_types/startup_stdio_stream_ops.h),
+  [startup_stdio_stream_ops.c](port/recovered_types/startup_stdio_stream_ops.c),
+  and [test_startup_stdio_stream_ops.c](port/recovered_types/test_startup_stdio_stream_ops.c).
+- Verified **122/122** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
+  and ASan, **104** contract tests on Python 3.14 and 3.15, and **967** clean-public
+  Python tests (**334** skipped) on Python 3.14 and 3.15 without touching the
+  shared Ghidra project or canonical exports (`clean_eng=0`, `clean_crt=0`,
+  `noret_or_thunk=0` across **1,411** functions; remaining `entry_point` spine
+  roots across Layers 66–71 and live runtime execution remain open).
