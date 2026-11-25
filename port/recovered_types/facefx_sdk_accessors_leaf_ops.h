@@ -9,9 +9,14 @@
  * forms an address (LEA) is 32-bit arithmetic on that address; a body that
  * loads or stores goes through the arena.
  *
- * Bounded: a load from outside the arena yields 0, a store there is dropped,
- * and a multi-step body returns at the first such access, where the original
- * faults. List walks stop after 0x10000 nodes.
+ * Bounded: the original faults on an access outside the arena. Here such a
+ * load yields 0, and an accessor that chains loads carries on with that 0;
+ * such a store is dropped; the list, callback and event-slot bodies return at
+ * the first such access. List walks stop after 0x10000 nodes.
+ *
+ * A float body returns what a caller's FSTP m32 would store. The FLD bodies
+ * return the stored single with a signalling NaN made quiet, as FLD m32 does
+ * with the invalid-operation exception masked.
  */
 
 #include "facefx_name_avl_table_ops.h"
@@ -73,9 +78,13 @@ typedef struct rome2_l84_fx_event_ctx {
 
 void rome2_l84_event_ctx_init(rome2_l84_fx_event_ctx *ctx, rome2_l80_fx_ctx *fx);
 
-/* SDK version and error text (0x10ed6680, 0x10ed65b0) */
+/*
+ * SDK version and error text (0x10ed6680, 0x10ed65b0). The error text is a
+ * string in the image's .rdata: its host copy is returned, and text_va, when
+ * not NULL, receives the address the original returns.
+ */
 uint32_t rome2_l84_fx_sdk_get_version(void);
-const char *rome2_l84_fx_sdk_get_error_string(rome2_l80_fx_ctx *fx, int32_t error);
+const char *rome2_l84_fx_sdk_get_error_string(rome2_l80_fx_ctx *fx, int32_t error, uint32_t *text_va);
 
 /*
  * Value types (0x10be8b50, 0x10ed5700, 0x10ed59e0, 0x10ed7bf0, 0x10ed7c10).

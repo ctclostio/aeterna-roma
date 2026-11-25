@@ -89,6 +89,9 @@ static uint32_t s_clone_result;
 static uint32_t s_event_ids[8];
 static int s_audio_hook_clears_global;
 static int s_get_id_hook_truncates;
+/* when set, the destroy, clone and audio hooks store s_hook_global_value there, as a callee rebinding the static would */
+static uint32_t *s_hook_global;
+static uint32_t s_hook_global_value;
 static const rome2_l80_fx_ctx *s_fx;
 
 static void record(l84_call_kind kind, uint32_t a, uint32_t b, uint32_t c, int32_t action) {
@@ -138,6 +141,12 @@ static float get_f32(uint32_t va) {
     return value;
 }
 
+static uint32_t f32_bits(float value) {
+    uint32_t bits;
+    memcpy(&bits, &value, sizeof(bits));
+    return bits;
+}
+
 static void put_u8(uint32_t va, uint8_t value) {
     *(uint8_t *)at(va, 1u) = value;
 }
@@ -167,14 +176,22 @@ static void hook_delete(rome2_l84_fx_event_ctx *ctx, uint32_t ptr_va, uint32_t b
     record(CALL_DELETE, ptr_va, bytes, 0u, 0);
 }
 
+static void hook_rebind_global(void) {
+    if (s_hook_global != NULL) {
+        *s_hook_global = s_hook_global_value;
+    }
+}
+
 static void hook_destroy(rome2_l84_fx_event_ctx *ctx, uint32_t impl_va, uint32_t flags) {
     (void)ctx;
     record(CALL_DESTROY, impl_va, flags, 0u, 0);
+    hook_rebind_global();
 }
 
 static uint32_t hook_clone(rome2_l84_fx_event_ctx *ctx, uint32_t impl_va) {
     (void)ctx;
     record(CALL_CLONE, impl_va, 0u, 0u, 0);
+    hook_rebind_global();
     return s_clone_result;
 }
 
@@ -188,6 +205,7 @@ static void hook_audio(
     if (s_audio_hook_clears_global != 0) {
         ctx->audio_callback_va = 0u;
     }
+    hook_rebind_global();
 }
 
 static void hook_custom(
@@ -221,6 +239,8 @@ static void fixture_init(l84_fixture *f) {
     s_clone_result = 0u;
     s_audio_hook_clears_global = 0;
     s_get_id_hook_truncates = 0;
+    s_hook_global = NULL;
+    s_hook_global_value = 0u;
 
     rome2_l80_ctx_init(&f->fx, s_arena, L84_ARENA_BASE, (uint32_t)sizeof(s_arena), L84_HEAP_START);
     s_fx = &f->fx;
@@ -260,48 +280,65 @@ static void test_sdk_version_and_error_strings(void) {
         "Cannot create resource because a resource of the same type with the same key already exists",
         "One of the supplied resource parameters was not a managed resource",
     };
+    /* the text pointers of rows 0..14 of the table at 0x1183a958 */
+    static const uint32_t known_va[15] = {
+        0x1183a9d8u, 0x1183a9e0u, 0x1183a9f0u, 0x1183aa08u, 0x1183aa28u,
+        0x1183aa5cu, 0x1183aa90u, 0x1183aab0u, 0x1183aadcu, 0x1183ab14u,
+        0x1183ab38u, 0x1183ab70u, 0x1183abe8u, 0x1183ac10u, 0x1183ac70u,
+    };
     l84_fixture f;
     int32_t code;
+    uint32_t text_va;
     fixture_init(&f);
 
     assert(rome2_l84_fx_sdk_get_version() == 0x853u);
 
-    /* codes 0..14 resolve without touching the log */
+    /* codes 0..14 resolve without touching the log; EAX is the row's text pointer */
     for (code = 0; code < 15; ++code) {
-        assert(strcmp(rome2_l84_fx_sdk_get_error_string(&f.fx, code), known[code]) == 0);
+        text_va = L84_UNWRITTEN;
+        assert(strcmp(rome2_l84_fx_sdk_get_error_string(&f.fx, code, &text_va), known[code]) == 0);
+        assert(text_va == known_va[code]);
     }
     assert(s_log_count == 0u);
 
-    /* a code outside the table reaches the -1 row: level-1 entry, then "UNKNOWN" */
-    assert(strcmp(rome2_l84_fx_sdk_get_error_string(&f.fx, 15), "UNKNOWN") == 0);
+    /* a code outside the table reaches the -1 row: level-1 entry, then "UNKNOWN" at 0x1178701c */
+    text_va = L84_UNWRITTEN;
+    assert(strcmp(rome2_l84_fx_sdk_get_error_string(&f.fx, 15, &text_va), "UNKNOWN") == 0);
+    assert(text_va == 0x1178701cu);
     assert(s_log_count == 1u && s_log[0].level == 1);
     assert(strcmp(s_log[0].text, "Unknown FX_ERROR code: 15") == 0);
 
     /* -1 equals no row ahead of the terminator, so it is reported as unknown as well */
-    assert(strcmp(rome2_l84_fx_sdk_get_error_string(&f.fx, -1), "UNKNOWN") == 0);
+    text_va = L84_UNWRITTEN;
+    assert(strcmp(rome2_l84_fx_sdk_get_error_string(&f.fx, -1, &text_va), "UNKNOWN") == 0);
+    assert(text_va == 0x1178701cu);
     assert(s_log_count == 2u && strcmp(s_log[1].text, "Unknown FX_ERROR code: -1") == 0);
 
     /* the entry is indented by the manager's tab level, four spaces per tab */
     f.manager->tab_level = 2u;
-    assert(strcmp(rome2_l84_fx_sdk_get_error_string(&f.fx, INT_MIN), "UNKNOWN") == 0);
+    assert(strcmp(rome2_l84_fx_sdk_get_error_string(&f.fx, INT_MIN, NULL), "UNKNOWN") == 0);
     assert(s_log_count == 3u && strcmp(s_log[2].text, "        Unknown FX_ERROR code: -2147483648") == 0);
     f.manager->tab_level = 0u;
 
     /* JL at 0x10ed65e1: the entry needs a signed level of at least 1 */
     f.manager->max_log_level = 1;
-    (void)rome2_l84_fx_sdk_get_error_string(&f.fx, 99);
+    (void)rome2_l84_fx_sdk_get_error_string(&f.fx, 99, NULL);
     assert(s_log_count == 4u && strcmp(s_log[3].text, "Unknown FX_ERROR code: 99") == 0);
     f.manager->max_log_level = 0;
-    assert(strcmp(rome2_l84_fx_sdk_get_error_string(&f.fx, 99), "UNKNOWN") == 0);
+    assert(strcmp(rome2_l84_fx_sdk_get_error_string(&f.fx, 99, NULL), "UNKNOWN") == 0);
     f.manager->max_log_level = -1;
-    assert(strcmp(rome2_l84_fx_sdk_get_error_string(&f.fx, 99), "UNKNOWN") == 0);
+    text_va = L84_UNWRITTEN;
+    assert(strcmp(rome2_l84_fx_sdk_get_error_string(&f.fx, 99, &text_va), "UNKNOWN") == 0);
+    assert(text_va == 0x1178701cu);
     assert(s_log_count == 4u);
 
     /* bounded: no log manager, no log */
     f.fx.log_manager_singleton_va = 0u;
-    assert(strcmp(rome2_l84_fx_sdk_get_error_string(&f.fx, 99), "UNKNOWN") == 0);
-    assert(strcmp(rome2_l84_fx_sdk_get_error_string(NULL, 99), "UNKNOWN") == 0);
-    assert(strcmp(rome2_l84_fx_sdk_get_error_string(NULL, 11), known[11]) == 0);
+    assert(strcmp(rome2_l84_fx_sdk_get_error_string(&f.fx, 99, NULL), "UNKNOWN") == 0);
+    assert(strcmp(rome2_l84_fx_sdk_get_error_string(NULL, 99, NULL), "UNKNOWN") == 0);
+    text_va = L84_UNWRITTEN;
+    assert(strcmp(rome2_l84_fx_sdk_get_error_string(NULL, 11, &text_va), known[11]) == 0);
+    assert(text_va == 0x1183ab70u);
     assert(s_log_count == 4u);
 }
 
@@ -461,9 +498,33 @@ static void test_anim_accessors(void) {
     assert(isnan(rome2_l84_anim_get_duration(&f.fx, L84_ANIM_VA)));
     assert(rome2_l84_anim_get_end_time(&f.fx, L84_ANIM_VA) == 0.0f);
 
-    /* bounded loads */
+    /*
+     * The five FLD m32 bodies (0x10228780, 0x10a9a5c0, 0x103bf2c0, 0x101db470,
+     * 0x10ed7840) hand back the stored bits, except that a signalling NaN
+     * comes back quiet with its sign and payload kept.
+     */
+    put_u32(L84_ANIM_VA + 0x24u, 0x7fa00000u);
+    put_u32(L84_ANIM_VA + 0x28u, 0xff800001u);
+    put_u32(L84_ANIM_VA + 0x2cu, 0x7fc12345u);
+    put_u32(L84_ANIM_VA + 0x30u, 0xff800000u);
+    put_u32(L84_ANIM_VA + 0xf4u, 0x80000001u);
+    assert(f32_bits(rome2_l84_anim_get_real_start_time(&f.fx, L84_ANIM_VA)) == 0x7fe00000u);
+    assert(f32_bits(rome2_l84_anim_get_real_end_time(&f.fx, L84_ANIM_VA)) == 0xffc00001u);
+    assert(f32_bits(rome2_l84_anim_get_curves_start_time(&f.fx, L84_ANIM_VA)) == 0x7fc12345u);
+    assert(f32_bits(rome2_l84_anim_get_curves_end_time(&f.fx, L84_ANIM_VA)) == 0xff800000u);
+    assert(f32_bits(rome2_l84_anim_get_frame_rate(&f.fx, L84_ANIM_VA)) == 0x80000001u);
+    /* the loads leave the stored bits alone */
+    assert(get_u32(L84_ANIM_VA + 0x24u) == 0x7fa00000u && get_u32(L84_ANIM_VA + 0x28u) == 0xff800001u);
+    /* 0x10ed77f0 returns the stored end through the same FLD; both times are unordered here */
+    assert(f32_bits(rome2_l84_anim_get_end_time(&f.fx, L84_ANIM_VA)) == 0xffc00001u);
+    /* 0x10ed7770 with one NaN operand: that NaN, quiet */
+    put_f32(L84_ANIM_VA + 0x30u, 2.0f);
+    assert(f32_bits(rome2_l84_anim_get_curves_duration(&f.fx, L84_ANIM_VA)) == 0x7fc12345u);
+
+    /* bounded loads: a chained accessor carries on with the 0 an unmapped load yields */
     assert(rome2_l84_anim_get_frame_rate(&f.fx, L84_UNMAPPED_VA) == 0.0f);
     assert(rome2_l84_anim_get_anim_curve(&f.fx, L84_UNMAPPED_VA, 2u) == 0x50u);
+    assert(rome2_l84_anim_get_compressed_anim_curve(&f.fx, L84_UNMAPPED_VA, 2u) == 0x30u);
 }
 
 static void test_actor_accessors(void) {
@@ -570,6 +631,41 @@ static void test_actor_find_anim_group(void) {
     /* an unbound name never matches: every name it is compared with has been bound first */
     name.entry_va = 0u;
     assert(rome2_l84_actor_find_anim_group(&f.names, L84_ACTOR_VA, &name) == 0xffffffffu);
+
+    /*
+     * The argument is read again at every compare (CMP reg, [ESI] at
+     * 0x10ed6508, 0x10ed6547 and 0x10ed656d). Handed an owned group's own
+     * unbound name, the lookup binds that slot to NullName and then finds the
+     * argument equal to it.
+     */
+    put_u32(L84_GROUPS_VA + 0x24u, 0u);
+    assert(
+        rome2_l84_actor_find_anim_group(
+            &f.names, L84_ACTOR_VA, (const rome2_fx_name_32 *)at(L84_GROUPS_VA + 0x24u, 4u)) == 2u);
+    assert(get_u32(L84_GROUPS_VA + 0x24u) == L84_ENTRY_NULL);
+    /* the same with the default group's own name once no owned group matches */
+    put_u32(L84_GROUPS_VA + 0x24u, L84_ENTRY_ONE);
+    put_u32(L84_ACTOR_VA + 0x60b8u, 0u);
+    assert(
+        rome2_l84_actor_find_anim_group(
+            &f.names, L84_ACTOR_VA, (const rome2_fx_name_32 *)at(L84_ACTOR_VA + 0x60b8u, 4u)) == 0u);
+    assert(get_u32(L84_ACTOR_VA + 0x60b8u) == L84_ENTRY_NULL);
+
+    /*
+     * With FxName::NullName itself unset (0x11fadb7c holds 0 before the name
+     * table starts) an empty slot is rewritten with 0 and equals an unbound
+     * argument: the first empty owned group answers.
+     */
+    f.names.null_name.entry_va = 0u;
+    put_u32(L84_GROUPS_VA + 0x24u, 0u);
+    put_u32(L84_ACTOR_VA + 0x60b8u, 0u);
+    name.entry_va = 0u;
+    assert(rome2_l84_actor_find_anim_group(&f.names, L84_ACTOR_VA, &name) == 2u);
+    assert(get_u32(L84_GROUPS_VA + 0x24u) == 0u && get_u32(L84_ACTOR_VA + 0x60b8u) == 0u);
+    put_u32(L84_GROUPS_VA + 0x24u, L84_ENTRY_ONE);
+    assert(rome2_l84_actor_find_anim_group(&f.names, L84_ACTOR_VA, &name) == 0u);
+    assert(get_u32(L84_ACTOR_VA + 0x60b8u) == 0u);
+    f.names.null_name.entry_va = L84_ENTRY_NULL;
 
     /* mounted sets report count + 1 + position and are searched before the owned groups */
     fixture_init(&f);
@@ -712,6 +808,10 @@ static void test_actor_instance_accessors(void) {
     put_f32(L84_VALUES_VA + 0x0cu, -7.5f);
     assert(rome2_l84_actor_instance_get_node_final_value(&f.fx, L84_INSTANCE_VA, 0u) == 0.25f);
     assert(rome2_l84_actor_instance_get_node_final_value(&f.fx, L84_INSTANCE_VA, 3u) == -7.5f);
+    /* FLD m32 [EAX + index*4]: a signalling NaN comes back quiet */
+    put_u32(L84_VALUES_VA + 0x04u, 0x7f800001u);
+    assert(f32_bits(rome2_l84_actor_instance_get_node_final_value(&f.fx, L84_INSTANCE_VA, 1u)) == 0x7fc00001u);
+    assert(get_u32(L84_VALUES_VA + 0x04u) == 0x7f800001u);
 
     /* bounded loads */
     put_u32(L84_INSTANCE_VA + 0x08u, L84_UNMAPPED_VA);
@@ -752,6 +852,11 @@ static void test_event_manager_ctor_and_state(void) {
     put_f32(L84_MANAGER_VA + 0x04u, 3.25f);
     assert(rome2_l84_event_manager_is_paused(&f.fx, L84_MANAGER_VA) == 0x7fu);
     assert(rome2_l84_event_manager_get_pause_time(&f.fx, L84_MANAGER_VA) == 3.25f);
+    /* 0x101b0ee0 is FLD m32 [ECX + 4]: the constructed bits pass through, a signalling NaN comes back quiet */
+    put_u32(L84_MANAGER_VA + 0x04u, 0xcf000000u);
+    assert(f32_bits(rome2_l84_event_manager_get_pause_time(&f.fx, L84_MANAGER_VA)) == 0xcf000000u);
+    put_u32(L84_MANAGER_VA + 0x04u, 0xffa00000u);
+    assert(f32_bits(rome2_l84_event_manager_get_pause_time(&f.fx, L84_MANAGER_VA)) == 0xffe00000u);
 
     /* bounded */
     assert(rome2_l84_event_manager_ctor(&f.fx, L84_UNMAPPED_VA) == L84_UNMAPPED_VA);
@@ -909,6 +1014,24 @@ static void test_event_manager_pause_resume(void) {
     assert(get_u8(L84_MANAGER_VA) == 0u);
     s_audio_hook_clears_global = 0;
 
+    /* a callback that rebinds the static is replaced from the next slot on (0x10ed8ff7, 0x10ed9a1f) */
+    s_call_count = 0u;
+    put_u32(L84_CUSTOM_FUNCTOR_VA, L84_IMPL_CUSTOM);
+    f.events.audio_callback_va = L84_AUDIO_FUNCTOR_VA;
+    s_hook_global = &f.events.audio_callback_va;
+    s_hook_global_value = L84_CUSTOM_FUNCTOR_VA;
+    rome2_l84_event_manager_pause(&f.events, L84_MANAGER_VA, L84_ACTOR_INSTANCE_ARG, 4.0f);
+    assert(s_call_count == 2u);
+    expect_call(0u, CALL_AUDIO, L84_IMPL_AUDIO, L84_ACTOR_INSTANCE_ARG, L84_EVENTS_VA, 1);
+    expect_call(1u, CALL_AUDIO, L84_IMPL_CUSTOM, L84_ACTOR_INSTANCE_ARG, L84_EVENTS_VA + 0x158u, 1);
+    f.events.audio_callback_va = L84_AUDIO_FUNCTOR_VA;
+    rome2_l84_event_manager_resume(&f.events, L84_MANAGER_VA, L84_ACTOR_INSTANCE_ARG, 4.0f);
+    assert(s_call_count == 4u);
+    expect_call(2u, CALL_AUDIO, L84_IMPL_AUDIO, L84_ACTOR_INSTANCE_ARG, L84_EVENTS_VA, 2);
+    expect_call(3u, CALL_AUDIO, L84_IMPL_CUSTOM, L84_ACTOR_INSTANCE_ARG, L84_EVENTS_VA + 0x158u, 2);
+    s_hook_global = NULL;
+    f.events.audio_callback_va = 0u;
+
     /* no audio callback installed: state changes only */
     s_call_count = 0u;
     rome2_l84_event_manager_pause(&f.events, L84_MANAGER_VA, L84_ACTOR_INSTANCE_ARG, 10.0f);
@@ -1041,6 +1164,74 @@ static void test_event_manager_callbacks(void) {
     f.events.audio_callback_va = L84_AUDIO_FUNCTOR_VA;
     rome2_l84_event_manager_fire_custom_event_callback(&f.events, L84_ACTOR_INSTANCE_ARG, L84_EVENTS_VA);
     assert(s_call_count == 0u);
+
+    /*
+     * Both Clear bodies and the installed half of Set hold the functor pointer
+     * they loaded on entry in ESI: a destructor or clone that rebinds the
+     * static changes neither which functor is released nor which is rewritten.
+     */
+    s_call_count = 0u;
+    put_u32(L84_AUDIO_FUNCTOR_VA, L84_IMPL_AUDIO);
+    put_u32(L84_CUSTOM_FUNCTOR_VA, L84_IMPL_CUSTOM);
+    f.events.audio_callback_va = L84_AUDIO_FUNCTOR_VA;
+    s_hook_global = &f.events.audio_callback_va;
+    s_hook_global_value = L84_CUSTOM_FUNCTOR_VA;
+    rome2_l84_event_manager_clear_audio_callback(&f.events);
+    assert(s_call_count == 2u);
+    expect_call(0u, CALL_DESTROY, L84_IMPL_AUDIO, 1u, 0u, 0);
+    expect_call(1u, CALL_DELETE, L84_AUDIO_FUNCTOR_VA, 4u, 0u, 0);
+    assert(f.events.audio_callback_va == 0u); /* 0x10ed8382 stores 0 last */
+
+    s_call_count = 0u;
+    f.events.custom_event_callback_va = L84_CUSTOM_FUNCTOR_VA;
+    s_hook_global = &f.events.custom_event_callback_va;
+    s_hook_global_value = L84_AUDIO_FUNCTOR_VA;
+    rome2_l84_event_manager_clear_custom_event_callback(&f.events);
+    assert(s_call_count == 2u);
+    expect_call(0u, CALL_DESTROY, L84_IMPL_CUSTOM, 1u, 0u, 0);
+    expect_call(1u, CALL_DELETE, L84_CUSTOM_FUNCTOR_VA, 4u, 0u, 0);
+    assert(f.events.custom_event_callback_va == 0u);
+
+    /* Set over an installed functor whose clone rebinds the static: the entry functor still gets the swap */
+    s_call_count = 0u;
+    put_u32(L84_SOURCE_FUNCTOR_VA, L84_IMPL_SOURCE);
+    f.events.audio_callback_va = L84_AUDIO_FUNCTOR_VA;
+    s_hook_global = &f.events.audio_callback_va;
+    s_hook_global_value = L84_CUSTOM_FUNCTOR_VA;
+    s_clone_result = L84_IMPL_CLONE_1;
+    rome2_l84_event_manager_set_audio_callback(&f.events, L84_SOURCE_FUNCTOR_VA);
+    assert(s_call_count == 2u);
+    expect_call(0u, CALL_CLONE, L84_IMPL_SOURCE, 0u, 0u, 0);
+    expect_call(1u, CALL_DESTROY, L84_IMPL_AUDIO, 1u, 0u, 0);
+    assert(get_u32(L84_AUDIO_FUNCTOR_VA) == L84_IMPL_CLONE_1);
+    assert(get_u32(L84_CUSTOM_FUNCTOR_VA) == L84_IMPL_CUSTOM);
+    assert(f.events.audio_callback_va == L84_CUSTOM_FUNCTOR_VA); /* this half never stores the static */
+
+    /* a clone that clears the static changes nothing either */
+    s_call_count = 0u;
+    f.events.audio_callback_va = L84_AUDIO_FUNCTOR_VA;
+    s_hook_global_value = 0u;
+    s_clone_result = L84_IMPL_CLONE_2;
+    rome2_l84_event_manager_set_audio_callback(&f.events, L84_SOURCE_FUNCTOR_VA);
+    assert(s_call_count == 2u);
+    expect_call(0u, CALL_CLONE, L84_IMPL_SOURCE, 0u, 0u, 0);
+    expect_call(1u, CALL_DESTROY, L84_IMPL_CLONE_1, 1u, 0u, 0);
+    assert(get_u32(L84_AUDIO_FUNCTOR_VA) == L84_IMPL_CLONE_2 && f.events.audio_callback_va == 0u);
+
+    /* nothing installed: whatever the clone left in the static, 0x10ed9ab8 stores the new functor */
+    s_call_count = 0u;
+    f.events.operator_new = hook_new;
+    s_new_result = L84_NEW_FUNCTOR_VA;
+    s_hook_global_value = L84_CUSTOM_FUNCTOR_VA;
+    s_clone_result = L84_IMPL_CLONE_1;
+    rome2_l84_event_manager_set_audio_callback(&f.events, L84_SOURCE_FUNCTOR_VA);
+    assert(s_call_count == 2u);
+    expect_call(0u, CALL_NEW, 4u, 0u, 0u, 0);
+    expect_call(1u, CALL_CLONE, L84_IMPL_SOURCE, 0u, 0u, 0);
+    assert(f.events.audio_callback_va == L84_NEW_FUNCTOR_VA && get_u32(L84_NEW_FUNCTOR_VA) == L84_IMPL_CLONE_1);
+    assert(get_u32(L84_CUSTOM_FUNCTOR_VA) == L84_IMPL_CUSTOM);
+    s_hook_global = NULL;
+    s_call_count = 0u;
 
     /* unset hooks: the global still clears */
     f.events.functor_impl_destroy = NULL;

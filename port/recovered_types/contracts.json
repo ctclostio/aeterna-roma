@@ -32909,7 +32909,7 @@
       "callee_pop_bytes": 0,
       "calling_convention": "cdecl",
       "ordinary_return": "void FxEventManager::ClearAudioCallback(void)",
-      "scope": "when the functor pointer at 0x11fadb6c is set: destroys its implementation through vtable slot +0 with flag 1 if non-NULL, releases the 4B functor through 0x116835d7(ptr, 4) and clears the global",
+      "scope": "loads the functor pointer at 0x11fadb6c once; when it is set, destroys its implementation through vtable slot +0 with flag 1 if non-NULL, releases that 4B functor through 0x116835d7(ptr, 4) and stores NULL in the global",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "10ed838d"
@@ -32986,7 +32986,7 @@
       "callee_pop_bytes": 8,
       "calling_convention": "thiscall",
       "ordinary_return": "void __thiscall FxEventManager::Pause(FxActorInstance*, float)",
-      "scope": "no-op when the pause byte at +0 is set; otherwise each of the [+0x24] slots with a non-zero flag byte gets the audio functor (0x11fadb6c, re-read after each call) slot +8 with a stack {instance, event} pair and action 1, then byte 1 is stored at +0 and the time at +4",
+      "scope": "no-op when the pause byte at +0 is set; otherwise, for each of the [+0x24] slots whose flag byte at [+0x1c] is non-zero, when the audio functor pointer at 0x11fadb6c (loaded before the loop and again after each call) is non-NULL, calls its implementation's vtable slot +8 with the addresses of a stack {instance, [+0x10] + slot * 0xac} pair and of action 1; then stores byte 1 at +0 and the time at +4",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "10ed901d"
@@ -33001,7 +33001,7 @@
       "callee_pop_bytes": 8,
       "calling_convention": "thiscall",
       "ordinary_return": "void __thiscall FxEventManager::Resume(FxActorInstance*, float)",
-      "scope": "no-op unless the pause byte is set; each flagged slot's event float at +0x88 gains (time - [+4]) unless it equals the 0x1183b014 sentinel (-2147483648.0f; unordered counts as different) and the audio functor slot +8 is called with action 2, then the pause byte is cleared and 0xcf000000 stored at +4",
+      "scope": "no-op unless the pause byte at +0 is set; for each of the [+0x24] slots whose flag byte at [+0x1c] is non-zero, the event float at [+0x10] + slot * 0xac + 0x88 gains (time - [+4]) unless it equals the 0x1183b014 sentinel (-2147483648.0f; unordered counts as different), then, when the audio functor pointer at 0x11fadb6c (loaded for each such slot) is non-NULL, its implementation's vtable slot +8 is called with the addresses of a stack {instance, event} pair and of action 2; finally the pause byte is cleared and 0xcf000000 stored at +4",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "10ed9a6f"
@@ -33016,7 +33016,7 @@
       "callee_pop_bytes": 0,
       "calling_convention": "cdecl",
       "ordinary_return": "void FxEventManager::SetAudioCallback(const FxFunctor&)",
-      "scope": "with a functor installed at 0x11fadb6c: clones the argument's implementation through its vtable slot +4 (NULL stays NULL), swaps it in and destroys the previous implementation through slot +0 with flag 1; otherwise allocates a 4B functor through 0x100d12b0, stores the clone and publishes it, a failed allocation storing NULL in the global",
+      "scope": "loads the functor pointer at 0x11fadb6c once; when it is set: clones the argument's implementation through its vtable slot +4 (NULL stays NULL), swaps it into that functor and destroys the previous implementation through slot +0 with flag 1, leaving the global as it is; otherwise allocates a 4B functor through 0x100d12b0, stores the clone and publishes it, a failed allocation storing NULL in the global",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "10ed9ab0",
@@ -76981,6 +76981,18 @@
       "11 bodies carry more than one export name (cross-class folds at 0x1018aba0, 0x1054d080 and 0x10be8b50, the GetStartTime and GetAnimCurveM aliases at 0x10228780 and 0x10ed7380, and six const/non-const overload pairs), so 64 bodies carry 78 export names; one registry row covers each body",
       "The 23 globals (error table, 17 strings, the event-time sentinel float and four .data zero-fill pointers) and the FxResourceManager vtable 0x1183a798 are pinned from the image by the contract validator without a retained REA read_bytes envelope; the vtable's only slot 0x10ed61e0 is outside the recovered set",
       "Direct CALL closure is 0 open edges and direct JMP/Jcc closure remains 1 single-tail edge: 0x11695ee2 -> 0x11695e3c"
-    ]
+    ],
+    "model_revision": {
+      "revision": 1,
+      "date": "2026-11-25",
+      "evidence": "same 64 Partition 12 records; no new REA operations",
+      "summary": [
+        "0x10ed8360, 0x10ed8390 and the installed half of 0x10ed9a80 hold the functor pointer loaded on entry in ESI across the indirect destructor or clone call; the model read the static again after its hook and now releases or rewrites the functor captured on entry",
+        "the FLD m32 bodies 0x101b0ee0, 0x101db470, 0x10228780, 0x103bf2c0, 0x10a9a5c0, 0x10ed7840 and 0x10ed7850, and the FLD of the stored end in 0x10ed77f0, hand back a signalling NaN quiet (the masked invalid-operation response); the model returned the stored bits",
+        "0x10ed65b0 returns the stopping row's text pointer; the model now reports that image address (0x1183a9d8..0x1183ac70 for rows 0..14, 0x1178701c for the -1 row) beside the host copy of the text",
+        "scope text of 0x10ed8fa0 and 0x10ed99c0 now states that the audio callback is skipped while the functor pointer at 0x11fadb6c is NULL and that the [+0x24] count bounds both loops; 0x10ed8360 and 0x10ed9a80 state the single load of the functor pointer",
+        "tests added for the argument load at each FindAnimGroup compare (0x10ed6508, 0x10ed6547, 0x10ed656d), an unset FxName::NullName, a callback that rebinds the audio functor static during Pause and Resume, and each correction above"
+      ]
+    }
   }
 }

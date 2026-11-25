@@ -27,6 +27,20 @@ static float l84_load_f32(const rome2_l80_fx_ctx *fx, uint32_t va) {
     return value;
 }
 
+/*
+ * FLD m32fp: the stored single reaches ST0 unchanged except that a signalling
+ * NaN arrives quiet (bit 22 set), the masked invalid-operation response.
+ */
+static float l84_fld(float m32) {
+    uint32_t bits;
+    memcpy(&bits, &m32, sizeof(bits));
+    if ((bits & 0x7f800000u) == 0x7f800000u && (bits & 0x007fffffu) != 0u) {
+        bits |= 0x00400000u;
+        memcpy(&m32, &bits, sizeof(m32));
+    }
+    return m32;
+}
+
 static uint8_t l84_load_u8(const rome2_l80_fx_ctx *fx, uint32_t va) {
     const uint8_t *p = (const uint8_t *)rome2_l80_const_ptr(fx, va, 1u);
     return (p != NULL) ? *p : 0u;
@@ -91,8 +105,10 @@ static const struct {
  * stops at the first code equal to the argument or to -1. Only the -1 stop
  * logs, so an argument of -1 is reported as unknown too. The level-1 entry
  * goes to the log at manager +4 when the manager's level is at least 1.
+ * EAX is the stopping row's text pointer: the host copy of that text is
+ * returned and its image address is stored through text_va.
  */
-const char *rome2_l84_fx_sdk_get_error_string(rome2_l80_fx_ctx *fx, int32_t error) {
+const char *rome2_l84_fx_sdk_get_error_string(rome2_l80_fx_ctx *fx, int32_t error, uint32_t *text_va) {
     uint32_t index = 0u;
     int32_t code = 0;
     while (code != error && index + 1u < ROME2_FX_ERROR_STRING_ROWS) {
@@ -115,6 +131,9 @@ const char *rome2_l84_fx_sdk_get_error_string(rome2_l80_fx_ctx *fx, int32_t erro
             }
             break;
         }
+    }
+    if (text_va != NULL) {
+        *text_va = l84_error_rows[index].text_va;
     }
     return l84_error_rows[index].text;
 }
@@ -204,7 +223,7 @@ uint8_t rome2_l84_anim_set_is_published(const rome2_l80_fx_ctx *fx, uint32_t sel
 
 /* 0x101db470 */
 float rome2_l84_anim_get_curves_end_time(const rome2_l80_fx_ctx *fx, uint32_t self_va) {
-    return l84_load_f32(fx, self_va + L84_OFFSET(rome2_fx_anim_prefix_32, curves_end_time));
+    return l84_fld(l84_load_f32(fx, self_va + L84_OFFSET(rome2_fx_anim_prefix_32, curves_end_time)));
 }
 
 /* 0x101f8940 */
@@ -214,7 +233,7 @@ uint32_t rome2_l84_anim_get_audio_asset_path(uint32_t self_va) {
 
 /* 0x10228780 */
 float rome2_l84_anim_get_real_start_time(const rome2_l80_fx_ctx *fx, uint32_t self_va) {
-    return l84_load_f32(fx, self_va + L84_OFFSET(rome2_fx_anim_prefix_32, real_start_time));
+    return l84_fld(l84_load_f32(fx, self_va + L84_OFFSET(rome2_fx_anim_prefix_32, real_start_time)));
 }
 
 /* 0x10298bc0 */
@@ -229,7 +248,7 @@ uint32_t rome2_l84_anim_get_audio_asset_index(const rome2_l80_fx_ctx *fx, uint32
 
 /* 0x103bf2c0 */
 float rome2_l84_anim_get_curves_start_time(const rome2_l80_fx_ctx *fx, uint32_t self_va) {
-    return l84_load_f32(fx, self_va + L84_OFFSET(rome2_fx_anim_prefix_32, curves_start_time));
+    return l84_fld(l84_load_f32(fx, self_va + L84_OFFSET(rome2_fx_anim_prefix_32, curves_start_time)));
 }
 
 /* 0x105e13a0 */
@@ -254,7 +273,7 @@ uint32_t rome2_l84_anim_get_audio_asset_name(uint32_t self_va) {
 
 /* 0x10a9a5c0 */
 float rome2_l84_anim_get_real_end_time(const rome2_l80_fx_ctx *fx, uint32_t self_va) {
-    return l84_load_f32(fx, self_va + L84_OFFSET(rome2_fx_anim_prefix_32, real_end_time));
+    return l84_fld(l84_load_f32(fx, self_va + L84_OFFSET(rome2_fx_anim_prefix_32, real_end_time)));
 }
 
 /* 0x10abed80 */
@@ -277,7 +296,9 @@ uint32_t rome2_l84_anim_get_compressed_anim_curve(const rome2_l80_fx_ctx *fx, ui
 /*
  * The three subtracting bodies below leave the x87 difference in ST0 at the
  * control word's precision. The value returned here is that difference
- * rounded to single, which is what a caller's FSTP m32 stores.
+ * rounded to single, which is what a caller's FSTP m32 stores. A NaN operand
+ * gives a quiet NaN; which payload survives when both operands are NaN is
+ * not modelled.
  */
 
 /* 0x10ed7770: curves start minus curves end, in that order. */
@@ -297,14 +318,14 @@ float rome2_l84_anim_get_duration(const rome2_l80_fx_ctx *fx, uint32_t self_va) 
     return end - start;
 }
 
-/* 0x10ed77f0 */
+/* 0x10ed77f0: the stored end is copied to the stack and returned through FLD. */
 float rome2_l84_anim_get_end_time(const rome2_l80_fx_ctx *fx, uint32_t self_va) {
     float start = l84_load_f32(fx, self_va + L84_OFFSET(rome2_fx_anim_prefix_32, real_start_time));
     float end = l84_load_f32(fx, self_va + L84_OFFSET(rome2_fx_anim_prefix_32, real_end_time));
     if (start == 0.0f && end == 0.0f) {
         return 1.0f;
     }
-    return end;
+    return l84_fld(end);
 }
 
 /* 0x10ed7830 */
@@ -314,7 +335,7 @@ uint32_t rome2_l84_anim_get_event_template(uint32_t self_va) {
 
 /* 0x10ed7840 */
 float rome2_l84_anim_get_frame_rate(const rome2_l80_fx_ctx *fx, uint32_t self_va) {
-    return l84_load_f32(fx, self_va + L84_OFFSET(rome2_fx_anim_prefix_32, frame_rate));
+    return l84_fld(l84_load_f32(fx, self_va + L84_OFFSET(rome2_fx_anim_prefix_32, frame_rate)));
 }
 
 /* ---- FxActor ---- */
@@ -590,7 +611,7 @@ uint32_t rome2_l84_actor_instance_get_bone_name(const rome2_l80_fx_ctx *fx, uint
 float rome2_l84_actor_instance_get_node_final_value(const rome2_l80_fx_ctx *fx, uint32_t self_va, uint32_t index) {
     uint32_t values_va =
         l84_load_u32(fx, self_va + L84_OFFSET(rome2_fx_actor_instance_prefix_32, node_final_values_va));
-    return l84_load_f32(fx, values_va + index * 4u);
+    return l84_fld(l84_load_f32(fx, values_va + index * 4u));
 }
 
 /* 0x10ed7870 */
@@ -603,7 +624,7 @@ uint32_t rome2_l84_actor_instance_get_num_bones(const rome2_l80_fx_ctx *fx, uint
 
 /* 0x101b0ee0 */
 float rome2_l84_event_manager_get_pause_time(const rome2_l80_fx_ctx *fx, uint32_t self_va) {
-    return l84_load_f32(fx, self_va + L84_OFFSET(rome2_fx_event_manager_prefix_32, pause_time));
+    return l84_fld(l84_load_f32(fx, self_va + L84_OFFSET(rome2_fx_event_manager_prefix_32, pause_time)));
 }
 
 /* 0x105699b0 */
@@ -639,15 +660,19 @@ uint32_t rome2_l84_event_manager_ctor(const rome2_l80_fx_ctx *fx, uint32_t self_
 
 /*
  * 0x10ed8360 / 0x10ed8390: destroy the implementation through its vtable
- * slot +0 with flag 1, release the 4-byte functor, clear the global.
+ * slot +0 with flag 1, release the 4-byte functor, clear the global. The
+ * global is read once (ESI) and that pointer is the one released, whatever
+ * the destructor does to the global.
  */
 static void l84_clear_callback(rome2_l84_fx_event_ctx *ctx, uint32_t *global_va) {
     const void *functor;
+    uint32_t functor_va;
     uint32_t impl_va;
     if (ctx == NULL || *global_va == 0u) {
         return;
     }
-    functor = rome2_l80_const_ptr(ctx->fx, *global_va, (uint32_t)sizeof(rome2_fx_functor_32));
+    functor_va = *global_va;
+    functor = rome2_l80_const_ptr(ctx->fx, functor_va, (uint32_t)sizeof(rome2_fx_functor_32));
     if (functor == NULL) {
         return; /* bounded */
     }
@@ -656,7 +681,7 @@ static void l84_clear_callback(rome2_l84_fx_event_ctx *ctx, uint32_t *global_va)
         ctx->functor_impl_destroy(ctx, impl_va, 1u);
     }
     if (ctx->operator_delete != NULL) {
-        ctx->operator_delete(ctx, *global_va, (uint32_t)sizeof(rome2_fx_functor_32));
+        ctx->operator_delete(ctx, functor_va, (uint32_t)sizeof(rome2_fx_functor_32));
     }
     *global_va = 0u;
 }
@@ -903,8 +928,10 @@ static uint32_t l84_clone_functor_impl(rome2_l84_fx_event_ctx *ctx, uint32_t imp
 /*
  * 0x10ed9a80: with a functor already installed, the clone of the argument's
  * implementation replaces the installed one, which is then destroyed with
- * flag 1. Otherwise a 4-byte functor is allocated and receives the clone; a
- * failed allocation leaves the global NULL.
+ * flag 1. The installed functor is the one the global named on entry (ESI),
+ * whatever the clone call does to the global. Otherwise a 4-byte functor is
+ * allocated and receives the clone; a failed allocation leaves the global
+ * NULL.
  */
 void rome2_l84_event_manager_set_audio_callback(rome2_l84_fx_event_ctx *ctx, uint32_t functor_va) {
     const void *source;
@@ -913,17 +940,19 @@ void rome2_l84_event_manager_set_audio_callback(rome2_l84_fx_event_ctx *ctx, uin
     uint32_t new_impl_va;
     uint32_t old_impl_va;
     uint32_t new_functor_va;
+    uint32_t installed_va;
     if (ctx == NULL) {
         return;
     }
-    if (ctx->audio_callback_va != 0u) {
+    installed_va = ctx->audio_callback_va;
+    if (installed_va != 0u) {
         source = rome2_l80_const_ptr(ctx->fx, functor_va, (uint32_t)sizeof(rome2_fx_functor_32));
         if (source == NULL) {
             return; /* bounded */
         }
         memcpy(&source_impl_va, source, sizeof(source_impl_va));
         new_impl_va = l84_clone_functor_impl(ctx, source_impl_va);
-        target = rome2_l80_mut_ptr(ctx->fx, ctx->audio_callback_va, (uint32_t)sizeof(rome2_fx_functor_32));
+        target = rome2_l80_mut_ptr(ctx->fx, installed_va, (uint32_t)sizeof(rome2_fx_functor_32));
         if (target == NULL) {
             return; /* bounded */
         }

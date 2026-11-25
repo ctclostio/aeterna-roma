@@ -72567,5 +72567,137 @@
     "remaining": [
       "16 curl_* and 247 FaceFX DLL export names (218 addresses) are not yet recovered; Partition 12 continues with Layer 85"
     ]
+  },
+  "layer84_revision1": {
+    "status": "Layer 84 model, tests and contract text corrected against the retained original-image evidence; verified with bounded C17 /analyze and ASan suites, original-image contract verification and clean-public regression coverage",
+    "revises": "layer84",
+    "base_commit": "64c4bf9",
+    "original_image_contracts": {
+      "schema": "rome2-recovered-types-v1",
+      "verified": true,
+      "functions": 2093,
+      "globals": 1153,
+      "vtables": 86,
+      "instruction_witnesses": 1624,
+      "scope": "static original-image evidence; native behavior requires separate tests"
+    },
+    "python_focused_contract_tests": 129,
+    "native_tests": {
+      "analyze": {
+        "suites": 141,
+        "failed": 0,
+        "local_ctest_log": "out/facefx-layer84-20261125/r1-analyze/Testing/Temporary/LastTest.log",
+        "log_sha256": "69da83558ddbe8d607be6c905e62c7a099d4ea5ba57abc878c323ddb3dc56e12",
+        "junit_sha256": "ab036d8c8af1d66eba77711e4ffe381aca7cb42b4043d64de86824c123f48ff3"
+      },
+      "asan": {
+        "suites": 141,
+        "failed": 0,
+        "local_ctest_log": "out/facefx-layer84-20261125/r1-asan/Testing/Temporary/LastTest.log",
+        "log_sha256": "790cf41c8b5ca07cd70ce58ddb4197f1efd0ea1188d8200092a6dbcb98dff298",
+        "junit_sha256": "125cc4a9ebb19b77035523cbda49f6d372e3fa5014a1c0d72e6756bea1f32b15"
+      },
+      "assertions_enabled": true
+    },
+    "facefx_sdk_accessors_leaf_ops_tests": {
+      "suites": 1,
+      "active_checks": 12,
+      "cases": [
+        "test_sdk_version_and_error_strings",
+        "test_value_types",
+        "test_anim_set_accessors",
+        "test_anim_accessors",
+        "test_actor_accessors",
+        "test_actor_find_anim_group",
+        "test_actor_get_anim_group_and_mounted",
+        "test_actor_instance_accessors",
+        "test_event_manager_ctor_and_state",
+        "test_event_manager_client_events_and_is_playing",
+        "test_event_manager_pause_resume",
+        "test_event_manager_callbacks"
+      ]
+    },
+    "original_observations": [
+      "0x10ed8360 / 0x10ed8390: MOV ESI, [static] once; the implementation destructor (vtable slot +0, flag 1) runs, then PUSH 4; PUSH ESI; CALL 0x116835d7 releases the functor loaded on entry and 0 is stored in the static last",
+      "0x10ed9a80: MOV ESI, [0x11fadb6c] once; with a functor installed the clone is swapped in through ESI (MOV ECX, [ESI]; MOV [ESI], EAX), the previous implementation destroyed with flag 1 and the static never stored; otherwise the new 4-byte functor is stored in the static after the clone call",
+      "0x101b0ee0, 0x101db470, 0x10228780, 0x103bf2c0, 0x10a9a5c0, 0x10ed7840, 0x10ed7850: FLD m32 then RET; 0x10ed77f0 returns the stored end through MOVSS to the stack and FLD; a signalling NaN reaches ST0 quiet",
+      "0x10ed65b0: EAX = [ESI*8 + 0x1183a95c], the stopping row's text pointer (0x1183a9d8..0x1183ac70 for rows 0..14, 0x1178701c for the -1 row)",
+      "0x10ed8fa0: the functor static is loaded before the loop and after each call and a NULL pointer skips the call; 0x10ed99c0: it is loaded for each flagged slot after the time update; both loops run over the count at +0x24",
+      "0x10ed64a0: each of the three compares (0x10ed6508, 0x10ed6547, 0x10ed656d) loads the argument's entry from memory, after the slot being compared has been bound to FxName::NullName"
+    ],
+    "native_adaptations": [
+      "FxSDKGetErrorString returns the host copy of the row text and reports the image address through an optional out-parameter",
+      "FLD-returned values are the stored single with a signalling NaN made quiet; which payload survives when both FSUB operands are NaN is not modelled",
+      "An out-of-arena load yields 0 and an accessor that chains loads carries on with it; the list, callback and event-slot bodies return at the first such access, where the original faults"
+    ],
+    "contract_text_corrections": {
+      "functions": 4,
+      "globals": 0,
+      "instruction_witnesses": 0,
+      "byte_hashes_changed": 0
+    },
+    "public_python_clean": {
+      "checkout": "tracked public files at the revision commit, no original image/canonical exports",
+      "runs": [
+        {
+          "tests": 992,
+          "skipped": 358,
+          "failures": 0,
+          "errors": 0,
+          "version": "3.14"
+        },
+        {
+          "tests": 992,
+          "skipped": 358,
+          "failures": 0,
+          "errors": 0,
+          "version": "3.15"
+        }
+      ],
+      "original_image_dependent_skip_reason": "Total War Rome II/empire.retail.dll, canonical exports and private reports absent"
+    },
+    "rea": {
+      "new_operation_envelopes": 0,
+      "evidence": "out/facefx-layer84-20261125 (Partition 12 bundle, 64 records)"
+    },
+    "local_logs": "out/facefx-layer84-20261125/",
+    "source_hash_scope": "files changed by this revision, UTF-8 text with LF line endings, excluding verification.json itself",
+    "sources": [
+      {
+        "path": "docs/vfs_recovery.md",
+        "bytes": 237826,
+        "sha256": "1b867ab6c6a1694ba2f92248020b5c094c7e3198a263e5651be0c1780706fbd0"
+      },
+      {
+        "path": "port/recovered_types/contracts.json",
+        "bytes": 3842704,
+        "sha256": "599b8b6688aabf24f2041bc49e1a14168549a7e66376b0854f3de0745b0ea249"
+      },
+      {
+        "path": "port/recovered_types/facefx_sdk_accessors_leaf_ops.c",
+        "bytes": 37241,
+        "sha256": "52c5be0486cea61580d5282f8324303c9c6965784dcef118565ca241b832e8cf"
+      },
+      {
+        "path": "port/recovered_types/facefx_sdk_accessors_leaf_ops.h",
+        "bytes": 11624,
+        "sha256": "d4d89f0cd82d19113859dea1fdf340b6e5e7bee3aed63bcaeb4cd4e7bc6b32d1"
+      },
+      {
+        "path": "port/recovered_types/test_facefx_sdk_accessors_leaf_ops.c",
+        "bytes": 59747,
+        "sha256": "2d2f4bceac1f536b60e1a8f46ea36be78c5103e8be571f23a6b8dbdcf11731f8"
+      },
+      {
+        "path": "progress.md",
+        "bytes": 219147,
+        "sha256": "b9ab3ad1feca44dac8dc8959f48190d992f322de0cb4bd8331e63e4dfd37a971"
+      },
+      {
+        "path": "scripts/test_type_recovery_contracts.py",
+        "bytes": 305195,
+        "sha256": "9a733f43f51e4820fb5f1ad5a0642b4287f447d95f3cdd362a9e968c54c347fc"
+      }
+    ]
   }
 }

@@ -4744,6 +4744,64 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual((sum(map(len, facefx.values())), sum(bool(names) for names in facefx.values())), (247, 218))
         self.assertEqual(sum(n.startswith("curl_") for a, names in exports.items() if a not in fns for n in names), 16)
 
+    def test_layer84_revision1_held_functor_and_fld_fidelity(self):
+        self.assertEqual(self.registry["rea_layer84_evidence"]["model_revision"]["revision"], 1)
+        fns = {f["address"]: f for f in self.registry["functions"]}
+        base, sections = contracts.parse_pe32(self.image)
+
+        def code(address, size):
+            return contracts.image_bytes(self.image, base, sections, address, size)[0].hex()
+
+        # both Clear bodies load the functor static into ESI once, release PUSH 4 / PUSH ESI and store 0 last
+        for load, release, clear, static in ((0x10ED8361, 0x10ED8377, 0x10ED8382, "6cdbfa11"),
+                                             (0x10ED8391, 0x10ED83A7, 0x10ED83B2, "70dbfa11")):
+            self.assertEqual(code(load, 6), "8b35" + static)
+            self.assertEqual(code(release, 3), "6a0456")
+            self.assertEqual(code(clear, 10), "c705" + static + "00000000")
+        # SetAudioCallback: the same single load; the installed half swaps through ESI, the other half stores ESI
+        self.assertEqual(code(0x10ED9A81, 6), "8b356cdbfa11")
+        self.assertEqual(code(0x10ED9ADD, 4), "8b0e8906")
+        self.assertEqual(code(0x10ED9AB8, 6), "89356cdbfa11")
+        for address in ("10ed8360", "10ed9a80"):
+            self.assertIn("loads the functor pointer at 0x11fadb6c once", fns[address]["scope"])
+        # Pause and Resume: the [+0x24] count, and a NULL functor pointer skips the call
+        self.assertEqual((code(0x10ED8FAC, 3), code(0x10ED99D0, 3)), ("8b6f24", "8b6e24"))
+        self.assertEqual((code(0x10ED8FB6, 6), code(0x10ED8FC9, 4), code(0x10ED8FF7, 6)),
+                         ("8b0d6cdbfa11", "85c97430", "8b0d6cdbfa11"))
+        self.assertEqual(code(0x10ED9A1F, 10), "8b0d6cdbfa1185c9742a")
+        for address in ("10ed8fa0", "10ed99c0"):
+            self.assertIn("[+0x24] slots", fns[address]["scope"])
+            self.assertIn("is non-NULL", fns[address]["scope"])
+        # FindAnimGroup compares against the argument in memory each time
+        self.assertEqual((code(0x10ED6508, 2), code(0x10ED6547, 2), code(0x10ED656D, 2)), ("3b0e", "3b06", "3b06"))
+        # the float accessors are FLD m32; RET, and GetEndTime returns its stack copy through FLD too
+        for address, offset in ((0x101B0EE0, "04"), (0x10228780, "24"), (0x10A9A5C0, "28"),
+                                (0x103BF2C0, "2c"), (0x101DB470, "30")):
+            self.assertEqual(code(address, 4), "d941" + offset + "c3")
+        self.assertEqual(code(0x10ED7840, 7), "d981f4000000c3")
+        self.assertEqual(code(0x10ED7850, 13), "8b49388b442404d90481c20400")
+        self.assertEqual(code(0x10ED7814, 15), "f30f104128f30f110424d9042459c3")
+        root = Path(__file__).resolve().parents[1] / "port" / "recovered_types"
+        source = (root / "facefx_sdk_accessors_leaf_ops.c").read_text(encoding="utf-8")
+        header = (root / "facefx_sdk_accessors_leaf_ops.h").read_text(encoding="utf-8")
+        tests = (root / "test_facefx_sdk_accessors_leaf_ops.c").read_text(encoding="utf-8")
+        self.assertEqual(source.count("l84_fld(l84_load_f32("), 7)
+        self.assertIn("return l84_fld(end);", source)
+        self.assertIn("bits |= 0x00400000u;", source)
+        # the released and rewritten functor is the one captured before the hook runs
+        self.assertIn("ctx->operator_delete(ctx, functor_va, (uint32_t)sizeof(rome2_fx_functor_32));", source)
+        self.assertIn("target = rome2_l80_mut_ptr(ctx->fx, installed_va, (uint32_t)sizeof(rome2_fx_functor_32));", source)
+        # FxSDKGetErrorString hands back the row's text pointer (0x10ed6621)
+        self.assertEqual(code(0x10ED6621, 7), "8b04f55ca98311")
+        self.assertIn("const char *rome2_l84_fx_sdk_get_error_string(rome2_l80_fx_ctx *fx, int32_t error, uint32_t *text_va);", header)
+        self.assertIn("*text_va = l84_error_rows[index].text_va;", source)
+        globs = {g["address"]: g for g in self.registry["globals"]}
+        table = bytes.fromhex(globs["1183a958"]["initial_hex_le"])
+        for row in range(15):
+            self.assertIn(f"0x{struct.unpack_from('<I', table, row * 8 + 4)[0]:08x}u", tests)
+        self.assertEqual(struct.unpack_from("<I", table, 15 * 8 + 4)[0], 0x1178701C)
+        self.assertIn("text_va == 0x1178701cu", tests)
+
     def test_tail_exit_indirect_jmp_mutations_rejected(self):
         for mutator, pattern in (
             (lambda te: te.update({"address": "116c1f58"}), "tail_exit indirect_jmp address disagrees"),
