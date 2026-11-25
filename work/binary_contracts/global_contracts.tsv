@@ -3,6 +3,8 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 10102254	184	file	000a01010a02010a030a0a0a0a02030a0a0a0a0a0a0a040a0a0a0a0a0a0a0a0a050a0a0a0a0a060a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a070a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a080a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a09	.text	184-byte lookup index table in .text mapping Win32 codes 0..0xb7 for 0x101021b0	184-byte lookup index table in .text mapping Win32 codes 0..0xb7 for 0x101021b0	true
 10103140	40	file	f2301010f5301010fb301010333110100131101007311010393110100d311010133110102d311010	.text	10-entry 32-bit switch jump table in .text for Win32 error mapper 0x101030d0	10-entry 32-bit switch jump table in .text for Win32 error mapper 0x101030d0	true
 10103168	184	file	00090101090201090309090909090909090909090909090909090909090909090409090909090509090909090909090909090909090909090909090909090909090909090909090909090909090909090909090909090906090909090909090909090909090909090909090909090909090909090909090909090907090909090909090909090909090909090909090909090909090909090909090909090909090909090909090909090909090909090909090909090908	.text	184-byte lookup index table in .text mapping Win32 codes 0..0xb7 for 0x101030d0	184-byte lookup index table in .text mapping Win32 codes 0..0xb7 for 0x101030d0	true
+10f233b0	44	file	0833f2104a33f2104a33f2101e33f210a833f2103433f2103433f2107633f2109233f2109233f2109233f210	.text	multi_getsock state jump table in .text (11 code pointers for states 2..12) indexed at 0x10f23301	multi_getsock state jump table in .text (11 code pointers for states 2..12) indexed at 0x10f23301	true
+10f403a0	76	file	e9fbf310e5fbf31020fcf31049fcf31045fcf31082fcf310a7fcf310c8fbf3107ffff310f3fcf31021fff310a3fdf310e3fdf31048fef310f4fef31021fff3107ffff3107ffff31008fef310	.text	FormAdd option jump table in .text (19 code pointers for CURLFORM options 1..19) indexed at 0x10f3fbc1	FormAdd option jump table in .text (19 code pointers for CURLFORM options 1..19) indexed at 0x10f3fbc1	true
 112e4188	52	file	6a402e118d402e11b0402e1181412e1181412e1181412e1181412e1181412e1181412e11d0402e11f0402e1110412e1130412e11	.text	13-entry 32-bit switch jump table in .rdata/.text for 0x112e4050 unit formatting tags 1..13	13-entry 32-bit switch jump table in .rdata/.text for 0x112e4050 unit formatting tags 1..13	true
 1172f000	4	file	80009301	.rdata	pe_iat_slot	ADVAPI32.dll!RegOpenKeyExA	false
 1172f004	4	file	90009301	.rdata	IAT slot in .rdata (ADVAPI32.dll!RegQueryValueExA) called by 0x11302cc0/0x11303db0/0x113048b0	IAT slot in .rdata (ADVAPI32.dll!RegQueryValueExA) called by 0x11302cc0/0x11303db0/0x113048b0	true
@@ -213,7 +215,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1172f34c	4	file	121d9301	.rdata	IAT slot in .rdata (KERNEL32!DecodePointer) called by 0x116b0763	IAT slot in .rdata (KERNEL32!DecodePointer) called by 0x116b0763	true
 1172f350	4	file	021d9301	.rdata	pe_iat_slot	KERNEL32.dll!EncodePointer	false
 1172f354	4	file	ec1c9301	.rdata	pe_iat_slot	KERNEL32.dll!InitializeSListHead	false
-1172f358	4	file	d21c9301	.rdata	pe_iat_slot	KERNEL32.dll!GetSystemTimeAsFileTime	false
+1172f358	4	file	d21c9301	.rdata	IAT slot in .rdata (KERNEL32.dll!GetSystemTimeAsFileTime) jumped to by 0x116a88a7	IAT slot in .rdata (KERNEL32.dll!GetSystemTimeAsFileTime) jumped to by 0x116a88a7	true
 1172f35c	4	file	c01c9301	.rdata	pe_iat_slot	KERNEL32.dll!GetStartupInfoW	false
 1172f360	4	file	a21c9301	.rdata	IAT slot in .rdata (KERNEL32.dll!SetUnhandledExceptionFilter) called by 0x1168783d (___acrt_call_reportfault)	IAT slot in .rdata (KERNEL32.dll!SetUnhandledExceptionFilter) called by 0x1168783d (___acrt_call_reportfault)	true
 1172f364	4	file	861c9301	.rdata	IAT slot in .rdata (KERNEL32.dll!UnhandledExceptionFilter) called by 0x1168783d (___acrt_call_reportfault)	IAT slot in .rdata (KERNEL32.dll!UnhandledExceptionFilter) called by 0x1168783d (___acrt_call_reportfault)	true
@@ -240,8 +242,8 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1172f3bc	4	file	de000080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_222	false
 1172f3c0	4	file	df000080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_223	false
 1172f3c4	4	file	f3080080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_2291	false
-1172f3c8	4	file	e0000080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_224	false
-1172f3cc	4	file	fe000080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_254	false
+1172f3c8	4	file	e0000080	.rdata	OpenSSL IAT slot in .rdata (LIBEAY32.dll!#224, import by ordinal) jumped to by 0x1168778e	OpenSSL IAT slot in .rdata (LIBEAY32.dll!#224, import by ordinal) jumped to by 0x1168778e	true
+1172f3cc	4	file	fe000080	.rdata	OpenSSL IAT slot in .rdata (LIBEAY32.dll!#254, import by ordinal) jumped to by 0x11687794	OpenSSL IAT slot in .rdata (LIBEAY32.dll!#254, import by ordinal) jumped to by 0x11687794	true
 1172f3d0	4	file	d0010080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_464	false
 1172f3d4	4	file	99080080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_2201	false
 1172f3d8	4	file	d3010080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_467	false
@@ -268,7 +270,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1172f42c	4	file	f7030080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_1015	false
 1172f430	4	file	76060080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_1654	false
 1172f434	4	file	75060080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_1653	false
-1172f438	4	file	2c0a0080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_2604	false
+1172f438	4	file	2c0a0080	.rdata	OpenSSL IAT slot in .rdata (LIBEAY32.dll!#2604, import by ordinal) jumped to by 0x11687680	OpenSSL IAT slot in .rdata (LIBEAY32.dll!#2604, import by ordinal) jumped to by 0x11687680	true
 1172f43c	4	file	bc000080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_188	false
 1172f440	4	file	b5000080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_181	false
 1172f444	4	file	4e000080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_78	false
@@ -277,8 +279,8 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1172f450	4	file	18010080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_280	false
 1172f454	4	file	2c020080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_556	false
 1172f458	4	file	19010080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_281	false
-1172f45c	4	file	2a010080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_298	false
-1172f460	4	file	8c0c0080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_3212	false
+1172f45c	4	file	2a010080	.rdata	OpenSSL IAT slot in .rdata (LIBEAY32.dll!#298, import by ordinal) jumped to by 0x116876e6	OpenSSL IAT slot in .rdata (LIBEAY32.dll!#298, import by ordinal) jumped to by 0x116876e6	true
+1172f460	4	file	8c0c0080	.rdata	OpenSSL IAT slot in .rdata (LIBEAY32.dll!#3212, import by ordinal) jumped to by 0x116876e0	OpenSSL IAT slot in .rdata (LIBEAY32.dll!#3212, import by ordinal) jumped to by 0x116876e0	true
 1172f464	4	file	12000080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_18	false
 1172f468	4	file	8a090080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_2442	false
 1172f46c	4	file	07000080	.rdata	pe_iat_slot	LIBEAY32.dll!Ordinal_7	false
@@ -346,7 +348,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1172f57c	4	file	30000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_48	false
 1172f580	4	file	2b000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_43	false
 1172f584	4	file	4e000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_78	false
-1172f588	4	file	4c000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_76	false
+1172f588	4	file	4c000080	.rdata	OpenSSL IAT slot in .rdata (SSLEAY32.dll!#76, import by ordinal) jumped to by 0x116c7f93	OpenSSL IAT slot in .rdata (SSLEAY32.dll!#76, import by ordinal) jumped to by 0x116c7f93	true
 1172f58c	4	file	6c000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_108	false
 1172f590	4	file	2d000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_45	false
 1172f594	4	file	06000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_6	false
@@ -357,7 +359,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1172f5a8	4	file	ac000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_172	false
 1172f5ac	4	file	60000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_96	false
 1172f5b0	4	file	56000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_86	false
-1172f5b4	4	file	b7000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_183	false
+1172f5b4	4	file	b7000080	.rdata	OpenSSL IAT slot in .rdata (SSLEAY32.dll!#183, import by ordinal) jumped to by 0x116c7fd5	OpenSSL IAT slot in .rdata (SSLEAY32.dll!#183, import by ordinal) jumped to by 0x116c7fd5	true
 1172f5b8	4	file	31000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_49	false
 1172f5bc	4	file	7e000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_126	false
 1172f5c0	4	file	8d000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_141	false
@@ -370,7 +372,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1172f5dc	4	file	3d000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_61	false
 1172f5e0	4	file	5a000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_90	false
 1172f5e4	4	file	1f000080	.rdata	OpenSSL IAT slot SSL_SESSION_free (4B) used by Layer 82	OpenSSL IAT slot SSL_SESSION_free (4B) used by Layer 82	true
-1172f5e8	4	file	4a000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_74	false
+1172f5e8	4	file	4a000080	.rdata	OpenSSL IAT slot in .rdata (SSLEAY32.dll!#74, import by ordinal) jumped to by 0x116c7f45	OpenSSL IAT slot in .rdata (SSLEAY32.dll!#74, import by ordinal) jumped to by 0x116c7f45	true
 1172f5ec	4	file	de000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_222	false
 1172f5f0	4	file	1e000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_30	false
 1172f5f4	4	file	74000080	.rdata	pe_iat_slot	SSLEAY32.dll!Ordinal_116	false
@@ -518,8 +520,8 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1172f840	4	file	15000080	.rdata	pe_iat_slot	WS2_32.dll!Ordinal_21	false
 1172f844	4	file	17000080	.rdata	IAT slot in .rdata (WS2_32.dll!#23 socket) jumped to by 0x116c810d	IAT slot in .rdata (WS2_32.dll!#23 socket) jumped to by 0x116c810d	true
 1172f848	4	file	34000080	.rdata	pe_iat_slot	WS2_32.dll!Ordinal_52	false
-1172f84c	4	file	73000080	.rdata	pe_iat_slot	WS2_32.dll!Ordinal_115	false
-1172f850	4	file	74000080	.rdata	pe_iat_slot	WS2_32.dll!Ordinal_116	false
+1172f84c	4	file	73000080	.rdata	IAT slot in .rdata (WS2_32.dll!#115 WSAStartup) called by 0x10f10a57	IAT slot in .rdata (WS2_32.dll!#115 WSAStartup) called by 0x10f10a57	true
+1172f850	4	file	74000080	.rdata	IAT slot in .rdata (WS2_32.dll!#116 WSACleanup) called by 0x10f109c4 and 0x10f10a70	IAT slot in .rdata (WS2_32.dll!#116 WSACleanup) called by 0x10f109c4 and 0x10f10a70	true
 1172f854	4	file	6f000080	.rdata	IAT slot in .rdata (WS2_32.dll!#111 WSAGetLastError) jumped to by 0x116c8125	IAT slot in .rdata (WS2_32.dll!#111 WSAGetLastError) jumped to by 0x116c8125	true
 1172f858	4	file	08000080	.rdata	pe_iat_slot	WS2_32.dll!Ordinal_8	false
 1172f85c	4	file	39000080	.rdata	pe_iat_slot	WS2_32.dll!Ordinal_57	false
@@ -959,6 +961,18 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1183cc80	37	file	417474656d707420746f20637265617465206475706c6963617465204678436c6173732100	.rdata	FaceFX FxName/FxClass .rdata string slice (37B) used by Layer 81	FaceFX FxName/FxClass .rdata string slice (37B) used by Layer 81	true
 1183cd58	68	file	417474656d707420746f2066696e6420636c617373206465736372697074696f6e206265666f7265204678436c6173733a3a5374617274757028292063616c6c65642100	.rdata	FaceFX FxName/FxClass .rdata string slice (68B) used by Layer 81	FaceFX FxName/FxClass .rdata string slice (68B) used by Layer 81	true
 1183de80	12	file	46785265664f626a65637400	.rdata	FaceFX FxName/FxClass .rdata string slice (12B) used by Layer 81	FaceFX FxName/FxClass .rdata string slice (12B) used by Layer 81	true
+1183ea70	26	file	434f4e4e4543545f4f4e4c592069732072657175697265642100	.rdata	"libcurl .rdata string ""CONNECT_ONLY is required!"" pushed by 0x10f10b47"	"libcurl .rdata string ""CONNECT_ONLY is required!"" pushed by 0x10f10b47"	true
+1183ea8c	28	file	4661696c656420746f2067657420726563656e7420736f636b657400	.rdata	"libcurl .rdata string ""Failed to get recent socket"" pushed by 0x10f10b74"	"libcurl .rdata string ""Failed to get recent socket"" pushed by 0x10f10b74"	true
+1183fa10	3	file	2a2000	.rdata	"libcurl .rdata string ""* "" written before verbose failf text at 0x10f1d30c"	"libcurl .rdata string ""* "" written before verbose failf text at 0x10f1d30c"	true
+1183fa50	33	file	4661696c65642077726974696e6720626f64792028257a7520213d20257a752900	.rdata	"libcurl .rdata format ""Failed writing body (%zu != %zu)"" pushed by 0x10f1d109"	"libcurl .rdata format ""Failed writing body (%zu != %zu)"" pushed by 0x10f1d109"	true
+1183fa74	22	file	4661696c65642077726974696e672068656164657200	.rdata	"libcurl .rdata string ""Failed writing header"" pushed by 0x10f1d168"	"libcurl .rdata string ""Failed writing header"" pushed by 0x10f1d168"	true
+118465b0	72	file	2e676966000000000c6684112e6a706700000000186684112e6a706567000000186684112e74787400000000246684112e68746d6c000000306684112e786d6c000000003c668411	.rdata	libcurl formpost content-type table: six 12B {char extension[6]; pad; const char* type} rows read by 0x10f3fb40	libcurl formpost content-type table: six 12B {char extension[6]; pad; const char* type} rows read by 0x10f3fb40	true
+1184660c	10	file	696d6167652f67696600	.rdata	"libcurl .rdata string ""image/gif"" referenced by the 0x118465b0 table"	"libcurl .rdata string ""image/gif"" referenced by the 0x118465b0 table"	true
+11846618	11	file	696d6167652f6a70656700	.rdata	"libcurl .rdata string ""image/jpeg"" referenced by the 0x118465b0 table"	"libcurl .rdata string ""image/jpeg"" referenced by the 0x118465b0 table"	true
+11846624	11	file	746578742f706c61696e00	.rdata	"libcurl .rdata string ""text/plain"" referenced by the 0x118465b0 table"	"libcurl .rdata string ""text/plain"" referenced by the 0x118465b0 table"	true
+11846630	10	file	746578742f68746d6c00	.rdata	"libcurl .rdata string ""text/html"" referenced by the 0x118465b0 table"	"libcurl .rdata string ""text/html"" referenced by the 0x118465b0 table"	true
+1184663c	16	file	6170706c69636174696f6e2f786d6c00	.rdata	"libcurl .rdata string ""application/xml"" referenced by the 0x118465b0 table"	"libcurl .rdata string ""application/xml"" referenced by the 0x118465b0 table"	true
+1184664c	25	file	6170706c69636174696f6e2f6f637465742d73747265616d00	.rdata	"libcurl .rdata string ""application/octet-stream"" loaded as the default type at 0x10f400b0"	"libcurl .rdata string ""application/octet-stream"" loaded as the default type at 0x10f400b0"	true
 11846b04	9	file	6e6f2076616c756500	.rdata	ASCII string 'no value' returned by lua_typename (0x10f44f10)	ASCII string 'no value' returned by lua_typename (0x10f44f10)	true
 11846b10	2	file	3f00	.rdata	ASCII string '?' returned by getobjname/kname fallback	ASCII string '?' returned by getobjname/kname fallback	true
 11846b2c	7	file	6d6574686f6400	.rdata	ASCII string 'method' returned by getobjname (0x10f47140)	ASCII string 'method' returned by getobjname (0x10f47140)	true
@@ -1102,6 +1116,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1190c774	12	file	466c7347657456616c756500	.rdata	NUL-terminated ASCII string 'FlsGetValue' in .rdata queried by 0x116a8723 (___acrt_FlsGetValue@4)	NUL-terminated ASCII string 'FlsGetValue' in .rdata queried by 0x116a8723 (___acrt_FlsGetValue@4)	true
 1190c780	12	file	466c7353657456616c756500	.rdata	NUL-terminated ASCII string 'FlsSetValue' in .rdata queried by 0x116a8762 (___acrt_FlsSetValue@8)	NUL-terminated ASCII string 'FlsSetValue' in .rdata queried by 0x116a8762 (___acrt_FlsSetValue@8)	true
 1190c78c	28	file	496e697469616c697a65437269746963616c53656374696f6e457800	.rdata	NUL-terminated ASCII string 'InitializeCriticalSectionEx' in .rdata for 0x116a896e	NUL-terminated ASCII string 'InitializeCriticalSectionEx' in .rdata for 0x116a896e	true
+1190c964	31	file	47657453797374656d54696d6550726563697365417346696c6554696d6500	.rdata	"CRT .rdata string ""GetSystemTimePreciseAsFileTime"" pushed by 0x116a887e"	"CRT .rdata string ""GetSystemTimePreciseAsFileTime"" pushed by 0x116a887e"	true
 1190ca78	16	file	436f6d70617265537472696e67457800	.rdata	NUL-terminated ASCII string 'CompareStringEx' in .rdata queried by 0x116a82ed	NUL-terminated ASCII string 'CompareStringEx' in .rdata queried by 0x116a82ed	true
 1190ca98	14	file	4c434d6170537472696e67457800	.rdata	NUL-terminated ASCII string 'LCMapStringEx' in .rdata queried by 0x116a83bd	NUL-terminated ASCII string 'LCMapStringEx' in .rdata queried by 0x116a83bd	true
 1190ec70	91	file	06000006000100001000030600060210044545450505050505353000500000000028203850580708003730305750070000202008070000000860686060606000007870787878780807080700070008080800000807080007080007	.rdata	91-byte packed printf format-char state transition table in .rdata indexed by 0x1168934e ([ch+0x1190ec50] & 0xf row, [prev_state + row*8 + 0x1190ec70] >> 4)	91-byte packed printf format-char state transition table in .rdata indexed by 0x1168934e ([ch+0x1190ec50] & 0xf row, [prev_state + row*8 + 0x1190ec70] >> 4)	true
@@ -7965,7 +7980,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 119750b8	4	file	c0e88311	.data	static_rdata_ptr	ptr_0x1183e8c0	false
 119750bc	4	file	c4e88311	.data	static_rdata_ptr	ptr_0x1183e8c4	false
 119750c0	4	file	c8e88311	.data	static_rdata_ptr	ptr_0x1183e8c8	false
-119750cc	4	file	c3d06811	.data	static_fn_ptr	thunk_116a59a1_1168d0c3	false
+119750cc	20	file	c3d06811a8d06811a2d969114d206b11add96911	.data	libcurl allocator callback pointers in .data (malloc, free, realloc, strdup, calloc), initially CRT 0x1168d0c3, 0x1168d0a8, 0x1169d9a2, 0x116b204d, 0x1169d9ad	libcurl allocator callback pointers in .data (malloc, free, realloc, strdup, calloc), initially CRT 0x1168d0c3, 0x1168d0a8, 0x1169d9a2, 0x116b204d, 0x1169d9ad	true
 119750d0	4	file	a8d06811	.data	static_fn_ptr	thunk_116a5967_1168d0a8	false
 119750d4	4	file	a2d96911	.data	static_fn_ptr	thunk_116b1986_1169d9a2	false
 119750d8	4	file	4d206b11	.data	static_fn_ptr	strdup	false
@@ -10998,6 +11013,13 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 11fadb90	4	zero_fill	00000000	.data	pe_data_export	?_pClassDesc@FxActor@Face@OC3Ent@@0PAVFxClass@23@A	false
 11fadb94	4	zero_fill	00000000	.data	pe_data_export	?NewActor@FxActor@Face@OC3Ent@@2VFxName@23@A	false
 11fadb98	4	zero_fill	00000000	.data	pe_data_export	?_pClassDesc@FxActorInstance@Face@OC3Ent@@0PAVFxClass@23@A	false
+11fb5948	4	zero_fill	00000000	.data	curl_global_init nesting count in .bss	curl_global_init nesting count in .bss	true
+11fb594c	4	zero_fill	00000000	.data	curl_global_init flags in .bss	curl_global_init flags in .bss	true
+11fb5950	24	zero_fill	000000000000000000000000000000000000000000000000	.data	libcurl hostname cache curl_hash (0x18B) in .bss cleaned by 0x10f12f30	libcurl hostname cache curl_hash (0x18B) in .bss cleaned by 0x10f12f30	true
+11fb5968	4	zero_fill	00000000	.data	libcurl host cache initialised flag in .bss	libcurl host cache initialised flag in .bss	true
+11fb596c	4	zero_fill	00000000	.data	libcurl SSL initialised flag in .bss set by 0x10f162a0	libcurl SSL initialised flag in .bss set by 0x10f162a0	true
+11fb5970	4	zero_fill	00000000	.data	libcurl random seed in .bss stored by 0x10f1eda0	libcurl random seed in .bss stored by 0x10f1eda0	true
+11fb5974	8	zero_fill	0000000000000000	.data	zero timeval in .bss pushed by multi_timeout (0x10f24450) as the splay key	zero timeval in .bss pushed by multi_timeout (0x10f24450) as the splay key	true
 1201a50c	4	zero_fill	00000000	.data	4-byte zero-fill external queue counter in .data decremented by 0x10fa5d10	4-byte zero-fill external queue counter in .data decremented by 0x10fa5d10	true
 1201ae48	4	zero_fill	00000000	.data	4-byte zero-fill channel manager singleton base word in .data returned by 0x10fddba0	4-byte zero-fill channel manager singleton base word in .data returned by 0x10fddba0	true
 1201b07c	4	zero_fill	00000000	.data	4-byte zero-fill MSVC TLS init guard for 0x1201ae48 checked by 0x10fddba0	4-byte zero-fill MSVC TLS init guard for 0x1201ae48 checked by 0x10fddba0	true

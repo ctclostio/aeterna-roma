@@ -31120,6 +31120,937 @@
       "return_instruction_addresses": [
         "116d75f2"
       ]
+    },
+    {
+      "address": "10f10330",
+      "bytes": 40,
+      "sha256": "42c7dc05f15fda52b2f8f4af12df6198d368983a3fd158f883b5906018f1690a",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void Curl_easy_initHandleData(SessionHandle*)",
+      "scope": "memset(data + 0x18, 0, 0x110) then stores -1 into the dwords at +0x28 and +0x2c",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f10357"
+      ]
+    },
+    {
+      "address": "10f105a0",
+      "bytes": 49,
+      "sha256": "ab29003cf67fa29fd4c439e35554f493587c7b9b29d42ba4e07d4364748b2684",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURL* curl_easy_init(void)",
+      "scope": "runs curl_global_init(3) when the init count [0x11fb5948] is zero, then Curl_open; NULL on either failure",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f105cb",
+        "10f105d0"
+      ]
+    },
+    {
+      "address": "10f105e0",
+      "bytes": 292,
+      "sha256": "981cf66ac142d4374ed84ae694fc51e3950c704559de96d9fc634764e1de0dbb",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURLcode curl_easy_pause(CURL*, int)",
+      "scope": "rewrites the KEEP_RECV_PAUSE/KEEP_SEND_PAUSE bits at +0xf8 and, when receive is unpaused, replays the saved tempwrite buffer through Curl_client_write in 0x4000-byte chunks, re-saving the remainder if paused again",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f106c8",
+        "10f106f8",
+        "10f106fe",
+        "10f10703"
+      ]
+    },
+    {
+      "address": "10f10820",
+      "bytes": 189,
+      "sha256": "3ed420571afbfd22af6f31a22a552d00f5eff23f7377ca1c9ad9ac54f118f806",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void curl_easy_reset(CURL*)",
+      "scope": "frees the path and proto buffers, runs Curl_freeset, zeroes the set and progress blocks, reapplies Curl_init_userdefined and the handle defaults",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f108dc"
+      ]
+    },
+    {
+      "address": "10f108e0",
+      "bytes": 113,
+      "sha256": "2b66b76d6101ee5d442a5611afa701e0cdd11d57cee67db31a00e5e8fec1b7dd",
+      "receiver_register": "none",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURLcode curl_easy_send(CURL*, const void*, size_t, size_t*)",
+      "scope": "easy_connection then Curl_write on the connect-only socket; a zero-byte OK write reports CURLE_AGAIN (0x51)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f10939",
+        "10f10949",
+        "10f10950"
+      ]
+    },
+    {
+      "address": "10f10990",
+      "bytes": 69,
+      "sha256": "dfcca7b799164319fffd3df3c696a28cfacd9f88dfb77dfb74160ea5f972bd02",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void curl_global_cleanup(void)",
+      "scope": "decrements the init count and at zero runs the host-cache destructor, Curl_ssl_cleanup (flag bit 1), the folded no-op stub 0x100d6560, WSACleanup (flag bit 2) and clears init_flags",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f109d4"
+      ]
+    },
+    {
+      "address": "10f109e0",
+      "bytes": 206,
+      "sha256": "4e886de71f7a01a6adec72981ea6759166fcacf66c230b34c812e9035e82ad1a",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURLcode curl_global_init(long)",
+      "scope": "counts nested calls; the first installs the CRT allocator defaults at 0x119750cc, runs Curl_ssl_init (bit 1), WSAStartup(0x0202) with a 2.2 version check (bit 2), the folded zero stub 0x100dbc00 and Curl_srand; failure returns CURLE_FAILED_INIT (2) without undoing the count",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f109ff",
+        "10f10a82",
+        "10f10a98",
+        "10f10aad"
+      ]
+    },
+    {
+      "address": "10f10ab0",
+      "bytes": 127,
+      "sha256": "0eab6394e6088338334616b1d2ff8c898222607196fcdc9735cb84ca89ac09d0",
+      "receiver_register": "none",
+      "stack_argument_bytes": 24,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURLcode curl_global_init_mem(long, malloc_cb, free_cb, realloc_cb, strdup_cb, calloc_cb)",
+      "scope": "rejects a NULL callback with CURLE_FAILED_INIT, returns OK unchanged when already initialised, otherwise runs curl_global_init and installs the five callbacks at 0x119750cc on success",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f10aea",
+        "10f10b24",
+        "10f10b2e"
+      ]
+    },
+    {
+      "address": "10f10b30",
+      "bytes": 93,
+      "sha256": "fb5f964fb5b6c7837110a6e237d1e6f3595e84991e7cc93acdc8d54e00e90894",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURLcode easy_connection(SessionHandle*, curl_socket_t*, connectdata**)",
+      "scope": "requires a handle and connect_only (+0x358), fetches the socket through Curl_getconnectinfo and reports CURLE_UNSUPPORTED_PROTOCOL (1) through failf otherwise",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f10b3d",
+        "10f10b5b",
+        "10f10b88",
+        "10f10b8c"
+      ]
+    },
+    {
+      "address": "10f123e0",
+      "bytes": 79,
+      "sha256": "4bc8ad6a3148f523a47d3a0be7ae5a6574040aecb61f4c3e4b44d53abf022f2b",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void Curl_hash_clean(curl_hash*)",
+      "scope": "destroys each bucket llist with the hash as destructor user pointer, frees the table and zeroes table, slots and size",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f1242e"
+      ]
+    },
+    {
+      "address": "10f12660",
+      "bytes": 85,
+      "sha256": "753b3925dde552d41387207164e41117cffc8b68a4dfa95f043970a32ee43b3f",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void* Curl_hash_pick(curl_hash*, void*, size_t)",
+      "scope": "indexes the bucket through the hash callback (+4) and walks it with the compare callback (+8); returns the matching element payload or NULL",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f126ad",
+        "10f126b4"
+      ]
+    },
+    {
+      "address": "10f12f30",
+      "bytes": 33,
+      "sha256": "1c7d5a99817f6671ea4ce98cf0248e2d22b68435d7349124ffe385dc449ad81d",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void Curl_global_host_cache_dtor(void)",
+      "scope": "when [0x11fb5968] is set, runs Curl_hash_clean on the 0x11fb5950 hostname cache and clears the flag",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f12f50"
+      ]
+    },
+    {
+      "address": "10f14670",
+      "bytes": 145,
+      "sha256": "78b6f6b3362a5b1636119e45c718b3c1f48b300963858750d97fc3d05e9cee1d",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "int Curl_single_getsock(const connectdata*, curl_socket_t*, int)",
+      "scope": "defers to handler->perform_getsock (+0x2c) when present; otherwise builds the read/write socket bitmap from the keepon bits at data+0xf8 and conn sockfd/writesockfd (+0x240/+0x244)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f1469b",
+        "10f146a8",
+        "10f14700"
+      ]
+    },
+    {
+      "address": "10f15ca0",
+      "bytes": 5,
+      "sha256": "2085592494b91eb9b21d1148fa271859743f3dc730bb5ee3a2faca43bdc23d35",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "int Curl_ssl_check_cxn(connectdata*)",
+      "scope": "5B direct tail jump to Curl_ossl_check_cxn (0x10f2d260)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "direct_jmp",
+        "address": "10f15ca0",
+        "target": "10f2d260"
+      }
+    },
+    {
+      "address": "10f15cb0",
+      "bytes": 25,
+      "sha256": "cabb2a1e27153628357cc5aa2535060ee05f3b41c4b7274ef477c492b8343ba0",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void Curl_ssl_cleanup(void)",
+      "scope": "when the SSL init flag [0x11fb596c] is set, runs Curl_ossl_cleanup and clears the flag",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f15cc8"
+      ]
+    },
+    {
+      "address": "10f162a0",
+      "bytes": 30,
+      "sha256": "3b9a8e9ea0c6f873f311f137cd595f9a065a817f5f138b3a6b196bc3d945d941",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "int Curl_ssl_init(void)",
+      "scope": "returns 1 through the RET at 0x10f162ae when [0x11fb596c] is already set; otherwise sets it and tail-jumps to Curl_ossl_init (0x10f2d380)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "direct_jmp",
+        "address": "10f162b9",
+        "target": "10f2d380"
+      }
+    },
+    {
+      "address": "10f173f0",
+      "bytes": 30,
+      "sha256": "79a8da6bc0a20bc3c408d5f4bce60ee2cc13a8bf3949d76ef6aabf68ba7b8d44",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "int Curl_doing_getsock(connectdata*, curl_socket_t*, int)",
+      "scope": "returns 0 for a NULL connection or missing handler->doing_getsock (+0x24); otherwise leaves through the register-indirect JMP EAX at 0x10f17409",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f1740d"
+      ]
+    },
+    {
+      "address": "10f17730",
+      "bytes": 100,
+      "sha256": "1395e34eb5450867379aac167a4b38d5bfb34e8f454bf6f0487915951551a5e9",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void Curl_freeset(SessionHandle*)",
+      "scope": "frees and clears the 38 set.str slots at +0x378 and the owned referer (+0x458 with flag +0x45c)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f17793"
+      ]
+    },
+    {
+      "address": "10f178c0",
+      "bytes": 418,
+      "sha256": "4082ba167644b005a845fe7d47164ae75ed4a8f1182ae0c8906d3b248d7ee9f2",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURLcode Curl_init_userdefined(UserDefined*)",
+      "scope": "stores the stdio stream, fwrite/fread and numeric transfer defaults into the zeroed UserDefined block; always returns CURLE_OK",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f17a61"
+      ]
+    },
+    {
+      "address": "10f17b10",
+      "bytes": 693,
+      "sha256": "4e74b096e6ba55f4e86a8118e3b3af62d5dee2255162919f701c76ccfb21da43",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURLcode Curl_open(SessionHandle**)",
+      "scope": "calloc(1, 0x8788), magic 0xc0dedbad at +0x8784, the folded zero stub 0x100dbc00, a 0x100B header buffer (+0x58c) and an inlined Curl_init_userdefined; CURLE_OUT_OF_MEMORY (0x1b) on either allocation failure",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f17b2b",
+        "10f17b5c",
+        "10f17bab",
+        "10f17dc4"
+      ]
+    },
+    {
+      "address": "10f17f40",
+      "bytes": 26,
+      "sha256": "6abd8b8f00384f73f4940c5c17d08cccfca57806034f94aa54264b10cbb9e500",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "int Curl_protocol_getsock(connectdata*, curl_socket_t*, int)",
+      "scope": "returns 0 for a missing handler->proto_getsock (+0x20); otherwise leaves through the register-indirect JMP EAX at 0x10f17f55",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f17f59"
+      ]
+    },
+    {
+      "address": "10f1d030",
+      "bytes": 341,
+      "sha256": "986bb807d1138b243d6f59c442d452ae352b55dad23c05918386327a2017e9b3",
+      "receiver_register": "none",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURLcode Curl_client_write(connectdata*, int, char*, size_t)",
+      "scope": "appends to the tempwrite buffer while KEEP_RECV_PAUSE is set (type mismatch is CURLE_RECV_ERROR 0x38); otherwise calls the body and header write callbacks, routes CURL_WRITEFUNC_PAUSE (0x10000001) to pausewrite and reports a short write as CURLE_WRITE_ERROR (0x17) through failf",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f1d076",
+        "10f1d0a1",
+        "10f1d0cb",
+        "10f1d102",
+        "10f1d11f",
+        "10f1d163",
+        "10f1d17e",
+        "10f1d184"
+      ]
+    },
+    {
+      "address": "10f1d260",
+      "bytes": 204,
+      "sha256": "cdd098f3025da7951cf646be950429e9b1034756ff03af3746290a0842cb3c52",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void Curl_failf(SessionHandle*, const char*, ...)",
+      "scope": "formats at most 0x4000 bytes into data+0x594, copies it once into the caller error buffer (+0x130) and, when verbose (+0x31c), appends a newline and reports through the debug callback or fwrite to the error stream",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f1d301",
+        "10f1d32b"
+      ]
+    },
+    {
+      "address": "10f1d7e0",
+      "bytes": 92,
+      "sha256": "17c55a2e796acd27954227a3056d6ffe5d9f9bc8b39388bb6d9383b8485b4076",
+      "receiver_register": "none",
+      "stack_argument_bytes": 20,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURLcode Curl_write(connectdata*, curl_socket_t, const void*, size_t, ssize_t*)",
+      "scope": "selects sockindex by comparing the socket with conn+0x134, calls the per-socket send callback (+0x148) and maps a negative result to OK-with-zero for CURLE_AGAIN, CURLE_SEND_ERROR (0x37) for no code, or the code",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f1d834",
+        "10f1d83b"
+      ]
+    },
+    {
+      "address": "10f1d8e0",
+      "bytes": 80,
+      "sha256": "ca08aa51e9bcb5db65271e0cc46aee5c81773d9c4efbbbf6c236499f96cbbd45",
+      "receiver_register": "none",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURLcode pausewrite(SessionHandle*, int, const char*, size_t)",
+      "scope": "duplicates the unwritten bytes into a malloc'd tempwrite buffer (+0x85b0/+0x85b4/+0x85b8) and sets KEEP_RECV_PAUSE; CURLE_OUT_OF_MEMORY when the allocation fails",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f1d8fb",
+        "10f1d92f"
+      ]
+    },
+    {
+      "address": "10f1db90",
+      "bytes": 98,
+      "sha256": "6557f15cf2c44b943640c9964ede06dddf2cc8c84476af578232ca41c52d8fb8",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "curl_socket_t Curl_getconnectinfo(SessionHandle*, connectdata**)",
+      "scope": "resolves the last connection through the connection cache (+0x57c, index +0x588) and reports its socket only when Curl_ssl_check_cxn or a recv(MSG_PEEK) probe says it is still alive; otherwise CURL_SOCKET_BAD",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f1dbd9",
+        "10f1dbf1"
+      ]
+    },
+    {
+      "address": "10f1eda0",
+      "bytes": 30,
+      "sha256": "f46ff458164dd63fe90b8182d51c40b0baa1ce8fa87fff41fedf2470c41cacd3",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void Curl_srand(void)",
+      "scope": "stores (unsigned)_time64(NULL) * 0x807dbcb5 + 0xa70427df into [0x11fb5970], the closed form of three seed * 1103515245 + 12345 steps",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f1edbd"
+      ]
+    },
+    {
+      "address": "10f21180",
+      "bytes": 8,
+      "sha256": "744918b125efbbb789c8b98c6a24d30827ec80d4a844e65c13c23082e5ae733f",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "size_t Curl_llist_count(curl_llist*)",
+      "scope": "returns the list size dword at +0x0c",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f21187"
+      ]
+    },
+    {
+      "address": "10f213a0",
+      "bytes": 126,
+      "sha256": "d31c66e88df54e9b2fab1abaf39e8f078f8d4154b2ffb39b7636c2a3c592f3cc",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "int Curl_llist_remove(curl_llist*, curl_llist_element*, void*)",
+      "scope": "unlinks the element, calls the list destructor (+8) with the user pointer and payload, clears and frees the element and decrements the size; always returns 1",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f2141d"
+      ]
+    },
+    {
+      "address": "10f21420",
+      "bytes": 42,
+      "sha256": "3e9d387b17904eb47e94084bd75fc40d575ca1b3c64b81490fe5a48634b3015d",
+      "receiver_register": "none",
+      "stack_argument_bytes": 16,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "long curlx_tvdiff(struct timeval, struct timeval)",
+      "scope": "returns (newer.tv_sec - older.tv_sec) * 1000 + (newer.tv_usec - older.tv_usec) / 1000 in 32-bit arithmetic",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f21449"
+      ]
+    },
+    {
+      "address": "10f214b0",
+      "bytes": 37,
+      "sha256": "251db6b677c8473a1012a47bb39a513965fd5b641065ac5aa07a75a0111797f2",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "struct timeval curlx_tvnow(void)",
+      "scope": "returns GetTickCount() / 1000 in EAX and (GetTickCount() % 1000) * 1000 in EDX",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f214d4"
+      ]
+    },
+    {
+      "address": "10f22760",
+      "bytes": 49,
+      "sha256": "0451184ea4eaf5b115869a3382ca99bb90fa1801eb76dea2c49867ffeeb0b695",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURLMcode curl_multi_assign(CURLM*, curl_socket_t, void*)",
+      "scope": "looks the socket up in the multi socket hash (+0x5c) and stores the pointer at entry+0x18; CURLM_BAD_SOCKET (5) for CURL_SOCKET_BAD or a miss",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f2278a",
+        "10f22790"
+      ]
+    },
+    {
+      "address": "10f228f0",
+      "bytes": 322,
+      "sha256": "e0c8e0d3cf332508afded665448618e3c91470c950d4d205a20712758ef76fd2",
+      "receiver_register": "none",
+      "stack_argument_bytes": 20,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURLMcode curl_multi_fdset(CURLM*, fd_set*, fd_set*, fd_set*, int*)",
+      "scope": "checks the 0x000bab1e magic, walks the easy list through multi_getsock and adds each socket to the read or write fd_set (FD_SETSIZE 64, duplicates skipped), reporting the largest descriptor or -1",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f22a28",
+        "10f22a31"
+      ]
+    },
+    {
+      "address": "10f22a40",
+      "bytes": 90,
+      "sha256": "fd7ed0e5cffabe4f8e57261b90f84497cd235b2566b8c919b4a585ec36eadb3f",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURLMsg* curl_multi_info_read(CURLM*, int*)",
+      "scope": "zeroes the queue count, and for a live handle with queued messages (+0x48) pops the head payload through Curl_llist_remove and reports the remaining count through curlx_uztosi",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f22a94",
+        "10f22a99"
+      ]
+    },
+    {
+      "address": "10f22ef0",
+      "bytes": 152,
+      "sha256": "f84071f8793351740a6e6c90a5bde67dafe354c0045d437b02d55280430ed75c",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURLMcode curl_multi_setopt(CURLM*, CURLMoption, ...)",
+      "scope": "checks the magic, then stores the one variadic dword for SOCKETFUNCTION/SOCKETDATA/PIPELINING (as != 0)/TIMERFUNCTION/TIMERDATA/MAXCONNECTS; CURLM_UNKNOWN_OPTION (6) otherwise",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f22f2f",
+        "10f22f3a",
+        "10f22f4a",
+        "10f22f55",
+        "10f22f6a",
+        "10f22f75",
+        "10f22f80",
+        "10f22f87"
+      ]
+    },
+    {
+      "address": "10f23030",
+      "bytes": 31,
+      "sha256": "41a1cb8583034175b7e91f4a8cb49facc491bfc2afdc9593c2b0d51a7a58dcbf",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURLMcode curl_multi_timeout(CURLM*, long*)",
+      "scope": "returns CURLM_BAD_HANDLE (1) through its own RET for a NULL or wrong-magic handle; a live handle leaves through the mid-body direct JMP at 0x10f23044 to multi_timeout (0x10f24450)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f2304e"
+      ]
+    },
+    {
+      "address": "10f232c0",
+      "bytes": 237,
+      "sha256": "9c30d09afea6c99eece849bf89680a578863fe7e17adfcfcb035c5ec1b58dc30",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "int multi_getsock(Curl_one_easy*, curl_socket_t*, int)",
+      "scope": "dispatches the easy state (+0x10) through the 11-entry table at 0x10f233b0 to the resolver stub, connect-wait, protocol, doing, do-more and perform socket queries; the handler do-more query leaves through JMP EAX at 0x10f23390",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f2331d",
+        "10f23333",
+        "10f23349",
+        "10f23375",
+        "10f233a7",
+        "10f233ac"
+      ]
+    },
+    {
+      "address": "10f24450",
+      "bytes": 148,
+      "sha256": "8dbc6fa1c96145ba1dbf982001f6cdb76e3f70121b5b56e9f993b48dbc88af41",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURLMcode multi_timeout(Curl_multi*, long*)",
+      "scope": "splays the timeout tree (+0x58) to its smallest key and reports the millisecond distance from curlx_tvnow, 0 when expired, at least 1 when pending, or -1 without a tree",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f244c5",
+        "10f244d5",
+        "10f244e3"
+      ]
+    },
+    {
+      "address": "10f2d260",
+      "bytes": 43,
+      "sha256": "1204652f7c86ac0357d1219f9a7a9b2b7c3899a8391030b225215d10dd97bf39",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "int Curl_ossl_check_cxn(connectdata*)",
+      "scope": "calls the SSLEAY32 #76 thunk with (conn+0x15c handle, one stack byte, 1) and maps the result to 1 (> 0), 0 (== 0) or -1 (< 0)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f2d284",
+        "10f2d28a"
+      ]
+    },
+    {
+      "address": "10f2d290",
+      "bytes": 24,
+      "sha256": "4d1f0e4bd74a16b1851f5bada8778595bc108603c1f0cf73f777f11abcfe3dff",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void Curl_ossl_cleanup(void)",
+      "scope": "calls the LIBEAY32 #298, #2604 and #224 thunks with no arguments and the #254 thunk with a single 0",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f2d2a7"
+      ]
+    },
+    {
+      "address": "10f2d380",
+      "bytes": 26,
+      "sha256": "0cf15c370eea82c713572e51fddc2af24f14171d2509b12dd08fd27da9de5761",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "int Curl_ossl_init(void)",
+      "scope": "calls the SSLEAY32 #74 and #183 thunks, returns 0 when the second returns zero, otherwise calls the LIBEAY32 #3212 thunk and returns 1",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f2d38e",
+        "10f2d399"
+      ]
+    },
+    {
+      "address": "10f3d820",
+      "bytes": 209,
+      "sha256": "4d3c76beee7d76f0f0351d85b6252c65b71d8e4b20f4e995138761be889e792c",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "Curl_tree* Curl_splay(struct timeval, Curl_tree*)",
+      "scope": "top-down splay on the (tv_sec, tv_usec) key at +0x0c/+0x10 with child links at +0/+4; returns the new root, or NULL for a NULL tree",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f3d82e",
+        "10f3d8f0"
+      ]
+    },
+    {
+      "address": "10f3fb40",
+      "bytes": 2142,
+      "sha256": "6763d835e91ba644ce61c49e23fa93078782332427052119ef24d9a2530ed948",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURLFORMcode FormAdd(curl_httppost**, curl_httppost**, va_list)",
+      "scope": "parses CURLFORM options through the 19-entry table at 0x10f403a0 into calloc'd 0x40B FormInfo records, resolves content types from the 0x118465b0 extension table, then builds and links 0x34B curl_httppost nodes; releases its allocations on every error path",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f3fb7a",
+        "10f4039d"
+      ]
+    },
+    {
+      "address": "10f403f0",
+      "bytes": 22,
+      "sha256": "55c24ef67467ccc49e30351f7bc308787c57c50c1c0f4bef9baf6c482af052ab",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CURLFORMcode curl_formadd(curl_httppost**, curl_httppost**, ...)",
+      "scope": "forwards the address of its first variadic argument to FormAdd as the va_list",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f40405"
+      ]
+    },
+    {
+      "address": "10f40410",
+      "bytes": 135,
+      "sha256": "a9faad27c941fb9f41acd59652fb37028f1bad3ff0d9c6811ea3a4f784799de7",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void curl_formfree(curl_httppost*)",
+      "scope": "walks next, recursing through more (+0x24), and frees name, contents, content type and show-filename according to the PTRNAME/PTRCONTENTS/PTRBUFFER/CALLBACK flag bits before each node",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f40496"
+      ]
+    },
+    {
+      "address": "10f40670",
+      "bytes": 115,
+      "sha256": "d68e83c371fb04fc8c9e83493300a077e59302a55b3c03f5453800c757c3cdc2",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "char* memdup(const char*, size_t)",
+      "scope": "copies length bytes into a malloc'd buffer, or strdup's the source (\"\" for NULL) when the length is zero",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f406b6",
+        "10f406d0",
+        "10f406e2"
+      ]
+    },
+    {
+      "address": "11687680",
+      "bytes": 6,
+      "sha256": "e2b52683aead8784bf4d077d31d522237115d6deed7029e7131893155a6c3f91",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "LIBEAY32.dll!#2604 import thunk",
+      "scope": "6B IAT JMP thunk forwarding to LIBEAY32.dll ordinal 2604 through [0x1172f438]; Curl_ossl_cleanup calls it with no arguments; the import is by ordinal only, so the image does not name the target",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "iat_jmp",
+        "address": "11687680",
+        "iat_slot": "1172f438"
+      }
+    },
+    {
+      "address": "116876e0",
+      "bytes": 6,
+      "sha256": "13b1bd769a7a57bb7276b9f72dca4f6b378c4b85af6832e55206aea1b8409b2e",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "LIBEAY32.dll!#3212 import thunk",
+      "scope": "6B IAT JMP thunk forwarding to LIBEAY32.dll ordinal 3212 through [0x1172f460]; Curl_ossl_init calls it with no arguments; the import is by ordinal only, so the image does not name the target",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "iat_jmp",
+        "address": "116876e0",
+        "iat_slot": "1172f460"
+      }
+    },
+    {
+      "address": "116876e6",
+      "bytes": 6,
+      "sha256": "3014c29543e5377f2f9b18e35d5d669409d3203cfa4524b41e21e1ebd384ed75",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "LIBEAY32.dll!#298 import thunk",
+      "scope": "6B IAT JMP thunk forwarding to LIBEAY32.dll ordinal 298 through [0x1172f45c]; Curl_ossl_cleanup calls it with no arguments; the import is by ordinal only, so the image does not name the target",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "iat_jmp",
+        "address": "116876e6",
+        "iat_slot": "1172f45c"
+      }
+    },
+    {
+      "address": "1168778e",
+      "bytes": 6,
+      "sha256": "d3e759a4260ea64a38e998df4b8545a83fdd01f1fd7ec06ac8f0dc18ac3a299c",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "LIBEAY32.dll!#224 import thunk",
+      "scope": "6B IAT JMP thunk forwarding to LIBEAY32.dll ordinal 224 through [0x1172f3c8]; Curl_ossl_cleanup calls it with no arguments; the import is by ordinal only, so the image does not name the target",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "iat_jmp",
+        "address": "1168778e",
+        "iat_slot": "1172f3c8"
+      }
+    },
+    {
+      "address": "11687794",
+      "bytes": 6,
+      "sha256": "057a3764c477e4d9fb6dfcb21cba4f1fcc9f29bc76486fd82f3b7e5b5a5997af",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "LIBEAY32.dll!#254 import thunk",
+      "scope": "6B IAT JMP thunk forwarding to LIBEAY32.dll ordinal 254 through [0x1172f3cc]; Curl_ossl_cleanup pushes a single 0 and pops it; the import is by ordinal only, so the image does not name the target",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "iat_jmp",
+        "address": "11687794",
+        "iat_slot": "1172f3cc"
+      }
+    },
+    {
+      "address": "1168c9e2",
+      "bytes": 131,
+      "sha256": "89614277e1fa351261dbe5ec39a60da47e690af86e10ca90c4833b9913864e0e",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "int _timespec64_get(struct _timespec64*, int)",
+      "scope": "NULL ts sets errno 22 and calls the invalid-parameter handler; base 1 reads the system FILETIME, subtracts 0x019db1ded53e8000, rejects spans >= 0x0483f078dd478000 and stores span / 10^7 and remainder * 100 through __alldvrm; the body ends in a backward JMP so its only RET is at 0x1168ca05",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "1168ca05"
+      ]
+    },
+    {
+      "address": "1168ca95",
+      "bytes": 64,
+      "sha256": "fd5ce1bb055fe7a14fd1a1d21e5ae3a48628324e008bdf4eebb542fa89d686cf",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "__time64_t _time64(__time64_t*)",
+      "scope": "returns the tv_sec from _timespec64_get(&ts, 1), or -1 when that fails, also storing it through a non-NULL argument",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "1168cad4"
+      ]
+    },
+    {
+      "address": "116a886e",
+      "bytes": 63,
+      "sha256": "3fd0850c3183f4db2ab93a54caf2af1fa4dc7cf6f3ea777f96174da432930f59",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "stdcall",
+      "ordinary_return": "void __stdcall __acrt_GetSystemTimePreciseAsFileTime(LPFILETIME)",
+      "scope": "resolves GetSystemTimePreciseAsFileTime through try_get_function (0x116a84d2) and calls it behind the guard check, returning through RET 4 at 0x116a88a2; without it, tail-jumps to KERNEL32!GetSystemTimeAsFileTime",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "iat_jmp",
+        "address": "116a88a7",
+        "iat_slot": "1172f358"
+      }
+    },
+    {
+      "address": "116c7f45",
+      "bytes": 6,
+      "sha256": "fdaa3c24cbb13db94e617f2d25224991b7ee16f33fb46166df20ba8fb86f1091",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "SSLEAY32.dll!#74 import thunk",
+      "scope": "6B IAT JMP thunk forwarding to SSLEAY32.dll ordinal 74 through [0x1172f5e8]; Curl_ossl_init calls it with no arguments; the import is by ordinal only, so the image does not name the target",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "iat_jmp",
+        "address": "116c7f45",
+        "iat_slot": "1172f5e8"
+      }
+    },
+    {
+      "address": "116c7f93",
+      "bytes": 6,
+      "sha256": "371ac58ac125a976636957b72fecce8145d2bd43adcc16943cdb08cec28cd08d",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "SSLEAY32.dll!#76 import thunk",
+      "scope": "6B IAT JMP thunk forwarding to SSLEAY32.dll ordinal 76 through [0x1172f588]; Curl_ossl_check_cxn pushes three dwords and pops 0xc; the import is by ordinal only, so the image does not name the target",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "iat_jmp",
+        "address": "116c7f93",
+        "iat_slot": "1172f588"
+      }
+    },
+    {
+      "address": "116c7fd5",
+      "bytes": 6,
+      "sha256": "8ae0cbdc4c37b88d5c84f4080c112b5f87546923d981a64fe3a74724913199ca",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "SSLEAY32.dll!#183 import thunk",
+      "scope": "6B IAT JMP thunk forwarding to SSLEAY32.dll ordinal 183 through [0x1172f5b4]; Curl_ossl_init calls it with no arguments; the import is by ordinal only, so the image does not name the target",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "iat_jmp",
+        "address": "116c7fd5",
+        "iat_slot": "1172f5b4"
+      }
     }
   ],
   "globals": [
@@ -39844,6 +40775,278 @@
       "initial_hex_le": "1f000080",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1172f3c8",
+      "width": 4,
+      "kind": "OpenSSL IAT slot in .rdata (LIBEAY32.dll!#224, import by ordinal) jumped to by 0x1168778e",
+      "initial_hex_le": "e0000080",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1172f3cc",
+      "width": 4,
+      "kind": "OpenSSL IAT slot in .rdata (LIBEAY32.dll!#254, import by ordinal) jumped to by 0x11687794",
+      "initial_hex_le": "fe000080",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1172f438",
+      "width": 4,
+      "kind": "OpenSSL IAT slot in .rdata (LIBEAY32.dll!#2604, import by ordinal) jumped to by 0x11687680",
+      "initial_hex_le": "2c0a0080",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1172f45c",
+      "width": 4,
+      "kind": "OpenSSL IAT slot in .rdata (LIBEAY32.dll!#298, import by ordinal) jumped to by 0x116876e6",
+      "initial_hex_le": "2a010080",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1172f460",
+      "width": 4,
+      "kind": "OpenSSL IAT slot in .rdata (LIBEAY32.dll!#3212, import by ordinal) jumped to by 0x116876e0",
+      "initial_hex_le": "8c0c0080",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1172f588",
+      "width": 4,
+      "kind": "OpenSSL IAT slot in .rdata (SSLEAY32.dll!#76, import by ordinal) jumped to by 0x116c7f93",
+      "initial_hex_le": "4c000080",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1172f5b4",
+      "width": 4,
+      "kind": "OpenSSL IAT slot in .rdata (SSLEAY32.dll!#183, import by ordinal) jumped to by 0x116c7fd5",
+      "initial_hex_le": "b7000080",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1172f5e8",
+      "width": 4,
+      "kind": "OpenSSL IAT slot in .rdata (SSLEAY32.dll!#74, import by ordinal) jumped to by 0x116c7f45",
+      "initial_hex_le": "4a000080",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "10f233b0",
+      "width": 44,
+      "kind": "multi_getsock state jump table in .text (11 code pointers for states 2..12) indexed at 0x10f23301",
+      "initial_hex_le": "0833f2104a33f2104a33f2101e33f210a833f2103433f2103433f2107633f2109233f2109233f2109233f210",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "10f403a0",
+      "width": 76,
+      "kind": "FormAdd option jump table in .text (19 code pointers for CURLFORM options 1..19) indexed at 0x10f3fbc1",
+      "initial_hex_le": "e9fbf310e5fbf31020fcf31049fcf31045fcf31082fcf310a7fcf310c8fbf3107ffff310f3fcf31021fff310a3fdf310e3fdf31048fef310f4fef31021fff3107ffff3107ffff31008fef310",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1172f358",
+      "width": 4,
+      "kind": "IAT slot in .rdata (KERNEL32.dll!GetSystemTimeAsFileTime) jumped to by 0x116a88a7",
+      "initial_hex_le": "d21c9301",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1172f84c",
+      "width": 4,
+      "kind": "IAT slot in .rdata (WS2_32.dll!#115 WSAStartup) called by 0x10f10a57",
+      "initial_hex_le": "73000080",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1172f850",
+      "width": 4,
+      "kind": "IAT slot in .rdata (WS2_32.dll!#116 WSACleanup) called by 0x10f109c4 and 0x10f10a70",
+      "initial_hex_le": "74000080",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183ea70",
+      "width": 26,
+      "kind": "libcurl .rdata string \"CONNECT_ONLY is required!\" pushed by 0x10f10b47",
+      "initial_hex_le": "434f4e4e4543545f4f4e4c592069732072657175697265642100",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183ea8c",
+      "width": 28,
+      "kind": "libcurl .rdata string \"Failed to get recent socket\" pushed by 0x10f10b74",
+      "initial_hex_le": "4661696c656420746f2067657420726563656e7420736f636b657400",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183fa10",
+      "width": 3,
+      "kind": "libcurl .rdata string \"* \" written before verbose failf text at 0x10f1d30c",
+      "initial_hex_le": "2a2000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183fa50",
+      "width": 33,
+      "kind": "libcurl .rdata format \"Failed writing body (%zu != %zu)\" pushed by 0x10f1d109",
+      "initial_hex_le": "4661696c65642077726974696e6720626f64792028257a7520213d20257a752900",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183fa74",
+      "width": 22,
+      "kind": "libcurl .rdata string \"Failed writing header\" pushed by 0x10f1d168",
+      "initial_hex_le": "4661696c65642077726974696e672068656164657200",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "118465b0",
+      "width": 72,
+      "kind": "libcurl formpost content-type table: six 12B {char extension[6]; pad; const char* type} rows read by 0x10f3fb40",
+      "initial_hex_le": "2e676966000000000c6684112e6a706700000000186684112e6a706567000000186684112e74787400000000246684112e68746d6c000000306684112e786d6c000000003c668411",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1184660c",
+      "width": 10,
+      "kind": "libcurl .rdata string \"image/gif\" referenced by the 0x118465b0 table",
+      "initial_hex_le": "696d6167652f67696600",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11846618",
+      "width": 11,
+      "kind": "libcurl .rdata string \"image/jpeg\" referenced by the 0x118465b0 table",
+      "initial_hex_le": "696d6167652f6a70656700",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11846624",
+      "width": 11,
+      "kind": "libcurl .rdata string \"text/plain\" referenced by the 0x118465b0 table",
+      "initial_hex_le": "746578742f706c61696e00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11846630",
+      "width": 10,
+      "kind": "libcurl .rdata string \"text/html\" referenced by the 0x118465b0 table",
+      "initial_hex_le": "746578742f68746d6c00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1184663c",
+      "width": 16,
+      "kind": "libcurl .rdata string \"application/xml\" referenced by the 0x118465b0 table",
+      "initial_hex_le": "6170706c69636174696f6e2f786d6c00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1184664c",
+      "width": 25,
+      "kind": "libcurl .rdata string \"application/octet-stream\" loaded as the default type at 0x10f400b0",
+      "initial_hex_le": "6170706c69636174696f6e2f6f637465742d73747265616d00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1190c964",
+      "width": 31,
+      "kind": "CRT .rdata string \"GetSystemTimePreciseAsFileTime\" pushed by 0x116a887e",
+      "initial_hex_le": "47657453797374656d54696d6550726563697365417346696c6554696d6500",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "119750cc",
+      "width": 20,
+      "kind": "libcurl allocator callback pointers in .data (malloc, free, realloc, strdup, calloc), initially CRT 0x1168d0c3, 0x1168d0a8, 0x1169d9a2, 0x116b204d, 0x1169d9ad",
+      "initial_hex_le": "c3d06811a8d06811a2d969114d206b11add96911",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11fb5948",
+      "width": 4,
+      "kind": "curl_global_init nesting count in .bss",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11fb594c",
+      "width": 4,
+      "kind": "curl_global_init flags in .bss",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11fb5950",
+      "width": 24,
+      "kind": "libcurl hostname cache curl_hash (0x18B) in .bss cleaned by 0x10f12f30",
+      "initial_hex_le": "000000000000000000000000000000000000000000000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11fb5968",
+      "width": 4,
+      "kind": "libcurl host cache initialised flag in .bss",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11fb596c",
+      "width": 4,
+      "kind": "libcurl SSL initialised flag in .bss set by 0x10f162a0",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11fb5970",
+      "width": 4,
+      "kind": "libcurl random seed in .bss stored by 0x10f1eda0",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11fb5974",
+      "width": 8,
+      "kind": "zero timeval in .bss pushed by multi_timeout (0x10f24450) as the splay key",
+      "initial_hex_le": "0000000000000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
     }
   ],
   "vtables": [
@@ -48178,6 +49381,96 @@
       "address": "10f3af80",
       "hex": "515355568b74",
       "purpose": "0x10f3af80 curl_easy_escape entry"
+    },
+    {
+      "address": "10f10a52",
+      "hex": "6802020000",
+      "purpose": "0x10f10a52 curl_global_init pushes WSAStartup version 2.2"
+    },
+    {
+      "address": "10f17b11",
+      "hex": "6888870000",
+      "purpose": "0x10f17b11 Curl_open pushes the 0x8788B SessionHandle size"
+    },
+    {
+      "address": "10f17b34",
+      "hex": "c78684870000addbdec0",
+      "purpose": "0x10f17b34 Curl_open stores the easy handle magic at +0x8784"
+    },
+    {
+      "address": "10f17d38",
+      "hex": "c78618040000effbffff",
+      "purpose": "0x10f17d38 Curl_open stores the redirect protocol default at +0x418"
+    },
+    {
+      "address": "10f1d0e9",
+      "hex": "3d01000010",
+      "purpose": "0x10f1d0e9 Curl_client_write tests the body callback result for CURL_WRITEFUNC_PAUSE"
+    },
+    {
+      "address": "10f1eda7",
+      "hex": "69c04b43827f",
+      "purpose": "0x10f1eda7 Curl_srand folded LCG multiplier (subtracted from 0xa70427df)"
+    },
+    {
+      "address": "10f1edad",
+      "hex": "b9df2704a7",
+      "purpose": "0x10f1edad Curl_srand folded LCG addend"
+    },
+    {
+      "address": "10f22905",
+      "hex": "81381eab0b00",
+      "purpose": "0x10f22905 curl_multi_fdset multi handle magic check"
+    },
+    {
+      "address": "10f23301",
+      "hex": "ff248db033f210",
+      "purpose": "0x10f23301 multi_getsock state switch dispatch"
+    },
+    {
+      "address": "10f2d261",
+      "hex": "6a01",
+      "purpose": "0x10f2d261 Curl_ossl_check_cxn one-byte peek length"
+    },
+    {
+      "address": "10f3d820",
+      "hex": "8b44240c83ec",
+      "purpose": "0x10f3d820 Curl_splay entry"
+    },
+    {
+      "address": "10f3fb40",
+      "hex": "83ec3053556a",
+      "purpose": "0x10f3fb40 FormAdd entry"
+    },
+    {
+      "address": "10f3fbc1",
+      "hex": "ff2485a003f410",
+      "purpose": "0x10f3fbc1 FormAdd option switch dispatch"
+    },
+    {
+      "address": "10f400ca",
+      "hex": "bbb0658411",
+      "purpose": "0x10f400ca FormAdd loads the content-type table"
+    },
+    {
+      "address": "1168ca23",
+      "hex": "2d00803ed5",
+      "purpose": "0x1168ca23 _timespec64_get FILETIME epoch low dword"
+    },
+    {
+      "address": "1168ca28",
+      "hex": "81d9deb19d01",
+      "purpose": "0x1168ca28 _timespec64_get FILETIME epoch high dword"
+    },
+    {
+      "address": "1168ca43",
+      "hex": "6880969800",
+      "purpose": "0x1168ca43 _timespec64_get divides the span by 10^7"
+    },
+    {
+      "address": "116a88a2",
+      "hex": "c20400",
+      "purpose": "0x116a88a2 __acrt_GetSystemTimePreciseAsFileTime stdcall return ahead of its IAT tail jump"
     }
   ],
   "ownership": {
@@ -73351,6 +74644,534 @@
     "limitations": [
       "Partition 11 Layer 82 acquired and closed alongside Layer 83 in a shared Partition 11 REA session (55 Layer 82 records; 2,969 cumulative across Partitions 1-11)",
       "0x10f2d4f0, 0x1169eccd, and 0x116c7f4b terminate via direct_jmp / iat_jmp tail exits without internal RET",
+      "Direct CALL closure is 0 open edges and direct JMP/Jcc closure remains 1 single-tail edge: 0x11695ee2 -> 0x11695e3c"
+    ]
+  },
+  "rea_layer83_evidence": {
+    "scope": "57 Layer 83 Partition 11 libcurl global init/cleanup, easy handle, client write/pause, multi handle, splay, formpost, OpenSSL import thunk and CRT time routines (14 exports; 0x10f10330..0x116c7fd5), 8 OpenSSL IAT slots and 26 image-pinned data globals",
+    "snapshot_mode": "extending_layer82_batched_p11_sealed",
+    "partition11_sealed": true,
+    "new_records": [
+      {
+        "evidence_id": "ev_b979a056042a31f13549b167cd0773ef14373c66abb4c460878be7a76b4ed158",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f10330.json",
+        "retained_record_sha256": "54538b912889ec85dcc1d311f9d2f90de3cfb65bf9af327a75cd65555ab3c5d4",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_14ec42b4c9403a19a5149aee69ffccbf311223eb6b66e606ae6e3a91aa682a25",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f105a0.json",
+        "retained_record_sha256": "65a07b22414cc127cac0521a7593d4944d08b593aac3a4933b07ed9c0df4f4b7",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_f9a20294af0e7e80fce95c7de5e919ed86f48680e1004d26778a237af79b9f2b",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f105e0.json",
+        "retained_record_sha256": "1cd6dd56690e5dda4f0ed580528d99beebbbff264e4aa414ba6b40a66a983aab",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_2275d22ee97c70044940b74cf31edb9dbec0aa255bc4d957ebdba33b6b36d77a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f10820.json",
+        "retained_record_sha256": "a57a6e47af487b41df9af6c114e32b7d82158afd1da22eb45456d591028e8305",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c11b32ee82c6ec08be38197e065eb8c4ec31454eca95228d433a5d2d1f68d378",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f108e0.json",
+        "retained_record_sha256": "b82f7b03d5d45af849a11b61979ceb2dac29aa02c2ad95578513393259436538",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_f5fe82373c740a7b78ce7a85983c7fe3522406eef537983f37424f2b9ab61f0d",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f10990.json",
+        "retained_record_sha256": "c4bbcce1f6e6243a5d9821d175d3cc7c74435ef5df072b399e653fec6f812e7d",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7fffc63e5623cb7556d32293214e17a95ac89cbfc2109d65b024641872484507",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f109e0.json",
+        "retained_record_sha256": "b1635cdcb4c80cda29125130e1d130651927b997aa4d78bdb315c7c098a071bc",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5af83ec856d885ffe0c0f64f87b3745b0968d332b8234ec66320537c4849c373",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f10ab0.json",
+        "retained_record_sha256": "3981e40e9d46a9a7128b8147d81a16a860d329a97835d8dd7ebfd042eb50fa2b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_8188b92fb11dec051be20da7c6f41ca58b0b76db9a0e89afc2891cd953652f50",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f10b30.json",
+        "retained_record_sha256": "c991828e40880645f6eb40f4e43c893c28090c3af0f63983428b8c9a04ef89d7",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_0002c56758cc762f87ae1472589578bf6ac5d5b936cd37a41195713d390c077a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f123e0.json",
+        "retained_record_sha256": "ba97214af8ef33d92b288d7a71bef90d8a9fcdb9851409dd215567f3c9a6cc16",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7e9affb6f6e96d90309550918509748f4a3acb80f8770ac751552a90c78492ee",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f12660.json",
+        "retained_record_sha256": "eb74edeab1d7e3bdeef9a8263ca75f70bacf9f83a1053b96dbcbadf5bc6badec",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_72d26283e4706d3104e93f7f1ed4c9b8953883d60fff594f96f8563805f41a3c",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f12f30.json",
+        "retained_record_sha256": "757e31e5d4d6aaa6a5bc07ac4c7a433c540a986fb608d4f5a0847a3a93de00db",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_ea81aeb6a7d601108b37952f6ddf828d9b0e56aec60956c5ae4166743e61ed86",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f14670.json",
+        "retained_record_sha256": "7ef97e460872728274a5a6a6ecb3b05909474aaa27c2a89d882507febc3d5578",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_cb3fb9f08c3d513e215d92222c2097879a68cbea458bfcc54680ced90ad45777",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f15ca0.json",
+        "retained_record_sha256": "566c41eb03d4c4d50ec397c25cb42db79c5420d2d0fe018c4ba2becc1112d184",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c91dc2137b87c034e403d6135c275402e9420654813f06ee4807271216ddc6d0",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f15cb0.json",
+        "retained_record_sha256": "f706c9e9b7da7429d1c41955e0f5cd4cf17632796708f5e471dec4b80b607ad1",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_18672efb1f7832b06342ad9554d5563f639054f2c170ac3b49d17ecb6abd3df7",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f162a0.json",
+        "retained_record_sha256": "13c2582773d7ff70ae24296cc393949c21981cffe4ac57ed023ca669feda872d",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_62489bc93cf799bd3be463f2e960a63192ec2c9812dd7a9a87bcde5e6b48ea38",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f173f0.json",
+        "retained_record_sha256": "15c043a837660cce6bd16b62ac89431965a13dd147efb5e4d7a3a4f5c0ce8777",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_e81d7ffe6417a0388f10ab8532a3c7d74ce09d69524404983c98f3db99ad7c12",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f17730.json",
+        "retained_record_sha256": "e11a9bf67fdc409dcd1eb896f403824b1d3e139cb9b50d8b9ba4b1d4e3288a03",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_87c8a9ac43e7600b59951d04e1c64dbeb6d0be7c6755f1647390b95f54c72d6a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f178c0.json",
+        "retained_record_sha256": "8cf44f9f5a0fc26499cce98adb094152b7e732bd5dc723136a416c97e562d910",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_173e4b54d0387a0833f3b0ab804aff57c3cc22c26277bd3a2e55beed9902a397",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f17b10.json",
+        "retained_record_sha256": "f42dfa6db316684ea78b5b709f31b6bc69c537a4b6b6e112acc4d65827ff462e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_8f8f4a463d9b7a6301f2953765551dcaf7ec58928fc3994dd63b0176738f151f",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f17f40.json",
+        "retained_record_sha256": "4b78aba2c75919398cfcbc8a22f6a1acfb9bbd771853e720d577521d92143be5",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_92af971f85ff4686a1d3acbb2e67700875bbf05f577ed1b4dff914d460ca8d04",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f1d030.json",
+        "retained_record_sha256": "2ed75cb3ce51fe680930f4a10123ea9057e95f5e69662efb6b893befea98be16",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_4e07d182d5627ae14a0c4b937ea4c1914713238e98e6ecf95ca9f16753fb2349",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f1d260.json",
+        "retained_record_sha256": "a7305324d4d780db7084a71ebe7c2d2cb87700f9fb433619089c10a68b3443b9",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_47345523210972b4f2ec6dbaa0b9ec328335aa23b45b131c99fc3078fc206c0e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f1d7e0.json",
+        "retained_record_sha256": "9b4629d484ee377369e3e00fd27106a2e4cd50a87cc49b2b30e1bb7dbbb449b4",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_97067c6c0fd26b54f4888168db5b1f69cbd1ed66944b1c2e6d35b368dc80f7b2",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f1d8e0.json",
+        "retained_record_sha256": "31a8d937fa59a8351c813c175bb14f6a967cce6282ec16f22ad1d081e4ed35d1",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_6b297bdcf0ed98c0ca9dd701400c00768abd6e1f1c59ee6b70e2ea6ecd704151",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f1db90.json",
+        "retained_record_sha256": "99b92336fbd05d5e2218b6658732e4fddc8974422e081401fd2f1eea66b081a1",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_e82fdff1cd3fbdcf1f180945671e768ef22eafc3ba0ce75d8b9a1c981243a476",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f1eda0.json",
+        "retained_record_sha256": "68e3f8e3e0936bf3dba03b01ce8dcb70391fd11dac0c837e9130d646a700b7eb",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5381bcec41cdcf54d7479316e398ffbf57d138c7b425eeb60e525788d4362f49",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f21180.json",
+        "retained_record_sha256": "0dead43c038f5252ab881dac22354273b6708e4dbb9dcca226898219725f8e2b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_dcaf4bd2774f6adce57670b4fb076761336e484704aeff932715a96ab7414553",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f213a0.json",
+        "retained_record_sha256": "0f9435b8131d30077d2fa59ef6102e8e68daf0ba96766de41ccbe87fb2d9e499",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_bfa554f2e6c32bbcf3c51dcc8250383011e84d59cd1b004a22e9f6ea79838eef",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f21420.json",
+        "retained_record_sha256": "e0bb9d3f99d6bfe634b339f44ed791de5c8a5474571884c77099eecc6c74d3df",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_060f61625d30550a4579e6cec0170a6330b4feda7a5746edf8e90b5e05fc69cf",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f214b0.json",
+        "retained_record_sha256": "46e217c0eb7687c9dfbe0413e0aec9c7b03fd3e23909f1492d0e401d93019c35",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_baacfa884efb47df3b013a4b817c255ed0c2035a1e4bdcaa35be0b06a50103d3",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f22760.json",
+        "retained_record_sha256": "2756f9f3b6028f4d32b130019ed0f7c4dc9ad6ab13e0e2b2f185d3eac1618138",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5498caa0df93996e6e3edf019acb2d653180ac9cf4db872f0339f5e361e1a3cf",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f228f0.json",
+        "retained_record_sha256": "a28134a0eaa9b307a985a808115cc701b1551463c36030457dc6616742f25603",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_d1b23bbfe03fc3153ff85ffe19788feaa5dd06f06435597ac91ad6187aa10054",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f22a40.json",
+        "retained_record_sha256": "1f39d26ecca2b060201cd360cd26fb086bd818d9d33ef296ce6080ff795b3c91",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_bdfeec7367a164d9684852c4d17cb78812bc5e4dc9d207cf37e077f1e371c824",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f22ef0.json",
+        "retained_record_sha256": "b787ee8d78a31a400a7ad790ec449dd312a2f8bf814b51cd3cb8310aafd4b6cd",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_63a213618b47cb6a05904723162872f80332100cefee7a00770cef8dac7702af",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f23030.json",
+        "retained_record_sha256": "a3b681a105aa3507809a8f7a115a33a6d1877ec2aca5418b998548f89dcfca4e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_05e20f3d32d975acea46d76d4af81972a04cdb181967c2c54eedbe996bf87b0d",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f232c0.json",
+        "retained_record_sha256": "2599a5b7ed6611d19465ae28516a1325ab6a783a9c73307207b30ba8f2b288d1",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_fc99c160a00cf973a7ea2561f27ea234734d52cb2a08c55133a84f651effb195",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f24450.json",
+        "retained_record_sha256": "b76bdc495d02307c0238cb8be414406e51ff17c0aaaab0a0c201acdc56fedfb6",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_4d470999594b6de8e7bf877144249ddb23e8d73b05f908e17c71358fdf6305a6",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f2d260.json",
+        "retained_record_sha256": "6c332b5c7490b42fd72d86b1ba808f5b7d0fc0301a3863dd77f0981c1d52ed2f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_6129c836fda755450e4bc0a1bf1b139bf23938d0257dbb94654d350ce6e4250a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f2d290.json",
+        "retained_record_sha256": "2b16406d34da3267835f180623ff871a88fdcdc9557f217ec77dbe3604716617",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c6a4c738293ec37001c8e603830b42aff92efd8adfce85bee9e7b32aadf04c36",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f2d380.json",
+        "retained_record_sha256": "7cd95561efe1e2b0d745e136315241aa0da00a2ad7d0c6946d2bd7f893ade80f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5cbbbe2a87cecf8359d9c3ae6f410b3cfd61a13631d0279ac30c95b53ada1551",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f3d820.json",
+        "retained_record_sha256": "e21e38ab31dbb8d96ffb25b412820bdbf643b3a7d2b34daf1dc132dfad00ad97",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_1b01e48e3814c34d5b8cb3535417537ec79cde0d8e8c102e9de096dab3348add",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f3fb40.json",
+        "retained_record_sha256": "a03e06ab6f8c944d89593d46c79e73a43c45124118a82cb8cfc4ec50434915f3",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_dfb9ae21c863d0ee520d71f0ccd9f5b5c9a4121853163f5cc7193c08313baf26",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f403f0.json",
+        "retained_record_sha256": "59f3f839981a7123f4001dc367f676c1f7e4e3d3937b641117a2c30e9900127c",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_d60446be5648fb0b5977b8d144e23f19ddd631cb7d7431e5af0d431c18184665",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f40410.json",
+        "retained_record_sha256": "f6d8e581b53c39729ccb5aa796a30fe692a02f8408e697baea91d938ede30273",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_dec776decac4486b2a64b42003d3c2a188ad9de38e7620dde6ab1233bd2eee78",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-10f40670.json",
+        "retained_record_sha256": "3b39b88d29c5f1954512002b394ec067091b83a1decd39701ee4e06a6506a2c3",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_396cdac842e18a5fe62b6446855cf9497d8168644fa76011cefa8fdf8a62db2f",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-11687680.json",
+        "retained_record_sha256": "7de13663dda48be33b961885a2e17966461c607a9cad48c0cd159a47a6c64457",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_4ac8fb01ed9b67f8f1ec44244cfc3a6a15587626fd867c152aa41f30c03a9587",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-116876e0.json",
+        "retained_record_sha256": "57d814efded087c44e379fe694052249a7c66bbd680099617d3668a417a3c739",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_8c917f0c8a7c9c9183e35a43c713195f5b93976461987f269329aa1196c3d6b5",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-116876e6.json",
+        "retained_record_sha256": "158521d2ce34ddf8790ebf8ca0d71d6404250e86fe40bb0bffc78cb044b8c9b5",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_f00a3d4ab6a450238769e172e90c0384367e4a0af17f25e878a3cf8af413105e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-1168778e.json",
+        "retained_record_sha256": "a3084482f9190a53fbb866df84d3a5f1cebc2c709bca04d5a2b03b7c23f7519b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_138875b65d3c4f32aa5afe3b8ef276f3921d84c6c905b43ae1ee5e640eb349bd",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-11687794.json",
+        "retained_record_sha256": "da3d02fcfe6dfa1bc5764b15b31bb322d3f8624436432145afd7076181230d44",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7c3c1276f12cf18caf6ddbd071e274b1ee6b1d45f5d813504bf7a40bb0f0afc3",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-1168c9e2.json",
+        "retained_record_sha256": "415b9b78f80645023f4a7449ac4def0bfd55d8d2697f79b36600ff05abe9c919",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7767208bd348debf28a55a556d183ffdebbfaf88cfa39d3e9cc2780103d0c1ba",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-1168ca95.json",
+        "retained_record_sha256": "ab7149b668f415ed3364970a156d60b169e81f317ec6f22c8bd621b72e7663b8",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_40cecafd6f5a0fe5bed36a6c2a0afc02c05a9284576c73dd9df9c1d35e72c70e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-116a886e.json",
+        "retained_record_sha256": "82199ee865e7bc05ea099805b54ade7e912594f4d269bff7eb905a3014a166d6",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_667b915fb31cf6c00a78fce622493083ed508a93d03e134ff73f08d8543bfc8c",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-116c7f45.json",
+        "retained_record_sha256": "d22f17472c459b9d6714861645f8d666e00a309f5dec73c60125b14c86473bef",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_29ad3edea02f2ab62de7c6c17f5ed442c48d983ff82b737ac33b96af9da7285c",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-116c7f93.json",
+        "retained_record_sha256": "e68907cd62770ef47ba2c046d187bf55c58ff01d4f92c640a3b5f8e0a36b4ef5",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5f25b3065427553097507e56275e07a1f1530961ab3e1fa4054b602694fd2b10",
+        "operation": "analyze_function",
+        "retained_local_path": "out/curl-layer83-20261125/fn-116c7fd5.json",
+        "retained_record_sha256": "043cf032e8366354a3d6519c2b9197f30763a8eeaaf26d8724e04a7de57bbc29",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_59fcf9d1048b73fa76add7a780c943e328a76ea0279d7a0a7211abe1a73e187d",
+        "operation": "read_bytes",
+        "retained_local_path": "out/curl-layer83-20261125/extra-1172f3c8.json",
+        "retained_record_sha256": "bb01a24346197caedcf962f7905221c38b88d58e89adc8bce14c49d57ce95b00",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_479068511c7ce5b2249d6023e49cb94a4925a611cad13a45ef435f8fb0367ef8",
+        "operation": "read_bytes",
+        "retained_local_path": "out/curl-layer83-20261125/extra-1172f3cc.json",
+        "retained_record_sha256": "062ea0c6d8cc957a6f2c270e054027cbefd9a6c107693184e6bd832e059ee995",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_137f404f8fc8b5919f0e96cbe30addf54782f362b6ca5336e0ba5f762f3b7c8d",
+        "operation": "read_bytes",
+        "retained_local_path": "out/curl-layer83-20261125/extra-1172f438.json",
+        "retained_record_sha256": "87741369a05516564db4063defcea7ce2c348d82b347f23f9250289f3c0adc2d",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_b88bca627ef32d350dac5a02cc3d5e826001630dd3f865008ea6087a6c1e1911",
+        "operation": "read_bytes",
+        "retained_local_path": "out/curl-layer83-20261125/extra-1172f45c.json",
+        "retained_record_sha256": "335eb70adfd0d940e2c0fb7204d116092f1e240305df2b7840fc984a27e40052",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_0ecd72bd4d0d88e02d4442ad2b45c359c781b086d37fac1f098d6bb53da1c300",
+        "operation": "read_bytes",
+        "retained_local_path": "out/curl-layer83-20261125/extra-1172f460.json",
+        "retained_record_sha256": "b3fe1977ae575ff6d71b4ded97aa54299bc2a211047c28eafbf9530d464858e2",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_925c495be4f8bcacdded9308e2f2590fa022f4841a7ef0946db6560ddd09e95b",
+        "operation": "read_bytes",
+        "retained_local_path": "out/curl-layer83-20261125/extra-1172f588.json",
+        "retained_record_sha256": "0c6bc8ca645ad1130ff69c91e1ef5ec2df4c37e6d3f49f4fb2b936996a85065c",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_d515052ebf6f05fc4bcd276fb84ce2eae0a13cb9a445c3df3327e4213dc1f5aa",
+        "operation": "read_bytes",
+        "retained_local_path": "out/curl-layer83-20261125/extra-1172f5b4.json",
+        "retained_record_sha256": "910a8a095dbb12d9f2f295973e8a8d758245124cc7e1e36d6bfe6c6e72bb07fd",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_71230d95cb7d9e41d4fccf481683db602dcb02b56d681f51cf3afb245caf9428",
+        "operation": "read_bytes",
+        "retained_local_path": "out/curl-layer83-20261125/extra-1172f5e8.json",
+        "retained_record_sha256": "d276496fd7874feee2b432a8b1c74b427fff8fc16cfa6a7bccec19d12d2ac4a4",
+        "retained_record_format": "original MCP result envelope"
+      }
+    ],
+    "closed_snapshot_local_path": "out/curl-layer83-20261125/session.rea.json",
+    "closed_snapshot_sha256": "c80fbba3becc2ad03370cd3b5e60a7b90ec3336de59b142c917a41bd6257dfc9",
+    "closed_evidence_records": 120,
+    "new_evidence_records": 65,
+    "retained_operation_envelopes": 65,
+    "reused_layer82_evidence_records": 55,
+    "extra_evidence_views_count": 0,
+    "validated_bundle_local_path": "out/curl-layer83-20261125/validated-evidence-bundle.json",
+    "validated_bundle_sha256": "70c0d4aaabe3e23085126fa74e10446c0006349f34a45c66861f98a5115a922e",
+    "cumulative_validated_bundle_local_path": "out/curl-layer83-20261125/cumulative-validated-evidence-bundle.json",
+    "cumulative_validated_bundle_sha256": "70c0d4aaabe3e23085126fa74e10446c0006349f34a45c66861f98a5115a922e",
+    "cumulative_validated_bundle_records": 120,
+    "partition1_validated_bundle_local_path": "out/vfs-layer24-20261114/validated-evidence-bundle.json",
+    "partition1_validated_bundle_sha256": "475ab7199d42e3cb2a866a007302f7868344303e3bfda6f975c2e19ae2040a0e",
+    "partition1_validated_bundle_records": 367,
+    "partition2_validated_bundle_local_path": "out/vfs-layer41-20261115/cumulative-validated-evidence-bundle.json",
+    "partition2_validated_bundle_sha256": "691eee5f4134ecfe5fa9ace57f78daead53f4c917e0aa4db243de429f03b0a7c",
+    "partition2_validated_bundle_records": 743,
+    "partition3_validated_bundle_local_path": "out/vfs-layer49-20261115/cumulative-validated-evidence-bundle.json",
+    "partition3_validated_bundle_sha256": "1fd402dd9c34d773769dcdb3f634bda90c0947c76f316a09467979c24c3459f6",
+    "partition3_validated_bundle_records": 264,
+    "partition4_validated_bundle_local_path": "out/vfs-layer55-20261115/cumulative-validated-evidence-bundle.json",
+    "partition4_validated_bundle_sha256": "b58b048ddae09bcbfb1c517792a7160c07bb1b1a0c2683464ead236f63eda3b0",
+    "partition4_validated_bundle_records": 181,
+    "partition5_validated_bundle_local_path": "out/vfs-layer58-20261115/validated-evidence-bundle.json",
+    "partition5_validated_bundle_sha256": "f8a0cfd64b101c746df29ef4cd126b4b610b618e63163255feebce22c81c258a",
+    "partition5_validated_bundle_records": 118,
+    "partition6_validated_bundle_local_path": "out/startup-layer62-20261119/cumulative-validated-evidence-bundle.json",
+    "partition6_validated_bundle_sha256": "da0f43dcf31accf01b85e3d85679908e2f930b4f9b68e0bc5dcf59769935a53a",
+    "partition6_validated_bundle_records": 252,
+    "partition7_validated_bundle_local_path": "out/startup-layer66-20261124/cumulative-validated-evidence-bundle.json",
+    "partition7_validated_bundle_sha256": "de90311e12db70e6ac2aae91c0523ea76e8fbbaae414e652e6a2665aaff44741",
+    "partition7_validated_bundle_records": 193,
+    "partition8_validated_bundle_local_path": "out/startup-layer71-20261124/cumulative-validated-evidence-bundle.json",
+    "partition8_validated_bundle_sha256": "d1e0cc84583aad43fe0757bc525b609c1558a1bb786b80d4c599b26d386e2541",
+    "partition8_validated_bundle_records": 257,
+    "partition9_validated_bundle_local_path": "out/startup-layer79-20261124/cumulative-validated-evidence-bundle.json",
+    "partition9_validated_bundle_sha256": "803f0707ce4405b10cabddf508f3822cc100250283bafa3d26792090caf9f7fc",
+    "partition9_validated_bundle_records": 407,
+    "partition10_validated_bundle_local_path": "out/facefx-layer81-20261125/validated-evidence-bundle.json",
+    "partition10_validated_bundle_sha256": "0dd9ee3985c9202147877b2b7871d021ce67d1f59212592bcade4227431b965d",
+    "partition10_validated_bundle_records": 132,
+    "prior_partitions_validated_records": 2914,
+    "cumulative_all_partitions_records": 3034,
+    "non_proc_slots": [],
+    "resource_constrained_slots": [],
+    "closure_audit": {
+      "method": "linear sweep of every recovered body range in the pinned image; each direct rel8/rel32 CALL, JMP and Jcc target is tested against the recovered body ranges",
+      "recovered_functions": 2029,
+      "open_direct_call_edges": 0,
+      "direct_jump_edges_leaving_recovered_bodies": [
+        {
+          "source": "11695ee2",
+          "instruction": "11695f26",
+          "target": "11695e3c"
+        }
+      ]
+    },
+    "limitations": [
+      "Partition 11 is sealed at Layer 83 (extending_layer82_batched_p11_sealed: 55 reused + 65 new = 120 Partition 11 records) alongside sealed Partitions 1-10 (2,914 prior; 3,034 cumulative across 2,029 functions)",
+      "0x10f15ca0 and 0x10f162a0 exit through direct_jmp tail exits, the eight OpenSSL thunks and 0x116a886e through iat_jmp tail exits; 0x10f162a0 (0x10f162ae) and 0x116a886e (RET 4 at 0x116a88a2) also hold an earlier RET that the mutually exclusive tail_exit contract cannot list, pinned instead by scope text and, for 0x116a88a2, an instruction witness",
+      "0x10f173f0, 0x10f17f40 and 0x10f232c0 leave through register-indirect JMP EAX handler dispatch and 0x10f23030 through a mid-body direct JMP to 0x10f24450; each also ends in a RET, so only the RETs are contract exits",
+      "The eight OpenSSL imports are by ordinal only: the image fixes DLL and ordinal, not a function name, and thunk stack bytes are the bytes the single Layer 83 call site pushes",
+      "The 26 non-IAT-envelope globals (strings, tables, allocator pointers, .bss state, two .text jump tables, three Win32 IAT slots) are pinned from the image by the contract validator without a retained REA read_bytes envelope; \"%s\" at 0x1173f1fc lies inside the already pinned 0x1173f1f0 slice and is not duplicated",
       "Direct CALL closure is 0 open edges and direct JMP/Jcc closure remains 1 single-tail edge: 0x11695ee2 -> 0x11695e3c"
     ]
   }

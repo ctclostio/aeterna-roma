@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 1972)
-        self.assertEqual(result["globals"], 1096)
+        self.assertEqual(result["functions"], 2029)
+        self.assertEqual(result["globals"], 1130)
         self.assertEqual(result["vtables"], 85)
-        self.assertEqual(result["instruction_witnesses"], 1581)
+        self.assertEqual(result["instruction_witnesses"], 1599)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -4416,6 +4416,123 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual(ev["closure_audit"]["recovered_functions"], 1972)
         self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
         self.assertEqual([(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]], [("11695ee2", "11695e3c")])
+
+    def test_layer83_curl_form_global_easy_multi_sealed_p11_contracts(self):
+        ev = self.registry["rea_layer83_evidence"]
+        self.assertTrue(ev["partition11_sealed"])
+        self.assertEqual(ev["snapshot_mode"], "extending_layer82_batched_p11_sealed")
+        self.assertEqual((ev["closed_evidence_records"], ev["new_evidence_records"], ev["reused_layer82_evidence_records"]), (120, 65, 55))
+        self.assertEqual(len(ev["new_records"]), 65)
+        self.assertEqual([r["operation"] for r in ev["new_records"]].count("read_bytes"), 8)
+        self.assertEqual(ev["closed_snapshot_sha256"], self.registry["rea_layer82_evidence"]["closed_snapshot_sha256"])
+        self.assertEqual(ev["prior_partitions_validated_records"], 2914)
+        self.assertEqual(ev["cumulative_all_partitions_records"], 3034)
+        self.assertEqual((ev["non_proc_slots"], ev["resource_constrained_slots"]), ([], []))
+        self.assertEqual(ev["closure_audit"]["recovered_functions"], 2029)
+        self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
+        self.assertEqual([(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]], [("11695ee2", "11695e3c")])
+
+        base, sections = contracts.parse_pe32(self.image)
+        fns = {f["address"]: f for f in self.registry["functions"]}
+        globs = {g["address"]: g for g in self.registry["globals"]}
+        value = lambda address: bytes.fromhex(globs[address]["initial_hex_le"])
+        layer = self.registry["functions"][-57:]
+        self.assertEqual((layer[0]["address"], layer[-1]["address"]), ("10f10330", "116c7fd5"))
+        self.assertEqual({f["calling_convention"] for f in layer if f["address"] != "116a886e"}, {"cdecl"})
+        self.assertEqual({f["receiver_register"] for f in layer}, {"none"})
+        for address, stack in (("10f10ab0", 24), ("10f1d7e0", 20), ("10f228f0", 20), ("10f108e0", 16),
+                               ("10f21420", 16), ("10f3d820", 12), ("10f3fb40", 12), ("10f403f0", 8),
+                               ("10f22ef0", 8), ("10f1d260", 8), ("10f109e0", 4), ("10f10990", 0)):
+            self.assertEqual(fns[address]["stack_argument_bytes"], stack, address)
+
+        # exits: two direct tail jumps, nine IAT tail jumps, one body ending in a backward JMP
+        self.assertEqual(fns["10f15ca0"]["tail_exit"], {"kind": "direct_jmp", "address": "10f15ca0", "target": "10f2d260"})
+        self.assertEqual(fns["10f162a0"]["tail_exit"], {"kind": "direct_jmp", "address": "10f162b9", "target": "10f2d380"})
+        self.assertIn("0x10f162ae", fns["10f162a0"]["scope"])
+        self.assertEqual(fns["1168c9e2"]["return_instruction_addresses"], ["1168ca05"])
+        precise = fns["116a886e"]
+        self.assertEqual((precise["calling_convention"], precise["stack_argument_bytes"], precise["callee_pop_bytes"]), ("stdcall", 4, 4))
+        self.assertEqual(precise["tail_exit"], {"kind": "iat_jmp", "address": "116a88a7", "iat_slot": "1172f358"})
+        self.assertEqual(contracts.image_bytes(self.image, base, sections, 0x116A88A2, 3)[0].hex(), "c20400")
+        self.assertEqual(len([f for f in layer if "tail_exit" in f]), 11)
+
+        # the model's thunk table restates the pinned thunk, slot, ordinal and DLL
+        source = (Path(__file__).resolve().parents[1] / "port" / "recovered_types" / "curl_form_global_easy_multi_ops.c").read_text(encoding="utf-8")
+        thunks = [("11687680", "1172f438", 2604, 0, 0), ("116876e0", "1172f460", 3212, 0, 0),
+                  ("116876e6", "1172f45c", 298, 0, 0), ("1168778e", "1172f3c8", 224, 0, 0),
+                  ("11687794", "1172f3cc", 254, 0, 4), ("116c7f45", "1172f5e8", 74, 1, 0),
+                  ("116c7f93", "1172f588", 76, 1, 12), ("116c7fd5", "1172f5b4", 183, 1, 0)]
+        for thunk, slot, ordinal, ssleay, stack in thunks:
+            self.assertIn(f"{{0x{thunk}u, 0x{slot}u, {ordinal}u, {ssleay}u}}", source)
+            self.assertEqual(fns[thunk]["bytes"], 6)
+            self.assertEqual(fns[thunk]["tail_exit"], {"kind": "iat_jmp", "address": thunk, "iat_slot": slot})
+            self.assertEqual(fns[thunk]["stack_argument_bytes"], stack)
+            self.assertIn(("SSLEAY32" if ssleay else "LIBEAY32") + f".dll!#{ordinal} ", fns[thunk]["ordinary_return"])
+            self.assertEqual(struct.unpack("<I", value(slot))[0], 0x80000000 | ordinal)
+            self.assertEqual(contracts.image_bytes(self.image, base, sections, int(thunk, 16), 6)[0],
+                             b"\xff\x25" + struct.pack("<I", int(slot, 16)))
+
+        # content-type table: six {char extension[6]; pad; type pointer} rows, plus the default type
+        table = value("118465b0")
+        self.assertEqual(len(table), 72)
+        rows = [(table[i:i + 6].rstrip(b"\0").decode(), value(f"{struct.unpack_from('<I', table, i + 8)[0]:08x}")[:-1].decode())
+                for i in range(0, 72, 12)]
+        self.assertEqual(rows, [(".gif", "image/gif"), (".jpg", "image/jpeg"), (".jpeg", "image/jpeg"),
+                                (".txt", "text/plain"), (".html", "text/html"), (".xml", "application/xml")])
+        for extension, content_type in rows:
+            self.assertIn(f'{{"{extension}", "{content_type}"}}', source)
+        self.assertEqual(value("1184664c"), b"application/octet-stream\0")
+        self.assertEqual(value("1183fa50"), b"Failed writing body (%zu != %zu)\0")
+        self.assertEqual((value("1183ea70"), value("1183ea8c")), (b"CONNECT_ONLY is required!\0", b"Failed to get recent socket\0"))
+        self.assertEqual((value("1183fa74"), value("1183fa10")), (b"Failed writing header\0", b"* \0"))
+        self.assertEqual(value("1190c964"), b"GetSystemTimePreciseAsFileTime\0")
+
+        # allocator defaults, .bss state and the two switch tables
+        self.assertEqual(struct.unpack("<5I", value("119750cc")), (0x1168D0C3, 0x1168D0A8, 0x1169D9A2, 0x116B204D, 0x1169D9AD))
+        for address, width in (("11fb5948", 4), ("11fb594c", 4), ("11fb5950", 24), ("11fb5968", 4),
+                               ("11fb596c", 4), ("11fb5970", 4), ("11fb5974", 8)):
+            self.assertEqual((globs[address]["storage"], globs[address]["width"]), ("zero_fill", width))
+        states = struct.unpack("<11I", value("10f233b0"))
+        self.assertEqual(states, (0x10F23308, 0x10F2334A, 0x10F2334A, 0x10F2331E, 0x10F233A8, 0x10F23334,
+                                  0x10F23334, 0x10F23376, 0x10F23392, 0x10F23392, 0x10F23392))
+        options = struct.unpack("<19I", value("10f403a0"))
+        self.assertTrue(all(0x10F3FB40 <= target <= 0x10F4039D for target in options))
+        self.assertEqual(len({options[i] for i in (8, 16, 17)}), 1)  # options 9, 17 and 18 share the unknown-option arm
+        self.assertEqual(options[10], options[15])  # CURLFORM_BUFFER and CURLFORM_FILENAME share an arm
+
+        witnesses = {w["address"]: w["hex"] for w in self.registry["instruction_witnesses"]}
+        self.assertEqual(witnesses["10f10a52"], "6802020000")
+        self.assertEqual(witnesses["10f17b11"], "6888870000")
+        self.assertEqual(witnesses["10f17b34"], "c78684870000addbdec0")
+        self.assertEqual(witnesses["10f1d0e9"], "3d01000010")
+        self.assertEqual(witnesses["10f22905"], "81381eab0b00")
+        self.assertEqual(witnesses["10f23301"], "ff248db033f210")
+        self.assertEqual(witnesses["10f3fbc1"], "ff2485a003f410")
+        self.assertEqual(witnesses["116a88a2"], "c20400")
+        # Curl_srand: 0xa70427df - t * 0x7f82434b is three folded seed * 1103515245 + 12345 steps
+        multiplier, addend = 1, 0
+        for _ in range(3):
+            multiplier, addend = multiplier * 1103515245 % 2**32, (addend * 1103515245 + 12345) % 2**32
+        self.assertEqual((witnesses["10f1eda7"], witnesses["10f1edad"]), ("69c04b43827f", "b9df2704a7"))
+        self.assertEqual((multiplier, addend), (-0x7F82434B % 2**32, 0xA70427DF))
+        header = (Path(__file__).resolve().parents[1] / "port" / "recovered_types" / "curl_form_global_easy_multi_ops.h").read_text(encoding="utf-8")
+        self.assertIn("ROME2_L83_RANDSEED_MUL 0x807dbcb5u", header)
+        self.assertIn("ROME2_L83_RANDSEED_ADD 0xa70427dfu", header)
+        # _timespec64_get: FILETIME epoch 0x019db1ded53e8000 and the 10^7 divisor
+        self.assertEqual((witnesses["1168ca23"], witnesses["1168ca28"], witnesses["1168ca43"]),
+                         ("2d00803ed5", "81d9deb19d01", "6880969800"))
+
+        layouts = (Path(__file__).resolve().parents[1] / "port" / "recovered_types" / "guest32_layouts.h").read_text(encoding="utf-8")
+        for text in ('_Static_assert(sizeof(rome2_curl_httppost_32) == 0x34, "curl httppost 32 size");',
+                     '_Static_assert(sizeof(rome2_curl_forminfo_32) == 0x40, "curl forminfo 32 size");',
+                     '_Static_assert(sizeof(rome2_curl_fd_set_32) == 0x104, "curl fd_set 32 size");',
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_httppost_32, more_va, 0x24);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_multi_prefix_32, sockhash_va, 0x5c);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_tree_prefix_32, key_sec, 0x0c);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_sh_entry_prefix_32, socketp_va, 0x18);"):
+            self.assertIn(text, layouts)
+        for stale in ("rome2_curl_msg_32", "rome2_curl_sock_entry_32", "rome2_curl_multi_32 "):
+            self.assertNotIn(stale, layouts)
 
     def test_tail_exit_indirect_jmp_mutations_rejected(self):
         for mutator, pattern in (
