@@ -2324,3 +2324,19 @@ callees.
   `clean_crt=0`, `noret_or_thunk=0` across **1,563** functions; no `entry_point`
   spine function remains; the `0x10cb6520` tail-jump edge, live runtime
   execution and whole-engine recovery remain open).
+
+### Layer 72 — Partition 9 start: preferences script writer, SEH4 validation/unwind & CRT tail closures (2026-11-24)
+
+- Opened **Partition 9** in [out/startup-layer72-20261124](out/startup-layer72-20261124/) (`fresh_partition_p9`) using REA headless/MCP Ghidra analysis, closing **25** functions across `0x100d12d0..0x116d7310` and reducing open direct jump edges leaving recovered bodies from **12** (9 targets) to **3** (`0x10cb0440->0x10cb6520`, `0x11695ee2->0x11695ffa`, `0x11695ee2->0x11695e3c`) while keeping `open_direct_call_edges == 0`:
+  - Preferences script writer & wide ostream helpers (`0x100dacb0`, `0x100d12d0`, `0x100d14d0`, `0x100d6570`, `0x11346aa0`, `0x11349f80`, `0x10104ac0`, `0x1168e944`),
+  - SEH epilogue tail (`0x10fd964a`), CRT x87 CW restore / `__math_exit` (`0x116b326e`, `0x116b327b`), SSE2 `log10` (`0x116bd580`, `0x116bd59e`), `___ascii_strnicmp` (`0x116bd810`),
+  - CRT SEH4/PE validation, `RtlUnwind`, and NLG unwind runtime (`0x116c09ae`, `0x116c09f0`, `0x116c0a56`, `0x116c0b0c`, `0x116c0b2b`, `0x116c0b30`, `0x116c0bf0` across 3 ranges, `0x116c0f9d`, `0x116d7200`, `0x116d7250` across 2 ranges, `0x116d7310`).
+- Extended [contracts.json](port/recovered_types/contracts.json) to **1,588** functions,
+  **935** globals (`13` Layer 72 non-overlapping globals: IAT slot `0x1172f118` `RtlUnwind`, preference delimiters `0x1173e288..0x1173e2b0`, mode strings `0x117420b4`/`0x117420bc`, 256-byte SSE2 `log10` constants `0x1191ec30`, EH guard pointer block `0x1191fd70`, SEH4 scope tables `0x11925c68`/`0x119264a0`, and NLG destination state `0x119ec740`), **85** vtables, and **1,516** instruction witnesses (`+21`), backed by **42** validated REA records (`25` `analyze_function`, `2` `resolve_containing_procedure` confirming `0x100ee5d0` & `0x116be3d8` `not_in_procedure`, `15` `read_bytes`; **2,417** cumulative across Partitions 1–9).
+- Locked 5 fixed-width `guest32_layouts.h` views (`rome2_startup_envvar_pref88_32`, `rome2_startup_crt_file_box8_32`, `rome2_startup_eh3_reg16_32`, `rome2_startup_nlg_dest16_32`, `rome2_startup_pe_sec_hdr40_32`) and bounded C17 models in [startup_prefs_seh_tail_ops.h](port/recovered_types/startup_prefs_seh_tail_ops.h) and [startup_prefs_seh_tail_ops.c](port/recovered_types/startup_prefs_seh_tail_ops.c), exercised by **35 check groups** in [test_startup_prefs_seh_tail_ops.c](port/recovered_types/test_startup_prefs_seh_tail_ops.c).
+- Verified **129/129** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
+  and ASan, **112** contract tests on Python 3.15 (`11,007` PE-verified
+  whole-binary globals in [manifest.json](work/binary_contracts/manifest.json)),
+  and **975** clean-public Python tests (**342** skipped) on Python 3.14 and 3.15
+  (`clean_eng=0`, `clean_crt=0`, `noret_or_thunk=0` across **1,588** functions;
+  3 remaining jump targets `0x11695ffa`/`0x11695e3c`/`0x10cb6520` queued across Layers 73–79).

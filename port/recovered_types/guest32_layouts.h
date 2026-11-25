@@ -3755,5 +3755,72 @@ _Static_assert(sizeof(rome2_startup_seh_scope12_32) == 0x0c, "startup seh scope1
 ROME2_LAYOUT_ASSERT(rome2_startup_seh_scope12_32, filter_04, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_startup_seh_scope12_32, handler_08, 0x08);
 
+/* Layer 72 Partition 9: preferences writer, CRT/SEH tails and _except_handler4 helpers. */
+typedef struct rome2_startup_envvar_pref88_32 {
+    uint32_t vptr_00;                            /* 00 vtable (+4 virtual value formatter) */
+    uint32_t name_04[3];                         /* 04..0f pref name narrow string12 */
+    uint32_t reserved_10_1c[4];                  /* 10..1f */
+    uint32_t group_20[3];                        /* 20..2b category narrow string12 */
+    uint32_t desc_2c[3];                         /* 2c..37 description narrow string12 */
+    uint32_t reserved_38_48[5];                  /* 38..4b */
+    uint8_t quote_scalar_4c;                     /* 4c nonzero quotes scalar output (0x100d14d0) */
+    uint8_t pad_4d[3];                           /* 4d..4f */
+    uint32_t reserved_50;                        /* 50..53 */
+    uint8_t quote_wstring_54;                    /* 54 nonzero quotes wstring output (0x100d12d0) */
+    uint8_t pad_55[3];                           /* 55..57 */
+} rome2_startup_envvar_pref88_32;
+_Static_assert(sizeof(rome2_startup_envvar_pref88_32) == 0x58, "startup envvar pref88 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_envvar_pref88_32, name_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_envvar_pref88_32, group_20, 0x20);
+ROME2_LAYOUT_ASSERT(rome2_startup_envvar_pref88_32, desc_2c, 0x2c);
+ROME2_LAYOUT_ASSERT(rome2_startup_envvar_pref88_32, quote_scalar_4c, 0x4c);
+ROME2_LAYOUT_ASSERT(rome2_startup_envvar_pref88_32, quote_wstring_54, 0x54);
+
+typedef struct rome2_startup_crt_file_box8_32 {
+    uint32_t file_00;                            /* 00 FILE* returned by _wfopen */
+    int32_t err_04;                              /* 04 errno on failure, 0 on success */
+} rome2_startup_crt_file_box8_32;
+_Static_assert(sizeof(rome2_startup_crt_file_box8_32) == 0x08, "startup crt file box8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_file_box8_32, err_04, 0x04);
+
+typedef struct rome2_startup_eh3_reg16_32 {
+    uint32_t next_00;                            /* 00 next SEH node */
+    uint32_t handler_04;                         /* 04 exception handler address */
+    uint32_t scope_table_08;                     /* 08 guest pointer to scope table */
+    uint32_t try_level_0c;                       /* 0c current try level (-1 = none) */
+} rome2_startup_eh3_reg16_32;
+_Static_assert(sizeof(rome2_startup_eh3_reg16_32) == 0x10, "startup eh3 reg16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_eh3_reg16_32, handler_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_eh3_reg16_32, scope_table_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_eh3_reg16_32, try_level_0c, 0x0c);
+
+typedef struct rome2_startup_nlg_dest16_32 {
+    uint32_t sig_00;                             /* 00 0x19930520 at 0x119ec740 */
+    uint32_t eax_04;                             /* 04 handler/return address (EAX) */
+    uint32_t code_08;                            /* 08 NLG code (e.g. 0x101) */
+    uint32_t frame_ebp_0c;                       /* 0c frame EBP */
+} rome2_startup_nlg_dest16_32;
+_Static_assert(sizeof(rome2_startup_nlg_dest16_32) == 0x10, "startup nlg dest16 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_nlg_dest16_32, eax_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_nlg_dest16_32, code_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_nlg_dest16_32, frame_ebp_0c, 0x0c);
+
+typedef struct rome2_startup_pe_sec_hdr40_32 {
+    uint8_t name_00[8];                          /* 00..07 section name */
+    uint32_t virtual_size_08;                    /* 08 Misc.VirtualSize */
+    uint32_t virtual_address_0c;                 /* 0c VirtualAddress */
+    uint32_t raw_size_10;                        /* 10 SizeOfRawData */
+    uint32_t raw_ptr_14;                         /* 14 PointerToRawData */
+    uint32_t reloc_ptr_18;                       /* 18 */
+    uint32_t linenum_ptr_1c;                     /* 1c */
+    uint16_t reloc_count_20;                     /* 20 */
+    uint16_t linenum_count_22;                   /* 22 */
+    uint32_t characteristics_24;                 /* 24 Characteristics */
+} rome2_startup_pe_sec_hdr40_32;
+_Static_assert(sizeof(rome2_startup_pe_sec_hdr40_32) == 0x28, "startup pe sec hdr40 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_pe_sec_hdr40_32, virtual_size_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_pe_sec_hdr40_32, virtual_address_0c, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_startup_pe_sec_hdr40_32, characteristics_24, 0x24);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

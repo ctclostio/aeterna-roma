@@ -13,7 +13,7 @@
     "class_field_entries": 95747,
     "rtti_type_descriptors": 181,
     "rtti_complete_object_locators": 15,
-    "globals": 10995,
+    "globals": 11007,
     "exported_code_targets_pinned": 405
   },
   "distributions": {
@@ -40,7 +40,7 @@
       "static_rdata_ptr": 7912,
       "static_fn_ptr": 888,
       "static_vptr_instance": 584,
-      "pe_iat_slot": 479,
+      "pe_iat_slot": 478,
       "msvc_rtti_type_descriptor": 181,
       "curated": 46,
       "pe_data_export": 29,
@@ -75,6 +75,7 @@
       "IAT slot in .rdata (KERNEL32.dll!HeapSize) called by 0x116b58d9 (__msize_base)": 1,
       "4-byte IAT slot in .rdata importing KERNEL32.dll!SetEndOfFile called by 0x116bc827": 1,
       "IAT slot in .rdata (KERNEL32.dll!WriteConsoleW) called by 0x116bd528": 1,
+      "IAT slot in .rdata (KERNEL32.dll!RtlUnwind) called by 0x116c09f0": 1,
       "IAT slot KERNEL32!QueryPerformanceCounter called by 0x100dbf80": 1,
       "IAT slot in .rdata (KERNEL32.dll!SleepEx) called by 0x10123e00": 1,
       "IAT slot in .rdata (KERNEL32.dll!GlobalMemoryStatusEx) called by 0x10103220": 1,
@@ -230,6 +231,11 @@
       "NUL-terminated ASCII string 'Warscape/MipLevel' in .rdata used by 0x100d2860": 1,
       "NUL-terminated ASCII string 'Warscape/TexelDensity' in .rdata used by 0x100d2860": 1,
       "static path-separator string \"\\\" (0x5c,0x00,0x00,0x00) followed by version string \"1.21\"": 1,
+      "UTF-16LE space literal L\" \" in .rdata used by preferences writer 0x100dacb0": 1,
+      "ASCII newline-comment delimiter \" #\\r\\n\" in .rdata used by preferences writer 0x100dacb0": 1,
+      "ASCII comma separator \", \" in .rdata used by preferences writer 0x100dacb0": 1,
+      "ASCII semicolon comment prefix \"; # \" in .rdata used by preferences writer 0x100dacb0": 1,
+      "UTF-16LE quote literal L\"\\\"\" in .rdata used by preferences writer 0x100dacb0": 1,
       "binary32 0.0 in .rdata compared against the inertia speed by 0x100dcfe0": 1,
       "4-byte IEEE-754 float 0.001f (0x3a83126f) in .rdata multiplied by 0x112e2b00": 1,
       "binary32 0.25 pinch/rotate damping factor in .rdata read by 0x100da620": 1,
@@ -319,6 +325,8 @@
       "3-byte NUL-terminated ANSI string '..' in .rdata compared by 0x112f6190 data-dir walk": 1,
       "NUL-terminated ASCII open mode 'abS' in .rdata for 0x10104a70": 1,
       "NUL-terminated ASCII open mode 'wbS' in .rdata for 0x10104a70": 1,
+      "UTF-16LE CRT file open mode L\"abS\" (append binary sequential) in .rdata used by 0x10104ac0": 1,
+      "UTF-16LE CRT file open mode L\"wbS\" (write binary sequential) in .rdata used by 0x10104ac0": 1,
       "NUL-terminated ASCII Winsock diagnostic literal 'Authoritative answer host not found.' in .rdata": 1,
       "NUL-terminated ASCII Winsock diagnostic literal 'Valid name, no data record of requested type.' in .rdata": 1,
       "NUL-terminated ASCII Winsock diagnostic literal 'A nonrecoverable error occurred.' in .rdata": 1,
@@ -545,7 +553,9 @@
       "64-byte 8-entry prefix of 228-entry 8B-stride sorted locale-name-to-index table in .rdata binary-searched by 0x116b80ef": 1,
       "NUL-terminated ASCII math name 'log10' in .rdata referenced by 0x116b8348": 1,
       "NUL-terminated UTF-16LE string L'CONOUT$' in .rdata passed to CreateFileW by 0x116bd4d3": 1,
+      "SSE2 256-byte log10 polynomial and argument-reduction constants table in .rdata used by 0x116bd59e": 1,
       "32-byte MSVC C++ exception template [0xe06d7363, 1, 0, 0, 3, 0x19930520, 0, 0] copied by 0x116bebf1": 1,
+      "C++ EH exception-destructor guard pointer block in .rdata inspected by 0x116c09ae": 1,
       "12B SEH scope record {enclosing -1, filter 0x100edf4a, handler 0x100edf67} in .rdata installed by 0x100edd70": 1,
       "12-byte MSVC SEH __except scope table entry [-1, 0x100f390c, 0x100f3910] in .rdata referenced by 0x100f38b0": 1,
       "16-byte MSVC _s__ThrowInfo descriptor [0, 0x100f1c80, 0, 0x11923dc4] in .rdata passed by 0x10114f60": 1,
@@ -584,6 +594,8 @@
       "16-byte MSVC SEH4 scope table descriptor in .rdata pushed by 0x116b46d2": 1,
       "16-byte SEH scope table descriptor in .rdata pushed by 0x116b5824 (_query_new_handler)": 1,
       "16-byte SEH scope table descriptor in .rdata pushed by 0x116b5f67 (update_thread_locale_data_internal)": 1,
+      "SEH4 scope table in .rdata for __ValidateEH3RN 0x116c0bf0": 1,
+      "SEH4 scope table in .rdata for __IsNonwritableInCurrentImage 0x116d7250": 1,
       "4-byte initialized video letterbox enable flag (initial 1) in .data written by 0x100dd4c0": 1,
       "low dword (initial 0) of the 8B counter base in .data subtracted by 0x100dbf80": 1,
       "high dword (initial 0) of the 8B counter base in .data subtracted by 0x100dbf80": 1,
@@ -672,6 +684,7 @@
       "4-byte CRT _mbctype range bitmask table {0x01, 0x02, 0x04, 0x08} in .data indexed by 0x116b4c4b": 1,
       "240-byte CRT _rgctype_info[5] DBCS codepage table (932/936/949/950/1361, 48B stride) in .data scanned by 0x116b4c4b": 1,
       "4-byte CRT __dcrt_lowio_console_output_handle in .data (init -2) tested by 0x116bd4f2 and 0x116bd528": 1,
+      "CRT NLG destination state dword base in .data populated by __NLG_Notify 0x116c0b0c": 1,
       "fixed frame-rate dword (initial 0) in .data read by 0x100dbf80": 1,
       "1-byte counter-sampling flag (initial 0) in .data tested by 0x100dbf80": 1,
       "1-byte capture-request flag (initial 0) in .data tested and cleared by 0x100dbf80": 1,
@@ -919,24 +932,24 @@
     }
   },
   "curated_reconciliation": {
-    "curated_functions_total": 1563,
-    "curated_in_canonical_index": 1532,
-    "curated_exact_body_sha256_match": 1514,
+    "curated_functions_total": 1588,
+    "curated_in_canonical_index": 1557,
+    "curated_exact_body_sha256_match": 1539,
     "curated_multi_range_expanded": 18,
     "curated_non_proc_slots": 31,
-    "curated_globals_matched": 922,
+    "curated_globals_matched": 935,
     "curated_vtables_matched": 85
   },
   "files": {
     "function_contracts_part1.tsv": {
       "rows": 40640,
-      "bytes": 9393088,
-      "sha256": "05e108a9a2ec85b348aa79abf0a1fba2dce4ff9e04b761463420bad25a7907c0"
+      "bytes": 9393173,
+      "sha256": "a4a08ee877779bd7f151000d7cc2a69291870643201d480295dc3c87379392d8"
     },
     "function_contracts_part2.tsv": {
       "rows": 40640,
-      "bytes": 9471598,
-      "sha256": "886bb589f95d76ffd3e0871b5677cb154d598c543c3012502a98c402ea16f00d"
+      "bytes": 9471938,
+      "sha256": "ce892eaaae89105a7e85a9fca9a811b35942aa4ad51968b8b514fab44568cd9e"
     },
     "non_proc_curated_slots.tsv": {
       "rows": 31,
@@ -959,9 +972,9 @@
       "sha256": "534964ec1fa25fd15189a0fd007ba1412fe7fe339981ade410ca82a303f8e912"
     },
     "global_contracts.tsv": {
-      "rows": 10995,
-      "bytes": 954977,
-      "sha256": "e2ae629e8a7b59c5d929e8210a4537da338e8baafa0f75df89fce077f9c910df"
+      "rows": 11007,
+      "bytes": 958197,
+      "sha256": "ad148c3d413929c5dc9db282a0f17d4e7238ece1a3b8630e06e5912b3efdbee4"
     }
   }
 }

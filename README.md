@@ -35,7 +35,7 @@ These are separate completion axes and must not be blended into one percentage:
 | Indirect-call resolution | 59,079 / 59,079 (100.0%) | All sites classified via whole-program cross-function type propagation and sound multi-slot/arity CHA closure (33,987 [57.53%] statically narrowed: 7,700 high, 26,287 medium; 25,092 low sound CHA closure; 0 unresolved); 9,639 vtables / 123,569 slots / 3,698 families inventoried and 3,961 target sets deduplicated. See `work/indirect_call_summary_after.md`. |
 | Decompiler-warning triage | 9,856 / 9,856 (100.0%) | All warnings across 6,765 functions classified (`0` untriaged): 9,724 benign/dispatch/symbol/dead-code/artifact (`1,698` virtual + `450` IAT + `10` reg + `4` callback tail calls, `6` `readonly_write` SSE `.rdata` aliases), `73` stack-frame `spacebase` + `2` clean-exported `restart_limit` for port verification, and `57` switch-table warnings resolved via `47` PE `.reloc`-verified jump tables across all `16` switch functions (`21` addressed + `26` selector-normalization). See `work/decomp_defects_triage_summary_after.md` and `work/switch_tables_recovered_after.tsv`. |
 | Whole-binary ABI & type contracts | 81,280 / 81,280 (100.0%) | PE-verified static contract pinning across all 81,280 canonical functions (+31 curated non-index slots), 9,639 vtables, 181 MSVC RTTI descriptors (`15` COLs), `95,747` member/ctor field entries across `6,281` vtables, and `10,995` static globals (`port/recovered_types/contracts.json` stays separate for handwritten C17 native semantics; see the next row). See `work/binary_contracts/summary.md`. |
-| Handwritten type recovery | Layer 71 · Partition 8 sealed | Bounded C17 reconstruction in `port/recovered_types/` pins 1,563 functions, 922 globals, 85 vtables and 1,495 instruction witnesses against the original image, across eight sealed evidence partitions and 128 native CTest suites. Layer 71 closes the last 17 functions of the `entry_point` (`0x100edd70`) startup spine: the entry point itself, the application run loop, the frame step and the per-frame screen-manager update. Closure is measured on direct CALL edges: none leaves the recovered set, but 12 direct jump edges do (one new, from `0x10cb0440` into the unrecovered `0x10cb6520`), and targets reached through virtual slots are outside the measure. All of it is test-only with injected effects. See [progress.md](progress.md) and `docs/vfs_recovery.md`. |
+| Handwritten type recovery | Layer 72 · Partition 9 open | Bounded C17 reconstruction in `port/recovered_types/` pins 1,588 functions, 935 globals, 85 vtables and 1,516 instruction witnesses against the original image, across eight sealed partitions plus Layer 72 of Partition 9 (`2,417` cumulative REA records) and 129 native CTest suites. Layer 72 closes 25 functions across the preferences script writer (`0x100dacb0`), `0x10fd964a` SEH epilogue, `0x116b326e`/`0x116b327b` x87 math CW/exit tails, `0x116bd580`/`0x116bd59e` SSE2 `log10`, `0x116bd810` `___ascii_strnicmp`, and the CRT SEH4/PE validation and unwind stack, leaving 0 open direct CALL edges and reducing open direct jump edges from 12 to 3 (`0x10cb6520`, `0x11695ffa`, `0x11695e3c`). All of it is test-only with injected effects. See [progress.md](progress.md) and `docs/vfs_recovery.md`. |
 | Latest admitted x64 milestone | 150 / 150 decision-and-caller bytes (100%) | The `entry_point` entry decision: the frozen selector, conditional registration-data interval, and two caller/continuation windows compose the admitted 400-byte nonempty ordinary-domain parent in a standalone test-only route. |
 | Playable/game-equivalent reconstruction | <1% (planning estimate) | No recovered launcher-facing startup, main loop, renderer, campaign, battle, UI, audio, networking, or save system is integrated. |
 
@@ -52,14 +52,15 @@ x64 port milestones, and the type-recovery layers.
   `0x100edf94`. Past them lie the installed tail, exception gap, common
   epilogue, `CoUninitialize`, and SEH restoration. See
   `docs/x64_next_milestone_candidates.md`.
-- **Startup type recovery:** Partition 8 is sealed at Layer 71, so no
-  `entry_point` (`0x100edd70`) spine function is left on a direct CALL edge.
-  Still open: the conditional tail jump from `0x10cb0440` into the unrecovered
-  `0x10cb6520`, the eleven earlier jump edges listed in `closure_audit`
-  (`port/recovered_types/contracts.json`), the two handler bodies `entry_point`
-  installs by address (`0x116be3d8`, `0x100ee5d0`), and everything reached only
-  through virtual slots: screen handlers, their factories and the graphics
-  device. Then the further engine and export roots.
+- **Startup type recovery:** Partition 8 is sealed at Layer 71, and Layer 72
+  opens Partition 9 by closing 6 of the 9 remaining direct jump targets
+  (`0x100dacb0`, `0x10fd964a`, `0x116b326e`, `0x116b327b`, `0x116bd580`,
+  `0x116bd810`), leaving 3 direct jump edges (`0x10cb0440->0x10cb6520`,
+  `0x11695ee2->0x11695ffa`, `0x11695ee2->0x11695e3c`), the two non-proc
+  handler addresses `entry_point` installs by address (`0x116be3d8`,
+  `0x100ee5d0`, both pinned in `read_bytes` and `instruction_witnesses`),
+  and everything reached only through virtual slots. Then the further engine
+  and export roots.
 - **Live execution:** recovered routines run only as bounded, test-only
   transcripts with injected effects. Native Win32 file mapping (`CreateFileA`,
   `MapViewOfFile`), threading, and CRT effects are modelled, not executed.
@@ -178,9 +179,10 @@ workflows and SonarQube Cloud setup.
    `src_out/empire.retail.dll/function_index.txt`). Done: 81,280 canonical
    functions.
 4. Type recovery: guest32 layouts, contracts and bounded C17 reconstructions in
-   `port/recovered_types/`. In progress: 1,563 functions through Layer 71,
-   which closes the `entry_point` startup spine on direct calls; see the
-   type-recovery layers in [progress.md](progress.md).
+   `port/recovered_types/`. In progress: 1,588 functions through Layer 72
+   (Partition 9 in progress), closing the `entry_point` startup spine and
+   6 of the 9 remaining direct jump targets; see the type-recovery layers in
+   [progress.md](progress.md).
 5. Symbolic renaming: exports, `steam_api` thunks, D3D vtables, string-xref
    names. FuncID pass complete: all 81,280 canonical functions named with
    tiered `[H]`/`[M]`/`[L]` confidence; `[L]` names remain open to refinement.

@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 1563)
-        self.assertEqual(result["globals"], 922)
+        self.assertEqual(result["functions"], 1588)
+        self.assertEqual(result["globals"], 935)
         self.assertEqual(result["vtables"], 85)
-        self.assertEqual(result["instruction_witnesses"], 1495)
+        self.assertEqual(result["instruction_witnesses"], 1516)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -820,7 +820,7 @@ class TypeContractProvenanceTests(unittest.TestCase):
                 "1168bcc3", "11695540", "11696308", "11696528", "11699af7", "11699b02",
                 "1169b820", "1169e653", "1169ecd8", "116a1729", "116a511c", "116a5864", "116a586f", "116ade23", "116ae58e", "116afb0a",
                 "116b4b50", "116b56b1", "116b5f67", "116bd8d0", "116bde50",
-            } | {"116b0517", "116aaee6", "1168d030", "116adaed"} | {"100edd70"},
+            } | {"116b0517", "116aaee6", "1168d030", "116adaed"} | {"100edd70"} | {"116c0bf0", "116d7250"},
         )
         base, sections = contracts.parse_pe32(self.image)
         expected_gaps = {
@@ -869,6 +869,8 @@ class TypeContractProvenanceTests(unittest.TestCase):
             "116b5f67": [12],
             "116bd8d0": [24, 1, 1, 3, 1, 17, 1, 3, 1, 5, 9],
             "116bde50": [24, 1, 1, 3, 1, 17, 1, 3, 1, 5, 9],
+            "116c0bf0": [40, 8],
+            "116d7250": [22],
         }
         for address, gaps in expected_gaps.items():
             helper = helpers[address]
@@ -4011,10 +4013,12 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual(by_w["100edd7a"]["hex"], "68d8e36b11")
         self.assertEqual(by_w["100edf05"]["hex"], "68d0e50e10")
 
-        # Independent decode of every audited jump edge that leaves the recovered bodies.
+        # Independent decode of every audited jump edge that left the Layer 71 recovered bodies.
         base, sections = contracts.parse_pe32(self.image)[:2]
+        l71_fns = self.registry["functions"][:1563]
+        l71_by_fn = {fn["address"]: fn for fn in l71_fns}
         ranges = []
-        for fn in self.registry["functions"]:
+        for fn in l71_fns:
             if "body_ranges" in fn:
                 ranges.extend((int(r["start"], 16), int(r["end"], 16)) for r in fn["body_ranges"])
             else:
@@ -4045,7 +4049,66 @@ class TypeContractProvenanceTests(unittest.TestCase):
             self.assertEqual(target, int(edge["target"], 16))
             self.assertTrue(recovered(at))
             self.assertFalse(recovered(target))
-            self.assertNotIn(edge["target"], by_fn)
+            self.assertNotIn(edge["target"], l71_by_fn)
+
+    def test_layer72_startup_prefs_seh_tail_contracts(self):
+        by_fn = {f["address"]: f for f in self.registry["functions"]}
+        layer72_addrs = [
+            "100d12d0",
+            "100d14d0",
+            "100d6570",
+            "100dacb0",
+            "10104ac0",
+            "10fd964a",
+            "11346aa0",
+            "11349f80",
+            "1168e944",
+            "116b326e",
+            "116b327b",
+            "116bd580",
+            "116bd59e",
+            "116bd810",
+            "116c09ae",
+            "116c09f0",
+            "116c0a56",
+            "116c0b0c",
+            "116c0b2b",
+            "116c0b30",
+            "116c0bf0",
+            "116c0f9d",
+            "116d7200",
+            "116d7250",
+            "116d7310",
+        ]
+        for addr in layer72_addrs:
+            self.assertIn(addr, by_fn)
+        self.assertEqual(
+            [(r["start"], r["end"]) for r in by_fn["116c0bf0"]["body_ranges"]],
+            [("116c0bf0", "116c0ed6"), ("116c0eff", "116c0f17"), ("116c0f20", "116c0f9c")],
+        )
+        self.assertEqual(
+            [(r["start"], r["end"]) for r in by_fn["116d7250"]["body_ranges"]],
+            [("116d7250", "116d72d8"), ("116d72ef", "116d7309")],
+        )
+        by_g = {g["address"]: g for g in self.registry["globals"]}
+        for gaddr in (
+            "1172f118", "1173e288", "1173e28c", "1173e294", "1173e298", "1173e2b0",
+            "117420b4", "117420bc", "1191ec30", "1191fd70", "11925c68", "119264a0", "119ec740",
+        ):
+            self.assertIn(gaddr, by_g)
+        ev = self.registry["rea_layer72_evidence"]
+        self.assertEqual(ev["snapshot_mode"], "fresh_partition_p9")
+        self.assertEqual(ev["closed_evidence_records"], 42)
+        self.assertEqual(ev["prior_partitions_validated_records"], 2375)
+        self.assertEqual(ev["cumulative_all_partitions_records"], 2417)
+        self.assertEqual(ev["non_proc_slots"], ["100ee5d0", "116be3d8"])
+        self.assertEqual(ev["resource_constrained_slots"], [])
+        self.assertEqual(ev["closure_audit"]["recovered_functions"], 1588)
+        self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
+        self.assertEqual(
+            [(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]],
+            [("11695ee2", "11695ffa"), ("11695ee2", "11695e3c"), ("10cb0440", "10cb6520")],
+        )
 
     def test_direct_jmp_short_mismatch_rejected(self):
         registry = copy.deepcopy(self.registry)
