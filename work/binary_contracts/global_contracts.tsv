@@ -844,11 +844,15 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 11756080	7	file	676c6f62616c00	.rdata	ASCII string 'global' returned by getobjname (0x10f47140)	ASCII string 'global' returned by getobjname (0x10f47140)	true
 1175612c	12	file	6c615f67696f636f6e646100	.rdata	NUL-terminated ASCII UI style key 'la_gioconda' in .rdata for 0x10c8f760/0x10c8f8c0/0x10cb8f90	NUL-terminated ASCII UI style key 'la_gioconda' in .rdata for 0x10c8f760/0x10c8f8c0/0x10cb8f90	true
 11756480	24	file	c0271d10afd86b11d0951d10b0321d10b03a1d1000771d10	.rdata	6-slot primary channel/socket adapter base vtable prefix [0x101d27c0, 0x116bd8af, 0x101d95d0, 0x101d32b0, 0x101d3ab0, 0x101d7700] in .rdata bound by 0x10fd6850	6-slot primary channel/socket adapter base vtable prefix [0x101d27c0, 0x116bd8af, 0x101d95d0, 0x101d32b0, 0x101d3ab0, 0x101d7700] in .rdata bound by 0x10fd6850	true
+11757d4c	3	file	257000	.rdata	ASCII format '%p' used by luaO_pushvfstring (0x10f462d0)	ASCII format '%p' used by luaO_pushvfstring (0x10f462d0)	true
+117580b0	64	file	000000000000f03f00002042000034420000704200008042000096420000a0420000aa420000b4420000f0420000fa4200000c43000020430000244300002543	.rdata	ASCII/double table slice (64B) referenced near luaO_pushvfstring/luaV_execute	ASCII/double table slice (64B) referenced near luaO_pushvfstring/luaV_execute	true
 11768574	8	file	00d43310afd86b11	.rdata	8-byte 2-slot DB table base vtable {0x1033d400, 0x116bd8af} in .rdata	8-byte 2-slot DB table base vtable {0x1033d400, 0x116bd8af} in .rdata	true
 1177d404	5	file	7461696c00	.rdata	ASCII string 'tail' used by auxgetinfo (0x10f46d50)	ASCII string 'tail' used by auxgetinfo (0x10f46d50)	true
 1177ddbc	20	file	6d61702f7365743c543e20746f6f206c6f6e6700	.rdata	"Static ASCII ""map/set<T> too long"" error literal pushed by 0x112a3320"	"Static ASCII ""map/set<T> too long"" error literal pushed by 0x112a3320"	true
 1177f34c	4	file	25660000	.rdata	curated	curated	true
 11794918	4	file	29000000	.rdata	NUL-terminated UTF-16 closing paren literal u')' in .rdata used by math formatters	NUL-terminated UTF-16 closing paren literal u')' in .rdata used by math formatters	true
+11798afc	2	file	2500	.rdata	ASCII '%' character literal used by luaO_pushvfstring (0x10f462d0)	ASCII '%' character literal used by luaO_pushvfstring (0x10f462d0)	true
+1179a178	2	file	6e00	.rdata	ASCII 'n' vararg count table key used by luaD_precall (0x10f48190)	ASCII 'n' vararg count table key used by luaD_precall (0x10f48190)	true
 117a4c74	4	file	2c000000	.rdata	NUL-terminated UTF-16 comma literal u',' in .rdata used by math formatters	NUL-terminated UTF-16 comma literal u',' in .rdata used by math formatters	true
 117d9270	6	file	50004f000000	.rdata	NUL-terminated UTF-16LE locale string L'PO' in .rdata for 0x10c8a0b0	NUL-terminated UTF-16LE locale string L'PO' in .rdata for 0x10c8a0b0	true
 117d9278	6	file	50004c000000	.rdata	NUL-terminated UTF-16LE locale string L'PL' in .rdata for 0x10c8a0b0	NUL-terminated UTF-16LE locale string L'PL' in .rdata for 0x10c8a0b0	true
@@ -910,6 +914,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 11846d30	7	file	286e756c6c2900	.rdata	7-byte ASCII '(null)' literal in .rdata emitted by 0x1168af61 (%Z) and 0x1168b78e (%s)	7-byte ASCII '(null)' literal in .rdata emitted by 0x1168af61 (%Z) and 0x1168b78e (%s)	true
 11846d38	3	file	0a0d00	.rdata	ASCII string '\n\r' delimiter set used by luaO_chunkid (0x10f460e0)	ASCII string '\n\r' delimiter set used by luaO_chunkid (0x10f460e0)	true
 11846d3c	10	file	5b737472696e67202200	.rdata	"ASCII string '[string ""' used by luaO_chunkid (0x10f460e0); covers sub-slice 0x11846d44"	"ASCII string '[string ""' used by luaO_chunkid (0x10f460e0); covers sub-slice 0x11846d44"	true
+11846d48	18	file	6e6f7420656e6f756768206d656d6f727900	.rdata	ASCII string 'not enough memory' used by luaD_seterrorobj (0x10f487e0)	ASCII string 'not enough memory' used by luaD_seterrorobj (0x10f487e0)	true
 11846d5c	13	file	282a74656d706f726172792900	.rdata	ASCII string '(*temporary)' returned by findlocal (0x10f470c0)	ASCII string '(*temporary)' returned by findlocal (0x10f470c0)	true
 11846d6c	5	file	3d5b435d00	.rdata	ASCII string '=[C]' used by auxgetinfo (0x10f46d50)	ASCII string '=[C]' used by auxgetinfo (0x10f46d50)	true
 11846d74	4	file	4c756100	.rdata	ASCII string 'Lua' used by auxgetinfo (0x10f46d50)	ASCII string 'Lua' used by auxgetinfo (0x10f46d50)	true
@@ -917,7 +922,32 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 11846d88	6	file	6c6f63616c00	.rdata	ASCII string 'local' returned by getobjname (0x10f47140)	ASCII string 'local' returned by getobjname (0x10f47140)	true
 11846d90	6	file	6669656c6400	.rdata	ASCII string 'field' returned by getobjname (0x10f47140)	ASCII string 'field' returned by getobjname (0x10f47140)	true
 11846d98	8	file	757076616c756500	.rdata	ASCII string 'upvalue' returned by getobjname (0x10f47140)	ASCII string 'upvalue' returned by getobjname (0x10f47140)	true
+11846da0	35	file	617474656d707420746f20257320257320272573272028612025732076616c75652900	.rdata	ASCII error format 'attempt to %s %s \'%s\' (a %s value)'	ASCII error format 'attempt to %s %s \'%s\' (a %s value)'	true
+11846dc4	25	file	617474656d707420746f20257320612025732076616c756500	.rdata	ASCII error format 'attempt to %s a %s value'	ASCII error format 'attempt to %s a %s value'	true
+11846de0	12	file	636f6e636174656e61746500	.rdata	ASCII op string 'concatenate' used by luaG_concaterror (0x10f47310)	ASCII op string 'concatenate' used by luaG_concaterror (0x10f47310)	true
+11846dec	22	file	706572666f726d2061726974686d65746963206f6e00	.rdata	ASCII op string 'perform arithmetic on' used by luaG_aritherror (0x10f472c0)	ASCII op string 'perform arithmetic on' used by luaG_aritherror (0x10f472c0)	true
+11846e04	33	file	617474656d707420746f20636f6d706172652074776f2025732076616c75657300	.rdata	ASCII format 'attempt to compare two %s values'	ASCII format 'attempt to compare two %s values'	true
+11846e28	30	file	617474656d707420746f20636f6d70617265202573207769746820257300	.rdata	ASCII format 'attempt to compare %s with %s'	ASCII format 'attempt to compare %s with %s'	true
+11846e48	10	file	25733a25643a20257300	.rdata	ASCII format '%s:%d: %s' used by luaG_runerror (0x10f47410)	ASCII format '%s:%d: %s' used by luaG_runerror (0x10f47410)	true
+11846e54	24	file	6572726f7220696e206572726f722068616e646c696e6700	.rdata	ASCII error string 'error in error handling' used by luaD_seterrorobj	ASCII error string 'error in error handling' used by luaD_seterrorobj	true
+11846e6c	15	file	737461636b206f766572666c6f7700	.rdata	ASCII error string 'stack overflow' used by growCI (0x10f47df0)	ASCII error string 'stack overflow' used by growCI (0x10f47df0)	true
+11846e7c	5	file	63616c6c00	.rdata	ASCII op string 'call' used by luaD_precall (0x10f48190)	ASCII op string 'call' used by luaD_precall (0x10f48190)	true
+11846e84	17	file	4320737461636b206f766572666c6f7700	.rdata	ASCII error string 'C stack overflow' used by luaD_call (0x10f47e40)	ASCII error string 'C stack overflow' used by luaD_call (0x10f47e40)	true
 11846ee0	32	file	0000000000000000000000000000000000000000696e76616c6964206b657920	.rdata	Lua dummynode_ (20B empty Node) + adjacent string prefix in .rdata used by luaH_getn (0x10f4a980)	Lua dummynode_ (20B empty Node) + adjacent string prefix in .rdata used by luaH_getn (0x10f4a980)	true
+11846f0c	15	file	7461626c65206f766572666c6f7700	.rdata	ASCII error string 'table overflow' used by setnodevector (0x10f4b430)	ASCII error string 'table overflow' used by setnodevector (0x10f4b430)	true
+11846f1c	19	file	7461626c6520696e646578206973206e696c00	.rdata	ASCII error string 'table index is nil' used by luaH_set (0x10f4ad20)	ASCII error string 'table index is nil' used by luaH_set (0x10f4ad20)	true
+11846f30	6	file	252e31346700	.rdata	ASCII float format '%.14g' used by luaV_concat (0x10f4be50)	ASCII float format '%.14g' used by luaV_concat (0x10f4be50)	true
+11846f38	6	file	696e64657800	.rdata	ASCII op string 'index' used by luaV_gettable/luaV_settable	ASCII op string 'index' used by luaV_gettable/luaV_settable	true
+11846f40	17	file	6c6f6f7020696e206765747461626c6500	.rdata	ASCII error string 'loop in gettable' used by luaV_gettable (0x10f4db60)	ASCII error string 'loop in gettable' used by luaV_gettable (0x10f4db60)	true
+11846f54	17	file	6c6f6f7020696e207365747461626c6500	.rdata	ASCII error string 'loop in settable' used by luaV_settable (0x10f4dcb0)	ASCII error string 'loop in settable' used by luaV_settable (0x10f4dcb0)	true
+11846f68	23	file	737472696e67206c656e677468206f766572666c6f7700	.rdata	ASCII error string 'string length overflow' used by luaV_concat (0x10f4be50)	ASCII error string 'string length overflow' used by luaV_concat (0x10f4be50)	true
+11846f80	14	file	676574206c656e677468206f6600	.rdata	ASCII op string 'get length of' used by luaV_execute (0x10f4c0f0)	ASCII op string 'get length of' used by luaV_execute (0x10f4c0f0)	true
+11846f90	37	file	27666f722720696e697469616c2076616c7565206d7573742062652061206e756d62657200	.rdata	"ASCII error string ""'for' initial value must be a number"""	"ASCII error string ""'for' initial value must be a number"""	true
+11846fb8	29	file	27666f7227206c696d6974206d7573742062652061206e756d62657200	.rdata	"ASCII error string ""'for' limit must be a number"""	"ASCII error string ""'for' limit must be a number"""	true
+11846fd8	28	file	27666f72272073746570206d7573742062652061206e756d62657200	.rdata	"ASCII error string ""'for' step must be a number"""	"ASCII error string ""'for' step must be a number"""	true
+11846ff8	8	file	0000000000003043	.rdata	IEEE double constant 16.0 / boundary constant slice in .rdata	IEEE double constant 16.0 / boundary constant slice in .rdata	true
+11847000	64	file	00000000000000807c70841180708411a47e75118870841190f17d119070841198708411a47e7511a4708411ac708411b47084110000000060677511bc708411	.rdata	Lua type-name pointer table slice + adjacent constants at 0x11847000..0x1184703f	Lua type-name pointer table slice + adjacent constants at 0x11847000..0x1184703f	true
+11847104	39	file	6d656d6f727920616c6c6f636174696f6e206572726f723a20626c6f636b20746f6f2062696700	.rdata	ASCII error string 'memory allocation error: block too big'	ASCII error string 'memory allocation error: block too big'	true
 11848c9c	32	file	afd86b11afd86b11afd86b11afd86b11afd86b11afd86b11afd86b11afd86b11	.rdata	8-slot _purecall base vtable stored prior to teardown destruction by 0x112ad6a0/0x112ad6d0	8-slot _purecall base vtable stored prior to teardown destruction by 0x112ad6a0/0x112ad6d0	true
 1184926c	12	file	40cbf610f080fd10d0951d10	.rdata	3-slot primary channel/stream adapter vtable prefix [0x10f6cb40, 0x10fd80f0, 0x101d95d0] in .rdata bound by 0x10fd6c90	3-slot primary channel/stream adapter vtable prefix [0x10f6cb40, 0x10fd80f0, 0x101d95d0] in .rdata bound by 0x10fd6c90	true
 11849278	60	file	afd86b11afd86b11afd86b11afd86b11afd86b11afd86b11afd86b11afd86b11afd86b11afd86b11afd86b114013fa10e0f6f910a0faf910e0faf910	.rdata	15-slot base pack-entry vtable (11 __purecall 0x116bd8af prefix + 4 concrete default slots)	15-slot base pack-entry vtable (11 __purecall 0x116bd8af prefix + 4 concrete default slots)	true

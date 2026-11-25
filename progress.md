@@ -2403,3 +2403,8 @@ callees.
   and **980** clean-public Python tests (**347** skipped) on Python 3.14 and 3.15
   (`clean_eng=0`, `clean_crt=0`, `noret_or_thunk=0` across **1,709** functions;
   Lua Layers 77–78 and advice bridge Layer 79 remain in Partition 9).
+
+### Partition 9 Layer 77: Lua 5.1.4 VM/GC/table core SCC (`lua_vm_gc_table_ops`, 54 functions -> 1,763 total)
+
+- **Scope & Closure**: Added [lua_vm_gc_table_ops.h](port/recovered_types/lua_vm_gc_table_ops.h), [lua_vm_gc_table_ops.c](port/recovered_types/lua_vm_gc_table_ops.c), and [test_lua_vm_gc_table_ops.c](port/recovered_types/test_lua_vm_gc_table_ops.c) covering the **54-function** Lua 5.1.4 VM, incremental GC, table, closure/upvalue, protected call, debug/error, parser/undump/dump, and `luaV_execute` (`0x10f4c0f0`, 6,580 B) SCC (`0x10f462b0..0x10f4e0d0`), plus **30** non-overlapping PE globals and **9** instruction witnesses (`1,763` functions, `1,000` globals, `85` vtables, `1,560` witnesses, `11,072` whole-binary globals; `286` Partition 9 records / `2,661` cumulative REA records; `0` open direct CALL edges, `2` open direct jump edges: `0x11695ee2 -> 0x11695e3c`, `0x10cb0440 -> 0x10cb6520`).
+- **Verification**: Passed **134/134** native CTest suites (`/W4 /WX /analyze` and ASan), **118** contract tests, whole-binary contract validation (**11,072** globals), and **981** clean-public Python tests (**348** skipped) on Python 3.14 & 3.15 (`Lua` Layer 78 and advice bridge Layer 79 remain in Partition 9).

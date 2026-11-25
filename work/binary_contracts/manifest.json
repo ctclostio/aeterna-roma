@@ -13,7 +13,7 @@
     "class_field_entries": 95747,
     "rtti_type_descriptors": 181,
     "rtti_complete_object_locators": 15,
-    "globals": 11042,
+    "globals": 11072,
     "exported_code_targets_pinned": 405
   },
   "distributions": {
@@ -371,10 +371,14 @@
       "ASCII string 'global' returned by getobjname (0x10f47140)": 1,
       "NUL-terminated ASCII UI style key 'la_gioconda' in .rdata for 0x10c8f760/0x10c8f8c0/0x10cb8f90": 1,
       "6-slot primary channel/socket adapter base vtable prefix [0x101d27c0, 0x116bd8af, 0x101d95d0, 0x101d32b0, 0x101d3ab0, 0x101d7700] in .rdata bound by 0x10fd6850": 1,
+      "ASCII format '%p' used by luaO_pushvfstring (0x10f462d0)": 1,
+      "ASCII/double table slice (64B) referenced near luaO_pushvfstring/luaV_execute": 1,
       "8-byte 2-slot DB table base vtable {0x1033d400, 0x116bd8af} in .rdata": 1,
       "ASCII string 'tail' used by auxgetinfo (0x10f46d50)": 1,
       "Static ASCII \"map/set<T> too long\" error literal pushed by 0x112a3320": 1,
       "NUL-terminated UTF-16 closing paren literal u')' in .rdata used by math formatters": 1,
+      "ASCII '%' character literal used by luaO_pushvfstring (0x10f462d0)": 1,
+      "ASCII 'n' vararg count table key used by luaD_precall (0x10f48190)": 1,
       "NUL-terminated UTF-16 comma literal u',' in .rdata used by math formatters": 1,
       "NUL-terminated UTF-16LE locale string L'PO' in .rdata for 0x10c8a0b0": 1,
       "NUL-terminated UTF-16LE locale string L'PL' in .rdata for 0x10c8a0b0": 1,
@@ -422,6 +426,7 @@
       "7-byte ASCII '(null)' literal in .rdata emitted by 0x1168af61 (%Z) and 0x1168b78e (%s)": 1,
       "ASCII string '\\n\\r' delimiter set used by luaO_chunkid (0x10f460e0)": 1,
       "ASCII string '[string \"' used by luaO_chunkid (0x10f460e0); covers sub-slice 0x11846d44": 1,
+      "ASCII string 'not enough memory' used by luaD_seterrorobj (0x10f487e0)": 1,
       "ASCII string '(*temporary)' returned by findlocal (0x10f470c0)": 1,
       "ASCII string '=[C]' used by auxgetinfo (0x10f46d50)": 1,
       "ASCII string 'Lua' used by auxgetinfo (0x10f46d50)": 1,
@@ -429,7 +434,32 @@
       "ASCII string 'local' returned by getobjname (0x10f47140)": 1,
       "ASCII string 'field' returned by getobjname (0x10f47140)": 1,
       "ASCII string 'upvalue' returned by getobjname (0x10f47140)": 1,
+      "ASCII error format 'attempt to %s %s \\'%s\\' (a %s value)'": 1,
+      "ASCII error format 'attempt to %s a %s value'": 1,
+      "ASCII op string 'concatenate' used by luaG_concaterror (0x10f47310)": 1,
+      "ASCII op string 'perform arithmetic on' used by luaG_aritherror (0x10f472c0)": 1,
+      "ASCII format 'attempt to compare two %s values'": 1,
+      "ASCII format 'attempt to compare %s with %s'": 1,
+      "ASCII format '%s:%d: %s' used by luaG_runerror (0x10f47410)": 1,
+      "ASCII error string 'error in error handling' used by luaD_seterrorobj": 1,
+      "ASCII error string 'stack overflow' used by growCI (0x10f47df0)": 1,
+      "ASCII op string 'call' used by luaD_precall (0x10f48190)": 1,
+      "ASCII error string 'C stack overflow' used by luaD_call (0x10f47e40)": 1,
       "Lua dummynode_ (20B empty Node) + adjacent string prefix in .rdata used by luaH_getn (0x10f4a980)": 1,
+      "ASCII error string 'table overflow' used by setnodevector (0x10f4b430)": 1,
+      "ASCII error string 'table index is nil' used by luaH_set (0x10f4ad20)": 1,
+      "ASCII float format '%.14g' used by luaV_concat (0x10f4be50)": 1,
+      "ASCII op string 'index' used by luaV_gettable/luaV_settable": 1,
+      "ASCII error string 'loop in gettable' used by luaV_gettable (0x10f4db60)": 1,
+      "ASCII error string 'loop in settable' used by luaV_settable (0x10f4dcb0)": 1,
+      "ASCII error string 'string length overflow' used by luaV_concat (0x10f4be50)": 1,
+      "ASCII op string 'get length of' used by luaV_execute (0x10f4c0f0)": 1,
+      "ASCII error string \"'for' initial value must be a number\"": 1,
+      "ASCII error string \"'for' limit must be a number\"": 1,
+      "ASCII error string \"'for' step must be a number\"": 1,
+      "IEEE double constant 16.0 / boundary constant slice in .rdata": 1,
+      "Lua type-name pointer table slice + adjacent constants at 0x11847000..0x1184703f": 1,
+      "ASCII error string 'memory allocation error: block too big'": 1,
       "8-slot _purecall base vtable stored prior to teardown destruction by 0x112ad6a0/0x112ad6d0": 1,
       "3-slot primary channel/stream adapter vtable prefix [0x10f6cb40, 0x10fd80f0, 0x101d95d0] in .rdata bound by 0x10fd6c90": 1,
       "15-slot base pack-entry vtable (11 __purecall 0x116bd8af prefix + 4 concrete default slots)": 1,
@@ -967,12 +997,12 @@
     }
   },
   "curated_reconciliation": {
-    "curated_functions_total": 1709,
-    "curated_in_canonical_index": 1678,
-    "curated_exact_body_sha256_match": 1660,
+    "curated_functions_total": 1763,
+    "curated_in_canonical_index": 1732,
+    "curated_exact_body_sha256_match": 1714,
     "curated_multi_range_expanded": 18,
     "curated_non_proc_slots": 31,
-    "curated_globals_matched": 970,
+    "curated_globals_matched": 1000,
     "curated_vtables_matched": 85
   },
   "files": {
@@ -983,8 +1013,8 @@
     },
     "function_contracts_part2.tsv": {
       "rows": 40640,
-      "bytes": 9473995,
-      "sha256": "b43fde29424e2e5acf6372795b1318d3bad6198c5e380f960cbd98b011ab6d08"
+      "bytes": 9474913,
+      "sha256": "7ad79fa8e5f7ce9a0ed3c2d13bc5ec13e9b72ec325c7972caee3b9371338ceb1"
     },
     "non_proc_curated_slots.tsv": {
       "rows": 31,
@@ -1007,9 +1037,9 @@
       "sha256": "534964ec1fa25fd15189a0fd007ba1412fe7fe339981ade410ca82a303f8e912"
     },
     "global_contracts.tsv": {
-      "rows": 11042,
-      "bytes": 966078,
-      "sha256": "4965baf3b1f46e4d3d2296cc918c9a97109f428710624086d5f92ce4677f18e5"
+      "rows": 11072,
+      "bytes": 972097,
+      "sha256": "c83e2c78f3848df2cc5757614bbbf4d1116b06ff99b696aca84d0c0419b98840"
     }
   }
 }
