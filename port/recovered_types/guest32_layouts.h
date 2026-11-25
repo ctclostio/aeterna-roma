@@ -4169,5 +4169,35 @@ typedef struct rome2_lua_lg_32 {
 _Static_assert(sizeof(rome2_lua_lg_32) == 0x148, "lua lg 32 size");
 ROME2_LAYOUT_ASSERT(rome2_lua_lg_32, g, 0x64);
 
+typedef struct rome2_lua_script_wrapper24_32 {
+    uint32_t lua_state_va;
+    uint8_t is_valid;
+    uint8_t pad05[3];
+    uint32_t owner_ctx_va;
+    uint8_t owns_master_state;
+    uint8_t pad0d[3];
+    uint32_t reserved10;
+    uint32_t reserved14;
+} rome2_lua_script_wrapper24_32;
+_Static_assert(sizeof(rome2_lua_script_wrapper24_32) == 0x18, "lua script wrapper 24B size");
+ROME2_LAYOUT_ASSERT(rome2_lua_script_wrapper24_32, is_valid, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_lua_script_wrapper24_32, owner_ctx_va, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_lua_script_wrapper24_32, owns_master_state, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_lua_script_wrapper24_32, reserved10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_lua_script_wrapper24_32, reserved14, 0x14);
+
+typedef struct rome2_lua_wrapper_ring20_32 {
+    uint32_t next_va;
+    uint32_t prev_va;
+    uint32_t wrapper_va;
+    uint32_t parent_lua_state_va;
+    int32_t registry_ref;
+} rome2_lua_wrapper_ring20_32;
+_Static_assert(sizeof(rome2_lua_wrapper_ring20_32) == 0x14, "lua wrapper ring 20B size");
+ROME2_LAYOUT_ASSERT(rome2_lua_wrapper_ring20_32, prev_va, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_lua_wrapper_ring20_32, wrapper_va, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_lua_wrapper_ring20_32, parent_lua_state_va, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_lua_wrapper_ring20_32, registry_ref, 0x10);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

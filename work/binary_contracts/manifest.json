@@ -13,7 +13,7 @@
     "class_field_entries": 95747,
     "rtti_type_descriptors": 181,
     "rtti_complete_object_locators": 15,
-    "globals": 11077,
+    "globals": 11140,
     "exported_code_targets_pinned": 405
   },
   "distributions": {
@@ -44,6 +44,16 @@
       "msvc_rtti_type_descriptor": 181,
       "curated": 46,
       "pe_data_export": 29,
+      "advice/Lua bridge image slice (4B) in .rdata/.data used by Layer 79": 10,
+      "advice/Lua bridge image slice (7B) in .rdata/.data used by Layer 79": 9,
+      "advice/Lua bridge image slice (6B) in .rdata/.data used by Layer 79": 8,
+      "advice/Lua bridge image slice (24B) in .rdata/.data used by Layer 79": 5,
+      "advice/Lua bridge image slice (5B) in .rdata/.data used by Layer 79": 5,
+      "advice/Lua bridge image slice (8B) in .rdata/.data used by Layer 79": 5,
+      "advice/Lua bridge image slice (11B) in .rdata/.data used by Layer 79": 2,
+      "advice/Lua bridge image slice (2B) in .rdata/.data used by Layer 79": 2,
+      "advice/Lua bridge image slice (13B) in .rdata/.data used by Layer 79": 2,
+      "advice/Lua bridge image slice (16B) in .rdata/.data used by Layer 79": 2,
       "unit-card extent float bits": 2,
       "1-byte flag (initial 0) in .data cleared by 0x100dbf80": 2,
       "unit-card colour float bits": 2,
@@ -297,6 +307,7 @@
       "first 24 bytes of the ASCII 'seconds' banner suffix in .rdata used by 0x100ec5c0": 1,
       "first 24 bytes of the ASCII 'TIME TO FIRST FRAME' banner prefix in .rdata used by 0x100ec5c0": 1,
       "NUL-terminated ASCII string 'End Logging\\r\\n' in .rdata written by 0x100e32e0": 1,
+      "advice/Lua bridge image slice (42B) in .rdata/.data used by Layer 79": 1,
       "16-byte aligned interface/GUID template block in .rdata copied to 0x119f3868 by 0x112c2370": 1,
       "16-byte aligned interface/GUID template block in .rdata copied to 0x119f387c by 0x112c8ca0": 1,
       "7-entry int32 Win32 thread priority lookup table [-15,-2,-1,0,1,2,15] in .rdata read by 0x100fcb80": 1,
@@ -367,11 +378,13 @@
       "NUL-terminated ASCII OOM literal 'VirtualAlloc (at place 1) returned NULL!' in .rdata": 1,
       "NUL-terminated ASCII OOM literal 'VirtualAlloc (at place 2) returned NULL!' in .rdata": 1,
       "NUL-terminated string literal 'dlmalloc returned NULL!' in .rdata passed to MessageBoxA in 0x101254a0": 1,
+      "advice/Lua bridge image slice (3B) in .rdata/.data used by Layer 79": 1,
       "NUL-terminated ASCII format string '%u' in .rdata for 0x10cba4c0": 1,
       "ASCII string 'global' returned by getobjname (0x10f47140)": 1,
       "NUL-terminated ASCII UI style key 'la_gioconda' in .rdata for 0x10c8f760/0x10c8f8c0/0x10cb8f90": 1,
       "6-slot primary channel/socket adapter base vtable prefix [0x101d27c0, 0x116bd8af, 0x101d95d0, 0x101d32b0, 0x101d3ab0, 0x101d7700] in .rdata bound by 0x10fd6850": 1,
       "ASCII format '%p' used by luaO_pushvfstring (0x10f462d0)": 1,
+      "advice/Lua bridge image slice (163B) in .rdata/.data used by Layer 79": 1,
       "ASCII/double table slice (64B) referenced near luaO_pushvfstring/luaV_execute": 1,
       "8-byte 2-slot DB table base vtable {0x1033d400, 0x116bd8af} in .rdata": 1,
       "ASCII string 'tail' used by auxgetinfo (0x10f46d50)": 1,
@@ -379,12 +392,15 @@
       "NUL-terminated UTF-16 closing paren literal u')' in .rdata used by math formatters": 1,
       "ASCII '%' character literal used by luaO_pushvfstring (0x10f462d0)": 1,
       "ASCII 'n' vararg count table key used by luaD_precall (0x10f48190)": 1,
+      "advice/Lua bridge image slice (12B) in .rdata/.data used by Layer 79": 1,
       "NUL-terminated UTF-16 comma literal u',' in .rdata used by math formatters": 1,
       "NUL-terminated UTF-16LE locale string L'PO' in .rdata for 0x10c8a0b0": 1,
       "NUL-terminated UTF-16LE locale string L'PL' in .rdata for 0x10c8a0b0": 1,
       "UTF-16LE literal key L\"vfs_log_level\" at 117df544..117df55f": 1,
+      "advice/Lua bridge image slice (10B) in .rdata/.data used by Layer 79": 1,
       "ASCII '>' template delimiter used by 0x112c0df0": 1,
       "ASCII '<' template delimiter used by 0x112c0df0": 1,
+      "advice/Lua bridge image slice (186B) in .rdata/.data used by Layer 79": 1,
       "NUL-terminated UTF-16LE DB folder prefix L'db\\\\' in .rdata": 1,
       "NUL-terminated ASCII exception message 'buffer too small' in .rdata thrown by 0x10cba590": 1,
       "NUL-terminated UTF-16LE remote assert banner L'REMOTE ASSERT from (name: %S) (IP %x)' in .rdata": 1,
@@ -467,6 +483,7 @@
       "8-slot _purecall base vtable stored prior to teardown destruction by 0x112ad6a0/0x112ad6d0": 1,
       "3-slot primary channel/stream adapter vtable prefix [0x10f6cb40, 0x10fd80f0, 0x101d95d0] in .rdata bound by 0x10fd6c90": 1,
       "15-slot base pack-entry vtable (11 __purecall 0x116bd8af prefix + 4 concrete default slots)": 1,
+      "advice/Lua bridge image slice (64B) in .rdata/.data used by Layer 79": 1,
       "archive-entry dispatch prefix": 1,
       "loose-entry dispatch prefix": 1,
       "slots +0x08..+0x4c completing 20-slot loose-file entry vtable 0x11897710 (+0x00..+0x04 pinned at 0x11897710)": 1,
@@ -499,6 +516,12 @@
       "UTF-16LE literal sentinel L\"Unused_key\" initialized by 112e32b0": 1,
       "ASCII suffix ' const' stripped by 0x112c0df0": 1,
       "ASCII format 'Pointer<%s>' used by 0x112c0df0": 1,
+      "advice/Lua bridge image slice (9B) in .rdata/.data used by Layer 79": 1,
+      "advice/Lua bridge image slice (19B) in .rdata/.data used by Layer 79": 1,
+      "advice/Lua bridge image slice (14B) in .rdata/.data used by Layer 79": 1,
+      "advice/Lua bridge image slice (27B) in .rdata/.data used by Layer 79": 1,
+      "advice/Lua bridge image slice (22B) in .rdata/.data used by Layer 79": 1,
+      "advice/Lua bridge image slice (15B) in .rdata/.data used by Layer 79": 1,
       "NUL-terminated ASCII string '%s: section timings initialised\\n' in .rdata formatted by 0x112dc9f0": 1,
       "NUL-terminated ASCII string '%s: Done %s' in .rdata formatted by 0x112dcaf0": 1,
       "NUL-terminated ASCII suffix '%dms delta, ... UniStrings:%d)\\n' in .rdata formatted by 0x112dcaf0": 1,
@@ -1002,12 +1025,12 @@
     }
   },
   "curated_reconciliation": {
-    "curated_functions_total": 1799,
-    "curated_in_canonical_index": 1768,
-    "curated_exact_body_sha256_match": 1750,
+    "curated_functions_total": 1813,
+    "curated_in_canonical_index": 1782,
+    "curated_exact_body_sha256_match": 1764,
     "curated_multi_range_expanded": 18,
     "curated_non_proc_slots": 31,
-    "curated_globals_matched": 1005,
+    "curated_globals_matched": 1068,
     "curated_vtables_matched": 85
   },
   "files": {
@@ -1018,8 +1041,8 @@
     },
     "function_contracts_part2.tsv": {
       "rows": 40640,
-      "bytes": 9475525,
-      "sha256": "1237d4e2f3f69c52eb49a5e0425936729a0d2438b55569e524afcd31fd66f517"
+      "bytes": 9475763,
+      "sha256": "2aeead8655ca6f247512d8bd7430d0348e6e9fff8b6400fef94517b0a0588fa0"
     },
     "non_proc_curated_slots.tsv": {
       "rows": 31,
@@ -1042,9 +1065,9 @@
       "sha256": "534964ec1fa25fd15189a0fd007ba1412fe7fe339981ade410ca82a303f8e912"
     },
     "global_contracts.tsv": {
-      "rows": 11077,
-      "bytes": 973194,
-      "sha256": "f1973c9c7976c78f3d64eedba454fe26fe4d7bd5fedadca555c40c7aa4c4816f"
+      "rows": 11140,
+      "bytes": 985666,
+      "sha256": "8f1e1d22942fb64acbd212febe2ff3cdc04ef93c0f6c4050364254027f2035f8"
     }
   }
 }

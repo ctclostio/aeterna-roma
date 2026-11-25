@@ -508,11 +508,15 @@ uint32_t rome2_l77_newkey(rome2_l77_ctx *ctx, uint32_t l_va, uint32_t t_va, cons
         return ROME2_LUA_VA_NILOBJECT;
     }
     mp_va = rome2_l75_mainposition(ctx->arena, t_va, key);
+    if (mp_va == ROME2_LUA_VA_DUMMYNODE) {
+        rome2_l77_rehash(ctx, l_va, t_va, key);
+        return rome2_l77_luaH_set(ctx, l_va, t_va, key);
+    }
     mp = (rome2_lua_node_32 *)rome2_l75_mut_ptr(ctx->arena, mp_va, sizeof(*mp));
     if (mp == NULL) {
         return ROME2_LUA_VA_NILOBJECT;
     }
-    if (mp->i_val.tt != ROME2_LUA_TNIL || mp_va == ROME2_LUA_VA_DUMMYNODE) {
+    if (mp->i_val.tt != ROME2_LUA_TNIL) {
         uint32_t f_va = 0u;
         while (t->lastfree_va > t->node_va) {
             t->lastfree_va -= (uint32_t)sizeof(rome2_lua_node_32);
