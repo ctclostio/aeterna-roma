@@ -58,10 +58,10 @@
   "original_image_contracts": {
     "schema": "rome2-recovered-types-v1",
     "verified": true,
-    "functions": 1972,
-    "globals": 1096,
-    "vtables": 85,
-    "instruction_witnesses": 1581,
+    "functions": 2159,
+    "globals": 1192,
+    "vtables": 90,
+    "instruction_witnesses": 1707,
     "scope": "static original-image evidence; native behavior requires separate tests"
   },
   "historical_canonical_island": {
@@ -149,13 +149,13 @@
     },
     {
       "path": "port/recovered_types/CMakeLists.txt",
-      "bytes": 10380,
-      "sha256": "e46184290930cb951836208d8481dc1e325205c95f95afbe760d5a108e1d1d0d"
+      "bytes": 10680,
+      "sha256": "cd127d73e230a08feb72ba818c18188c8437b6787ed1c11799dc7b14a2b7bad5"
     },
     {
       "path": "port/recovered_types/contracts.json",
-      "bytes": 3722444,
-      "sha256": "82bd66d57655c4d5c4e48c60d349d2e66d6cc2f188fc68df9c787d6d7f9c7a32"
+      "bytes": 3963206,
+      "sha256": "f12def1c2544b8aba41a5f602c5f5b5b894f0c7012001b84c37da411864de4ed"
     },
     {
       "path": "port/recovered_types/free_list_pool.c",
@@ -169,8 +169,8 @@
     },
     {
       "path": "port/recovered_types/guest32_layouts.h",
-      "bytes": 257121,
-      "sha256": "7dc076ad7f9d3e23b3237a4aaa3d44003c65ba5ea1940bfc3e7010816d02601a"
+      "bytes": 288646,
+      "sha256": "49f48ab296566fd9e8ef3fe34a1a0a5e4bef56dd9b8d19f09152f3e210bf34c5"
     },
     {
       "path": "port/recovered_types/image_defaults.h",
@@ -339,8 +339,8 @@
     },
     {
       "path": "progress.md",
-      "bytes": 201782,
-      "sha256": "53ad9a0e3b7be4a4cdbf1417d1306df58c07bb4ed45e0785bb7f8f3b18430ca1"
+      "bytes": 226496,
+      "sha256": "304b855df4ea2526f2648c6ca5ec30ad400db779361f79f8d1e9c91baa56ca8a"
     },
     {
       "path": "scripts/build_recovered_types.bat",
@@ -384,8 +384,8 @@
     },
     {
       "path": "scripts/test_type_recovery_contracts.py",
-      "bytes": 269329,
-      "sha256": "78660b5be7401ecf6272d609c88312a705715a2dc1937ef47676a2bd76056705"
+      "bytes": 335853,
+      "sha256": "0dcbeb19c55c00e6dd6253cddfccdbb62fdcde8bb85dc2ad52a5657805f4f606"
     },
     {
       "path": "scripts/type_recovery_contracts.py",
@@ -403,7 +403,7 @@
       "sha256": "ecefc6a835d909f08bda5e64e8b61eda327449995cd686a41e65ad9f885950a4"
     }
   ],
-  "updated_utc": "2026-11-25T17:39:17Z",
+  "updated_utc": "2026-11-25T23:03:11Z",
   "layer2": {
     "status": "complete for admitted tag copy domain and typed helper boundary",
     "tag_allocation_failure_positions": 11,
@@ -635,7 +635,7 @@
       "whole-engine class/vtable/allocator/threading recovery"
     ]
   },
-  "current_layer": "layer82",
+  "current_layer": "layer85",
   "layer5": {
     "status": "direct XML-node native setup verified; original XML ABI, resource-manager precedence and loader failure behavior remain open",
     "node_setup": {
@@ -53631,7 +53631,7 @@
       "full normalization, parser equivalence, historical CRT/locale/FP equivalence and whole-engine recovery"
     ]
   },
-  "python_focused_contract_tests": 124,
+  "python_focused_contract_tests": 131,
   "layer72": {
     "status": "all 25 Layer 72 Partition 9 preferences-writer, SEH4/PE validation & unwind, and CRT tail functions verified with bounded C17 helpers and 5 fixed-width guest32 memory views (1,588 functions total; open direct jump edges reduced from 12 to 3); Layers 73-79 remain open in Partition 9",
     "original_image_contracts": {
@@ -74246,6 +74246,165 @@
     ],
     "remaining": [
       "16 curl_* and 168 FaceFX DLL export names (163 addresses) are not yet recovered; Partition 12 continues with Layer 86"
+    ]
+  },
+  "layer85_revision1": {
+    "status": "Layer 85 bodies read again against the retained original-image evidence; one model offset renamed, the ledger header and the README whole-binary global count brought current; verified with bounded C17 /analyze and ASan suites, original-image contract verification and clean-public regression coverage",
+    "revises": "layer85",
+    "base_commit": "7ded891",
+    "original_image_contracts": {
+      "schema": "rome2-recovered-types-v1",
+      "verified": true,
+      "functions": 2159,
+      "globals": 1192,
+      "vtables": 90,
+      "instruction_witnesses": 1707,
+      "scope": "static original-image evidence; native behavior requires separate tests"
+    },
+    "python_focused_contract_tests": 131,
+    "native_tests": {
+      "analyze": {
+        "suites": 142,
+        "failed": 0,
+        "local_ctest_log": "out/facefx-layer85-20261125/r1-analyze/Testing/Temporary/LastTest.log",
+        "log_sha256": "912b6837e079e6122bd5ec7cd0751d3fe922a6a97b73b04ee0ef2cb856b724f1",
+        "junit_sha256": "a3314a15ecce1479d74b28dbc921977abc2483e7296363a1faf50b26321e7ea6"
+      },
+      "asan": {
+        "suites": 142,
+        "failed": 0,
+        "local_ctest_log": "out/facefx-layer85-20261125/r1-asan/Testing/Temporary/LastTest.log",
+        "log_sha256": "1ddeaba1dbc3410ec8363536ffa26878adb91ad44da0b1625ae97ae053709f0d",
+        "junit_sha256": "acb1d549cda34ff8161107894f5bb182398cbb8b0a8bcaf85fadf16d9d80426a"
+      },
+      "assertions_enabled": true
+    },
+    "facefx_sdk_group_list_frame_ops_tests": {
+      "suites": 1,
+      "active_checks": 14,
+      "cases": [
+        "test_class_queries",
+        "test_named_object_and_class_descriptors",
+        "test_fx_string_assign",
+        "test_name_stats_dump",
+        "test_resource_manager",
+        "test_event_time_range_and_frame_work",
+        "test_custom_event_callback_and_shutdown",
+        "test_anim_records_and_frame_rate",
+        "test_anim_group_iterators_and_clear",
+        "test_anim_group_find_remove_add",
+        "test_reference_list",
+        "test_actor_instances",
+        "test_bone_frames",
+        "test_instance_frame_and_flags"
+      ]
+    },
+    "original_observations": [
+      "0x10ed8710: MOV ECX, [ESI+EAX+0xc] at 0x10ed8790; TEST ECX, ECX; JZ 0x10ed87b2; MOVSS XMM0, [ESI+EAX+0x88]; SUBSS XMM0, [ECX+0x24] at 0x10ed87a1; MOVSS [ESI+EAX+0x88], XMM0. The float at +0x24 is the only read of the object the event names at +0x0c, and ECX is reloaded with the event address at 0x10ed87b3",
+      "0x10f09320: MOVSS XMM1, [ECX+0x24] is the FxEvent scale, read with ECX holding the event itself",
+      "All 66 bodies agree with the model on offsets, widths, call order and arguments, return values, conditions, loop bounds, constants and strings; the 39 globals, 4 vtables and 83 witnesses agree with the image and with their purpose text"
+    ],
+    "native_adaptations": [
+      "The linked object's float is read at ROME2_FX_EVENT_LINK_VALUE_OFFSET (0x24), a constant of its own, instead of the offset of the FxEvent scale field; the bytes read and the result are the same"
+    ],
+    "contract_text_corrections": {
+      "functions": 0,
+      "globals": 0,
+      "instruction_witnesses": 0,
+      "byte_hashes_changed": 0
+    },
+    "ledger_header": {
+      "was": {
+        "current_layer": "layer82",
+        "functions": 1972,
+        "python_focused_contract_tests": 124
+      },
+      "now": {
+        "current_layer": "layer85",
+        "functions": 2159,
+        "python_focused_contract_tests": 131
+      },
+      "sources_rehashed": [
+        "port/recovered_types/CMakeLists.txt",
+        "port/recovered_types/contracts.json",
+        "port/recovered_types/guest32_layouts.h",
+        "progress.md",
+        "scripts/test_type_recovery_contracts.py"
+      ],
+      "kept_current_by": "test_original_functions_globals_and_vtables"
+    },
+    "readme_whole_binary_globals": {
+      "was": 10995,
+      "now": 11245,
+      "kept_current_by": "test_public_validation_passes_and_sizes_under_25mb"
+    },
+    "public_python_clean": {
+      "checkout": "tracked public files at the revision commit, no original image/canonical exports",
+      "runs": [
+        {
+          "tests": 994,
+          "skipped": 360,
+          "failures": 0,
+          "errors": 0,
+          "version": "3.14"
+        },
+        {
+          "tests": 994,
+          "skipped": 360,
+          "failures": 0,
+          "errors": 0,
+          "version": "3.15"
+        }
+      ],
+      "original_image_dependent_skip_reason": "Total War Rome II/empire.retail.dll, canonical exports and private reports absent"
+    },
+    "rea": {
+      "new_operation_envelopes": 0,
+      "evidence": "out/facefx-layer85-20261125 (Partition 12 bundle, 130 records)"
+    },
+    "local_logs": "out/facefx-layer85-20261125/",
+    "source_hash_scope": "files changed by this revision, UTF-8 text with LF line endings, excluding verification.json itself",
+    "sources": [
+      {
+        "path": "README.md",
+        "bytes": 16248,
+        "sha256": "906169b4b4a34dbc481f7b4ba32f92419ff378983ace4dd8686f18f97836ccb4"
+      },
+      {
+        "path": "docs/vfs_recovery.md",
+        "bytes": 243694,
+        "sha256": "c337614cb3fdaa95fc0a4b9d310f55ae92e6d2b50187f3545f8077d30354fba3"
+      },
+      {
+        "path": "port/recovered_types/contracts.json",
+        "bytes": 3963206,
+        "sha256": "f12def1c2544b8aba41a5f602c5f5b5b894f0c7012001b84c37da411864de4ed"
+      },
+      {
+        "path": "port/recovered_types/facefx_sdk_group_list_frame_ops.c",
+        "bytes": 68284,
+        "sha256": "6941a4bcd5a584b489ded018d5a3499c318af6f27958ebd3e7393cc9368af4ac"
+      },
+      {
+        "path": "port/recovered_types/facefx_sdk_group_list_frame_ops.h",
+        "bytes": 11521,
+        "sha256": "0baefe4ff845839b30fad867b799a417419b35e2f63bea09e795cdbee6a66218"
+      },
+      {
+        "path": "progress.md",
+        "bytes": 226496,
+        "sha256": "304b855df4ea2526f2648c6ca5ec30ad400db779361f79f8d1e9c91baa56ca8a"
+      },
+      {
+        "path": "scripts/test_type_recovery_contracts.py",
+        "bytes": 335853,
+        "sha256": "0dcbeb19c55c00e6dd6253cddfccdbb62fdcde8bb85dc2ad52a5657805f4f606"
+      },
+      {
+        "path": "scripts/test_whole_binary_contracts.py",
+        "bytes": 11093,
+        "sha256": "e3a86bb0b1b27d70343f115a41ce9162262df122afa39b23bbd820d364ec85b6"
+      }
     ]
   }
 }

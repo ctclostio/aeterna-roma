@@ -79311,6 +79311,16 @@
       "9 bodies carry more than one export name (ten IsA/IsExactKindOf names at 0x10ed78b0, five IsKindOf names at 0x10ed7950, the Iterator/ConstIterator and End/ReverseEnd folds of the six FxAnimGroup iterator bodies and FxActor::SetShouldClientRelink at 0x10ee7850), so 55 exported bodies carry 79 export names; 11 bodies have no export name and are named from their callers and bytes",
       "The 39 globals (30 strings, four floats, the FxActorInstance vtable slot at 0x1183c784, the flag byte 0x11974fa0 and three .data zero-fill pointers) and the 4 vtables are pinned from the image by the contract validator without a retained REA read_bytes envelope; the constants 0x1173e2d0, 0x1183b014 and the pointers 0x119f3890, 0x11fadb6c, 0x11fadb70 and 0x11fadb7c these bodies also use were pinned by earlier layers",
       "Direct CALL closure is 0 open edges and direct JMP/Jcc closure remains 1 single-tail edge: 0x11695ee2 -> 0x11695e3c"
-    ]
+    ],
+    "model_revision": {
+      "revision": 1,
+      "date": "2026-11-25",
+      "evidence": "same 130 Partition 12 records; no new REA operations",
+      "summary": [
+        "the 66 bodies were read again against their retained assembly and the image: byte pins, layouts, registry text and the 14 native cases hold, and no body's modelled behaviour changes",
+        "0x10ed8710 reads one float at +0x24 of the object an event names at +0x0c (SUBSS XMM0, [ECX+0x24] at 0x10ed87a1) and nothing else of it; the model took that offset from the FxEvent scale field, a type the body does not establish, and now names it ROME2_FX_EVENT_LINK_VALUE_OFFSET",
+        "the verification.json header had stood at Layer 82 (1,972 functions, 124 contract tests) since Layer 83 and the README whole-binary row at 10,995 globals since Layer 72; both are brought to the Layer 85 registry and the 11,245-global manifest, and each is now compared by a test"
+      ]
+    }
   }
 }

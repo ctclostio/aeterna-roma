@@ -79,6 +79,15 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual(result["globals"], 1192)
         self.assertEqual(result["vtables"], 90)
         self.assertEqual(result["instruction_witnesses"], 1707)
+        # the ledger header names the latest layer in the registry and carries the same counts
+        ledger = json.loads((Path(__file__).resolve().parents[1] / "port" / "recovered_types"
+                             / "verification.json").read_text(encoding="utf-8"))
+        latest = max(int(key[len("rea_layer"):-len("_evidence")]) for key in self.registry
+                     if key.startswith("rea_layer") and key.endswith("_evidence"))
+        counted = ("functions", "globals", "vtables", "instruction_witnesses")
+        self.assertEqual(ledger["current_layer"], f"layer{latest}")
+        self.assertEqual({key: ledger["original_image_contracts"][key] for key in counted},
+                         {key: result[key] for key in counted})
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -5138,6 +5147,27 @@ class TypeContractProvenanceTests(unittest.TestCase):
         facefx = {a: [n for n in names if "@Face@OC3Ent@@" in n] for a, names in exports.items() if a not in through_layer85}
         self.assertEqual((sum(map(len, facefx.values())), sum(bool(names) for names in facefx.values())), (168, 163))
         self.assertEqual(sum(n.startswith("curl_") for a, names in exports.items() if a not in through_layer85 for n in names), 16)
+
+    def test_layer85_revision1_event_link_offset(self):
+        self.assertEqual(self.registry["rea_layer85_evidence"]["model_revision"]["revision"], 1)
+        base, sections = contracts.parse_pe32(self.image)
+        # HasWorkThisFrame, from the load of event +0x0c to the range rebuild: MOV ECX, [ESI+EAX+0xc];
+        # TEST ECX, ECX; JZ +0x1a; MOVSS XMM0, [ESI+EAX+0x88]; SUBSS XMM0, [ECX+0x24];
+        # MOVSS [ESI+EAX+0x88], XMM0; MOV EAX, [EDI+0x10]; PUSH ECX; LEA ECX, [ESI+EAX].
+        # The float at +0x24 is all the body reads of the object the event names.
+        linked = contracts.image_bytes(self.image, base, sections, 0x10ED8790, 0x26)[0]
+        self.assertEqual(linked.hex(), "8b4c060c" "85c9" "741a" "f30f10840688000000" "f30f5c4124"
+                         "f30f11840688000000" "8b4710" "51" "8d0c06")
+        root = Path(__file__).resolve().parents[1] / "port" / "recovered_types"
+        header = (root / "facefx_sdk_group_list_frame_ops.h").read_text(encoding="utf-8")
+        source = (root / "facefx_sdk_group_list_frame_ops.c").read_text(encoding="utf-8")
+        tests = (root / "test_facefx_sdk_group_list_frame_ops.c").read_text(encoding="utf-8")
+        self.assertIn("ROME2_FX_EVENT_LINK_VALUE_OFFSET = 0x24", header)
+        self.assertIn("event->link_0c_va + ROME2_FX_EVENT_LINK_VALUE_OFFSET", source)
+        # the FxEvent scale at +0x24 belongs to the range rebuild 0x10f09320 alone
+        self.assertEqual(contracts.image_bytes(self.image, base, sections, 0x10F09320, 5)[0].hex(), "f30f104924")
+        self.assertNotIn("L85_OFFSET(rome2_fx_event_prefix_32, scale_24)", source)
+        self.assertIn("put_f32(L85_LINKED_VA + 0x24u, 0.25f);", tests)
 
     def test_tail_exit_indirect_jmp_mutations_rejected(self):
         for mutator, pattern in (

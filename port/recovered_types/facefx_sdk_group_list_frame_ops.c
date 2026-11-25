@@ -525,7 +525,7 @@ uint8_t rome2_l85_event_manager_has_work_this_frame(const rome2_l80_fx_ctx *fx, 
             memcpy(&event->time_88, &event->time_84, sizeof(event->time_88));
             if (event->link_0c_va != 0u) {
                 const void *linked = rome2_l80_const_ptr(
-                    fx, event->link_0c_va + L85_OFFSET(rome2_fx_event_prefix_32, scale_24), 4u);
+                    fx, event->link_0c_va + ROME2_FX_EVENT_LINK_VALUE_OFFSET, 4u);
                 float linked_value;
                 if (linked == NULL) {
                     return result; /* bounded */

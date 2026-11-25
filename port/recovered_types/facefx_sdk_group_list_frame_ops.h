@@ -36,8 +36,14 @@ enum rome2_l85_fx_construct_va {
 enum {
     ROME2_L85_WALK_LIMIT = 0x10000,
     ROME2_L85_CLEAR_DEPTH_LIMIT = 64,
-    ROME2_FX_CURVE_STATE_BYTES = 0x30,      /* LEA EAX, [EAX + EAX*2]; SHL EAX, 4 at 0x10ed79c0 */
-    ROME2_FX_ACTOR_BONE_TABLE_OFFSET = 0x0c /* ADD ECX, 0xc at 0x10ed65a0, 0x10ed78a0 and 0x10ed7970 */
+    ROME2_FX_CURVE_STATE_BYTES = 0x30,       /* LEA EAX, [EAX + EAX*2]; SHL EAX, 4 at 0x10ed79c0 */
+    ROME2_FX_ACTOR_BONE_TABLE_OFFSET = 0x0c, /* ADD ECX, 0xc at 0x10ed65a0, 0x10ed78a0 and 0x10ed7970 */
+    /*
+     * SUBSS XMM0, [ECX + 0x24] at 0x10ed87a1: the float HasWorkThisFrame
+     * reads from the object an event names at +0x0c. The body reads nothing
+     * else of that object, which leaves its type open.
+     */
+    ROME2_FX_EVENT_LINK_VALUE_OFFSET = 0x24
 };
 
 /* SetFrameRate accepts 24.0f (0x117667f8) through 120.0f (0x117580d8), both inclusive. */

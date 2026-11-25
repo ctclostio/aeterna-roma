@@ -72,6 +72,8 @@ class PublicWholeBinaryContractTests(unittest.TestCase):
         self.assertEqual(res["vtables"], 9639)
         self.assertEqual(res["rtti_type_descriptors"], 181)
         self.assertEqual(res["globals"], 11245)
+        # the README status row cites the same global count
+        self.assertIn(f"`{res['globals']:,}` static globals", (ROOT / "README.md").read_text(encoding="utf-8"))
 
         for p in vwc.CONTRACTS_DIR.iterdir():
             self.assertLess(p.stat().st_size, MAX_FILE_BYTES, msg=p.name)
