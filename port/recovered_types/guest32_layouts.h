@@ -4162,5 +4162,12 @@ ROME2_LAYOUT_ASSERT(rome2_lua_userdata_hdr_32, metatable_va, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_lua_userdata_hdr_32, env_va, 0x0c);
 ROME2_LAYOUT_ASSERT(rome2_lua_userdata_hdr_32, len, 0x10);
 
+typedef struct rome2_lua_lg_32 {
+    rome2_lua_state_32 l;
+    rome2_lua_global_state_32 g;
+} rome2_lua_lg_32;
+_Static_assert(sizeof(rome2_lua_lg_32) == 0x148, "lua lg 32 size");
+ROME2_LAYOUT_ASSERT(rome2_lua_lg_32, g, 0x64);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

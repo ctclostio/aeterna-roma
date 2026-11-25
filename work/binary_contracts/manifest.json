@@ -13,7 +13,7 @@
     "class_field_entries": 95747,
     "rtti_type_descriptors": 181,
     "rtti_complete_object_locators": 15,
-    "globals": 11072,
+    "globals": 11077,
     "exported_code_targets_pinned": 405
   },
   "distributions": {
@@ -422,6 +422,10 @@
       "ASCII string 'no value' returned by lua_typename (0x10f44f10)": 1,
       "ASCII string '?' returned by getobjname/kname fallback": 1,
       "ASCII string 'method' returned by getobjname (0x10f47140)": 1,
+      "ASCII debug query string 'Sl' used in luaL_error (0x10f45680)": 1,
+      "ASCII location format '%s:%d: ' used in luaL_error (0x10f45680)": 1,
+      "ASCII package table key '_LOADED' used by luaL_register (0x10f45ed0)": 1,
+      "ASCII error format \"name conflict for module '%s'\" used by luaL_register": 1,
       "luaO_nilobject_ (8B) immediately followed by luaO_log2 256B lookup prefix (0x11846c30) in .rdata": 1,
       "7-byte ASCII '(null)' literal in .rdata emitted by 0x1168af61 (%Z) and 0x1168b78e (%s)": 1,
       "ASCII string '\\n\\r' delimiter set used by luaO_chunkid (0x10f460e0)": 1,
@@ -620,6 +624,7 @@
       "SSE2 256-byte log10 polynomial and argument-reduction constants table in .rdata used by 0x116bd59e": 1,
       "32-byte MSVC C++ exception template [0xe06d7363, 1, 0, 0, 3, 0x19930520, 0, 0] copied by 0x116bebf1": 1,
       "C++ EH exception-destructor guard pointer block in .rdata inspected by 0x116c09ae": 1,
+      "string library registration table slice at 0x11921f10 used by luaopen_string (0x116cfa80)": 1,
       "12B SEH scope record {enclosing -1, filter 0x100edf4a, handler 0x100edf67} in .rdata installed by 0x100edd70": 1,
       "12-byte MSVC SEH __except scope table entry [-1, 0x100f390c, 0x100f3910] in .rdata referenced by 0x100f38b0": 1,
       "16-byte MSVC _s__ThrowInfo descriptor [0, 0x100f1c80, 0, 0x11923dc4] in .rdata passed by 0x10114f60": 1,
@@ -997,12 +1002,12 @@
     }
   },
   "curated_reconciliation": {
-    "curated_functions_total": 1763,
-    "curated_in_canonical_index": 1732,
-    "curated_exact_body_sha256_match": 1714,
+    "curated_functions_total": 1799,
+    "curated_in_canonical_index": 1768,
+    "curated_exact_body_sha256_match": 1750,
     "curated_multi_range_expanded": 18,
     "curated_non_proc_slots": 31,
-    "curated_globals_matched": 1000,
+    "curated_globals_matched": 1005,
     "curated_vtables_matched": 85
   },
   "files": {
@@ -1013,8 +1018,8 @@
     },
     "function_contracts_part2.tsv": {
       "rows": 40640,
-      "bytes": 9474913,
-      "sha256": "7ad79fa8e5f7ce9a0ed3c2d13bc5ec13e9b72ec325c7972caee3b9371338ceb1"
+      "bytes": 9475525,
+      "sha256": "1237d4e2f3f69c52eb49a5e0425936729a0d2438b55569e524afcd31fd66f517"
     },
     "non_proc_curated_slots.tsv": {
       "rows": 31,
@@ -1037,9 +1042,9 @@
       "sha256": "534964ec1fa25fd15189a0fd007ba1412fe7fe339981ade410ca82a303f8e912"
     },
     "global_contracts.tsv": {
-      "rows": 11072,
-      "bytes": 972097,
-      "sha256": "c83e2c78f3848df2cc5757614bbbf4d1116b06ff99b696aca84d0c0419b98840"
+      "rows": 11077,
+      "bytes": 973194,
+      "sha256": "f1973c9c7976c78f3d64eedba454fe26fe4d7bd5fedadca555c40c7aa4c4816f"
     }
   }
 }
