@@ -4332,6 +4332,30 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual(fn_by_addr["10ed57f0"]["tail_exit"]["kind"], "direct_jmp")
         self.assertEqual(fn_by_addr["10ed57f0"]["tail_exit"]["target"], "10ede090")
 
+    def test_layer81_revision1_binary_fidelity_labels(self):
+        self.assertEqual(self.registry["rea_layer81_evidence"]["model_revision"]["revision"], 1)
+        fns = {f["address"]: f for f in self.registry["functions"]}
+        # 0x10ede2b0 is the C-string assignment, not a move assignment
+        self.assertEqual(fns["10ede2b0"]["ordinary_return"], "FxName& __thiscall FxName::operator=(const char*)")
+        self.assertNotIn("FxName&&", json.dumps(self.registry))
+        # FxClass takes five stack arguments: name, version, base, size, construct function
+        self.assertEqual(fns["10ef2a10"]["stack_argument_bytes"], 20)
+        self.assertNotIn("children", fns["10ef2a10"]["ordinary_return"])
+        self.assertIn("to_04, const FxName& to_00", fns["10ed7d70"]["ordinary_return"])
+        self.assertIn("0x10ee1590", fns["10edff50"]["scope"])
+        self.assertNotIn("leak", fns["10ee0890"]["scope"])
+        globs = {g["address"]: bytes.fromhex(g["initial_hex_le"]) for g in self.registry["globals"]}
+        # Startup assigns "" (0x1173dad0 starts with NUL), "Default" and "NewActor"; no "NullName" literal exists
+        self.assertEqual(globs["1173dad0"][:1], b"\0")
+        self.assertEqual((globs["117e3380"], globs["1183bb10"]), (b"Default\0", b"NewActor\0"))
+        self.assertFalse([a for a, v in globs.items() if b"NullName" in v])
+        self.assertEqual(globs["1183ba58"], b"Attempt to assign to name with other = \0")
+        # the reference suffix pair DumpNameTableToLog picks between
+        self.assertEqual((globs["1183bc70"], globs["1183bc60"]), (b" reference)\0", b" references)\0"))
+        layouts = (Path(__file__).resolve().parents[1] / "port" / "recovered_types" / "guest32_layouts.h").read_text(encoding="utf-8")
+        self.assertIn("ROME2_LAYOUT_ASSERT(rome2_fx_avl_string_node_32, height, 0x24);", layouts)
+        self.assertIn("ROME2_LAYOUT_ASSERT(rome2_fx_avl_string_node_32, balance, 0x34);", layouts)
+
     def test_layer82_curl_util_printf_slist_share_contracts(self):
         ev = self.registry["rea_layer82_evidence"]
         self.assertEqual(ev["snapshot_mode"], "fresh_partition11_batched")

@@ -67771,6 +67771,146 @@
       "Partition 11 (remaining 537 curl / ~713 FaceFX exports)"
     ]
   },
+  "layer81_revision1": {
+    "status": "Layer 81 model and tests rewritten against the retained original-image evidence; verified with bounded C17 /analyze and ASan suites, original-image contract verification and clean-public regression coverage",
+    "revises": "layer81",
+    "base_commit": "5d450f2",
+    "original_image_contracts": {
+      "schema": "rome2-recovered-types-v1",
+      "verified": true,
+      "functions": 1972,
+      "globals": 1096,
+      "vtables": 85,
+      "instruction_witnesses": 1581,
+      "scope": "static original-image evidence; native behavior requires separate tests"
+    },
+    "python_focused_contract_tests": 125,
+    "native_tests": {
+      "analyze": {
+        "suites": 139,
+        "failed": 0,
+        "local_ctest_log": "out/bridge-layer81r1-20261125/wt-analyze/Testing/Temporary/LastTest.log",
+        "log_sha256": "292d04939bc427682d025aa95ba0fa5f72cb12fff984e9a8d2edc27845061d0c",
+        "junit_sha256": "53886550d59672284032733d612bb7550faa7ec2b42555366e43c096b39c2162"
+      },
+      "asan": {
+        "suites": 139,
+        "failed": 0,
+        "local_ctest_log": "out/bridge-layer81r1-20261125/wt-asan/Testing/Temporary/LastTest.log",
+        "log_sha256": "08dbc0955c7e837e4cd23ad9770db37af15f97b1d89d625985d843144bc9c4f1",
+        "junit_sha256": "42348326a76febd3877fcd52c52865309606c0794c4ba2681ff9e4d084123200"
+      },
+      "assertions_enabled": true
+    },
+    "facefx_name_avl_table_ops_tests": {
+      "suites": 1,
+      "active_checks": 7,
+      "cases": [
+        "test_fx_string",
+        "test_avl_tree",
+        "test_name_table",
+        "test_fx_name_lifecycle",
+        "test_fx_name_before_startup",
+        "test_client_event",
+        "test_fx_class_registry"
+      ]
+    },
+    "original_observations": [
+      "0x10ee0d90: 0xc FxNameEntry allocated at reference count 0; entry +8 set to the tree node's key (node + 4) after the insert; '|' -> '_' and '\"' -> '\\''; 0x200 bytes without a terminator give the empty name",
+      "0x10ee0b20: level 5/6 messages, 0xc014 table with 4096 trees, FxNameEntry class (parent FxRefObject, size 0xc, construct 0x10edef10), then NullName = \"\" (0x11fadb7c), FxAnimGroup::Default = \"Default\" (0x11fadb88), FxActor::NewActor = \"NewActor\" (0x11fadb94)",
+      "0x10ee0890: while the name count is non-zero remove the first name and delete its entry; clear and destroy the buckets; FxFree(table, 0xc014); table pointer and the three statics zeroed",
+      "0x10edfc40: duplicate key returns {tree, NULL}; node count incremented after the allocation attempt; retrace to the root with single and double rotations chosen by int16 balance at +0x34",
+      "0x10edf5f0 / 0x10edf9f0 / 0x10ee0140: DJB2 (seed 0x1505, sign-extended bytes) & 0xfff; header +0x00 count, +0x04 added, +0x08 removed, +0x0c collisions (bucket had a root), +0x10 find hits and rejected inserts",
+      "0x10edff50: walk only; the matching node goes to tree slot +0x10",
+      "0x10ede090 / 0x10ede180 / 0x10ede2b0 / 0x10ee07c0 / 0x10ee1a80: shared release sequence; the name is unregistered and the FxName cleared only when the count is 1; entry freed at zero with the class descriptor's size; ~FxName is a no-op without a table",
+      "0x10ede2b0: FxName::operator=(const char*); level 1 'Attempt to assign to name with other = ' message when the table is absent",
+      "0x10edf360: level 4 'Name table [N names]:' then '[i]: name (N reference[s])' per entry in bucket order; 0x10edf860: header counters, non-empty buckets, min/max, sum >> 12 and 0xc000 + sum(key length + 0x59)",
+      "0x10ed7d70: first FxName argument copied to +0x04, second to +0x00, last to +0x24",
+      "0x10ef2a10: five stack arguments; level 2 warnings; linear duplicate search binding nameless classes to NullName; base child count; class array doubling from 1"
+    ],
+    "native_adaptations": [
+      "Tree slots +0x04 (0x10edeee0), +0x10 (0x10ee1590) and +0x14 (0x10ee0ed0), node slot +0x08 (0x10edede0 over 0x10ede030) and entry slots +0x00 (0x10edf760) and +0x08 (0x10edeea0) are outside the recovered set; modelled from the canonical decompilation without contract pins, slot addresses read from vtables 0x1183b9c0, 0x1183b99c and 0x1183b970 in the pinned image",
+      "FxName and FxClientEvent are host structs holding guest entry addresses; process globals are context fields",
+      "Failed allocations, a missing name or class table and corrupt links return early where the original faults or spins"
+    ],
+    "layout_corrections": [
+      "rome2_fx_avl_string_node_32: int32 height at +0x24 (was reserved), int16 balance at +0x34, +0x36 padding (was a second int16 named height)"
+    ],
+    "contract_text_corrections": {
+      "functions": 17,
+      "globals": 0,
+      "instruction_witnesses": 0,
+      "byte_hashes_changed": 0
+    },
+    "public_python_clean": {
+      "checkout": "tracked public files at the revision commit, no original image/canonical exports",
+      "runs": [
+        {
+          "tests": 988,
+          "skipped": 354,
+          "failures": 0,
+          "errors": 0,
+          "version": "3.14"
+        },
+        {
+          "tests": 988,
+          "skipped": 354,
+          "failures": 0,
+          "errors": 0,
+          "version": "3.15"
+        }
+      ],
+      "original_image_dependent_skip_reason": "Total War Rome II/empire.retail.dll, canonical exports and private reports absent"
+    },
+    "rea": {
+      "new_operation_envelopes": 0,
+      "evidence": "out/facefx-layer81-20261125 (Partition 10 bundle, 132 records)"
+    },
+    "local_logs": "out/bridge-layer81r1-20261125/",
+    "source_hash_scope": "files changed by this revision, UTF-8 text with LF line endings, excluding verification.json itself",
+    "sources": [
+      {
+        "path": "docs/vfs_recovery.md",
+        "bytes": 227528,
+        "sha256": "314ef4df9a6c10c7ba71ffc3bfce4b759c62520cbd0a19e0dff0ba6548296bb6"
+      },
+      {
+        "path": "port/recovered_types/contracts.json",
+        "bytes": 3652259,
+        "sha256": "86d6e8b5df80f7ea79209a246f7a734c32c4027ce6e07fbb38a5b47cf7a0938d"
+      },
+      {
+        "path": "port/recovered_types/facefx_name_avl_table_ops.c",
+        "bytes": 61011,
+        "sha256": "248ebd2cdb0cbabc308fdbaf6f0492b9b68e9342f17b93742db3c5d02752b688"
+      },
+      {
+        "path": "port/recovered_types/facefx_name_avl_table_ops.h",
+        "bytes": 9833,
+        "sha256": "b20cc2c6d2893e98e5eb648fc4ed46d65b235e08f50076af676a9eead35d10d1"
+      },
+      {
+        "path": "port/recovered_types/guest32_layouts.h",
+        "bytes": 257863,
+        "sha256": "1935478431d364244ee851e2c04db4dee18515ad8ca9970d86986790724fd51b"
+      },
+      {
+        "path": "port/recovered_types/test_facefx_name_avl_table_ops.c",
+        "bytes": 42915,
+        "sha256": "86ae73971184dc31234dc32abd77fa3e5fe2c55e7ca856c6111958d10bba8abb"
+      },
+      {
+        "path": "progress.md",
+        "bytes": 206546,
+        "sha256": "319f848645c5d8772dfafb741ca41c72cf39c040b1cbef97601ead2a98f5ea12"
+      },
+      {
+        "path": "scripts/test_type_recovery_contracts.py",
+        "bytes": 271286,
+        "sha256": "e9f584d15dcded9980ccb5d0f97d52dbd80b52d51cfef831e3c269eeec32cdb6"
+      }
+    ]
+  },
   "layer82": {
     "status": "verified with bounded C17 /analyze and ASan suites, updated original-image contract verification, and clean-public regression coverage",
     "original_image_contracts": {

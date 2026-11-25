@@ -4329,14 +4329,24 @@ typedef struct rome2_fx_avl_string_node_32 {
     uint32_t vtable_va; /* 0x1183b99c */
     rome2_fx_string_32 key;
     uint32_t value_va;
-    uint32_t reserved24;
+    int32_t height;  /* max(child heights) + 1, written by tree slot +0x14 (0x10ee0ed0) */
     uint32_t parent_va;
     uint32_t left_va;
     uint32_t right_va;
-    int16_t balance;
-    int16_t height;
+    int16_t balance; /* right height - left height */
+    uint16_t pad36;  /* never written */
 } rome2_fx_avl_string_node_32;
 _Static_assert(sizeof(rome2_fx_avl_string_node_32) == 0x38, "fx avl string node 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_avl_string_node_32, key, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_fx_avl_string_node_32, value_va, 0x20);
+ROME2_LAYOUT_ASSERT(rome2_fx_avl_string_node_32, height, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_fx_avl_string_node_32, parent_va, 0x28);
+ROME2_LAYOUT_ASSERT(rome2_fx_avl_string_node_32, left_va, 0x2c);
+ROME2_LAYOUT_ASSERT(rome2_fx_avl_string_node_32, right_va, 0x30);
+ROME2_LAYOUT_ASSERT(rome2_fx_avl_string_node_32, balance, 0x34);
+ROME2_LAYOUT_ASSERT(rome2_fx_string_32, data_va, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_fx_string_32, capacity, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_fx_string_32, length, 0x18);
 
 typedef struct rome2_fx_client_event_32 {
     rome2_fx_name_32 animation_group_name;
