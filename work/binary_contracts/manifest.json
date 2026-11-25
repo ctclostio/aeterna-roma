@@ -13,7 +13,7 @@
     "class_field_entries": 95747,
     "rtti_type_descriptors": 181,
     "rtti_complete_object_locators": 15,
-    "globals": 11007,
+    "globals": 11012,
     "exported_code_targets_pinned": 405
   },
   "distributions": {
@@ -481,6 +481,11 @@
       "16B libm vector {-8.742278e-08, pi, 0, 0} in .rdata read by 0x1168cad5": 1,
       "NUL-terminated UTF-16LE string L'mscoree.dll' in .rdata passed by 0x1168d2f1": 1,
       "NUL-terminated ASCII string 'CorExitProcess' in .rdata resolved by 0x1168d2f1": 1,
+      "UTF-16LE assertion path L\"minkernel\\\\crts\\\\ucrt\\\\inc\\\\corecrt_internal_strtox.h\" in .rdata": 1,
+      "UTF-16LE function name L\"__crt_strtox::floating_point_value::as_double\" in .rdata": 1,
+      "UTF-16LE assertion expr L\"_is_double\" in .rdata": 1,
+      "UTF-16LE function name L\"__crt_strtox::floating_point_value::as_float\" in .rdata": 1,
+      "UTF-16LE assertion expr L\"!_is_double\" in .rdata": 1,
       "120-byte (10 x 12B) scanf format length/specifier compatibility table in .rdata indexed by 0x11692f4e": 1,
       "360-byte (45 x 8B) Win32 oserr->errno LUT in .rdata searched by 0x11698a9d": 1,
       "NUL-terminated UTF-16LE extension literal '.exe' in .rdata compared by 0x116997f6": 1,
@@ -932,12 +937,12 @@
     }
   },
   "curated_reconciliation": {
-    "curated_functions_total": 1588,
-    "curated_in_canonical_index": 1557,
-    "curated_exact_body_sha256_match": 1539,
+    "curated_functions_total": 1623,
+    "curated_in_canonical_index": 1592,
+    "curated_exact_body_sha256_match": 1574,
     "curated_multi_range_expanded": 18,
     "curated_non_proc_slots": 31,
-    "curated_globals_matched": 935,
+    "curated_globals_matched": 940,
     "curated_vtables_matched": 85
   },
   "files": {
@@ -948,8 +953,8 @@
     },
     "function_contracts_part2.tsv": {
       "rows": 40640,
-      "bytes": 9471938,
-      "sha256": "ce892eaaae89105a7e85a9fca9a811b35942aa4ad51968b8b514fab44568cd9e"
+      "bytes": 9472533,
+      "sha256": "6c9e88aa156154c0098e15362c2a73510b8bbc06565ce656ee11703e98fa579a"
     },
     "non_proc_curated_slots.tsv": {
       "rows": 31,
@@ -972,9 +977,9 @@
       "sha256": "534964ec1fa25fd15189a0fd007ba1412fe7fe339981ade410ca82a303f8e912"
     },
     "global_contracts.tsv": {
-      "rows": 11007,
-      "bytes": 958197,
-      "sha256": "ad148c3d413929c5dc9db282a0f17d4e7238ece1a3b8630e06e5912b3efdbee4"
+      "rows": 11012,
+      "bytes": 959746,
+      "sha256": "22c01ab1ffdae1449405b9ae3d4eef98e274eedfc547db442e118d817ece6e6b"
     }
   }
 }

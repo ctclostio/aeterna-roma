@@ -2340,3 +2340,18 @@ callees.
   and **975** clean-public Python tests (**342** skipped) on Python 3.14 and 3.15
   (`clean_eng=0`, `clean_crt=0`, `noret_or_thunk=0` across **1,588** functions;
   3 remaining jump targets `0x11695ffa`/`0x11695e3c`/`0x10cb6520` queued across Layers 73–79).
+
+### Layer 73 — CRT `__crt_strtox` floating-point parser & `0x11695ffa` closure (2026-11-24)
+
+- Extended **Partition 9** in [out/startup-layer73-20261124](out/startup-layer73-20261124/) (`extending_layer72_batched_p9`) across **35** CRT `__crt_strtox` / `__crt_stdio_input` / `fegetround` functions (`0x1168f0d4..0x116b89b1`), closing jump target `0x11695ffa` and verifying 9B tail target `0x11695e3c` as `not_in_procedure` (`non_proc_slots`), reducing open direct jump edges from **3** to **2** (`0x11695ee2->0x11695e3c` non-proc tail, `0x10cb0440->0x10cb6520`) while keeping `open_direct_call_edges == 0`:
+  - `0x1168f0d4..0x1169136e`: `assemble_floating_point_snan`, `assemble_floating_point_value_t<float|double>`, decimal & hexfloat string converters, `parse_floating_point<string_input_adapter<char>>`, `parse_floating_point_from_source`, infinity / `NAN(IND|SNAN|charseq)` matchers, and `parse_floating_point_write_result`.
+  - `0x1169206a..0x11696481`: `process_floating_point_specifier_t<float|double>`, `write_floating_point`, cleanup lambda `0x11692f24`, `as_double`/`as_float`, `assemble_floating_point_infinity`/`zero`/`value`/`from_big_integer`, mantissa masks, 7,487B big-integer decimal converter `0x11693706` (retained untruncated in `fn-11693706-bundle-record.json`), `0x11695445` hexfloat converter, `0x11695ffa` float/double specifier dispatcher, `0x11696481` whitespace skip, plus `0x116ab791` `fegetround` and `0x116b89b1`.
+- Extended [contracts.json](port/recovered_types/contracts.json) to **1,623** functions,
+  **940** globals (`5` UTF-16LE assertion strings `0x119103d0..0x1191050c`), **85** vtables, and **1,529** instruction witnesses (`+13`), backed by **84** Partition 9 validated REA records (`42` reused Layer 72 + `42` new Layer 73; **2,459** cumulative across Partitions 1–9).
+- Locked 4 fixed-width `guest32_layouts.h` views (`rome2_startup_crt_fp_value8_32`, `rome2_startup_crt_fp_string780_32`, `rome2_startup_crt_big_int464_32`, `rome2_startup_crt_input_proc112_32`) and bounded C17 models in [startup_crt_strtox_fp_ops.h](port/recovered_types/startup_crt_strtox_fp_ops.h) and [startup_crt_strtox_fp_ops.c](port/recovered_types/startup_crt_strtox_fp_ops.c), exercised by **38 check groups** in [test_startup_crt_strtox_fp_ops.c](port/recovered_types/test_startup_crt_strtox_fp_ops.c).
+- Verified **130/130** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
+  and ASan, **113** contract tests on Python 3.15 (`11,012` PE-verified
+  whole-binary globals in [manifest.json](work/binary_contracts/manifest.json)),
+  and **976** clean-public Python tests (**343** skipped) on Python 3.14 and 3.15
+  (`clean_eng=0`, `clean_crt=0`, `noret_or_thunk=0` across **1,623** functions;
+  jump target `0x10cb6520` and Layers 74–79 remain in Partition 9).

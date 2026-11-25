@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 1588)
-        self.assertEqual(result["globals"], 935)
+        self.assertEqual(result["functions"], 1623)
+        self.assertEqual(result["globals"], 940)
         self.assertEqual(result["vtables"], 85)
-        self.assertEqual(result["instruction_witnesses"], 1516)
+        self.assertEqual(result["instruction_witnesses"], 1529)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -4108,6 +4108,37 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual(
             [(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]],
             [("11695ee2", "11695ffa"), ("11695ee2", "11695e3c"), ("10cb0440", "10cb6520")],
+        )
+
+    def test_layer73_startup_crt_strtox_fp_contracts(self):
+        by_fn = {f["address"]: f for f in self.registry["functions"]}
+        layer73_addrs = [
+            "1168f0d4", "1168f0f5", "1168f125", "1168f2b4", "1168f2d5", "1168f2f6", "1168f317",
+            "1168f448", "1168f4c1", "1168fa89", "11690ba7", "11690e4e", "116910d4", "11691188",
+            "11691202", "1169136e", "1169206a", "1169219c", "11692bae", "11692c50", "11692f24",
+            "1169316a", "1169318f", "116931b4", "116931f4", "1169353d", "116936d1", "11693706",
+            "11695445", "11695c75", "11695524", "11695ffa", "11696481", "116ab791", "116b89b1",
+        ]
+        for addr in layer73_addrs:
+            self.assertIn(addr, by_fn)
+        self.assertEqual(by_fn["11693706"]["bytes"], 7487)
+        by_g = {g["address"]: g for g in self.registry["globals"]}
+        for gaddr in ("119103d0", "11910438", "11910494", "119104b0", "1191050c"):
+            self.assertIn(gaddr, by_g)
+        ev = self.registry["rea_layer73_evidence"]
+        self.assertEqual(ev["snapshot_mode"], "extending_layer72_batched_p9")
+        self.assertEqual(ev["new_evidence_records"], 42)
+        self.assertEqual(ev["reused_layer72_evidence_records"], 42)
+        self.assertEqual(ev["cumulative_validated_bundle_records"], 84)
+        self.assertEqual(ev["prior_partitions_validated_records"], 2375)
+        self.assertEqual(ev["cumulative_all_partitions_records"], 2459)
+        self.assertEqual(ev["non_proc_slots"], ["11695e3c"])
+        self.assertEqual(ev["resource_constrained_slots"], ["11693706"])
+        self.assertEqual(ev["closure_audit"]["recovered_functions"], 1623)
+        self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
+        self.assertEqual(
+            [(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]],
+            [("11695ee2", "11695e3c"), ("10cb0440", "10cb6520")],
         )
 
     def test_direct_jmp_short_mismatch_rejected(self):

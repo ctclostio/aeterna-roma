@@ -3822,5 +3822,50 @@ ROME2_LAYOUT_ASSERT(rome2_startup_pe_sec_hdr40_32, virtual_size_08, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_startup_pe_sec_hdr40_32, virtual_address_0c, 0x0c);
 ROME2_LAYOUT_ASSERT(rome2_startup_pe_sec_hdr40_32, characteristics_24, 0x24);
 
+typedef struct rome2_startup_crt_fp_value8_32 {
+    uint32_t value_ptr_00;                       /* 00 guest float* or double* */
+    uint8_t is_double_04;                        /* 04 1 if double, 0 if float */
+    uint8_t pad_05[3];                           /* 05..07 */
+} rome2_startup_crt_fp_value8_32;
+_Static_assert(sizeof(rome2_startup_crt_fp_value8_32) == 0x08, "startup crt fp value8 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_fp_value8_32, is_double_04, 0x04);
+
+typedef struct rome2_startup_crt_fp_string780_32 {
+    int32_t exponent_00;                         /* 00 base-10/base-2 exponent */
+    uint32_t mantissa_count_04;                  /* 04 number of significant digits */
+    uint8_t mantissa_08[768];                    /* 08..307 up to 768 base-10/16 digit values */
+    uint8_t is_negative_308;                     /* 308 sign bit (0 or 1) */
+    uint8_t pad_309[3];                          /* 309..30b */
+} rome2_startup_crt_fp_string780_32;
+_Static_assert(sizeof(rome2_startup_crt_fp_string780_32) == 0x30c, "startup crt fp string780 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_fp_string780_32, mantissa_count_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_fp_string780_32, mantissa_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_fp_string780_32, is_negative_308, 0x308);
+
+typedef struct rome2_startup_crt_big_int464_32 {
+    uint32_t used_words_00;                      /* 00 word count (0..115) */
+    uint32_t words_04[115];                      /* 04..1cf 32-bit limbs */
+} rome2_startup_crt_big_int464_32;
+_Static_assert(sizeof(rome2_startup_crt_big_int464_32) == 0x1d0, "startup crt big int464 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_big_int464_32, words_04, 0x04);
+
+typedef struct rome2_startup_crt_input_proc112_32 {
+    uint8_t head_00[8];                          /* 00..07 vtable / flags */
+    uint8_t adapter_08[38];                      /* 08..2d string_input_adapter<char> state */
+    uint8_t suppress_assignment_2e;              /* 2e '*' suppression flag (checked by 0x11695e3c) */
+    uint8_t pad_2f;                              /* 2f */
+    uint32_t field_width_lo_30;                  /* 30 field width low dword */
+    uint32_t field_width_hi_34;                  /* 34 field width high dword */
+    uint8_t mid_38[48];                          /* 38..67 format flags & scan state */
+    uint32_t locale_68;                          /* 68 _locale_t guest pointer */
+    uint32_t va_arglist_6c;                      /* 6c va_list cursor */
+} rome2_startup_crt_input_proc112_32;
+_Static_assert(sizeof(rome2_startup_crt_input_proc112_32) == 0x70, "startup crt input proc112 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_input_proc112_32, adapter_08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_input_proc112_32, suppress_assignment_2e, 0x2e);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_input_proc112_32, field_width_lo_30, 0x30);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_input_proc112_32, locale_68, 0x68);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_input_proc112_32, va_arglist_6c, 0x6c);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif
