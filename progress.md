@@ -2372,3 +2372,19 @@ callees.
   and **978** clean-public Python tests (**345** skipped) on Python 3.14 and 3.15
   (`clean_eng=0`, `clean_crt=0`, `noret_or_thunk=0` across **1,646** functions;
   Lua Layers 75–78 and advice bridge Layer 79 remain in Partition 9).
+
+### Layer 75: `0x10f43cb0..0x10f4df10` Lua 5.1.4 core leaf helpers (`lua_core_leaf_ops`, Partition 9)
+
+- Extended Partition 9 (`extending_layer74_batched_p9`) with **39** Lua 5.1.4 core leaf helpers closing debug/introspection, bytecode `symbexec`, GC mark/barrier/weak-table helpers, hash table lookups, and `TValue`/`TString` utilities across **1,685** functions (`0` open direct CALL edges, `2` open direct jump edges: `0x11695e3c` non-proc tail and `0x10cb6520`):
+  - `0x10f43cb0..0x10f46670`: `luaA_pushobject`, `luaO_chunkid`, `luaO_fb2int`, `luaO_log2` (`0x11846c30[256]`), `luaO_rawequalObj`, `luaO_str2d`.
+  - `0x10f46c40..0x10f48c90`: `preinit_state`, `auxgetinfo`, `checkArgMode`, `currentline`, `currentpc`, `findlocal`, `getobjname`, `kname`, `lua_getlocal`, `lua_getstack`, `symbexec` (`0x11847350[38]`), `luaD_rawrunprotected`, `luaF_getlocalname`.
+  - `0x10f490a0..0x10f4df10`: `cleartable`, `luaC_barrierback`, `luaC_barrierf`, `luaC_link`, `luaC_linkupval`, `markmt`, `markroot`, `reallymarkobject`, `traverseclosure`, `traversetable`, `luaH_get`/`getn`/`getnum`/`getstr`/`mainposition`, `get_compTM`, `l_strcmp`, `luaV_tonumber`, `luaT_gettm`, `luaT_gettmbyobj`.
+- Extended [contracts.json](port/recovered_types/contracts.json) to **1,685** functions,
+  **964** globals (`19` non-overlapping `.rdata` slices including `0x11846c28` `luaO_nilobject_`+`luaO_log2` prefix and `0x11846ee0` `dummynode_`; `0x1183b666` & `0x11846d44` skipped as inside-string overlaps), **85** vtables, and **1,547** instruction witnesses (`+9`), backed by **172** Partition 9 validated REA records (`112` reused Layer 74 + `60` new Layer 75; **2,547** cumulative across Partitions 1–9).
+- Locked 12 fixed-width `guest32_layouts.h` views (`rome2_lua_tvalue_32`, `rome2_lua_tstring_hdr_32`, `rome2_lua_upval_32`, `rome2_lua_locvar_32`, `rome2_lua_proto_32`, `rome2_lua_node_32`, `rome2_lua_table_32`, `rome2_lua_closure_hdr_32`, `rome2_lua_callinfo_32`, `rome2_lua_debug_32`, `rome2_lua_state_32`, `rome2_lua_global_state_32`) and bounded guest32-arena C17 models in [lua_core_leaf_ops.h](port/recovered_types/lua_core_leaf_ops.h) and [lua_core_leaf_ops.c](port/recovered_types/lua_core_leaf_ops.c), exercised by **2 test functions** (`test_luaO_and_state_basics`, `test_table_str_and_gc`) in [test_lua_core_leaf_ops.c](port/recovered_types/test_lua_core_leaf_ops.c).
+- Verified **132/132** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
+  and ASan, **116** contract tests on Python 3.15 (`11,036` PE-verified
+  whole-binary globals in [manifest.json](work/binary_contracts/manifest.json)),
+  and **979** clean-public Python tests (**346** skipped) on Python 3.14 and 3.15
+  (`clean_eng=0`, `clean_crt=0`, `noret_or_thunk=0` across **1,685** functions;
+  Lua Layers 76–78 and advice bridge Layer 79 remain in Partition 9).

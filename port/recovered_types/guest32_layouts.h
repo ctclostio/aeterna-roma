@@ -3906,5 +3906,246 @@ typedef struct rome2_startup_crt_exc_record24_32 {
 _Static_assert(sizeof(rome2_startup_crt_exc_record24_32) == 0x18, "startup crt exc record24 32 size");
 ROME2_LAYOUT_ASSERT(rome2_startup_crt_exc_record24_32, number_parameters_10, 0x10);
 
+typedef struct rome2_lua_tvalue_32 {
+    uint32_t value_u32;
+    int32_t tt;
+} rome2_lua_tvalue_32;
+_Static_assert(sizeof(rome2_lua_tvalue_32) == 0x08, "lua tvalue 32 size");
+ROME2_LAYOUT_ASSERT(rome2_lua_tvalue_32, value_u32, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_lua_tvalue_32, tt, 0x04);
+
+typedef struct rome2_lua_tstring_hdr_32 {
+    uint32_t next_va;
+    uint8_t tt;
+    uint8_t marked;
+    uint8_t reserved;
+    uint8_t pad07;
+    uint32_t hash;
+    uint32_t len;
+} rome2_lua_tstring_hdr_32;
+_Static_assert(sizeof(rome2_lua_tstring_hdr_32) == 0x10, "lua tstring hdr 32 size");
+ROME2_LAYOUT_ASSERT(rome2_lua_tstring_hdr_32, tt, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_lua_tstring_hdr_32, marked, 0x05);
+ROME2_LAYOUT_ASSERT(rome2_lua_tstring_hdr_32, hash, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_lua_tstring_hdr_32, len, 0x0c);
+
+typedef struct rome2_lua_upval_32 {
+    uint32_t next_va;
+    uint8_t tt;
+    uint8_t marked;
+    uint8_t pad06[2];
+    uint32_t v_va;
+    rome2_lua_tvalue_32 u_value;
+} rome2_lua_upval_32;
+_Static_assert(sizeof(rome2_lua_upval_32) == 0x14, "lua upval 32 size");
+ROME2_LAYOUT_ASSERT(rome2_lua_upval_32, v_va, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_lua_upval_32, u_value, 0x0c);
+
+typedef struct rome2_lua_locvar_32 {
+    uint32_t varname_va;
+    int32_t startpc;
+    int32_t endpc;
+} rome2_lua_locvar_32;
+_Static_assert(sizeof(rome2_lua_locvar_32) == 0x0c, "lua locvar 32 size");
+ROME2_LAYOUT_ASSERT(rome2_lua_locvar_32, startpc, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_lua_locvar_32, endpc, 0x08);
+
+typedef struct rome2_lua_proto_32 {
+    uint32_t next_va;
+    uint8_t tt;
+    uint8_t marked;
+    uint8_t pad06[2];
+    uint32_t k_va;
+    uint32_t code_va;
+    uint32_t p_va;
+    uint32_t lineinfo_va;
+    uint32_t locvars_va;
+    uint32_t upvalues_va;
+    uint32_t source_va;
+    int32_t sizeupvalues;
+    int32_t sizek;
+    int32_t sizecode;
+    int32_t sizelineinfo;
+    int32_t sizep;
+    int32_t sizelocvars;
+    int32_t linedefined;
+    int32_t lastlinedefined;
+    uint32_t gclist_va;
+    uint8_t nups;
+    uint8_t numparams;
+    uint8_t is_vararg;
+    uint8_t maxstacksize;
+} rome2_lua_proto_32;
+_Static_assert(sizeof(rome2_lua_proto_32) == 0x4c, "lua proto 32 size");
+ROME2_LAYOUT_ASSERT(rome2_lua_proto_32, k_va, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_lua_proto_32, code_va, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_lua_proto_32, p_va, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_lua_proto_32, lineinfo_va, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_lua_proto_32, locvars_va, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_lua_proto_32, upvalues_va, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_lua_proto_32, source_va, 0x20);
+ROME2_LAYOUT_ASSERT(rome2_lua_proto_32, sizek, 0x28);
+ROME2_LAYOUT_ASSERT(rome2_lua_proto_32, sizecode, 0x2c);
+ROME2_LAYOUT_ASSERT(rome2_lua_proto_32, sizelocvars, 0x38);
+ROME2_LAYOUT_ASSERT(rome2_lua_proto_32, gclist_va, 0x44);
+ROME2_LAYOUT_ASSERT(rome2_lua_proto_32, maxstacksize, 0x4b);
+
+typedef struct rome2_lua_node_32 {
+    rome2_lua_tvalue_32 i_val;
+    rome2_lua_tvalue_32 i_key;
+    uint32_t next_va;
+} rome2_lua_node_32;
+_Static_assert(sizeof(rome2_lua_node_32) == 0x14, "lua node 32 size");
+ROME2_LAYOUT_ASSERT(rome2_lua_node_32, i_key, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_lua_node_32, next_va, 0x10);
+
+typedef struct rome2_lua_table_32 {
+    uint32_t next_va;
+    uint8_t tt;
+    uint8_t marked;
+    uint8_t flags;
+    uint8_t lsizenode;
+    uint32_t metatable_va;
+    uint32_t array_va;
+    uint32_t node_va;
+    uint32_t lastfree_va;
+    uint32_t gclist_va;
+    int32_t sizearray;
+} rome2_lua_table_32;
+_Static_assert(sizeof(rome2_lua_table_32) == 0x20, "lua table 32 size");
+ROME2_LAYOUT_ASSERT(rome2_lua_table_32, flags, 0x06);
+ROME2_LAYOUT_ASSERT(rome2_lua_table_32, lsizenode, 0x07);
+ROME2_LAYOUT_ASSERT(rome2_lua_table_32, metatable_va, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_lua_table_32, array_va, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_lua_table_32, node_va, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_lua_table_32, gclist_va, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_lua_table_32, sizearray, 0x1c);
+
+typedef struct rome2_lua_closure_hdr_32 {
+    uint32_t next_va;
+    uint8_t tt;
+    uint8_t marked;
+    uint8_t isC;
+    uint8_t nupvalues;
+    uint32_t gclist_va;
+    uint32_t env_va;
+    uint32_t f_or_p_va;
+} rome2_lua_closure_hdr_32;
+_Static_assert(sizeof(rome2_lua_closure_hdr_32) == 0x14, "lua closure hdr 32 size");
+ROME2_LAYOUT_ASSERT(rome2_lua_closure_hdr_32, isC, 0x06);
+ROME2_LAYOUT_ASSERT(rome2_lua_closure_hdr_32, nupvalues, 0x07);
+ROME2_LAYOUT_ASSERT(rome2_lua_closure_hdr_32, env_va, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_lua_closure_hdr_32, f_or_p_va, 0x10);
+
+typedef struct rome2_lua_callinfo_32 {
+    uint32_t base_va;
+    uint32_t func_va;
+    uint32_t top_va;
+    uint32_t savedpc_va;
+    int32_t nresults;
+    int32_t tailcalls;
+} rome2_lua_callinfo_32;
+_Static_assert(sizeof(rome2_lua_callinfo_32) == 0x18, "lua callinfo 32 size");
+ROME2_LAYOUT_ASSERT(rome2_lua_callinfo_32, func_va, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_lua_callinfo_32, savedpc_va, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_lua_callinfo_32, tailcalls, 0x14);
+
+typedef struct rome2_lua_debug_32 {
+    int32_t event;
+    uint32_t name_va;
+    uint32_t namewhat_va;
+    uint32_t what_va;
+    uint32_t source_va;
+    int32_t currentline;
+    int32_t nups;
+    int32_t linedefined;
+    int32_t lastlinedefined;
+    char short_src[256];
+    int32_t i_ci;
+} rome2_lua_debug_32;
+_Static_assert(sizeof(rome2_lua_debug_32) == 0x128, "lua debug 32 size");
+ROME2_LAYOUT_ASSERT(rome2_lua_debug_32, short_src, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_lua_debug_32, i_ci, 0x124);
+
+typedef struct rome2_lua_state_32 {
+    uint32_t next_va;
+    uint8_t tt;
+    uint8_t marked;
+    uint8_t status;
+    uint8_t pad07;
+    uint32_t top_va;
+    uint32_t base_va;
+    uint32_t l_g_va;
+    uint32_t ci_va;
+    uint32_t savedpc_va;
+    uint32_t stack_last_va;
+    uint32_t stack_va;
+    uint32_t end_ci_va;
+    uint32_t base_ci_va;
+    int32_t stacksize;
+    int32_t size_ci;
+    uint16_t nCcalls;
+    uint8_t hookmask;
+    uint8_t allowhook;
+    int32_t basehookcount;
+    int32_t hookcount;
+    uint32_t hook_va;
+    rome2_lua_tvalue_32 l_gt;
+    rome2_lua_tvalue_32 env;
+    uint32_t openupval_va;
+    uint32_t gclist_va;
+    uint32_t error_jmp_va;
+    int32_t errfunc;
+} rome2_lua_state_32;
+_Static_assert(sizeof(rome2_lua_state_32) == 0x64, "lua state 32 size");
+ROME2_LAYOUT_ASSERT(rome2_lua_state_32, l_g_va, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_lua_state_32, ci_va, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_lua_state_32, base_ci_va, 0x28);
+ROME2_LAYOUT_ASSERT(rome2_lua_state_32, allowhook, 0x37);
+ROME2_LAYOUT_ASSERT(rome2_lua_state_32, l_gt, 0x44);
+ROME2_LAYOUT_ASSERT(rome2_lua_state_32, error_jmp_va, 0x5c);
+
+typedef struct rome2_lua_global_state_32 {
+    uint32_t strt_hash_va;
+    int32_t strt_nuse;
+    int32_t strt_size;
+    uint32_t frealloc_va;
+    uint32_t ud_va;
+    uint8_t currentwhite;
+    uint8_t gcstate;
+    uint8_t pad16[2];
+    int32_t sweepstrgc;
+    uint32_t rootgc_va;
+    uint32_t sweepgc_va;
+    uint32_t gray_va;
+    uint32_t grayagain_va;
+    uint32_t weak_va;
+    uint32_t tmudata_va;
+    uint32_t buff_va;
+    uint32_t buff_n;
+    uint32_t buff_size;
+    uint32_t gc_threshold;
+    uint32_t totalbytes;
+    uint32_t estimate;
+    uint32_t gcdept;
+    int32_t gcpause;
+    int32_t gcstepmul;
+    uint32_t panic_va;
+    rome2_lua_tvalue_32 l_registry;
+    uint32_t mainthread_va;
+    uint8_t uvhead_pad[0x14];
+    uint32_t mt_va[9];
+    uint32_t tmname_va[17];
+} rome2_lua_global_state_32;
+_Static_assert(sizeof(rome2_lua_global_state_32) == 0xe4, "lua global state 32 size");
+ROME2_LAYOUT_ASSERT(rome2_lua_global_state_32, currentwhite, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_lua_global_state_32, gcstate, 0x15);
+ROME2_LAYOUT_ASSERT(rome2_lua_global_state_32, rootgc_va, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_lua_global_state_32, gray_va, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_lua_global_state_32, l_registry, 0x5c);
+ROME2_LAYOUT_ASSERT(rome2_lua_global_state_32, mainthread_va, 0x64);
+ROME2_LAYOUT_ASSERT(rome2_lua_global_state_32, mt_va, 0x7c);
+ROME2_LAYOUT_ASSERT(rome2_lua_global_state_32, tmname_va, 0xa0);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

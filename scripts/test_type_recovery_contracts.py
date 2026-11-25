@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 1646)
-        self.assertEqual(result["globals"], 945)
+        self.assertEqual(result["functions"], 1685)
+        self.assertEqual(result["globals"], 964)
         self.assertEqual(result["vtables"], 85)
-        self.assertEqual(result["instruction_witnesses"], 1538)
+        self.assertEqual(result["instruction_witnesses"], 1547)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -4166,6 +4166,30 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual(ev["cumulative_validated_bundle_records"], 112)
         self.assertEqual(ev["cumulative_all_partitions_records"], 2487)
         self.assertEqual(ev["closure_audit"]["recovered_functions"], 1646)
+        self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
+        self.assertEqual([(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]], [("11695ee2", "11695e3c"), ("10cb0440", "10cb6520")])
+
+    def test_layer75_lua_core_leaf_contracts(self):
+        ev = self.registry["rea_layer75_evidence"]
+        self.assertEqual(ev["snapshot_mode"], "extending_layer74_batched_p9")
+        self.assertEqual(ev["closed_evidence_records"], 172)
+        self.assertEqual(ev["new_evidence_records"], 60)
+        self.assertEqual(ev["reused_layer74_evidence_records"], 112)
+        self.assertEqual(ev["cumulative_validated_bundle_records"], 172)
+        self.assertEqual(ev["prior_partitions_validated_records"], 2375)
+        self.assertEqual(ev["cumulative_all_partitions_records"], 2547)
+        self.assertEqual(ev["non_proc_slots"], [])
+        self.assertEqual(ev["resource_constrained_slots"], [])
+        fns = {f["address"]: f for f in self.registry["functions"]}
+        for addr in ("10f43cb0", "10f460e0", "10f46d50", "10f47870", "10f49920", "10f4a340", "10f4df10"):
+            self.assertIn(addr, fns)
+            self.assertEqual(fns[addr]["calling_convention"], "cdecl")
+        globs = {g["address"]: g for g in self.registry["globals"]}
+        self.assertEqual(globs["11846c28"]["width"], 256)
+        self.assertEqual(globs["11846ee0"]["width"], 32)
+        self.assertNotIn("1183b666", globs)
+        self.assertNotIn("11846d44", globs)
+        self.assertEqual(ev["closure_audit"]["recovered_functions"], 1685)
         self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
         self.assertEqual([(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]], [("11695ee2", "11695e3c"), ("10cb0440", "10cb6520")])
 

@@ -738,6 +738,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 117402c0	16	file	0000000000000000000000002ece2f35	.rdata	16-byte aligned interface/GUID template block in .rdata copied to 0x119f387c by 0x112c8ca0	16-byte aligned interface/GUID template block in .rdata copied to 0x119f387c by 0x112c8ca0	true
 1174108c	28	file	f1fffffffeffffffffffffff0000000001000000020000000f000000	.rdata	7-entry int32 Win32 thread priority lookup table [-15,-2,-1,0,1,2,15] in .rdata read by 0x100fcb80	7-entry int32 Win32 thread priority lookup table [-15,-2,-1,0,1,2,15] in .rdata read by 0x100fcb80	true
 117410d4	2	file	3000	.rdata	NUL-terminated ASCII literal '0' in .rdata referenced by 0x101002b0/0x10100380/$I10_OUTPUT	NUL-terminated ASCII literal '0' in .rdata referenced by 0x101002b0/0x10100380/$I10_OUTPUT	true
+11741d48	2	file	4300	.rdata	ASCII string 'C' used by auxgetinfo (0x10f46d50)	ASCII string 'C' used by auxgetinfo (0x10f46d50)	true
 11741d58	12	file	20380f10f05d111060650d10	.rdata	3-slot std::exception base vtable in .rdata (0x100f3820, 0x10115df0, 0x100d6560)	3-slot std::exception base vtable in .rdata (0x100f3820, 0x10115df0, 0x100d6560)	true
 11741d64	18	file	756e6b6e6f776e20657863657074696f6e00	.rdata	"NUL-terminated ASCII fallback string ""unknown exception"" returned by 0x10115df0"	"NUL-terminated ASCII fallback string ""unknown exception"" returned by 0x10115df0"	true
 11741d78	12	file	20380f10f05d1110103b0f10	.rdata	full 3-slot std::bad_alloc vtable in .rdata (0x100f3820, 0x10115df0, 0x100f3b10)	full 3-slot std::bad_alloc vtable in .rdata (0x100f3820, 0x10115df0, 0x100f3b10)	true
@@ -783,6 +784,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 117452ac	17	file	636f6e737420556e694368617231362a00	.rdata	NUL-terminated ASCII type label 'const UniChar16*' in .rdata used by 0x100f5f20	NUL-terminated ASCII type label 'const UniChar16*' in .rdata used by 0x100f5f20	true
 117452c0	12	file	636f6e737420636861722a00	.rdata	NUL-terminated ASCII type literal 'const char*' in .rdata pushed by 0x100f5d40	NUL-terminated ASCII type literal 'const char*' in .rdata pushed by 0x100f5d40	true
 117452f4	10	file	3c556e6b6e6f776e3e00	.rdata	NUL-terminated ASCII string '<Unknown>' in .rdata (trailing NUL reused at 0x117452fd by 0x100f0fd0)	NUL-terminated ASCII string '<Unknown>' in .rdata (trailing NUL reused at 0x117452fd by 0x100f0fd0)	true
+11745314	5	file	6d61696e00	.rdata	ASCII string 'main' used by auxgetinfo (0x10f46d50)	ASCII string 'main' used by auxgetinfo (0x10f46d50)	true
 11745360	4	file	00002041	.rdata	curated	curated	true
 117453c0	16	file	00000080000000800000008000000080	.rdata	16-byte SSE IEEE-754 sign-bit negation constant (4x 0x80000000) in .rdata used by 0x100f5860	16-byte SSE IEEE-754 sign-bit negation constant (4x 0x80000000) in .rdata used by 0x100f5860	true
 11745b64	14	file	52006f006d00650032005c000000	.rdata	NUL-terminated UTF-16LE string L'Rome2\\' in .rdata referenced via 0x11934780	NUL-terminated UTF-16LE string L'Rome2\\' in .rdata referenced via 0x11934780	true
@@ -838,9 +840,11 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1174e7d0	26	file	6600610075006e0061005f0063006f006e006600690067000000	.rdata	curated	curated	true
 1174eaa8	48	file	5300630072006900700074002f006600610075006e0061005f0063006f006e006600690067002e0078006d006c000000	.rdata	curated	curated	true
 11753f98	3	file	257500	.rdata	NUL-terminated ASCII format string '%u' in .rdata for 0x10cba4c0	NUL-terminated ASCII format string '%u' in .rdata for 0x10cba4c0	true
+11756080	7	file	676c6f62616c00	.rdata	ASCII string 'global' returned by getobjname (0x10f47140)	ASCII string 'global' returned by getobjname (0x10f47140)	true
 1175612c	12	file	6c615f67696f636f6e646100	.rdata	NUL-terminated ASCII UI style key 'la_gioconda' in .rdata for 0x10c8f760/0x10c8f8c0/0x10cb8f90	NUL-terminated ASCII UI style key 'la_gioconda' in .rdata for 0x10c8f760/0x10c8f8c0/0x10cb8f90	true
 11756480	24	file	c0271d10afd86b11d0951d10b0321d10b03a1d1000771d10	.rdata	6-slot primary channel/socket adapter base vtable prefix [0x101d27c0, 0x116bd8af, 0x101d95d0, 0x101d32b0, 0x101d3ab0, 0x101d7700] in .rdata bound by 0x10fd6850	6-slot primary channel/socket adapter base vtable prefix [0x101d27c0, 0x116bd8af, 0x101d95d0, 0x101d32b0, 0x101d3ab0, 0x101d7700] in .rdata bound by 0x10fd6850	true
 11768574	8	file	00d43310afd86b11	.rdata	8-byte 2-slot DB table base vtable {0x1033d400, 0x116bd8af} in .rdata	8-byte 2-slot DB table base vtable {0x1033d400, 0x116bd8af} in .rdata	true
+1177d404	5	file	7461696c00	.rdata	ASCII string 'tail' used by auxgetinfo (0x10f46d50)	ASCII string 'tail' used by auxgetinfo (0x10f46d50)	true
 1177ddbc	20	file	6d61702f7365743c543e20746f6f206c6f6e6700	.rdata	"Static ASCII ""map/set<T> too long"" error literal pushed by 0x112a3320"	"Static ASCII ""map/set<T> too long"" error literal pushed by 0x112a3320"	true
 1177f34c	4	file	25660000	.rdata	curated	curated	true
 11794918	4	file	29000000	.rdata	NUL-terminated UTF-16 closing paren literal u')' in .rdata used by math formatters	NUL-terminated UTF-16 closing paren literal u')' in .rdata used by math formatters	true
@@ -885,16 +889,31 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1183a4d0	4	file	503eed10	.rdata	pe_data_export	??_7?$FxSingleton@VFxLogManager@Logging@Face@OC3Ent@@@Face@OC3Ent@@6B@	false
 1183a794	4	file	6061ed10	.rdata	pe_data_export	??_7?$FxSingleton@VFxResourceManager@Face@OC3Ent@@@Face@OC3Ent@@6B@	false
 1183a798	4	file	e061ed10	.rdata	pe_data_export	??_7FxResourceManager@Face@OC3Ent@@6B@	false
+1183b664	3	file	225d00	.rdata	"ASCII string '""]' used by luaO_chunkid (0x10f460e0); covers NUL sub-slice 0x1183b666"	"ASCII string '""]' used by luaO_chunkid (0x10f460e0); covers NUL sub-slice 0x1183b666"	true
 1183bc84	4	file	0000c041	.rdata	pe_data_export	?MINIMUM_FRAME_RATE@FxAnim@Face@OC3Ent@@2MB	false
 1183bc88	4	file	0000f042	.rdata	pe_data_export	?MAXIMUM_FRAME_RATE@FxAnim@Face@OC3Ent@@2MB	false
 1183bc8c	4	file	0000c041	.rdata	pe_data_export	?DEFAULT_FRAME_RATE@FxAnim@Face@OC3Ent@@2MB	false
 1183bce4	4	file	6076ed10	.rdata	pe_data_export	??_7FxAnim@Face@OC3Ent@@6B@	false
 1183bf8c	4	file	8076ed10	.rdata	pe_data_export	??_7FxAnimGroup@Face@OC3Ent@@6B@	false
 1183c058	4	file	a076ed10	.rdata	pe_data_export	??_7FxAnimSet@Face@OC3Ent@@6B@	false
+1183c22c	4	file	2e2e2e00	.rdata	ASCII string '...' used by luaO_chunkid (0x10f460e0)	ASCII string '...' used by luaO_chunkid (0x10f460e0)	true
 1183c294	4	file	2076ed10	.rdata	pe_data_export	??_7FxActor@Face@OC3Ent@@6B@	false
 1183c770	4	file	4076ed10	.rdata	pe_data_export	??_7FxActorInstance@Face@OC3Ent@@6B@	false
 1183c7a0	4	file	00c1ee10	.rdata	pe_data_export	??_7FxLogManager@Logging@Face@OC3Ent@@6B@	false
+11846b10	2	file	3f00	.rdata	ASCII string '?' returned by getobjname/kname fallback	ASCII string '?' returned by getobjname/kname fallback	true
+11846b2c	7	file	6d6574686f6400	.rdata	ASCII string 'method' returned by getobjname (0x10f47140)	ASCII string 'method' returned by getobjname (0x10f47140)	true
+11846c28	256	file	00000000000000000001020203030303040404040404040405050505050505050505050505050505060606060606060606060606060606060606060606060606060606060606060607070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808	.rdata	luaO_nilobject_ (8B) immediately followed by luaO_log2 256B lookup prefix (0x11846c30) in .rdata	luaO_nilobject_ (8B) immediately followed by luaO_log2 256B lookup prefix (0x11846c30) in .rdata	true
 11846d30	7	file	286e756c6c2900	.rdata	7-byte ASCII '(null)' literal in .rdata emitted by 0x1168af61 (%Z) and 0x1168b78e (%s)	7-byte ASCII '(null)' literal in .rdata emitted by 0x1168af61 (%Z) and 0x1168b78e (%s)	true
+11846d38	3	file	0a0d00	.rdata	ASCII string '\n\r' delimiter set used by luaO_chunkid (0x10f460e0)	ASCII string '\n\r' delimiter set used by luaO_chunkid (0x10f460e0)	true
+11846d3c	10	file	5b737472696e67202200	.rdata	"ASCII string '[string ""' used by luaO_chunkid (0x10f460e0); covers sub-slice 0x11846d44"	"ASCII string '[string ""' used by luaO_chunkid (0x10f460e0); covers sub-slice 0x11846d44"	true
+11846d5c	13	file	282a74656d706f726172792900	.rdata	ASCII string '(*temporary)' returned by findlocal (0x10f470c0)	ASCII string '(*temporary)' returned by findlocal (0x10f470c0)	true
+11846d6c	5	file	3d5b435d00	.rdata	ASCII string '=[C]' used by auxgetinfo (0x10f46d50)	ASCII string '=[C]' used by auxgetinfo (0x10f46d50)	true
+11846d74	4	file	4c756100	.rdata	ASCII string 'Lua' used by auxgetinfo (0x10f46d50)	ASCII string 'Lua' used by auxgetinfo (0x10f46d50)	true
+11846d78	13	file	3d287461696c2063616c6c2900	.rdata	ASCII string '=(tail call)' used by auxgetinfo (0x10f46d50)	ASCII string '=(tail call)' used by auxgetinfo (0x10f46d50)	true
+11846d88	6	file	6c6f63616c00	.rdata	ASCII string 'local' returned by getobjname (0x10f47140)	ASCII string 'local' returned by getobjname (0x10f47140)	true
+11846d90	6	file	6669656c6400	.rdata	ASCII string 'field' returned by getobjname (0x10f47140)	ASCII string 'field' returned by getobjname (0x10f47140)	true
+11846d98	8	file	757076616c756500	.rdata	ASCII string 'upvalue' returned by getobjname (0x10f47140)	ASCII string 'upvalue' returned by getobjname (0x10f47140)	true
+11846ee0	32	file	0000000000000000000000000000000000000000696e76616c6964206b657920	.rdata	Lua dummynode_ (20B empty Node) + adjacent string prefix in .rdata used by luaH_getn (0x10f4a980)	Lua dummynode_ (20B empty Node) + adjacent string prefix in .rdata used by luaH_getn (0x10f4a980)	true
 11848c9c	32	file	afd86b11afd86b11afd86b11afd86b11afd86b11afd86b11afd86b11afd86b11	.rdata	8-slot _purecall base vtable stored prior to teardown destruction by 0x112ad6a0/0x112ad6d0	8-slot _purecall base vtable stored prior to teardown destruction by 0x112ad6a0/0x112ad6d0	true
 1184926c	12	file	40cbf610f080fd10d0951d10	.rdata	3-slot primary channel/stream adapter vtable prefix [0x10f6cb40, 0x10fd80f0, 0x101d95d0] in .rdata bound by 0x10fd6c90	3-slot primary channel/stream adapter vtable prefix [0x10f6cb40, 0x10fd80f0, 0x101d95d0] in .rdata bound by 0x10fd6c90	true
 11849278	60	file	afd86b11afd86b11afd86b11afd86b11afd86b11afd86b11afd86b11afd86b11afd86b11afd86b11afd86b114013fa10e0f6f910a0faf910e0faf910	.rdata	15-slot base pack-entry vtable (11 __purecall 0x116bd8af prefix + 4 concrete default slots)	15-slot base pack-entry vtable (11 __purecall 0x116bd8af prefix + 4 concrete default slots)	true

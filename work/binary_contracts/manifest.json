@@ -13,7 +13,7 @@
     "class_field_entries": 95747,
     "rtti_type_descriptors": 181,
     "rtti_complete_object_locators": 15,
-    "globals": 11017,
+    "globals": 11036,
     "exported_code_targets_pinned": 405
   },
   "distributions": {
@@ -300,6 +300,7 @@
       "16-byte aligned interface/GUID template block in .rdata copied to 0x119f387c by 0x112c8ca0": 1,
       "7-entry int32 Win32 thread priority lookup table [-15,-2,-1,0,1,2,15] in .rdata read by 0x100fcb80": 1,
       "NUL-terminated ASCII literal '0' in .rdata referenced by 0x101002b0/0x10100380/$I10_OUTPUT": 1,
+      "ASCII string 'C' used by auxgetinfo (0x10f46d50)": 1,
       "3-slot std::exception base vtable in .rdata (0x100f3820, 0x10115df0, 0x100d6560)": 1,
       "NUL-terminated ASCII fallback string \"unknown exception\" returned by 0x10115df0": 1,
       "full 3-slot std::bad_alloc vtable in .rdata (0x100f3820, 0x10115df0, 0x100f3b10)": 1,
@@ -345,6 +346,7 @@
       "NUL-terminated ASCII type label 'const UniChar16*' in .rdata used by 0x100f5f20": 1,
       "NUL-terminated ASCII type literal 'const char*' in .rdata pushed by 0x100f5d40": 1,
       "NUL-terminated ASCII string '<Unknown>' in .rdata (trailing NUL reused at 0x117452fd by 0x100f0fd0)": 1,
+      "ASCII string 'main' used by auxgetinfo (0x10f46d50)": 1,
       "16-byte SSE IEEE-754 sign-bit negation constant (4x 0x80000000) in .rdata used by 0x100f5860": 1,
       "NUL-terminated UTF-16LE string L'Rome2\\\\' in .rdata referenced via 0x11934780": 1,
       "NUL-terminated string literal 'data\\boot.pack' in .rdata probed by 0x1011fef0": 1,
@@ -365,9 +367,11 @@
       "NUL-terminated ASCII OOM literal 'VirtualAlloc (at place 2) returned NULL!' in .rdata": 1,
       "NUL-terminated string literal 'dlmalloc returned NULL!' in .rdata passed to MessageBoxA in 0x101254a0": 1,
       "NUL-terminated ASCII format string '%u' in .rdata for 0x10cba4c0": 1,
+      "ASCII string 'global' returned by getobjname (0x10f47140)": 1,
       "NUL-terminated ASCII UI style key 'la_gioconda' in .rdata for 0x10c8f760/0x10c8f8c0/0x10cb8f90": 1,
       "6-slot primary channel/socket adapter base vtable prefix [0x101d27c0, 0x116bd8af, 0x101d95d0, 0x101d32b0, 0x101d3ab0, 0x101d7700] in .rdata bound by 0x10fd6850": 1,
       "8-byte 2-slot DB table base vtable {0x1033d400, 0x116bd8af} in .rdata": 1,
+      "ASCII string 'tail' used by auxgetinfo (0x10f46d50)": 1,
       "Static ASCII \"map/set<T> too long\" error literal pushed by 0x112a3320": 1,
       "NUL-terminated UTF-16 closing paren literal u')' in .rdata used by math formatters": 1,
       "NUL-terminated UTF-16 comma literal u',' in .rdata used by math formatters": 1,
@@ -406,7 +410,22 @@
       "8-byte 2-slot subtitle timings vtable {0x10c9fd40, 0x10b908d0} in .rdata": 1,
       "8-byte 2-slot anim vtable {0x10de3460, 0x101920c0} in .rdata": 1,
       "NUL-terminated UTF-16LE table folder L'subtitle_timings_tables' in .rdata": 1,
+      "ASCII string '\"]' used by luaO_chunkid (0x10f460e0); covers NUL sub-slice 0x1183b666": 1,
+      "ASCII string '...' used by luaO_chunkid (0x10f460e0)": 1,
+      "ASCII string '?' returned by getobjname/kname fallback": 1,
+      "ASCII string 'method' returned by getobjname (0x10f47140)": 1,
+      "luaO_nilobject_ (8B) immediately followed by luaO_log2 256B lookup prefix (0x11846c30) in .rdata": 1,
       "7-byte ASCII '(null)' literal in .rdata emitted by 0x1168af61 (%Z) and 0x1168b78e (%s)": 1,
+      "ASCII string '\\n\\r' delimiter set used by luaO_chunkid (0x10f460e0)": 1,
+      "ASCII string '[string \"' used by luaO_chunkid (0x10f460e0); covers sub-slice 0x11846d44": 1,
+      "ASCII string '(*temporary)' returned by findlocal (0x10f470c0)": 1,
+      "ASCII string '=[C]' used by auxgetinfo (0x10f46d50)": 1,
+      "ASCII string 'Lua' used by auxgetinfo (0x10f46d50)": 1,
+      "ASCII string '=(tail call)' used by auxgetinfo (0x10f46d50)": 1,
+      "ASCII string 'local' returned by getobjname (0x10f47140)": 1,
+      "ASCII string 'field' returned by getobjname (0x10f47140)": 1,
+      "ASCII string 'upvalue' returned by getobjname (0x10f47140)": 1,
+      "Lua dummynode_ (20B empty Node) + adjacent string prefix in .rdata used by luaH_getn (0x10f4a980)": 1,
       "8-slot _purecall base vtable stored prior to teardown destruction by 0x112ad6a0/0x112ad6d0": 1,
       "3-slot primary channel/stream adapter vtable prefix [0x10f6cb40, 0x10fd80f0, 0x101d95d0] in .rdata bound by 0x10fd6c90": 1,
       "15-slot base pack-entry vtable (11 __purecall 0x116bd8af prefix + 4 concrete default slots)": 1,
@@ -942,12 +961,12 @@
     }
   },
   "curated_reconciliation": {
-    "curated_functions_total": 1646,
-    "curated_in_canonical_index": 1615,
-    "curated_exact_body_sha256_match": 1597,
+    "curated_functions_total": 1685,
+    "curated_in_canonical_index": 1654,
+    "curated_exact_body_sha256_match": 1636,
     "curated_multi_range_expanded": 18,
     "curated_non_proc_slots": 31,
-    "curated_globals_matched": 945,
+    "curated_globals_matched": 964,
     "curated_vtables_matched": 85
   },
   "files": {
@@ -958,8 +977,8 @@
     },
     "function_contracts_part2.tsv": {
       "rows": 40640,
-      "bytes": 9472924,
-      "sha256": "e8e6160faa65b5b11d1e4f3410a4f650f9bd80fd0622716e6eef96115799fdbb"
+      "bytes": 9473587,
+      "sha256": "1ecae25f6dc31dd6138723f5132d3070acd584a0c257ed42337937275dfd7cca"
     },
     "non_proc_curated_slots.tsv": {
       "rows": 31,
@@ -982,9 +1001,9 @@
       "sha256": "534964ec1fa25fd15189a0fd007ba1412fe7fe339981ade410ca82a303f8e912"
     },
     "global_contracts.tsv": {
-      "rows": 11017,
-      "bytes": 961484,
-      "sha256": "eeb1ebd002bdfc70e91b00488cff12a3d9845d9c659446ee534128e5839df66d"
+      "rows": 11036,
+      "bytes": 965259,
+      "sha256": "829c2039330f92c2e29915b320a9c250bdd06d96b932fe49aec81771facc7cfb"
     }
   }
 }
