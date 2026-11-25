@@ -4623,5 +4623,242 @@ typedef struct rome2_curl_fd_set_32 {
 } rome2_curl_fd_set_32;
 _Static_assert(sizeof(rome2_curl_fd_set_32) == 0x104, "curl fd_set 32 size");
 
+/*
+ * Layer 84: FaceFX SDK accessors and leaf routines (Partition 12).
+ * The *_prefix_32 records hold only the fields the recovered bodies touch.
+ * A byte array marked "address only" reserves the bytes from a sub-object
+ * whose address a body returns up to the next touched field; the extent of
+ * that sub-object is not pinned.
+ */
+
+/* FxList: head sentinel pointer and element count (FxActor +0x60e0, FxAnimSet +0x30). */
+typedef struct rome2_fx_list_32 {
+    uint32_t head_va;
+    uint32_t count;
+} rome2_fx_list_32;
+_Static_assert(sizeof(rome2_fx_list_32) == 0x08, "fx list 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_list_32, count, 0x04);
+
+/* FxList node: FxAllocate(0xc) at 0x10ed64bd, 0x10ed73d3 and 0x10ed78e0. An empty sentinel links to itself. */
+typedef struct rome2_fx_list_node_32 {
+    uint32_t item_va; /* never written for the sentinel */
+    uint32_t next_va;
+    uint32_t prev_va;
+} rome2_fx_list_node_32;
+_Static_assert(sizeof(rome2_fx_list_node_32) == 0x0c, "fx list node 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_list_node_32, next_va, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_fx_list_node_32, prev_va, 0x08);
+
+/* FxAnimGroup: 0x20-byte stride at 0x10ed6551 and 0x10ed73b7; only the name is read. */
+typedef struct rome2_fx_anim_group_prefix_32 {
+    uint32_t field_00;
+    rome2_fx_name_32 name;
+    uint8_t reserved08[0x18];
+} rome2_fx_anim_group_prefix_32;
+_Static_assert(sizeof(rome2_fx_anim_group_prefix_32) == 0x20, "fx anim group prefix 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_group_prefix_32, name, 0x04);
+
+typedef struct rome2_fx_anim_set_prefix_32 {
+    uint8_t reserved00[0x08];
+    uint8_t is_published;
+    uint8_t reserved09[0x03];
+    rome2_fx_name_32 owning_actor_name;
+    rome2_fx_anim_group_prefix_32 anim_group;
+    rome2_fx_list_32 references;
+} rome2_fx_anim_set_prefix_32;
+_Static_assert(sizeof(rome2_fx_anim_set_prefix_32) == 0x38, "fx anim set prefix 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_set_prefix_32, is_published, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_set_prefix_32, owning_actor_name, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_set_prefix_32, anim_group, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_set_prefix_32, references, 0x30);
+
+typedef struct rome2_fx_anim_prefix_32 {
+    uint8_t reserved00[0x0c];
+    uint32_t anim_curves_va;            /* 0x28-byte FxAnimCurve records */
+    uint8_t reserved10[0x08];
+    uint32_t compressed_anim_curves_va; /* 0x18-byte FxCompressedAnimCurve records */
+    uint8_t reserved1c[0x08];
+    float real_start_time;
+    float real_end_time;
+    float curves_start_time;
+    float curves_end_time;
+    uint8_t event_take[0x34];           /* FxEventList, address only */
+    uint8_t event_template[0x1c];       /* FxEventTemplate, address only */
+    uint8_t phon_word_list[0x2c];       /* FxPhonWordList, address only */
+    uint32_t editor_only_data_va;
+    rome2_fx_string_32 audio_asset_path;
+    rome2_fx_string_32 audio_asset_name;
+    uint32_t audio_asset_index;
+    uint32_t audio_asset_pointer_va;
+    float frame_rate;
+} rome2_fx_anim_prefix_32;
+_Static_assert(sizeof(rome2_fx_anim_prefix_32) == 0xf8, "fx anim prefix 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, anim_curves_va, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, compressed_anim_curves_va, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, real_start_time, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, real_end_time, 0x28);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, curves_start_time, 0x2c);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, curves_end_time, 0x30);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, event_take, 0x34);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, event_template, 0x68);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, phon_word_list, 0x84);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, editor_only_data_va, 0xb0);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, audio_asset_path, 0xb4);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, audio_asset_name, 0xd0);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, audio_asset_index, 0xec);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, audio_asset_pointer_va, 0xf0);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, frame_rate, 0xf4);
+
+/* Record of the bone array at FxActor +0x14: GetBone returns record + 4, GetBoneName record + 8. */
+typedef struct rome2_fx_actor_bone_record_32 {
+    uint32_t field_00;
+    uint32_t bone_field_00; /* the FxBone starts here */
+    rome2_fx_name_32 bone_name;
+    uint8_t reserved0c[0x34];
+} rome2_fx_actor_bone_record_32;
+_Static_assert(sizeof(rome2_fx_actor_bone_record_32) == 0x40, "fx actor bone record 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_bone_record_32, bone_field_00, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_bone_record_32, bone_name, 0x08);
+
+typedef struct rome2_fx_actor_prefix_32 {
+    uint8_t reserved0000[0x08];
+    uint8_t should_client_relink; /* FxActor::ShouldClientRelink is the body at 0x1054d080 */
+    uint8_t is_open_in_studio;
+    uint8_t is_published;
+    uint8_t reserved000b[0x09];
+    uint32_t bone_records_va;
+    uint8_t reserved0018[0x04];
+    uint32_t bone_count;
+    uint8_t reserved0020[0x0c];
+    uint8_t decompiled_face_graph[0x20]; /* FxFaceGraph, address only */
+    uint8_t compiled_face_graph[0x6068]; /* FxCompiledFaceGraph, address only */
+    rome2_fx_anim_group_prefix_32 default_anim_group;
+    uint32_t anim_groups_va;             /* 0x20-byte FxAnimGroup records */
+    uint8_t reserved60d8[0x04];
+    uint32_t anim_group_count;
+    rome2_fx_list_32 mounted_anim_sets;  /* nodes hold FxAnimSet pointers */
+    uint8_t reserved60e8[0x08];
+    uint8_t phoneme_map[0x1c];           /* FxPhonemeMap, address only */
+    uint8_t editor_only_data[0x04];      /* FxArray<unsigned char>, address only */
+} rome2_fx_actor_prefix_32;
+_Static_assert(sizeof(rome2_fx_actor_prefix_32) == 0x6110, "fx actor prefix 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, should_client_relink, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, is_open_in_studio, 0x09);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, is_published, 0x0a);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, bone_records_va, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, bone_count, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, decompiled_face_graph, 0x2c);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, compiled_face_graph, 0x4c);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, default_anim_group, 0x60b4);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, anim_groups_va, 0x60d4);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, anim_group_count, 0x60dc);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, mounted_anim_sets, 0x60e0);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, phoneme_map, 0x60f0);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, editor_only_data, 0x610c);
+
+typedef struct rome2_fx_actor_instance_prefix_32 {
+    uint8_t reserved00[0x08];
+    uint32_t actor_va;
+    uint8_t is_no_work_frame;
+    uint8_t is_open_in_studio;
+    uint8_t reserved0e[0x02];
+    uint8_t channel_bank[0x28];             /* FxChannelBank, address only; GetChannelBank is the body at 0x1018aba0 */
+    uint32_t node_final_values_va;          /* float per face graph node */
+    uint8_t reserved3c[0x70];
+    uint8_t weighted_bone_transforms[0x18]; /* FxArray<FxWeightedBoneTransform>, address only */
+    uint32_t client_event_count;
+    uint8_t reservedc8[0x08];
+    uint32_t max_client_event_count;
+    uint8_t reservedd4[0x34];
+    uint32_t curve_state_pool_length;
+    uint8_t reserved10c[0x04];
+    uint8_t accumulated_base_channel_track_values[0x04]; /* FxArray<float>, address only */
+} rome2_fx_actor_instance_prefix_32;
+_Static_assert(sizeof(rome2_fx_actor_instance_prefix_32) == 0x114, "fx actor instance prefix 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, actor_va, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, is_no_work_frame, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, is_open_in_studio, 0x0d);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, channel_bank, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, node_final_values_va, 0x38);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, weighted_bone_transforms, 0xac);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, client_event_count, 0xc4);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, max_client_event_count, 0xd0);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, curve_state_pool_length, 0x108);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, accumulated_base_channel_track_values, 0x110);
+
+/* The folded bodies 0x1018aba0 and 0x1054d080 serve two classes at one offset each. */
+_Static_assert(offsetof(rome2_fx_actor_instance_prefix_32, channel_bank) ==
+                   offsetof(rome2_fx_anim_set_prefix_32, anim_group),
+               "0x1018aba0 folds GetAnimGroup and GetChannelBank");
+_Static_assert(offsetof(rome2_fx_actor_prefix_32, should_client_relink) ==
+                   offsetof(rome2_fx_anim_set_prefix_32, is_published),
+               "0x1054d080 folds IsPublished and ShouldClientRelink");
+
+/* FxEvent record of the manager array: 0xac-byte stride at 0x10ed86ff, 0x10ed8f72, 0x10ed8ffe and 0x10ed9a54. */
+typedef struct rome2_fx_event_prefix_32 {
+    uint32_t vtable_va; /* IsPlaying calls slot +0x30 */
+    uint8_t reserved04[0x84];
+    float time_88;      /* shifted by Resume unless it holds -2147483648.0f */
+    uint8_t reserved8c[0x20];
+} rome2_fx_event_prefix_32;
+_Static_assert(sizeof(rome2_fx_event_prefix_32) == 0xac, "fx event prefix 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_event_prefix_32, time_88, 0x88);
+
+/* FxEventManager as its constructor 0x10ed7de0 writes it; field_* are only zeroed there. */
+typedef struct rome2_fx_event_manager_prefix_32 {
+    uint8_t paused;
+    uint8_t pad01[3];           /* never written */
+    float pause_time;           /* 0xcf000000 (-2147483648.0f) while not paused */
+    uint32_t field_08;
+    uint32_t field_0c;
+    uint32_t events_va;         /* rome2_fx_event_prefix_32 records */
+    uint32_t field_14;
+    uint32_t event_count;       /* bounds GetClientEvent and IsPlaying */
+    uint32_t active_flags_va;   /* one byte per event slot */
+    uint32_t field_20;
+    uint32_t active_flag_count; /* bounds Pause and Resume */
+    uint32_t field_28;
+    uint32_t field_2c;
+    uint32_t field_30;
+    uint8_t flag_34;            /* constructed as 1 */
+    uint8_t pad35[3];           /* never written */
+    uint32_t field_38;
+    uint32_t field_3c;
+    uint32_t field_40;
+    uint8_t flag_44;            /* constructed as 0 */
+    uint8_t pad45[3];           /* never written */
+} rome2_fx_event_manager_prefix_32;
+_Static_assert(sizeof(rome2_fx_event_manager_prefix_32) == 0x48, "fx event manager prefix 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_event_manager_prefix_32, pause_time, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_fx_event_manager_prefix_32, events_va, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_fx_event_manager_prefix_32, event_count, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_fx_event_manager_prefix_32, active_flags_va, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_fx_event_manager_prefix_32, active_flag_count, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_fx_event_manager_prefix_32, flag_34, 0x34);
+ROME2_LAYOUT_ASSERT(rome2_fx_event_manager_prefix_32, field_38, 0x38);
+ROME2_LAYOUT_ASSERT(rome2_fx_event_manager_prefix_32, flag_44, 0x44);
+
+/* Two dwords copied by 0x10be8b50, which is also FxMountUnmountResult::operator=. */
+typedef struct rome2_fx_event_callback_param_32 {
+    uint32_t actor_instance_va;
+    uint32_t event_va;
+} rome2_fx_event_callback_param_32;
+_Static_assert(sizeof(rome2_fx_event_callback_param_32) == 0x08, "fx event callback param 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_event_callback_param_32, event_va, 0x04);
+
+/* FxFunctor: operator new(4) at 0x10ed9a8d; the one field points at the implementation object. */
+typedef struct rome2_fx_functor_32 {
+    uint32_t impl_va;
+} rome2_fx_functor_32;
+_Static_assert(sizeof(rome2_fx_functor_32) == 0x04, "fx functor 32 size");
+
+/* FxResourceManager: the vector deleting destructor in its vtable (0x10ed61e0) steps 8 bytes per element. */
+typedef struct rome2_fx_resource_manager_32 {
+    uint32_t vtable_va; /* 0x1183a798 */
+    uint32_t field_04;
+} rome2_fx_resource_manager_32;
+_Static_assert(sizeof(rome2_fx_resource_manager_32) == 0x08, "fx resource manager 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_resource_manager_32, field_04, 0x04);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

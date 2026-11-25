@@ -13,7 +13,7 @@
     "class_field_entries": 95747,
     "rtti_type_descriptors": 181,
     "rtti_complete_object_locators": 15,
-    "globals": 11189,
+    "globals": 11208,
     "exported_code_targets_pinned": 405
   },
   "distributions": {
@@ -43,7 +43,7 @@
       "pe_iat_slot": 466,
       "msvc_rtti_type_descriptor": 181,
       "curated": 46,
-      "pe_data_export": 29,
+      "pe_data_export": 25,
       "FaceFX FxName/FxClass .rdata string slice (12B) used by Layer 81": 3,
       "FaceFX FxName/FxClass .rdata string slice (9B) used by Layer 81": 3,
       "ASCII literal 'class UTILITYDLL::LUA::State &__thiscall UTILITYDLL::LUA::State::operato...' referenced by the Layer 79 advice/Lua bridge": 2,
@@ -411,6 +411,7 @@
       "ASCII string 'tail' used by auxgetinfo (0x10f46d50)": 1,
       "Static ASCII \"map/set<T> too long\" error literal pushed by 0x112a3320": 1,
       "FaceFX FxName/FxClass .rdata string slice (2B) used by Layer 81": 1,
+      "FxSDKGetErrorString terminator-row text (\"UNKNOWN\"), row 15 of the 0x1183a958 table": 1,
       "NUL-terminated UTF-16 closing paren literal u')' in .rdata used by math formatters": 1,
       "ASCII '%' character literal used by luaO_pushvfstring (0x10f462d0)": 1,
       "ASCII 'n' vararg count table key used by luaD_precall (0x10f48190)": 1,
@@ -462,6 +463,24 @@
       "8-byte 2-slot anim vtable {0x10de3460, 0x101920c0} in .rdata": 1,
       "NUL-terminated UTF-16LE table folder L'subtitle_timings_tables' in .rdata": 1,
       "4-space indentation literal '    ' used by FxLogEntry::GetStream (0x10ed4cd0)": 1,
+      "16-row {int code; const char* text} table in .rdata scanned by FxSDKGetErrorString (0x10ed65b0): codes 0..14 and the -1 terminator row whose text is \"UNKNOWN\"": 1,
+      "FxSDKGetErrorString text for code 0 (\"Success\"), row 0 of the 0x1183a958 table": 1,
+      "FxSDKGetErrorString text for code 1 (\"Internal error\"), row 1 of the 0x1183a958 table": 1,
+      "FxSDKGetErrorString text for code 2 (\"A parameter was null\"), row 2 of the 0x1183a958 table": 1,
+      "FxSDKGetErrorString text for code 3 (\"The archive store is invalid\"), row 3 of the 0x1183a958 table": 1,
+      "FxSDKGetErrorString text for code 4 (\"The archive store could not be opened for writing\"), row 4 of the 0x1183a958 table": 1,
+      "FxSDKGetErrorString text for code 5 (\"The archive store could not be opened for reading\"), row 5 of the 0x1183a958 table": 1,
+      "FxSDKGetErrorString text for code 6 (\"The save operation was refused\"), row 6 of the 0x1183a958 table": 1,
+      "FxSDKGetErrorString text for code 7 (\"The archive is not a valid FaceFX archive\"), row 7 of the 0x1183a958 table": 1,
+      "FxSDKGetErrorString text for code 8 (\"The archive format is newer than the current FaceFX SDK\"), row 8 of the 0x1183a958 table": 1,
+      "FxSDKGetErrorString text for code 9 (\"The animation group already exists\"), row 9 of the 0x1183a958 table": 1,
+      "FxSDKGetErrorString text for code 10 (\"The animation group is not a mounted animation set\"), row 10 of the 0x1183a958 table": 1,
+      "FxSDKGetErrorString text for code 11 (\"The unmount operation was refused because an actor instance is currently playing an animation from the animation set\"), row 11 of the 0x1183a958 table": 1,
+      "FxSDKGetErrorString text for code 12 (\"Too many events during take creation\"), row 12 of the 0x1183a958 table": 1,
+      "FxSDKGetErrorString text for code 13 (\"Cannot create resource because a resource of the same type with the same key already exists\"), row 13 of the 0x1183a958 table": 1,
+      "FxSDKGetErrorString text for code 14 (\"One of the supplied resource parameters was not a managed resource\"), row 14 of the 0x1183a958 table": 1,
+      "\"Unknown FX_ERROR code: \" log prefix pushed by FxSDKGetErrorString at 0x10ed6604": 1,
+      "float -2147483648.0f (0xcf000000) in .rdata, the event-time sentinel FxEventManager::Resume loads at 0x10ed99ed": 1,
       "ASCII string '\"]' used by luaO_chunkid (0x10f460e0); covers NUL sub-slice 0x1183b666": 1,
       "FaceFX FxName/FxClass .rdata string slice (24B) used by Layer 81": 1,
       "FaceFX FxName/FxClass .rdata string slice (34B) used by Layer 81": 1,
@@ -880,6 +899,7 @@
       "MSVC TLS init guard in .bss for 0x119f3868 in 0x112c2370": 1,
       "16B copy of 0x117402c0 in .bss lazily initialized by 0x112c8ca0": 1,
       "MSVC TLS init guard in .bss for 0x119f387c in 0x112c8ca0": 1,
+      "FxLogManager singleton pointer in the .data zero-fill tail read by FxSDKGetErrorString (0x10ed65d4)": 1,
       "120-byte zero-fill crash-reporter singleton state in .data initialized and returned by 0x100e8240": 1,
       "4-byte zero-fill TSS init epoch guard for crash-reporter singleton in .data tested by 0x100e8240": 1,
       "16-byte zero-fill TLS-guarded SSE zero vector in .data returned by 0x100e7ff0": 1,
@@ -943,6 +963,9 @@
       "448B dlmalloc global mstate block in .bss managed by 0x10124e50 and 0x101254a0": 1,
       "4B dlmalloc interlocked spinlock word in .bss paired with 0x11afa8bc mflags": 1,
       "unit-card flag byte": 1,
+      "FxEventManager::_audioCallback FxFunctor pointer in the .data zero-fill tail used by 0x10ed8360, 0x10ed8fa0, 0x10ed99c0 and 0x10ed9a80": 1,
+      "FxEventManager::_customEventCallback FxFunctor pointer in the .data zero-fill tail used by 0x10ed8390 and 0x10ed83c0": 1,
+      "FxName::NullName entry pointer in the .data zero-fill tail that 0x10ed64a0 and 0x10ed78d0 bind to empty names": 1,
       "curl_global_init nesting count in .bss": 1,
       "curl_global_init flags in .bss": 1,
       "libcurl hostname cache curl_hash (0x18B) in .bss cleaned by 0x10f12f30": 1,
@@ -1121,24 +1144,24 @@
     }
   },
   "curated_reconciliation": {
-    "curated_functions_total": 2029,
-    "curated_in_canonical_index": 1998,
-    "curated_exact_body_sha256_match": 1980,
+    "curated_functions_total": 2093,
+    "curated_in_canonical_index": 2062,
+    "curated_exact_body_sha256_match": 2044,
     "curated_multi_range_expanded": 18,
     "curated_non_proc_slots": 31,
-    "curated_globals_matched": 1130,
-    "curated_vtables_matched": 85
+    "curated_globals_matched": 1153,
+    "curated_vtables_matched": 86
   },
   "files": {
     "function_contracts_part1.tsv": {
       "rows": 40640,
-      "bytes": 9393326,
-      "sha256": "79c62ca4185d8e0bea295d5827158e0d9fb29093d078c97d30c3ae9b64ec45be"
+      "bytes": 9393853,
+      "sha256": "7c71a3c206c5bf7ac11885fa4c8068979e2991416a5655c2fd1e1ac4aff36d40"
     },
     "function_contracts_part2.tsv": {
       "rows": 40640,
-      "bytes": 9479282,
-      "sha256": "dfaa27e03e9952fe8e286f96603f22bf9b67773610cdd07dd0b85816fdd9edcd"
+      "bytes": 9479843,
+      "sha256": "2080161140310dfc89322b0f4ce4a5122af74114672c83a9f553e088b72e50e4"
     },
     "non_proc_curated_slots.tsv": {
       "rows": 31,
@@ -1152,8 +1175,8 @@
     },
     "vtable_class_contracts.tsv": {
       "rows": 9639,
-      "bytes": 2806459,
-      "sha256": "8ea40913ab23a3e39947646c08bb517bf68fad402cdf224dda31e3e1540b8e21"
+      "bytes": 2806458,
+      "sha256": "d3c864d4ede02228493706c625e1b0690234435924cd8aeab1e9c14f24382d0f"
     },
     "class_field_layouts.tsv": {
       "rows": 95747,
@@ -1161,9 +1184,9 @@
       "sha256": "534964ec1fa25fd15189a0fd007ba1412fe7fe339981ade410ca82a303f8e912"
     },
     "global_contracts.tsv": {
-      "rows": 11189,
-      "bytes": 998737,
-      "sha256": "bcdd473528a27292a03d4e3f7858b0f849fdee357f62a50e0647b6720b2582f6"
+      "rows": 11208,
+      "bytes": 1006069,
+      "sha256": "ed44c3d440b6501c9cfb8967e49e2ecb65a97c7a3bb134b1c9e8659a331e0b53"
     }
   }
 }

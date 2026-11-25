@@ -32051,6 +32051,979 @@
         "address": "116c7fd5",
         "iat_slot": "1172f5b4"
       }
+    },
+    {
+      "address": "100e80c0",
+      "bytes": 4,
+      "sha256": "dd9fb9b70598fa70d2f544d70e0faf8ff028fc6b8fcb88f35c9d2eaf38d86e7d",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "const FxName& __thiscall FxAnimSet::GetAnimGroupName() const",
+      "scope": "LEA EAX, [ECX+0x14]: the name inside the animation group embedded at +0x10",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100e80c3"
+      ]
+    },
+    {
+      "address": "100e8110",
+      "bytes": 4,
+      "sha256": "3b2eded1bf6b0f7390191ad1371a956a736f9d18c2a7de0db7e90886555b69e1",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "uint __thiscall FxAnimSet::GetReferenceCount() const",
+      "scope": "returns the dword at +0x34, the count of the reference list at +0x30",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "100e8113"
+      ]
+    },
+    {
+      "address": "10170450",
+      "bytes": 4,
+      "sha256": "bf9a4d01d1b8c2260962ee739fe4b6a547d3450d9b40041673ef71f673ba9bf7",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "const FxName& __thiscall FxAnimSet::GetOwningActorName() const",
+      "scope": "LEA EAX, [ECX+0x0c]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10170453"
+      ]
+    },
+    {
+      "address": "1018aba0",
+      "bytes": 4,
+      "sha256": "108eb05660dfe1a041240deb6da273082575a75017fa45a5f13e0086c713bc3d",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxAnimGroup& __thiscall FxAnimSet::GetAnimGroup()",
+      "scope": "LEA EAX, [ECX+0x10]; one folded body behind three exports: both FxAnimSet::GetAnimGroup overloads and FxActorInstance::GetChannelBank",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "1018aba3"
+      ]
+    },
+    {
+      "address": "101a9b80",
+      "bytes": 4,
+      "sha256": "0f44d97c9f42d2e1a1e7956b0bb8e4b07c70feb205b095c08c6fc79b67e90094",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "const FxList<FxActor*>& __thiscall FxAnimSet::GetReferences() const",
+      "scope": "LEA EAX, [ECX+0x30]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "101a9b83"
+      ]
+    },
+    {
+      "address": "101b0ee0",
+      "bytes": 4,
+      "sha256": "3d9caa687bfd020f329312b20ca9c531cd40547c4648197c719e25efa84fdab0",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "float __thiscall FxEventManager::GetPauseTime() const",
+      "scope": "FLD dword [ECX+4]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "101b0ee3"
+      ]
+    },
+    {
+      "address": "101db470",
+      "bytes": 4,
+      "sha256": "091e02b649b671d38c9a7bf9ed3e4bac4aeae90f8e5d74173076b5b9b8350d86",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "float __thiscall FxAnim::GetCurvesEndTime() const",
+      "scope": "FLD dword [ECX+0x30]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "101db473"
+      ]
+    },
+    {
+      "address": "101f8940",
+      "bytes": 7,
+      "sha256": "0e4c36b562852394b91e68fddc1ac9c01c0c74ba84837d72719997278686c27e",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "const FxString& __thiscall FxAnim::GetAudioAssetPath() const",
+      "scope": "LEA EAX, [ECX+0xb4]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "101f8946"
+      ]
+    },
+    {
+      "address": "10228780",
+      "bytes": 4,
+      "sha256": "19e310ae533415c7c2ecaae5a9ae76ceb279a761c43623981f57a65d33a93da0",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "float __thiscall FxAnim::GetRealStartTime() const",
+      "scope": "FLD dword [ECX+0x24]; the folded body is also exported as FxAnim::GetStartTime",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10228783"
+      ]
+    },
+    {
+      "address": "10298bc0",
+      "bytes": 7,
+      "sha256": "3118dec3bc33bc97e440257d3564e1715b5ed17891e03297e3affeeb44f4f6ff",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxPhonWordList& __thiscall FxAnim::GetPhonWordList()",
+      "scope": "LEA EAX, [ECX+0x84]; exported for the const and non-const overloads",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10298bc6"
+      ]
+    },
+    {
+      "address": "10298bd0",
+      "bytes": 7,
+      "sha256": "72d99f9324c723ae8208a092b7a98621b035e5c3f8b01622b831b8eb2b305a91",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "const FxArray<FxWeightedBoneTransform>& __thiscall FxActorInstance::GetWeightedBoneTransforms() const",
+      "scope": "LEA EAX, [ECX+0xac]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10298bd6"
+      ]
+    },
+    {
+      "address": "102e3420",
+      "bytes": 4,
+      "sha256": "8acf161f52368e8c95efb689a150a798b080039ec8193d4aa411a87496346c6a",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxFaceGraph& __thiscall FxActor::GetDecompiledFaceGraph()",
+      "scope": "LEA EAX, [ECX+0x2c]; exported for the const and non-const overloads",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "102e3423"
+      ]
+    },
+    {
+      "address": "10371c70",
+      "bytes": 7,
+      "sha256": "c9c43eadf5bd7f55b293118acaeb3a2e1326844934204240186ebe584f77f430",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "uint __thiscall FxAnim::GetAudioAssetIndex() const",
+      "scope": "returns the dword at +0xec",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10371c76"
+      ]
+    },
+    {
+      "address": "103bf2c0",
+      "bytes": 4,
+      "sha256": "f95341a99d51f5475633b0a992fa6bb809c41744fe61f8de030d059a5d1f6bb6",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "float __thiscall FxAnim::GetCurvesStartTime() const",
+      "scope": "FLD dword [ECX+0x2c]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "103bf2c3"
+      ]
+    },
+    {
+      "address": "104447e0",
+      "bytes": 4,
+      "sha256": "adfdaf8d63f7d4f682e89dc37c55b912cc246f100ce02742bbd875a4a750c535",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxCompiledFaceGraph& __thiscall FxActor::GetCompiledFaceGraph()",
+      "scope": "LEA EAX, [ECX+0x4c]; exported for the const and non-const overloads",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "104447e3"
+      ]
+    },
+    {
+      "address": "105421e0",
+      "bytes": 7,
+      "sha256": "2ca4d4b3b4236810e391c18abad88834f6438777c0a3a88da8f6fc857395ddaf",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "uint __thiscall FxActorInstance::GetNumClientEvents() const",
+      "scope": "returns the dword at +0xc4",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "105421e6"
+      ]
+    },
+    {
+      "address": "1054d080",
+      "bytes": 4,
+      "sha256": "8a905797df24e4a1fe68a2f630971aa55b606cd6a92fed57303379d0f93a7a2d",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxAnimSet::IsPublished() const",
+      "scope": "MOV AL, [ECX+8]: the stored byte, not normalised; the folded body is also exported as FxActor::ShouldClientRelink",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "1054d083"
+      ]
+    },
+    {
+      "address": "1054d6a0",
+      "bytes": 4,
+      "sha256": "d577cc6b1b05cb0c2be7f658f60d7baf98684eeaad579cd874c21150f6dd70ab",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxActor::IsOpenInStudio() const",
+      "scope": "MOV AL, [ECX+9]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "1054d6a3"
+      ]
+    },
+    {
+      "address": "105699b0",
+      "bytes": 3,
+      "sha256": "cd8c73a1813dd09771f20362f6e800d162b78599a9dd2da8ba1372fc969e1f5c",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxEventManager::IsPaused() const",
+      "scope": "MOV AL, [ECX]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "105699b2"
+      ]
+    },
+    {
+      "address": "105d0bb0",
+      "bytes": 4,
+      "sha256": "f82485647da88f1345396046db25899cbf8e6fe84b931a28e4691b98a1ca10b1",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxActorInstance::IsNoWorkFrame() const",
+      "scope": "MOV AL, [ECX+0x0c]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "105d0bb3"
+      ]
+    },
+    {
+      "address": "105d0f20",
+      "bytes": 4,
+      "sha256": "0cdf663d1e17d58f4e79036a22b2e9e5e3ba410c43129c5252ae00599a0a7a3c",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxActor::IsPublished() const",
+      "scope": "MOV AL, [ECX+0x0a]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "105d0f23"
+      ]
+    },
+    {
+      "address": "105e13a0",
+      "bytes": 4,
+      "sha256": "90c2f8a333061ae3ae2c6cda2961f701575b0dd8515b766f152618f87c5624f6",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "const FxEventList& __thiscall FxAnim::GetEventTake() const",
+      "scope": "LEA EAX, [ECX+0x34]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "105e13a3"
+      ]
+    },
+    {
+      "address": "106364c0",
+      "bytes": 4,
+      "sha256": "46cd1d183d4c8aa77403ec4b918f34a623aafc103fee39bdc349569535f82d2b",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxActorInstance::IsOpenInStudio() const",
+      "scope": "MOV AL, [ECX+0x0d]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "106364c3"
+      ]
+    },
+    {
+      "address": "1085b040",
+      "bytes": 7,
+      "sha256": "3f0376cf2d7b9c11e925d941b3713fb314f7b6436e249f976badc622aebd5877",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "uint __thiscall FxActorInstance::GetMaxNumClientEvents() const",
+      "scope": "returns the dword at +0xd0",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "1085b046"
+      ]
+    },
+    {
+      "address": "10a281c0",
+      "bytes": 7,
+      "sha256": "0cfed9bd5dacd9397d968e3ec10546faeaa236d5b3c54ebc18ade09625c75817",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void* __thiscall FxAnim::GetAudioAssetPointer() const",
+      "scope": "returns the dword at +0xf0",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10a281c6"
+      ]
+    },
+    {
+      "address": "10a2a300",
+      "bytes": 7,
+      "sha256": "94a8345a6999d4436b977e01fb13524b82c4d551173faafc89b7c129b8175bf2",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "uint __thiscall FxActorInstance::GetCurveStatePoolLength() const",
+      "scope": "returns the dword at +0x108",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10a2a306"
+      ]
+    },
+    {
+      "address": "10a2d1e0",
+      "bytes": 7,
+      "sha256": "a33ed4c54f724b1cdd526b3c3e8bfc670f9881db0df0a549f9dd82f82745c8cf",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxAnimEditorOnlyData* __thiscall FxAnim::GetEditorOnlyData()",
+      "scope": "returns the pointer stored at +0xb0",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10a2d1e6"
+      ]
+    },
+    {
+      "address": "10a34830",
+      "bytes": 7,
+      "sha256": "3ad84cc006e28acb67dab255d231e90a124930d7cf82ed4ee9d0f5df97731952",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "const FxString& __thiscall FxAnim::GetAudioAssetName() const",
+      "scope": "LEA EAX, [ECX+0xd0]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10a34836"
+      ]
+    },
+    {
+      "address": "10a9a5c0",
+      "bytes": 4,
+      "sha256": "27e4dfbe05c492938bf67dd00ba580fac1f526fd352e12ff761c7a7c2f75d2f6",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "float __thiscall FxAnim::GetRealEndTime() const",
+      "scope": "FLD dword [ECX+0x28]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10a9a5c3"
+      ]
+    },
+    {
+      "address": "10abed80",
+      "bytes": 13,
+      "sha256": "75d7ddd552b898a071b64e2c34987b7ca2cc12005dcdcd70b03ad7dde3ca9ff5",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxAnim::SetAudioAssetPointer(void*)",
+      "scope": "stores the argument into the dword at +0xf0",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10abed8a"
+      ]
+    },
+    {
+      "address": "10be8b50",
+      "bytes": 19,
+      "sha256": "66bf6b3f120317582b139030902f325cbc75fbcf213ea2eb8bd44f567a8217ce",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxEventCallbackParam& __thiscall FxEventCallbackParam::operator=(const FxEventCallbackParam&)",
+      "scope": "copies the dwords at +0 and +4 and returns this; one folded body behind four exports: the copy and move assignments of FxEventCallbackParam and of FxMountUnmountResult",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10be8b60"
+      ]
+    },
+    {
+      "address": "10ed5700",
+      "bytes": 21,
+      "sha256": "15dc264127cbece280160921076bf6922ea83e8ce235e1ecb3bb3b8cc16efa31",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxResourceManager* __thiscall FxResourceManager::FxResourceManager(const FxResourceManager&)",
+      "scope": "stores the class vtable 0x1183a798 at +0, copies the dword at +4 and returns this",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed5712"
+      ]
+    },
+    {
+      "address": "10ed59e0",
+      "bytes": 15,
+      "sha256": "718f48f39e4bbd507179901d52f15b5a35cef40c278fa91dc72ab7521c8a53be",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxResourceManager& __thiscall FxResourceManager::operator=(const FxResourceManager&)",
+      "scope": "copies the dword at +4 only and returns this",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed59ec"
+      ]
+    },
+    {
+      "address": "10ed64a0",
+      "bytes": 251,
+      "sha256": "f8a2d97ed9e8dbf25e46042ef7ffb69b3637bb546d80aec043023557585b2b60",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "uint __thiscall FxActor::FindAnimGroup(const FxName&) const",
+      "scope": "creates the mounted-set list sentinel at +0x60e0 through FxAllocate(0xc) when it is NULL, then compares name entry pointers: mounted sets (name at set+0x14) return count+1+position, the [+0x60dc] owned 0x20B groups at [+0x60d4] return position+1, the default group name at +0x60b8 returns 0 and a miss returns 0xffffffff; every empty name visited is first bound to FxName::NullName (0x11fadb7c)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed657f",
+        "10ed658e",
+        "10ed6598"
+      ]
+    },
+    {
+      "address": "10ed65b0",
+      "bytes": 129,
+      "sha256": "c81920a516e14512301860f3b9640fded57771764cf5bd55239dd39f34b585c7",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "const char* FxSDKGetErrorString(int)",
+      "scope": "scans the 16-row {code, text} table at 0x1183a958 from a literal 0 for the argument or the -1 terminator; reaching the terminator writes a level-1 \"Unknown FX_ERROR code: <n>\" entry to the FxLogManager singleton (0x119f3890) when its level at +0x84 is at least 1; returns the stopping row's text pointer",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed6630"
+      ]
+    },
+    {
+      "address": "10ed6680",
+      "bytes": 6,
+      "sha256": "b8be9241341189407947d31d9a83a25319c232a03197567b922ac230b961f89a",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "uint FxSDKGetVersion(void)",
+      "scope": "MOV EAX, 0x853",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed6685"
+      ]
+    },
+    {
+      "address": "10ed7370",
+      "bytes": 7,
+      "sha256": "c9989f2d2a92d4bfc946a71ab0394c9eb988d39f411a9ffc0cf66a08b20ccc62",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "const FxArray<float>& __thiscall FxActorInstance::GetAccumulatedBaseChannelTrackValues() const",
+      "scope": "LEA EAX, [ECX+0x110]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed7376"
+      ]
+    },
+    {
+      "address": "10ed7380",
+      "bytes": 16,
+      "sha256": "d1edbcf1635fac518305b9796e3f7b9aff66bb963e4982a20fae9cf0c493b12f",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "const FxAnimCurve& __thiscall FxAnim::GetAnimCurve(uint) const",
+      "scope": "returns [ECX+0x0c] + index * 0x28 (LEA index*5, then *8) with no bounds test; the folded body is also exported as FxAnim::GetAnimCurveM",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed738d"
+      ]
+    },
+    {
+      "address": "10ed7390",
+      "bytes": 146,
+      "sha256": "246fef8d6b0756dc66d82b336b2d9efffc3353f4bb0d5121aaa929f9a55c7720",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxAnimGroup& __thiscall FxActor::GetAnimGroup(uint)",
+      "scope": "index 0 returns this+0x60b4, 1..[+0x60dc] return [+0x60d4] + (index << 5) - 0x20, larger indices create the list sentinel at +0x60e0 when it is NULL and step index-count-1 links from its first node with no end test, returning that node's item + 0x10; exported for the const and non-const overloads",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed73aa",
+        "10ed73c1",
+        "10ed741f"
+      ]
+    },
+    {
+      "address": "10ed75c0",
+      "bytes": 18,
+      "sha256": "74699dd2d46fea95bb872d7aa6a15b1c0f801e411db99a89ff488bfd638153f8",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "const FxBone& __thiscall FxActor::GetBone(uint) const",
+      "scope": "returns [ECX+0x14] + 4 + (index << 6) with no bounds test",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed75cf"
+      ]
+    },
+    {
+      "address": "10ed7600",
+      "bytes": 21,
+      "sha256": "6d3757bda79c150d44a1d79e420a5331f0799d7b0c54c9846a39d6733efb7b06",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "const FxName& __thiscall FxActorInstance::GetBoneName(uint) const",
+      "scope": "follows the actor pointer at +8 and returns [actor+0x14] + (index << 6) + 8 with no bounds test",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed7612"
+      ]
+    },
+    {
+      "address": "10ed76c0",
+      "bytes": 16,
+      "sha256": "8f57a4f125aae6a900f557de52d5f28defd08f73bb4bd733ae160e64976a8519",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "const FxCompressedAnimCurve& __thiscall FxAnim::GetCompressedAnimCurve(uint) const",
+      "scope": "returns [ECX+0x18] + index * 0x18 (LEA index*3, then *8) with no bounds test",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed76cd"
+      ]
+    },
+    {
+      "address": "10ed7770",
+      "bytes": 7,
+      "sha256": "1ed37b80d9a781bbc2c3ffbbdc1a4c968c801658ba84478724446c35d7505f28",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "float __thiscall FxAnim::GetCurvesDuration() const",
+      "scope": "FLD dword [ECX+0x2c]; FSUB dword [ECX+0x30]: curves start minus curves end, left in ST0",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed7776"
+      ]
+    },
+    {
+      "address": "10ed7790",
+      "bytes": 75,
+      "sha256": "3247b1e3b0a9e41e4f133f18f8d503092a67cb0b4fbc9c33b5f930f5a3853ae5",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "float __thiscall FxAnim::GetDuration() const",
+      "scope": "when the real start (+0x24) and real end (+0x28) both compare equal to 0.0 (UCOMISS; unordered counts as different) returns 1.0 - start, otherwise end - start, each through x87 FSUB",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed77c5",
+        "10ed77da"
+      ]
+    },
+    {
+      "address": "10ed77e0",
+      "bytes": 7,
+      "sha256": "cfe0779a1c6f73fe4c375d90af308a6c44666a0eb7264c79932ae5bf9fc02c4c",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxArray<unsigned char>& __thiscall FxActor::GetEditorOnlyData()",
+      "scope": "LEA EAX, [ECX+0x610c]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed77e6"
+      ]
+    },
+    {
+      "address": "10ed77f0",
+      "bytes": 51,
+      "sha256": "859cb238f61bcefc07a5a24d97117fb998d0f31c70ec5c4e310f4974645e1543",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "float __thiscall FxAnim::GetEndTime() const",
+      "scope": "returns 1.0 when the real start (+0x24) and real end (+0x28) both compare equal to 0.0, otherwise the real end",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed7813",
+        "10ed7822"
+      ]
+    },
+    {
+      "address": "10ed7830",
+      "bytes": 4,
+      "sha256": "f6f198bb15de0a313a3f09b198c939389a604e9bb02625fad9ccb4b76bfb2e70",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxEventTemplate& __thiscall FxAnim::GetEventTemplate()",
+      "scope": "LEA EAX, [ECX+0x68]; exported for the const and non-const overloads",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed7833"
+      ]
+    },
+    {
+      "address": "10ed7840",
+      "bytes": 7,
+      "sha256": "9faaa7cc2c71b22bab369f908897058852c59ada2d13f8dace6493f59fcce0ea",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "float __thiscall FxAnim::GetFrameRate() const",
+      "scope": "FLD dword [ECX+0xf4]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed7846"
+      ]
+    },
+    {
+      "address": "10ed7850",
+      "bytes": 13,
+      "sha256": "9395b36218756934389822230cb176fd22473a96f8558e6418849a1cd8950179",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "float __thiscall FxActorInstance::GetNodeFinalValue(uint)",
+      "scope": "FLD dword [[ECX+0x38] + index*4] with no bounds test",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed785a"
+      ]
+    },
+    {
+      "address": "10ed7860",
+      "bytes": 14,
+      "sha256": "063f319496c539e905fd3439381bcbe8067ce2c7ef1de7456292138a918e069f",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "uint __thiscall FxActor::GetNumAnimGroups() const",
+      "scope": "returns [ECX+0x60dc] + 1 + [ECX+0x60e4]: owned groups, the default group and the mounted list count",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed786d"
+      ]
+    },
+    {
+      "address": "10ed7870",
+      "bytes": 7,
+      "sha256": "0b7cec38df71aed7dcf53cc0217db798ac5f5b0436e24c5b097b9edf3c5f3b8a",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "uint __thiscall FxActorInstance::GetNumBones() const",
+      "scope": "follows the actor pointer at +8 and returns the dword at actor+0x1c",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed7876"
+      ]
+    },
+    {
+      "address": "10ed7880",
+      "bytes": 7,
+      "sha256": "d8fdd0a9a37d72ff3bbd4807de6ee3963b3a5d41d5d12004cb6450a720a3f166",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxPhonemeMap& __thiscall FxActor::GetPhonemeMap()",
+      "scope": "LEA EAX, [ECX+0x60f0]; exported for the const and non-const overloads",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed7886"
+      ]
+    },
+    {
+      "address": "10ed78d0",
+      "bytes": 119,
+      "sha256": "12d497451631a7f6c19655300f840bf0f4affe0fcb060c20f3ae3932a1f444cc",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxActor::IsAnimGroupMounted(const FxName&) const",
+      "scope": "creates the list sentinel at +0x60e0 when it is NULL, then walks the mounted sets comparing each set's name entry at +0x14 (an empty name is first bound to FxName::NullName) with the argument's; AL = 1 on a match, else 0",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed793d",
+        "10ed7944"
+      ]
+    },
+    {
+      "address": "10ed7bf0",
+      "bytes": 17,
+      "sha256": "34a6f9b81d2c012a595639e6c7313a0e4ce3dd64d261c9b1dc0762f8daf3af19",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxMountUnmountResult::operator_bool() const",
+      "scope": "AL = 1 only when the dwords at +0 and +4 are both zero",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed7bfd",
+        "10ed7c00"
+      ]
+    },
+    {
+      "address": "10ed7c10",
+      "bytes": 7,
+      "sha256": "eaf7adc353b4a81ba9f0f091445dbba46de8fab5ee6a90c697c8b4ae679c5531",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxPlayResult::operator_bool() const",
+      "scope": "CMP dword [ECX], -1; SETNZ AL",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed7c16"
+      ]
+    },
+    {
+      "address": "10ed7de0",
+      "bytes": 119,
+      "sha256": "efbda1ad8d27b3101838ae9975543c9615798cc2adff7f4970064e2e7f26103f",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxEventManager* __thiscall FxEventManager::FxEventManager()",
+      "scope": "stores byte 0 at +0, 0xcf000000 (-2147483648.0f) at +4, zero dwords at +8..+0x30 and +0x38..+0x40, byte 1 at +0x34 and byte 0 at +0x44, leaving the nine pad bytes unwritten; returns this",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed7e56"
+      ]
+    },
+    {
+      "address": "10ed8360",
+      "bytes": 46,
+      "sha256": "375fe305e51ae567204f6017307803742912909a60f520a48a7ee2923db10ef0",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void FxEventManager::ClearAudioCallback(void)",
+      "scope": "when the functor pointer at 0x11fadb6c is set: destroys its implementation through vtable slot +0 with flag 1 if non-NULL, releases the 4B functor through 0x116835d7(ptr, 4) and clears the global",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed838d"
+      ]
+    },
+    {
+      "address": "10ed8390",
+      "bytes": 46,
+      "sha256": "8eb7e951189b91f65506532fc0b47172c01e23a3155cea8e2967acb86e74da5f",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void FxEventManager::ClearCustomEventCallback(void)",
+      "scope": "the ClearAudioCallback sequence on the functor pointer at 0x11fadb70",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed83bd"
+      ]
+    },
+    {
+      "address": "10ed83c0",
+      "bytes": 43,
+      "sha256": "255b0d295239a182b07d270bf2b018cb9969b56e5dbac2bdb87811691ae46d82",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void FxEventManager::FireCustomEventCallback(FxActorInstance*, const FxEvent&)",
+      "scope": "when the functor pointer at 0x11fadb70 is set, builds an 8B {instance, event} FxEventCallbackParam on the stack and calls the implementation's vtable slot +8 with its address",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed83ea"
+      ]
+    },
+    {
+      "address": "10ed86d0",
+      "bytes": 62,
+      "sha256": "e8852925b31b54153a4c9768cf99aaffbf877ec05a002ecf2e6675248e76e33a",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "const FxEvent* __thiscall FxEventManager::GetClientEvent(uint) const",
+      "scope": "scans the [+0x18] flag bytes at [+0x1c] and returns [+0x10] + slot * 0xac for the index-th non-zero flag, or NULL",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed86fc",
+        "10ed870b"
+      ]
+    },
+    {
+      "address": "10ed8f50",
+      "bytes": 67,
+      "sha256": "4345f46df37a48609f82c2761a1f8de5cebca2e48d68bbd69c2b6dbc35b1a250",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxEventManager::IsPlaying(uint) const",
+      "scope": "for each of the [+0x18] 0xacB events at [+0x10] (count re-read each pass) calls the event's vtable slot +0x30 and, on the first result equal to the argument, returns the raw flag byte [[+0x1c] + slot]; AL = 0 otherwise",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed8f83",
+        "10ed8f90"
+      ]
+    },
+    {
+      "address": "10ed8fa0",
+      "bytes": 128,
+      "sha256": "866ac303d35afcbf18dab4c39a1ec03ae4fd5d54fafa46f984f9aba19c2b9ac2",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxEventManager::Pause(FxActorInstance*, float)",
+      "scope": "no-op when the pause byte at +0 is set; otherwise each of the [+0x24] slots with a non-zero flag byte gets the audio functor (0x11fadb6c, re-read after each call) slot +8 with a stack {instance, event} pair and action 1, then byte 1 is stored at +0 and the time at +4",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed901d"
+      ]
+    },
+    {
+      "address": "10ed99c0",
+      "bytes": 178,
+      "sha256": "2df521a1471cfb3352da6a41e2643ac63f21dbf0e58ab3a1a625d094fdb941c2",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxEventManager::Resume(FxActorInstance*, float)",
+      "scope": "no-op unless the pause byte is set; each flagged slot's event float at +0x88 gains (time - [+4]) unless it equals the 0x1183b014 sentinel (-2147483648.0f; unordered counts as different) and the audio functor slot +8 is called with action 2, then the pause byte is cleared and 0xcf000000 stored at +4",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed9a6f"
+      ]
+    },
+    {
+      "address": "10ed9a80",
+      "bytes": 109,
+      "sha256": "34dc5fe702126a67253d836d8029a0ee774ec852e0427cef8f2a7e9b5fbba1d0",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void FxEventManager::SetAudioCallback(const FxFunctor&)",
+      "scope": "with a functor installed at 0x11fadb6c: clones the argument's implementation through its vtable slot +4 (NULL stays NULL), swaps it in and destroys the previous implementation through slot +0 with flag 1; otherwise allocates a 4B functor through 0x100d12b0, stores the clone and publishes it, a failed allocation storing NULL in the global",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed9ab0",
+        "10ed9abf",
+        "10ed9ac9",
+        "10ed9aec"
+      ]
     }
   ],
   "globals": [
@@ -41047,6 +42020,190 @@
       "initial_hex_le": "0000000000000000",
       "storage": "zero_fill",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183a958",
+      "width": 128,
+      "kind": "16-row {int code; const char* text} table in .rdata scanned by FxSDKGetErrorString (0x10ed65b0): codes 0..14 and the -1 terminator row whose text is \"UNKNOWN\"",
+      "initial_hex_le": "00000000d8a9831101000000e0a9831102000000f0a983110300000008aa83110400000028aa8311050000005caa83110600000090aa831107000000b0aa831108000000dcaa83110900000014ab83110a00000038ab83110b00000070ab83110c000000e8ab83110d00000010ac83110e00000070ac8311ffffffff1c707811",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183acb4",
+      "width": 24,
+      "kind": "\"Unknown FX_ERROR code: \" log prefix pushed by FxSDKGetErrorString at 0x10ed6604",
+      "initial_hex_le": "556e6b6e6f776e2046585f4552524f5220636f64653a2000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183b014",
+      "width": 4,
+      "kind": "float -2147483648.0f (0xcf000000) in .rdata, the event-time sentinel FxEventManager::Resume loads at 0x10ed99ed",
+      "initial_hex_le": "000000cf",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "119f3890",
+      "width": 4,
+      "kind": "FxLogManager singleton pointer in the .data zero-fill tail read by FxSDKGetErrorString (0x10ed65d4)",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11fadb6c",
+      "width": 4,
+      "kind": "FxEventManager::_audioCallback FxFunctor pointer in the .data zero-fill tail used by 0x10ed8360, 0x10ed8fa0, 0x10ed99c0 and 0x10ed9a80",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11fadb70",
+      "width": 4,
+      "kind": "FxEventManager::_customEventCallback FxFunctor pointer in the .data zero-fill tail used by 0x10ed8390 and 0x10ed83c0",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11fadb7c",
+      "width": 4,
+      "kind": "FxName::NullName entry pointer in the .data zero-fill tail that 0x10ed64a0 and 0x10ed78d0 bind to empty names",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183a9d8",
+      "width": 8,
+      "kind": "FxSDKGetErrorString text for code 0 (\"Success\"), row 0 of the 0x1183a958 table",
+      "initial_hex_le": "5375636365737300",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183a9e0",
+      "width": 15,
+      "kind": "FxSDKGetErrorString text for code 1 (\"Internal error\"), row 1 of the 0x1183a958 table",
+      "initial_hex_le": "496e7465726e616c206572726f7200",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183a9f0",
+      "width": 21,
+      "kind": "FxSDKGetErrorString text for code 2 (\"A parameter was null\"), row 2 of the 0x1183a958 table",
+      "initial_hex_le": "4120706172616d6574657220776173206e756c6c00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183aa08",
+      "width": 29,
+      "kind": "FxSDKGetErrorString text for code 3 (\"The archive store is invalid\"), row 3 of the 0x1183a958 table",
+      "initial_hex_le": "54686520617263686976652073746f726520697320696e76616c696400",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183aa28",
+      "width": 50,
+      "kind": "FxSDKGetErrorString text for code 4 (\"The archive store could not be opened for writing\"), row 4 of the 0x1183a958 table",
+      "initial_hex_le": "54686520617263686976652073746f726520636f756c64206e6f74206265206f70656e656420666f722077726974696e6700",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183aa5c",
+      "width": 50,
+      "kind": "FxSDKGetErrorString text for code 5 (\"The archive store could not be opened for reading\"), row 5 of the 0x1183a958 table",
+      "initial_hex_le": "54686520617263686976652073746f726520636f756c64206e6f74206265206f70656e656420666f722072656164696e6700",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183aa90",
+      "width": 31,
+      "kind": "FxSDKGetErrorString text for code 6 (\"The save operation was refused\"), row 6 of the 0x1183a958 table",
+      "initial_hex_le": "5468652073617665206f7065726174696f6e20776173207265667573656400",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183aab0",
+      "width": 42,
+      "kind": "FxSDKGetErrorString text for code 7 (\"The archive is not a valid FaceFX archive\"), row 7 of the 0x1183a958 table",
+      "initial_hex_le": "5468652061726368697665206973206e6f7420612076616c696420466163654658206172636869766500",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183aadc",
+      "width": 56,
+      "kind": "FxSDKGetErrorString text for code 8 (\"The archive format is newer than the current FaceFX SDK\"), row 8 of the 0x1183a958 table",
+      "initial_hex_le": "546865206172636869766520666f726d6174206973206e65776572207468616e207468652063757272656e74204661636546582053444b00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183ab14",
+      "width": 35,
+      "kind": "FxSDKGetErrorString text for code 9 (\"The animation group already exists\"), row 9 of the 0x1183a958 table",
+      "initial_hex_le": "54686520616e696d6174696f6e2067726f757020616c72656164792065786973747300",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183ab38",
+      "width": 51,
+      "kind": "FxSDKGetErrorString text for code 10 (\"The animation group is not a mounted animation set\"), row 10 of the 0x1183a958 table",
+      "initial_hex_le": "54686520616e696d6174696f6e2067726f7570206973206e6f742061206d6f756e74656420616e696d6174696f6e2073657400",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183ab70",
+      "width": 117,
+      "kind": "FxSDKGetErrorString text for code 11 (\"The unmount operation was refused because an actor instance is currently playing an animation from the animation set\"), row 11 of the 0x1183a958 table",
+      "initial_hex_le": "54686520756e6d6f756e74206f7065726174696f6e207761732072656675736564206265636175736520616e206163746f7220696e7374616e63652069732063757272656e746c7920706c6179696e6720616e20616e696d6174696f6e2066726f6d2074686520616e696d6174696f6e2073657400",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183abe8",
+      "width": 37,
+      "kind": "FxSDKGetErrorString text for code 12 (\"Too many events during take creation\"), row 12 of the 0x1183a958 table",
+      "initial_hex_le": "546f6f206d616e79206576656e747320647572696e672074616b65206372656174696f6e00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183ac10",
+      "width": 92,
+      "kind": "FxSDKGetErrorString text for code 13 (\"Cannot create resource because a resource of the same type with the same key already exists\"), row 13 of the 0x1183a958 table",
+      "initial_hex_le": "43616e6e6f7420637265617465207265736f7572636520626563617573652061207265736f75726365206f66207468652073616d6520747970652077697468207468652073616d65206b657920616c72656164792065786973747300",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183ac70",
+      "width": 67,
+      "kind": "FxSDKGetErrorString text for code 14 (\"One of the supplied resource parameters was not a managed resource\"), row 14 of the 0x1183a958 table",
+      "initial_hex_le": "4f6e65206f662074686520737570706c696564207265736f7572636520706172616d657465727320776173206e6f742061206d616e61676564207265736f7572636500",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1178701c",
+      "width": 8,
+      "kind": "FxSDKGetErrorString terminator-row text (\"UNKNOWN\"), row 15 of the 0x1183a958 table",
+      "initial_hex_le": "554e4b4e4f574e00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
     }
   ],
   "vtables": [
@@ -41474,6 +42631,11 @@
       "address": "117ff0d0",
       "first_slot_code_identity": "10de3460",
       "scope": "2-slot anim vtable in .rdata"
+    },
+    {
+      "address": "1183a798",
+      "first_slot_code_identity": "10ed61e0",
+      "scope": "1-slot FxResourceManager vtable in .rdata stored by the copy constructor 0x10ed5700; slot 0 is the vector deleting destructor 0x10ed61e0, which is outside the recovered set"
     }
   ],
   "instruction_witnesses": [
@@ -49471,6 +50633,131 @@
       "address": "116a88a2",
       "hex": "c20400",
       "purpose": "0x116a88a2 __acrt_GetSystemTimePreciseAsFileTime stdcall return ahead of its IAT tail jump"
+    },
+    {
+      "address": "10ed5704",
+      "hex": "c70198a78311",
+      "purpose": "0x10ed5704 FxResourceManager copy constructor stores the class vtable"
+    },
+    {
+      "address": "10ed64bb",
+      "hex": "6a0c",
+      "purpose": "0x10ed64bb FxActor::FindAnimGroup pushes the 0xcB list-node size for FxAllocate"
+    },
+    {
+      "address": "10ed64ff",
+      "hex": "8b0d7cdbfa11",
+      "purpose": "0x10ed64ff FxActor::FindAnimGroup loads FxName::NullName for an empty set name"
+    },
+    {
+      "address": "10ed6551",
+      "hex": "83c220",
+      "purpose": "0x10ed6551 FxActor::FindAnimGroup steps the owned groups by 0x20B"
+    },
+    {
+      "address": "10ed65c7",
+      "hex": "8b04f560a98311",
+      "purpose": "0x10ed65c7 FxSDKGetErrorString reads the next row's code (table + 8)"
+    },
+    {
+      "address": "10ed65da",
+      "hex": "83b98400000001",
+      "purpose": "0x10ed65da FxSDKGetErrorString tests the log level against 1"
+    },
+    {
+      "address": "10ed65e3",
+      "hex": "6a01",
+      "purpose": "0x10ed65e3 FxSDKGetErrorString pushes log level 1"
+    },
+    {
+      "address": "10ed6604",
+      "hex": "68b4ac8311",
+      "purpose": "0x10ed6604 FxSDKGetErrorString pushes the unknown-code prefix"
+    },
+    {
+      "address": "10ed6621",
+      "hex": "8b04f55ca98311",
+      "purpose": "0x10ed6621 FxSDKGetErrorString returns the stopping row's text (table + 4)"
+    },
+    {
+      "address": "10ed6680",
+      "hex": "b853080000",
+      "purpose": "0x10ed6680 FxSDKGetVersion constant"
+    },
+    {
+      "address": "10ed73d1",
+      "hex": "6a0c",
+      "purpose": "0x10ed73d1 FxActor::GetAnimGroup pushes the 0xcB list-node size for FxAllocate"
+    },
+    {
+      "address": "10ed78de",
+      "hex": "6a0c",
+      "purpose": "0x10ed78de FxActor::IsAnimGroupMounted pushes the 0xcB list-node size for FxAllocate"
+    },
+    {
+      "address": "10ed7de5",
+      "hex": "c74104000000cf",
+      "purpose": "0x10ed7de5 FxEventManager constructor stores the invalid pause time at +4"
+    },
+    {
+      "address": "10ed7e39",
+      "hex": "c6413401",
+      "purpose": "0x10ed7e39 FxEventManager constructor stores byte 1 at +0x34"
+    },
+    {
+      "address": "10ed8375",
+      "hex": "ff10",
+      "purpose": "0x10ed8375 ClearAudioCallback calls implementation vtable slot +0"
+    },
+    {
+      "address": "10ed83e4",
+      "hex": "ff5008",
+      "purpose": "0x10ed83e4 FireCustomEventCallback calls implementation vtable slot +8"
+    },
+    {
+      "address": "10ed86ff",
+      "hex": "69c0ac000000",
+      "purpose": "0x10ed86ff FxEventManager::GetClientEvent scales the slot by the 0xacB event"
+    },
+    {
+      "address": "10ed8f6a",
+      "hex": "ff5030",
+      "purpose": "0x10ed8f6a FxEventManager::IsPlaying calls FxEvent vtable slot +0x30"
+    },
+    {
+      "address": "10ed8fde",
+      "hex": "c744241001000000",
+      "purpose": "0x10ed8fde FxEventManager::Pause audio callback action 1"
+    },
+    {
+      "address": "10ed8ff4",
+      "hex": "ff5008",
+      "purpose": "0x10ed8ff4 FxEventManager::Pause calls implementation vtable slot +8"
+    },
+    {
+      "address": "10ed99ed",
+      "hex": "f30f100514b08311",
+      "purpose": "0x10ed99ed FxEventManager::Resume loads the event-time sentinel"
+    },
+    {
+      "address": "10ed9a3a",
+      "hex": "c744241002000000",
+      "purpose": "0x10ed9a3a FxEventManager::Resume audio callback action 2"
+    },
+    {
+      "address": "10ed9a63",
+      "hex": "c74604000000cf",
+      "purpose": "0x10ed9a63 FxEventManager::Resume restores the invalid pause time at +4"
+    },
+    {
+      "address": "10ed9a8b",
+      "hex": "6a04",
+      "purpose": "0x10ed9a8b FxEventManager::SetAudioCallback pushes the 4B FxFunctor size"
+    },
+    {
+      "address": "10ed9ab3",
+      "hex": "ff5004",
+      "purpose": "0x10ed9ab3 FxEventManager::SetAudioCallback calls implementation vtable slot +4 (clone)"
     }
   ],
   "ownership": {
@@ -75172,6 +76459,527 @@
       "0x10f173f0, 0x10f17f40 and 0x10f232c0 leave through register-indirect JMP EAX handler dispatch and 0x10f23030 through a mid-body direct JMP to 0x10f24450; each also ends in a RET, so only the RETs are contract exits",
       "The eight OpenSSL imports are by ordinal only: the image fixes DLL and ordinal, not a function name, and thunk stack bytes are the bytes the single Layer 83 call site pushes",
       "The 26 non-IAT-envelope globals (strings, tables, allocator pointers, .bss state, two .text jump tables, three Win32 IAT slots) are pinned from the image by the contract validator without a retained REA read_bytes envelope; \"%s\" at 0x1173f1fc lies inside the already pinned 0x1173f1f0 slice and is not duplicated",
+      "Direct CALL closure is 0 open edges and direct JMP/Jcc closure remains 1 single-tail edge: 0x11695ee2 -> 0x11695e3c"
+    ]
+  },
+  "rea_layer84_evidence": {
+    "scope": "64 Layer 84 Partition 12 FaceFX SDK accessor and leaf routines of FxAnimSet, FxAnim, FxActor, FxActorInstance, FxEventManager, FxResourceManager and the SDK version/error-string pair (78 exports; 0x100e80c0..0x10ed9a80), 23 image-pinned data globals and 1 vtable",
+    "snapshot_mode": "fresh_partition12_batched",
+    "new_records": [
+      {
+        "evidence_id": "ev_4225a760a3516a5e01c5e178d04e81758a8b75fbdb53ee353d9540d8ca9f711e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-100e80c0.json",
+        "retained_record_sha256": "bab5ded432d691c1270a1bcab5724e39c3ce951661b443d90b65340dbbc3cb0a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c490610cb54426421010faf6d586d9edb0dccb115cf06de6f364271b869ac1fe",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-100e8110.json",
+        "retained_record_sha256": "d5ce3936dca92c94e9a4a555b106a4f545bcc41cbb0442bf3f1b6c6a8a6f6bfe",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_ee87796b314291c42bf11bf1338721f06e4218757e66458a328de25e0783d753",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10170450.json",
+        "retained_record_sha256": "0a6a9ce8a277e91eebc11bd12b07271117809d99c082dd5b7ef828cf7eea309e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_0a2c83c006366617c009a2149dd8b1c60fb556f4b806bb855c661951dcf2973d",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-1018aba0.json",
+        "retained_record_sha256": "4bb355bc83e6db802832175ab827baf166fcf40699dbc245ce22e93d30371ad7",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_bdfdb74a1ca6be1352de4a3dcbd9d9c16d98c2d50ba0c96434258d8fee4d2d2e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-101a9b80.json",
+        "retained_record_sha256": "8c82574cdd0c5aae8a1058ea962fe7d58b54cb3b80793fed2131c32470e7f040",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c5e2214dad875ef53583c44459c9801cf5886e60deb597d99c21d669dfb533c6",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-101b0ee0.json",
+        "retained_record_sha256": "2c50325a68bfb7d234b8439a848b9fa4065627ca546f7fbd0971e5e09266dff7",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_22f83cf8e54246942dc8b629e5c16d1ff32935749f2fb2e1071b8d38545d53d0",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-101db470.json",
+        "retained_record_sha256": "e84f4e11ece2b50fa56e16b40e26326b598a3077b390343a83106ddfa5c82803",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7baa3bd1feddb7e62a0370030f1b0cfa4e01e9c75f0e30abac1b5bfe33545097",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-101f8940.json",
+        "retained_record_sha256": "9d6310c88ee9f2aea94459f59a3455cb2c601e571fb80a58a99bf49c1f844654",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_2e7bd98360c14dc5dbe692287ff80f827d19f5d876694a51d813359cacd0d26b",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10228780.json",
+        "retained_record_sha256": "c58f16d99240a21e5a09e29901ada4ca51b2848d56e1e9df00bf262e49812b4b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_a1c7391de7b5a70bac1371eff3e4d04e9f8078e7b7fbe1489887af35be714b30",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10298bc0.json",
+        "retained_record_sha256": "c7e3e896603562dc51a09ba69453410039d1384efaa0b357ec8fb57deb40947f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_91a729e88f43d5bef6a43a0cc0297ba069dc6b31d8414b94d079118283a2e19d",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10298bd0.json",
+        "retained_record_sha256": "ab883cab7c9a1f6891fafeb706621ec3433e99f092b302e004301fd170cdd99d",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7474f41aa5a503476eb65c3daaa52220a8c0f3b0a87427edd6d8f8b2da81ac6d",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-102e3420.json",
+        "retained_record_sha256": "f4ef1f5b3e14a905a432d408349ccdd77eb37f63e3bbaded749b0bc6fd5d1c80",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_0aca86454331b2d618fb5d4b815d68d8e75706a46f8d57d48d250591ed0fc664",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10371c70.json",
+        "retained_record_sha256": "8d15429f933fac2b1f98067d58dcd41b16f775b4430b99fc41b145ab60acc39f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_88fba1fba3c4564aa8073baa715b582099d125462674eea2a12a0280b0e184bd",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-103bf2c0.json",
+        "retained_record_sha256": "81f3492579eb18260ab44527a8e65bbb597b528a97637fe089e92bcf621c7a8c",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_961e9d0a5a6a28aefaf2aca0a5e32a1ee57ea7801abeedb31f402affcb24f7b0",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-104447e0.json",
+        "retained_record_sha256": "2842fda5e404ad6bfd0577c67e6e6ec5de9d42f56f29d6c9bdd829f80a6397ca",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_3cca28f839bd38e120cd70b48568ceaa1eb29c8f7e2b02965ae8ea22ef9f28dd",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-105421e0.json",
+        "retained_record_sha256": "250fdde389ab92d5d713b8207561f16e56ac7dcf6ec98aa9854dca2204fc0a14",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_300f833774bf8bffaf8ae88c94c045948d874fd51ce177b58336d57f8c67b7a0",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-1054d080.json",
+        "retained_record_sha256": "2af88cab97e8d1e19b859d1de9a7e97aee74ccb9a9987f6ec2a613c2a23a19a0",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_a07cbcec67432b5e33df82ffe80e42849278181dcd9526d7dd5e8aea6d03db69",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-1054d6a0.json",
+        "retained_record_sha256": "0ab47d5a67fb9edde482de069e64c3ad767c3060321c8de330da47f9498d6fea",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_6b6c4a21c493fbb1a96e2c549a1ee4954400c3a3c319693f96d7720e4472c18a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-105699b0.json",
+        "retained_record_sha256": "ce9938a830446f62cc6a5e72c49f4330902dcf69319d99cc61602849a852f0fc",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_24a3a3bcdfa0e34b87d0a2ef4c729e2f6c2a3228c667c97834a527012c475142",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-105d0bb0.json",
+        "retained_record_sha256": "a378cdee79110cc33bdddb230f27e53d8ffbbf094bf983b738abd2b93c5903a7",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_47f1971653a120b54c68dc66925de95b92ebfc67f3359468f53aa18581de4d8c",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-105d0f20.json",
+        "retained_record_sha256": "8f794d82d676e81ebc39a9a24b2bbd71cc4e47d47b9348048d5c1154953dba7c",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_8ff409e383fa41c1a66560479d971ce3fbfbf59e5754506dc51279a710a931c4",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-105e13a0.json",
+        "retained_record_sha256": "9a0061e80b484b2afc59bf94f050033650e621c24e19719d2d6fa471810d74fe",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_af83a27d1cce6ac1d8169284c8e0a8c21f8f5934b31f96f3281a9ae28fd93d91",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-106364c0.json",
+        "retained_record_sha256": "d5d70685ca1be513058bca88711d3191a2c0d2f9e0fbc5fa44ea535c89479bb1",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_69f553456c259928bda79493b91bcfaf92b868b7cd0595287b325cb8b22a7b05",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-1085b040.json",
+        "retained_record_sha256": "be7abe5167397f895938d591c754eee57ded6b8292253ef563b4b27e3b870b09",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_81350173d33187a57e2a424f73b8ee3bdcf5d5df29bae83c50c725979c51c49e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10a281c0.json",
+        "retained_record_sha256": "a25acf5f5745feda1f1ef7d0870a8ecdeeb7bafa392f903b4ae3f0bfc54f4c3f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_0243b8151b954a5609005ec450009e52344a4244b59e7a8e93f62a8e438d7b8e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10a2a300.json",
+        "retained_record_sha256": "e86a19bf4dcb2dba552125299b0c6a78928533eb522f4769c183a62f29c68132",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_e3c1a91bc64d19b2b01f81e02e115d15ff203a3f948675b952cbfe61f0b8bb38",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10a2d1e0.json",
+        "retained_record_sha256": "2af36c40e7f1a70e783c391cf4c7f78940e009aa3c0d6cbedb75e1c41f05024e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_ab4c5f7e621e4387cd4a4061cff89a2b24ad22c0fba8e8b812d093d531f2fd24",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10a34830.json",
+        "retained_record_sha256": "2b2f5669c588521318a94dd95005a516fb2e6204fb26b512d62406a08b257808",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_d6ef1a3d27711c637725a8040a2788935ebb6dbcd878a65770f2c0cb25a7cc5a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10a9a5c0.json",
+        "retained_record_sha256": "b86af49e4a70c32a2d2632743fa8b1f52c4508b1685cae081fa93fdbf5bd5489",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_0deb90bfc8ef9d680e9545714adaf06901dd72e31a9b1683896360a89855686b",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10abed80.json",
+        "retained_record_sha256": "dd63c216491d05a8fd10e742013f962b2c6ecd3a9687dca91a7e057e2483648e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_62649658ba5fbf25ef86d9a918534939775b8bf5f176c57c57f98404548db404",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10be8b50.json",
+        "retained_record_sha256": "c435412752785d039923846b849729f5d59b3745ffae17de914bab0ba8ea51d6",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_4dfa53d1c1d4aa67c647362c470965ec7ec1e27f60bad26f12dc0796d1a739fc",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed5700.json",
+        "retained_record_sha256": "b57c62f8fa1746a726b7d739312c4f1005ccf13617ca7570618a992c9feba4d5",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_18107b50cc538ebe5d9da1f47987aea5d4836ed56a735c7bb2b50be30a58a3d6",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed59e0.json",
+        "retained_record_sha256": "8e6baf1824bcd781e8f43fa9c024441de8bc93fa297657ab4e0bceeb2797ed68",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_8cdca3547ff0faeb698bab783ac685d3c8142c070ce2a19ef5a77d14c7877d85",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed64a0.json",
+        "retained_record_sha256": "f36daa3eaa82f33dc39c1252d2d29f6f437b8c9789b0a8845a54430d83b7b271",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_8735189f0b8d2f6311ebb2dc3751a47483d54a719a76c1218b99c965960bd2c3",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed65b0.json",
+        "retained_record_sha256": "5e435c6d669f19ed805dac46cba0985e05be1764d4cac6ae2128ed3ec0405cdc",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_236cd26efaebe4dece358386bc2344a189f5131be8d4dc469573229ab3a80e0d",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed6680.json",
+        "retained_record_sha256": "a3a8d86b77f25c2949b1dbb404bab9c74b2339dd6deb6663e0a389a34abbe0a3",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_d27432dee01dba6e77747d388dbbc530c46c6ec8e15730ac19780dcc1510b0d0",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed7370.json",
+        "retained_record_sha256": "9e0b39ee296345f18d5b6be5985550e0417e4e74c6b3225afbcda8aab83233d2",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_dfcc774e107dc871b0a43c3e15c926d6113ddaacd9ea84435c2c849d7ca56888",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed7380.json",
+        "retained_record_sha256": "1508c098c30196c4b1516c83ff9ce9fb961044b89ef990346e4ee711f877e68d",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_2756cad4c65e976743e057007e65da7d8ea001b3f0e47266687f75db84a967ac",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed7390.json",
+        "retained_record_sha256": "d7e465971bbb287daef02bdf5e983c993a125196fcb0f7a5af97b9d700226f7b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_95fff4fe50e266e07e349cd3e8c6324f2c001b308a39a44e0397669cf7a4636a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed75c0.json",
+        "retained_record_sha256": "6922c7d263c83fadf0db3192c8292d06acaaf6ee1e54e0aebcf3af51163fe8f6",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_de55b2661a4eac1434e0ad43cbf633e0bc2a69f07f1068c5b99744af29f5671e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed7600.json",
+        "retained_record_sha256": "5a5ae311087920f971f3cfe3270c703cf1edb504efbbe2dd9a4bcb4f205b41e2",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_09792edbbba61eac3e02182f2f5663c5c293be8f552c883df542c2c7e16abc4a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed76c0.json",
+        "retained_record_sha256": "31b66a7ac154498a3e757a1ec107625255234d2999fa5718afd2a519255a550d",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7dbb53a0c4b4ee23b027e95fbb3a34079a0dd5607204e47b3e5a9c6f4ff9ce33",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed7770.json",
+        "retained_record_sha256": "1351e8423d11f89589a41da837d5e1f5f53a28ecdef658416bc61ed7168bb08b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_006ad4bbbc51c6f4fb67d0cbdc4b8e8b159ee8cef215e3dde475754b8bc1a592",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed7790.json",
+        "retained_record_sha256": "6b7b930f2c4d5b2cc0c428624e80a0a7806071e1d4790556fa381dc80e1a1728",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_cbe30c5d28f9b0a5efad5d63b4615a36f6006109d979104678a0867aff643412",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed77e0.json",
+        "retained_record_sha256": "688c7d46e4c6871d2ef9965aa22404022930151c94254b0ee73ba62a464d43a7",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_3d4b942686f73485cbbb3b53a25938f1c0f6babf3a9157ddae4649bf5ba36023",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed77f0.json",
+        "retained_record_sha256": "e49828695830a9f152a20f9f44cd97ce7d98e3f2eb2a78f596d0e5d8aacd2c0f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_011b91b36d8ef1a8d79df78967e4fc22a4a2ea4ce51af2fe58d635e649415a12",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed7830.json",
+        "retained_record_sha256": "effe393bc429597723485e4ea9c4c8f6abeff7e487657fa62501459c900815a5",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_a289abd56dd53ee215a33ee66280f47574b14ea4fc110b0b11cc74dcbb617354",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed7840.json",
+        "retained_record_sha256": "63a182d42ecbf396ffd575d029273defc1a0d65a87360c605659c3e63a58d0e6",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_3be683d5fd2ca804ba29093ef46861e9c35a5168438b77c727484f3c7991ecc5",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed7850.json",
+        "retained_record_sha256": "607fbd166af9b0ebe781b2ef0ad049d3792e3aae060b0e8f358fa62000006c2e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_8f7b7ffc671d1942bc30a1ee312ae689f40d0d7c0b380390163714bbf2fc7035",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed7860.json",
+        "retained_record_sha256": "b6e8b39d09ebcd81b9b241581ce9483c76592a7916b027dbd0a182b35020382c",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_755a980cb06d6d18c0bbbe3f6990f229b079003249e30cfbe00343b5913b1606",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed7870.json",
+        "retained_record_sha256": "9ce413b91fa16232b9860f3c732118268a87913f2bac67816c712f05286d47d1",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_9b3f96d5408e3ecd64b00cd86834617b77764f6f00d5667ba18a96db5bbae985",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed7880.json",
+        "retained_record_sha256": "46d08211fbe5b41824006b3e3e7090bff15a781793e1517d142a3e864517227a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_1ad3ebee806b72c9442cb0feeef9f3d558c65093007caf1dfe0a6640d76f4bf0",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed78d0.json",
+        "retained_record_sha256": "e190c1e5b928d8f7a4ea29de7c865b95811ca09df23722a162bd5b9611b17047",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_933389c15b76db5581b76360b20e1e8594767682a3ddfabab9c6afc4ea99a079",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed7bf0.json",
+        "retained_record_sha256": "6415c9be9ee78a2ca05d08a1055f7f83e3543be206faef24fa1747fc2934e6f6",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_023c3c8d0691d74cbfe996f89c117df3883329d65ab94a3a6d1f4feb8d75083b",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed7c10.json",
+        "retained_record_sha256": "47ce1394ad28f9bf59456520734d1938e36be671ab34062237560bc41f98eef5",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_ce8c7ed53579cbeb835aa87d67202526d5f3a3ca55240f257dbeddfb25e2bf04",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed7de0.json",
+        "retained_record_sha256": "bdfa13f6ca0fe3d1bbf06149cbcd52c30f018eef3486ab63dfa864e0e1674b85",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c27cdfbe0b5078027e79ee6aecbf8710d7964a738d0fd737dc75019b4db42001",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed8360.json",
+        "retained_record_sha256": "d753f3032bc9543ab75c2ff450f0fc2a277f31dde0fb3f95d7e28f219e0fe1eb",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_e302297e1f49ae9ec05d63b80bd7586816514098bfa3b2ac6cba6dd858dbf37c",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed8390.json",
+        "retained_record_sha256": "79ce27e17504a17739ec89c9429ed5cf88c1239afd1a6279ece57cd3fbdc3fc5",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_313bfa8cd3c2dbecd91a4da7b68c23b21d329be695a3919f01f340bc92ce26fb",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed83c0.json",
+        "retained_record_sha256": "148cd3fcf7be41869b3a77220473a7263f486b099ff35c713f4e987ea8553c50",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_04116566470ca0d26c7c7ea5cc6853be02b8ace72254614dbad446ef855e8ec6",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed86d0.json",
+        "retained_record_sha256": "80a06b95d77c9abde21f0e291d746f2373f30365e6d4bb565be4134689486fd5",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5cae2014da5ab04bd1357297d8f8b47ce18bb4ee5dddf36d56a3a2f64d3db312",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed8f50.json",
+        "retained_record_sha256": "b9fac67138186a8e2e1b29112886194cc49506116a8f9bdb8bc69f9424d24c52",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c94f483f973c9a78687fdfe83df7c2e002fff96307cdbe16f175b244bcea5b86",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed8fa0.json",
+        "retained_record_sha256": "cc7668ae260bf80df6a0724824998783cae62c0beaa66a42b46070c1255db930",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_3136e96d1e3c975a8e4ce1fb00eaf13340bf7eb67b48e09e4d02b823f1ec0c5a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed99c0.json",
+        "retained_record_sha256": "c526ae0240efe28b5b4a7ecc7a26ca61dba8a9578b63acc88b77c8d3f9baf22b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_0e564dc990e479843807fe517c181c73c17d916e9b9559e2cb7c9e2624139cdd",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer84-20261125/fn-10ed9a80.json",
+        "retained_record_sha256": "e009ab94ab5b6a91fea3631b2101e8c2b3c46b3e9d5399c30bc303193121a651",
+        "retained_record_format": "original MCP result envelope"
+      }
+    ],
+    "closed_snapshot_local_path": "out/facefx-layer85-20261125/session.rea.json",
+    "closed_snapshot_sha256": "1956b12bff85dbe00dfab7d1dcb2933dfba499d09aa4f0a2921b4175d8a1a3c7",
+    "closed_evidence_records": 64,
+    "new_evidence_records": 64,
+    "retained_operation_envelopes": 64,
+    "extra_evidence_views_count": 0,
+    "validated_bundle_local_path": "out/facefx-layer84-20261125/validated-evidence-bundle.json",
+    "validated_bundle_sha256": "d584b90e32e988cdf1c78f4ebabc260ac7f13cbab4cf6fc92df393f66ef6e312",
+    "cumulative_validated_bundle_local_path": "out/facefx-layer84-20261125/cumulative-validated-evidence-bundle.json",
+    "cumulative_validated_bundle_sha256": "d584b90e32e988cdf1c78f4ebabc260ac7f13cbab4cf6fc92df393f66ef6e312",
+    "cumulative_validated_bundle_records": 64,
+    "partition1_validated_bundle_local_path": "out/vfs-layer24-20261114/validated-evidence-bundle.json",
+    "partition1_validated_bundle_sha256": "475ab7199d42e3cb2a866a007302f7868344303e3bfda6f975c2e19ae2040a0e",
+    "partition1_validated_bundle_records": 367,
+    "partition2_validated_bundle_local_path": "out/vfs-layer41-20261115/cumulative-validated-evidence-bundle.json",
+    "partition2_validated_bundle_sha256": "691eee5f4134ecfe5fa9ace57f78daead53f4c917e0aa4db243de429f03b0a7c",
+    "partition2_validated_bundle_records": 743,
+    "partition3_validated_bundle_local_path": "out/vfs-layer49-20261115/cumulative-validated-evidence-bundle.json",
+    "partition3_validated_bundle_sha256": "1fd402dd9c34d773769dcdb3f634bda90c0947c76f316a09467979c24c3459f6",
+    "partition3_validated_bundle_records": 264,
+    "partition4_validated_bundle_local_path": "out/vfs-layer55-20261115/cumulative-validated-evidence-bundle.json",
+    "partition4_validated_bundle_sha256": "b58b048ddae09bcbfb1c517792a7160c07bb1b1a0c2683464ead236f63eda3b0",
+    "partition4_validated_bundle_records": 181,
+    "partition5_validated_bundle_local_path": "out/vfs-layer58-20261115/validated-evidence-bundle.json",
+    "partition5_validated_bundle_sha256": "f8a0cfd64b101c746df29ef4cd126b4b610b618e63163255feebce22c81c258a",
+    "partition5_validated_bundle_records": 118,
+    "partition6_validated_bundle_local_path": "out/startup-layer62-20261119/cumulative-validated-evidence-bundle.json",
+    "partition6_validated_bundle_sha256": "da0f43dcf31accf01b85e3d85679908e2f930b4f9b68e0bc5dcf59769935a53a",
+    "partition6_validated_bundle_records": 252,
+    "partition7_validated_bundle_local_path": "out/startup-layer66-20261124/cumulative-validated-evidence-bundle.json",
+    "partition7_validated_bundle_sha256": "de90311e12db70e6ac2aae91c0523ea76e8fbbaae414e652e6a2665aaff44741",
+    "partition7_validated_bundle_records": 193,
+    "partition8_validated_bundle_local_path": "out/startup-layer71-20261124/cumulative-validated-evidence-bundle.json",
+    "partition8_validated_bundle_sha256": "d1e0cc84583aad43fe0757bc525b609c1558a1bb786b80d4c599b26d386e2541",
+    "partition8_validated_bundle_records": 257,
+    "partition9_validated_bundle_local_path": "out/startup-layer79-20261124/cumulative-validated-evidence-bundle.json",
+    "partition9_validated_bundle_sha256": "803f0707ce4405b10cabddf508f3822cc100250283bafa3d26792090caf9f7fc",
+    "partition9_validated_bundle_records": 407,
+    "partition10_validated_bundle_local_path": "out/facefx-layer81-20261125/validated-evidence-bundle.json",
+    "partition10_validated_bundle_sha256": "0dd9ee3985c9202147877b2b7871d021ce67d1f59212592bcade4227431b965d",
+    "partition10_validated_bundle_records": 132,
+    "partition11_validated_bundle_local_path": "out/curl-layer83-20261125/cumulative-validated-evidence-bundle.json",
+    "partition11_validated_bundle_sha256": "70c0d4aaabe3e23085126fa74e10446c0006349f34a45c66861f98a5115a922e",
+    "partition11_validated_bundle_records": 120,
+    "prior_partitions_validated_records": 3034,
+    "cumulative_all_partitions_records": 3098,
+    "non_proc_slots": [],
+    "resource_constrained_slots": [],
+    "closure_audit": {
+      "method": "linear sweep of every recovered body range in the pinned image; each direct rel8/rel32 CALL, JMP and Jcc target is tested against the recovered body ranges",
+      "recovered_functions": 2093,
+      "open_direct_call_edges": 0,
+      "direct_jump_edges_leaving_recovered_bodies": [
+        {
+          "source": "11695ee2",
+          "instruction": "11695f26",
+          "target": "11695e3c"
+        }
+      ]
+    },
+    "limitations": [
+      "Layer 84 begins Partition 12 (fresh_partition12_batched: 64 records) alongside sealed Partitions 1-11 (3,034 prior; 3,098 cumulative across 2,093 functions); its REA session continued into Layer 85 and was closed there, so the closed snapshot is the Layer 85 session file",
+      "All 64 bodies end in RET; the functor implementation vtable slots +0/+4/+8 and the FxEvent vtable slot +0x30 are reached only through register-indirect CALLs, which the direct-edge closure audit does not follow, and stay callback-injected in the bounded C17 tests",
+      "11 bodies carry more than one export name (cross-class folds at 0x1018aba0, 0x1054d080 and 0x10be8b50, the GetStartTime and GetAnimCurveM aliases at 0x10228780 and 0x10ed7380, and six const/non-const overload pairs), so 64 bodies carry 78 export names; one registry row covers each body",
+      "The 23 globals (error table, 17 strings, the event-time sentinel float and four .data zero-fill pointers) and the FxResourceManager vtable 0x1183a798 are pinned from the image by the contract validator without a retained REA read_bytes envelope; the vtable's only slot 0x10ed61e0 is outside the recovered set",
       "Direct CALL closure is 0 open edges and direct JMP/Jcc closure remains 1 single-tail edge: 0x11695ee2 -> 0x11695e3c"
     ]
   }
