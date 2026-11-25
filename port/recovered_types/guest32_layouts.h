@@ -4147,5 +4147,20 @@ ROME2_LAYOUT_ASSERT(rome2_lua_global_state_32, mainthread_va, 0x64);
 ROME2_LAYOUT_ASSERT(rome2_lua_global_state_32, mt_va, 0x7c);
 ROME2_LAYOUT_ASSERT(rome2_lua_global_state_32, tmname_va, 0xa0);
 
+typedef struct rome2_lua_userdata_hdr_32 {
+    uint32_t next_va;
+    uint8_t tt;
+    uint8_t marked;
+    uint8_t pad06[2];
+    uint32_t metatable_va;
+    uint32_t env_va;
+    uint32_t len;
+    uint32_t pad14;
+} rome2_lua_userdata_hdr_32;
+_Static_assert(sizeof(rome2_lua_userdata_hdr_32) == 0x18, "lua userdata hdr 32 size");
+ROME2_LAYOUT_ASSERT(rome2_lua_userdata_hdr_32, metatable_va, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_lua_userdata_hdr_32, env_va, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_lua_userdata_hdr_32, len, 0x10);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

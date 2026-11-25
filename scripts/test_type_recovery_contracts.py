@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 1685)
-        self.assertEqual(result["globals"], 964)
+        self.assertEqual(result["functions"], 1709)
+        self.assertEqual(result["globals"], 970)
         self.assertEqual(result["vtables"], 85)
-        self.assertEqual(result["instruction_witnesses"], 1547)
+        self.assertEqual(result["instruction_witnesses"], 1551)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -4190,6 +4190,28 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertNotIn("1183b666", globs)
         self.assertNotIn("11846d44", globs)
         self.assertEqual(ev["closure_audit"]["recovered_functions"], 1685)
+        self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
+        self.assertEqual([(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]], [("11695ee2", "11695e3c"), ("10cb0440", "10cb6520")])
+
+    def test_layer76_lua_stack_api_contracts(self):
+        ev = self.registry["rea_layer76_evidence"]
+        self.assertEqual(ev["snapshot_mode"], "extending_layer75_batched_p9")
+        self.assertEqual(ev["closed_evidence_records"], 202)
+        self.assertEqual(ev["new_evidence_records"], 30)
+        self.assertEqual(ev["reused_layer75_evidence_records"], 172)
+        self.assertEqual(ev["cumulative_validated_bundle_records"], 202)
+        self.assertEqual(ev["prior_partitions_validated_records"], 2375)
+        self.assertEqual(ev["cumulative_all_partitions_records"], 2577)
+        self.assertEqual(ev["non_proc_slots"], [])
+        self.assertEqual(ev["resource_constrained_slots"], [])
+        fns = {f["address"]: f for f in self.registry["functions"]}
+        for addr in ("10f43c00", "10f440d0", "10f449f0", "10f44ad0", "10f44ef0", "10f44f10", "112a5480", "112c0df0"):
+            self.assertIn(addr, fns)
+            self.assertEqual(fns[addr]["calling_convention"], "cdecl")
+        globs = {g["address"]: g for g in self.registry["globals"]}
+        for addr in ("1173fb20", "117e0fac", "117e0fd8", "11846b04", "1189870c", "11898714"):
+            self.assertIn(addr, globs)
+        self.assertEqual(ev["closure_audit"]["recovered_functions"], 1709)
         self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
         self.assertEqual([(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]], [("11695ee2", "11695e3c"), ("10cb0440", "10cb6520")])
 

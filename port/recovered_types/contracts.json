@@ -26563,6 +26563,386 @@
         "10f4df52",
         "10f4df59"
       ]
+    },
+    {
+      "address": "10f43c00",
+      "bytes": 163,
+      "sha256": "0a800c0d656e06eaf40607001c85bdcdb1e4a05c797755f865b5c75c4c2d2f21",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "TValue* index2adr(lua_State *L, int idx)",
+      "scope": "maps positive/negative/pseudo Lua stack indices to TValue slots",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f43c1e",
+        "10f43c31",
+        "10f43c70",
+        "10f43c77",
+        "10f43c7e",
+        "10f43c9a",
+        "10f43ca2"
+      ]
+    },
+    {
+      "address": "10f44040",
+      "bytes": 78,
+      "sha256": "a48b6adcdc69f916474ee5796429107a69be5f51e46b9f3d26d5f70adcdf073d",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "int lua_getmetatable(lua_State *L, int objindex)",
+      "scope": "pushes Table/Userdata or global basic-type metatable",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f44076",
+        "10f4408d"
+      ]
+    },
+    {
+      "address": "10f440c0",
+      "bytes": 14,
+      "sha256": "6e833688661138ff97e5a7b1cd959b252eed97a9a3f495ae961189b224b2ccb7",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "int lua_gettop(lua_State *L)",
+      "scope": "returns active stack element count (L->top - L->base) >> 3",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f440cd"
+      ]
+    },
+    {
+      "address": "10f440d0",
+      "bytes": 130,
+      "sha256": "c85914751873f91bd583e5bcf0fd5ff9774adff7adc987975265969a87697d20",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "const char* lua_getupvalue(lua_State *L, int funcindex, int n)",
+      "scope": "pushes n-th upvalue of closure at funcindex and returns name",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f440eb",
+        "10f4414b",
+        "10f44151"
+      ]
+    },
+    {
+      "address": "10f44160",
+      "bytes": 66,
+      "sha256": "1c491d3e99ee44ccebb58b5a107c3af399c1f890f9320d4729500302ed704fd6",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void lua_insert(lua_State *L, int idx)",
+      "scope": "rotates top element into stack slot idx",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f441a1"
+      ]
+    },
+    {
+      "address": "10f44250",
+      "bytes": 38,
+      "sha256": "b84d27d9706dbb49fe49d8c69cb8a809816e22ebdc0255e1e8c1650e5db04a1d",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "int lua_isuserdata(lua_State *L, int idx)",
+      "scope": "returns 1 if slot is full or light userdata",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f4426f",
+        "10f44275"
+      ]
+    },
+    {
+      "address": "10f444e0",
+      "bytes": 30,
+      "sha256": "b7542ab5276f9898b935e24393d731985a8e47712003404357429884839280b1",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void lua_pushboolean(lua_State *L, int b)",
+      "scope": "pushes normalized 0/1 LUA_TBOOLEAN",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f444fd"
+      ]
+    },
+    {
+      "address": "10f445f0",
+      "bytes": 25,
+      "sha256": "d495f07e6f6ef9c740de72e5c5e94d70e1ee1bc5d3aa37bf635ec1e297720d7b",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void lua_pushlightuserdata(lua_State *L, void *p)",
+      "scope": "pushes LUA_TLIGHTUSERDATA pointer value",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f44608"
+      ]
+    },
+    {
+      "address": "10f44650",
+      "bytes": 19,
+      "sha256": "c292313c0f200afc58bf6b8f56d0014f0e8652e3b3c2d54ddd6e512b51831a34",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void lua_pushnil(lua_State *L)",
+      "scope": "pushes LUA_TNIL onto L->top",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f44662"
+      ]
+    },
+    {
+      "address": "10f44720",
+      "bytes": 37,
+      "sha256": "e3ec847ac8499485e091bffaeae6cb5dee8ef9f0c29cc05223239e56e4c0a0d2",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void lua_pushvalue(lua_State *L, int idx)",
+      "scope": "copies slot at idx onto top of stack",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f44744"
+      ]
+    },
+    {
+      "address": "10f447c0",
+      "bytes": 48,
+      "sha256": "4a4622b7012710ebd0bc02eea97885549e9f2a27b05fec24274ff586d9b0ec04",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void lua_rawget(lua_State *L, int idx)",
+      "scope": "replaces top key with luaH_get(t, key)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f447ef"
+      ]
+    },
+    {
+      "address": "10f447f0",
+      "bytes": 48,
+      "sha256": "29a225a9889b1e1428350299092c75e3cdd531c103d7975f36f63561dcb6b1a7",
+      "receiver_register": "none",
+      "stack_argument_bytes": 12,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void lua_rawgeti(lua_State *L, int idx, int n)",
+      "scope": "pushes luaH_getnum(t, n) onto stack",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f4481f"
+      ]
+    },
+    {
+      "address": "10f44900",
+      "bytes": 61,
+      "sha256": "246c0e0826eb8d70d90c8ca6d5f55ea294fab7f0e860598a7bdbae4a254097ad",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void lua_remove(lua_State *L, int idx)",
+      "scope": "removes slot idx shifting upper elements down",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f4493c"
+      ]
+    },
+    {
+      "address": "10f449f0",
+      "bytes": 122,
+      "sha256": "8a077578b917b310cffb8440e4bcb0de9157dfc1bb5a211202b74b9e58ee629c",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "int lua_setfenv(lua_State *L, int idx)",
+      "scope": "assigns environment table popped from top with GC write barrier",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f44a69"
+      ]
+    },
+    {
+      "address": "10f44ad0",
+      "bytes": 162,
+      "sha256": "367dbfe667aeae8d1bf56990225a5a1115b2a539cddd8a3aecd86453d8157663",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "int lua_setmetatable(lua_State *L, int objindex)",
+      "scope": "sets metatable on Table/Userdata/basic type with GC barrier",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f44b16",
+        "10f44b44",
+        "10f44b71"
+      ]
+    },
+    {
+      "address": "10f44bb0",
+      "bytes": 78,
+      "sha256": "a0669e6c7fbab5c5320aa5bbc456cded531d5104fcd1ecf9b4d272803abb93f8",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void lua_settop(lua_State *L, int idx)",
+      "scope": "adjusts stack top positive or negative, nil-filling upward",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f44bf0",
+        "10f44bfd"
+      ]
+    },
+    {
+      "address": "10f44cd0",
+      "bytes": 42,
+      "sha256": "4ffb6bc1ded08791d6247117e779e3f55d6ef34feb0ec48cabd751f23b63e905",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "int lua_toboolean(lua_State *L, int idx)",
+      "scope": "evaluates Lua truthiness (false only for nil or false)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f44cf6",
+        "10f44cf9"
+      ]
+    },
+    {
+      "address": "10f44d30",
+      "bytes": 54,
+      "sha256": "0fde41b002f510e03062246833e531e30156cd676ef29dfe62affee51923743d",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "lua_Integer lua_tointeger(lua_State *L, int idx)",
+      "scope": "converts number or numeric string via luaV_tonumber to int32",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f44d5d",
+        "10f44d65"
+      ]
+    },
+    {
+      "address": "10f44df0",
+      "bytes": 54,
+      "sha256": "6b81aaddf5160b549543a48faa47f26be3122787b5bcd149fb03e79a5ce69f1c",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "lua_Number lua_tonumber(lua_State *L, int idx)",
+      "scope": "converts number or numeric string via luaV_tonumber to float",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f44e1f",
+        "10f44e25"
+      ]
+    },
+    {
+      "address": "10f44ec0",
+      "bytes": 41,
+      "sha256": "e199ce260fc6a03baa961bb4083c56bc8ffd42cb2c4405ab579d971bd6767ecc",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void* lua_touserdata(lua_State *L, int idx)",
+      "scope": "returns lightuserdata pointer or userdata payload (+0x18)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f44edf",
+        "10f44ee5",
+        "10f44ee8"
+      ]
+    },
+    {
+      "address": "10f44ef0",
+      "bytes": 31,
+      "sha256": "4e5be8fc3b164bac966cf78507214e2935362b9e6404d85483dd393cf6fd8e2f",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "int lua_type(lua_State *L, int idx)",
+      "scope": "returns TValue->tt or -1 (LUA_TNONE) for luaO_nilobject",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f44f0a",
+        "10f44f0e"
+      ]
+    },
+    {
+      "address": "10f44f10",
+      "bytes": 23,
+      "sha256": "00536783d32bceeeda5e2c2535773267527475761f959f6c1a8562e124e807af",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "const char* lua_typename(lua_State *L, int t)",
+      "scope": "returns typename string from 0x11847008 table or 'no value'",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f44f1e",
+        "10f44f26"
+      ]
+    },
+    {
+      "address": "112a5480",
+      "bytes": 168,
+      "sha256": "43b8e811c371e128b3a398408a817d2a6c228387ff02b8c73ade0c4df173f093",
+      "receiver_register": "none",
+      "stack_argument_bytes": 20,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CString* lua_format_3args(CString *out, const char *fmt, ...)",
+      "scope": "formats 3-argument string diagnostic used by Lua binding error reporter",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "112a5527"
+      ]
+    },
+    {
+      "address": "112c0df0",
+      "bytes": 611,
+      "sha256": "a87ca6b2213d4797e5e312d3ef6e4d7f56043a7922c3acb1d9797a2f26a1c9f0",
+      "receiver_register": "none",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "CString* lua_pointer_type_name(CString *out, const char *rtti_sig)",
+      "scope": "extracts unqualified inner class from Pointer<...> signature",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "112c1012"
+      ]
     }
   ],
   "globals": [
@@ -34229,6 +34609,54 @@
       "width": 32,
       "kind": "Lua dummynode_ (20B empty Node) + adjacent string prefix in .rdata used by luaH_getn (0x10f4a980)",
       "initial_hex_le": "0000000000000000000000000000000000000000696e76616c6964206b657920",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1173fb20",
+      "width": 2,
+      "kind": "ASCII ':' delimiter used by 0x112c0df0",
+      "initial_hex_le": "3a00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e0fac",
+      "width": 2,
+      "kind": "ASCII '>' template delimiter used by 0x112c0df0",
+      "initial_hex_le": "3e00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117e0fd8",
+      "width": 2,
+      "kind": "ASCII '<' template delimiter used by 0x112c0df0",
+      "initial_hex_le": "3c00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11846b04",
+      "width": 9,
+      "kind": "ASCII string 'no value' returned by lua_typename (0x10f44f10)",
+      "initial_hex_le": "6e6f2076616c756500",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1189870c",
+      "width": 7,
+      "kind": "ASCII suffix ' const' stripped by 0x112c0df0",
+      "initial_hex_le": "20636f6e737400",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11898714",
+      "width": 12,
+      "kind": "ASCII format 'Pointer<%s>' used by 0x112c0df0",
+      "initial_hex_le": "506f696e7465723c25733e00",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
     }
@@ -42395,6 +42823,26 @@
       "address": "10f4aeb0",
       "hex": "ff248534aff410",
       "purpose": "0x10f4aea0 mainposition indirect switch jump table [eax*4+0x10f4af34]"
+    },
+    {
+      "address": "10f43c00",
+      "hex": "8b4c240885",
+      "purpose": "0x10f43c00 index2adr entry loading stack index"
+    },
+    {
+      "address": "10f44ad0",
+      "hex": "568b742408",
+      "purpose": "0x10f44ad0 lua_setmetatable entry"
+    },
+    {
+      "address": "112a5480",
+      "hex": "83ec10566a40",
+      "purpose": "0x112a5480 Lua 3-arg string format helper entry"
+    },
+    {
+      "address": "112c0df0",
+      "hex": "64a12c000000",
+      "purpose": "0x112c0df0 Pointer<%s> RTTI type formatter entry"
     }
   ],
   "ownership": {
@@ -64114,6 +64562,282 @@
       "Layer 75 extends Partition 9 from Layer 74 (extending_layer74_batched_p9: 112 reused + 60 new = 172 Partition 9 records) alongside sealed Partitions 1-8 (2,375 prior; 2,547 cumulative)",
       "Two read_bytes slices in extra-*.json (0x1183b666 len 1 inside 0x1183b664 len 3; 0x11846d44 len 2 inside 0x11846d3c len 10) are retained as provenance envelopes without duplicating overlapping entries in contracts.globals",
       "All 8 indirect jumps in Layer 75 are bounded intra-function switch dispatch tables inside recovered .text bodies"
+    ]
+  },
+  "rea_layer76_evidence": {
+    "scope": "24 Layer 76 Partition 9 Lua 5.1.4 stack/push/to/raw/env/metatable API functions and binding Pointer<%s> format helpers (0x10f43c00..0x112c0df0)",
+    "snapshot_mode": "extending_layer75_batched_p9",
+    "new_records": [
+      {
+        "evidence_id": "ev_a12f036e8f788c420db96b992854cdd2097d116904ed670ea779ca1d731f6aaa",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f43c00.json",
+        "retained_record_sha256": "833a7cec91721cf6a77d4c989d3307b42b4cd8bb21981cb408e2ae19735800ea",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_73cd1c9f8c3ad49df185ea46fe9846d8aab1106954a56c99a639ed6240149e68",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f44040.json",
+        "retained_record_sha256": "291eedb9224bf56d846940a1f95b8001a3debf01c6cd57b0454bdf78f5f5b713",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5250ae69bc2d38efd47db7109820c620631dc4cce2bc2ab727ffc76bbb23d459",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f440c0.json",
+        "retained_record_sha256": "421c19b3d51473dcde5c58d90dd1d40af86d30e342532806500fefb985c0d231",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_ea1fe491a19060eaefe1f1c97cd610dc09911c15bfac9c01848dd844baa24f4f",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f440d0.json",
+        "retained_record_sha256": "6ba0d150d9e3df3015ee88ac0b4c3a5a5f7bf99a6e90ec19423bc30cca08bc67",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_668aba84c7dd430144463e27dce7b697811e14a1ff9a29951eda8e0866cdbbd4",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f44160.json",
+        "retained_record_sha256": "dc4785f938372c497eb54dca2897d5150919c2130584ba8e0c1ea52b5cd30060",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_f08616186b224ac002c4f6191a6faa1ecd59baa1e41777e9b20980acb2e622bd",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f44250.json",
+        "retained_record_sha256": "37b99e9063b3b488b557b5000587694b1757f99584933cb477dcaf54d26a5b36",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_334b2c28b1e293bd43a1e22e286d7d4481742efcea44fca5aed8b61af047b216",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f444e0.json",
+        "retained_record_sha256": "4111bbea3af8032ef9c5195b7d1e6045f2787eb9b7bb4e6ce65e0d1dd328fd0e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7049404710824604e6ea604359e44ffb51c3019d09afe204a4ae9f9a007d72ca",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f445f0.json",
+        "retained_record_sha256": "0bcfc282f06e542d07a9fd6cb6fb405a010fbeaaedbc5632dbf0aaf834de1e1f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_cea3f8aeb245a9f1882346ebdd570429813b790b8551ef8d6b30d84e4342e6f1",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f44650.json",
+        "retained_record_sha256": "9e9679e97ea7d19f321fb5c74674e8dd746c0c4cc0d431a8558335e56e911a5e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_f57503daf3eef055e39e82defb9d4b2ca12a9ecb92846d73ca725779dba9860f",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f44720.json",
+        "retained_record_sha256": "1b4b6f3b78a5ae74a1e4a21709dbeea52a24d7195713d48a7e7bc8c188bcff8c",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_78cabe9aef7e55418c40a0faaf2f24e89204258d9373fedabf245b497425d219",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f447c0.json",
+        "retained_record_sha256": "8f49aec0c5955c98d60f968b50873f21ac5271f0b4481a9e763765af62c3703d",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c0f0309c8d05f68707f7477045aaecb7af44787ea8142bb0ac40fe70fc706664",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f447f0.json",
+        "retained_record_sha256": "de169ce6d4b72efd9bbbfa9ca871607003cc72b7392ec8bd4ce3c8cc86ea5199",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_b9099d6c06cd97d094de71d57320335798e8655007d047b7c77bddca6a94e2e6",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f44900.json",
+        "retained_record_sha256": "9c8841e3a1c3137faf5b136ca11990e2a0494b065bd0cc58be543d09b8f7cb4b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_8b3b79a632caee17d83349a970ae20d9a58f7212c16bab563ac8e11b6a9439f8",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f449f0.json",
+        "retained_record_sha256": "82e57f1e0d6f1866b2809640295ec1d1c3a882a8a629065d09ca2953c6b44aed",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_bc17e854a099aee7966b995086fd4c726cfc104f9cae889623daa3d0cab19189",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f44ad0.json",
+        "retained_record_sha256": "a8a97fd03a655ea6236295ece6c075d5252e06d48b1b85247c268002728157cf",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5fb4d72d4107d9bc130f6f6fb6d1199702a53da4691115726931ecd4b7cab58e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f44bb0.json",
+        "retained_record_sha256": "5d5d58541508ec58b2d0b1c1bb8392e661804e152d8f31ade0db53bb8ae41f39",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_b0e2edfa00232f65df4396aef7d60790ca22b24d278794412a5df5e98f5382d3",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f44cd0.json",
+        "retained_record_sha256": "13cf109aa30155859013d782970b1678c7c8e3a23527e0ea9dc0a3b95463f37e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_141e5ad6e03258534f7aecafcb37b476be1dddfbf2001447b77b50a46ffec76a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f44d30.json",
+        "retained_record_sha256": "694a1167937514fcbad09fb2cdd38b45bb39a3cca92685a6d712a2dd529f1346",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_0f908efcae68d4a02c9e7cde5761d191d36439d39c6761f28255f13d65aa9df3",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f44df0.json",
+        "retained_record_sha256": "0b57b73960ae2fce25e531aa1d6684f443fb8c0a20bf6b7df9cbda06b490ecf5",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_3340c3648ba7875a6ce2e086f3fb943c7732e59586e042f2817087b94ff3020f",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f44ec0.json",
+        "retained_record_sha256": "a5132f86e29267d8a5cd845c70cfa064ff9b98a3caa01b3362d687792e35a853",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_4652cadfcaa34e13532bbf93fb07875fbeed0adabf46f980ea327d50d744a413",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f44ef0.json",
+        "retained_record_sha256": "f1bc1834be7068a791679d553c19804842c9d46320874752869f7d76475adc5e",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_d2a8bd48db8adc9fed8f0e9b8841a0783c3822dee09f3e1fd0914c06b89b1e8d",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-10f44f10.json",
+        "retained_record_sha256": "821beb449b9cedb29ed71e8f455f4c422cdd4128f247753a2c8116aa9965377a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_a05839815af0a349eef89ae8a40a5534e5d17c795aa46c31e3ffb772879af9e7",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-112a5480.json",
+        "retained_record_sha256": "348e93f5734c37858f73ca32408040f15ddec0f4685a57da35da714cd8de3bc1",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_1c3a2382fb9680ae547a28b4e489793ca6273043373c9c7814a6538c81b203e8",
+        "operation": "analyze_function",
+        "retained_local_path": "out/startup-layer76-20261124/fn-112c0df0.json",
+        "retained_record_sha256": "a416488326cfbbb660f943953d0080748973eb07b59d3fb6d55730743dc3c348",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_36b4fb3eee289225c04c14a310e9328590bc98aeecf605a1eac641f1552d2033",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer76-20261124/extra-1173fb20.json",
+        "retained_record_sha256": "45b4b53adefac99995cfdfa4c8700d073f7768110190727061a95c348e42dda0",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_db2c30336322f0ecde03098735db6b8514055b7fee1d6d323f1af05343ba46ad",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer76-20261124/extra-117e0fac.json",
+        "retained_record_sha256": "63670ce6956e11af001bba619ccc8c258f7279198b95e1f3e4283bbf9c53edf8",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c20458618c27ad9c47df1d4d9318c8774bec124b06030839cc908d1e178b85aa",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer76-20261124/extra-117e0fd8.json",
+        "retained_record_sha256": "df8d0cd6dadb2d8e234cb21e931e2670b133df057df7f1e92b83bcb5f8fa931c",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_728a7563510a2334bbed9f018ec399320f233b176dfa41aeee503d7b55a650f3",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer76-20261124/extra-11846b04.json",
+        "retained_record_sha256": "885845db1202ce2fdcb8e81a1dff7cb07e9192abc8c536a51ddd0ec63ed4d142",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_fd4a5abae0338b19053008487df4744a35e49483e460293ed577554db6e47283",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer76-20261124/extra-1189870c.json",
+        "retained_record_sha256": "b1c7a338d289198c5a17257f7520c91e06bd644a2a67b7f90608248030537962",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_2717883ca8de24315779e9cfe9ed59f0eb7883b88a37a247ce9042e623303b2a",
+        "operation": "read_bytes",
+        "retained_local_path": "out/startup-layer76-20261124/extra-11898714.json",
+        "retained_record_sha256": "4231a446d214ee94b235029f7f0fcc6bd764bd81e1c540105b0b6e568d9bafa8",
+        "retained_record_format": "original MCP result envelope"
+      }
+    ],
+    "closed_snapshot_local_path": "out/startup-layer79-20261124/session.rea.json",
+    "closed_snapshot_sha256": "1c4396bde4e5612aa7730f54e9fec3853d3e6a0ed353f3cedb1bfee9c4e98e2b",
+    "closed_evidence_records": 202,
+    "new_evidence_records": 30,
+    "retained_operation_envelopes": 202,
+    "reused_layer75_evidence_records": 172,
+    "extra_evidence_views_count": 0,
+    "validated_bundle_local_path": "out/startup-layer76-20261124/validated-evidence-bundle.json",
+    "validated_bundle_sha256": "027b05fe32fed20301f27806fd2796ff6e6c3b157e4f45fde78100c66aad14ec",
+    "cumulative_validated_bundle_local_path": "out/startup-layer76-20261124/cumulative-validated-evidence-bundle.json",
+    "cumulative_validated_bundle_sha256": "027b05fe32fed20301f27806fd2796ff6e6c3b157e4f45fde78100c66aad14ec",
+    "cumulative_validated_bundle_records": 202,
+    "partition1_validated_bundle_local_path": "out/vfs-layer24-20261114/validated-evidence-bundle.json",
+    "partition1_validated_bundle_sha256": "475ab7199d42e3cb2a866a007302f7868344303e3bfda6f975c2e19ae2040a0e",
+    "partition1_validated_bundle_records": 367,
+    "partition2_validated_bundle_local_path": "out/vfs-layer41-20261115/cumulative-validated-evidence-bundle.json",
+    "partition2_validated_bundle_sha256": "691eee5f4134ecfe5fa9ace57f78daead53f4c917e0aa4db243de429f03b0a7c",
+    "partition2_validated_bundle_records": 743,
+    "partition3_validated_bundle_local_path": "out/vfs-layer49-20261115/cumulative-validated-evidence-bundle.json",
+    "partition3_validated_bundle_sha256": "1fd402dd9c34d773769dcdb3f634bda90c0947c76f316a09467979c24c3459f6",
+    "partition3_validated_bundle_records": 264,
+    "partition4_validated_bundle_local_path": "out/vfs-layer55-20261115/cumulative-validated-evidence-bundle.json",
+    "partition4_validated_bundle_sha256": "b58b048ddae09bcbfb1c517792a7160c07bb1b1a0c2683464ead236f63eda3b0",
+    "partition4_validated_bundle_records": 181,
+    "partition5_validated_bundle_local_path": "out/vfs-layer58-20261115/validated-evidence-bundle.json",
+    "partition5_validated_bundle_sha256": "f8a0cfd64b101c746df29ef4cd126b4b610b618e63163255feebce22c81c258a",
+    "partition5_validated_bundle_records": 118,
+    "partition6_validated_bundle_local_path": "out/startup-layer62-20261119/cumulative-validated-evidence-bundle.json",
+    "partition6_validated_bundle_sha256": "da0f43dcf31accf01b85e3d85679908e2f930b4f9b68e0bc5dcf59769935a53a",
+    "partition6_validated_bundle_records": 252,
+    "partition7_validated_bundle_local_path": "out/startup-layer66-20261124/cumulative-validated-evidence-bundle.json",
+    "partition7_validated_bundle_sha256": "de90311e12db70e6ac2aae91c0523ea76e8fbbaae414e652e6a2665aaff44741",
+    "partition7_validated_bundle_records": 193,
+    "partition8_validated_bundle_local_path": "out/startup-layer71-20261124/cumulative-validated-evidence-bundle.json",
+    "partition8_validated_bundle_sha256": "d1e0cc84583aad43fe0757bc525b609c1558a1bb786b80d4c599b26d386e2541",
+    "partition8_validated_bundle_records": 257,
+    "prior_partitions_validated_records": 2375,
+    "cumulative_all_partitions_records": 2577,
+    "non_proc_slots": [],
+    "resource_constrained_slots": [],
+    "closure_audit": {
+      "method": "linear sweep of every recovered body range in the pinned image; each direct rel8/rel32 CALL, JMP and Jcc target is tested against the recovered body ranges",
+      "recovered_functions": 1709,
+      "open_direct_call_edges": 0,
+      "direct_jump_edges_leaving_recovered_bodies": [
+        {
+          "source": "11695ee2",
+          "instruction": "11695f26",
+          "target": "11695e3c"
+        },
+        {
+          "source": "10cb0440",
+          "instruction": "10cb045e",
+          "target": "10cb6520"
+        }
+      ]
+    },
+    "limitations": [
+      "Layer 76 extends Partition 9 from Layer 75 (extending_layer75_batched_p9: 172 reused + 30 new = 202 Partition 9 records) alongside sealed Partitions 1-8 (2,375 prior; 2,577 cumulative)"
     ]
   }
 }

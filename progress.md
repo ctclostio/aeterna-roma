@@ -2388,3 +2388,18 @@ callees.
   and **979** clean-public Python tests (**346** skipped) on Python 3.14 and 3.15
   (`clean_eng=0`, `clean_crt=0`, `noret_or_thunk=0` across **1,685** functions;
   Lua Layers 76–78 and advice bridge Layer 79 remain in Partition 9).
+
+### Layer 76: `0x10f43c00..0x112c0df0` Lua 5.1.4 C stack API & type-name helpers (`lua_stack_api_ops`, Partition 9)
+
+- Extended Partition 9 (`extending_layer75_batched_p9`) with **24** Lua 5.1.4 stack/push/to/raw/env/metatable API routines and binding `Pointer<%s>` string helpers across **1,709** functions (`0` open direct CALL edges, `2` open direct jump edges: `0x11695e3c` non-proc tail and `0x10cb6520`):
+  - `0x10f43c00..0x10f44f10`: `index2adr`, `lua_getmetatable`, `lua_gettop`, `lua_getupvalue`, `lua_insert`, `lua_isuserdata`, `lua_pushboolean`, `lua_pushlightuserdata`, `lua_pushnil`, `lua_pushvalue`, `lua_rawget`, `lua_rawgeti`, `lua_remove`, `lua_setfenv`, `lua_setmetatable`, `lua_settop`, `lua_toboolean`, `lua_tointeger`, `lua_tonumber`, `lua_touserdata`, `lua_type`, `lua_typename`.
+  - `0x112a5480`, `0x112c0df0`: Lua 3-arg string format helper and unqualified `Pointer<%s>` RTTI formatter.
+- Extended [contracts.json](port/recovered_types/contracts.json) to **1,709** functions,
+  **970** globals (`6` non-overlapping `.rdata` slices: `0x1173fb20..0x11898714`), **85** vtables, and **1,551** instruction witnesses (`+4`), backed by **202** Partition 9 validated REA records (`172` reused Layer 75 + `30` new Layer 76; **2,577** cumulative across Partitions 1–9).
+- Locked `rome2_lua_userdata_hdr_32` (`0x18` bytes) in `guest32_layouts.h` and bounded C17 models in [lua_stack_api_ops.h](port/recovered_types/lua_stack_api_ops.h) and [lua_stack_api_ops.c](port/recovered_types/lua_stack_api_ops.c), exercised by [test_lua_stack_api_ops.c](port/recovered_types/test_lua_stack_api_ops.c).
+- Verified **133/133** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
+  and ASan, **117** contract tests on Python 3.15 (`11,042` PE-verified
+  whole-binary globals in [manifest.json](work/binary_contracts/manifest.json)),
+  and **980** clean-public Python tests (**347** skipped) on Python 3.14 and 3.15
+  (`clean_eng=0`, `clean_crt=0`, `noret_or_thunk=0` across **1,709** functions;
+  Lua Layers 77–78 and advice bridge Layer 79 remain in Partition 9).

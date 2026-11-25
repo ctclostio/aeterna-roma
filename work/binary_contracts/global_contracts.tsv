@@ -722,6 +722,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1173f9ec	4	file	666f6700	.rdata	curated	curated	true
 1173fa6c	4	file	64617900	.rdata	curated	curated	true
 1173fa70	6	file	6e6967687400	.rdata	curated	curated	true
+1173fb20	2	file	3a00	.rdata	ASCII ':' delimiter used by 0x112c0df0	ASCII ':' delimiter used by 0x112c0df0	true
 1173fb24	4	file	d03eed10	.rdata	pe_data_export	??_7FxLogListener@Logging@Face@OC3Ent@@6B@	false
 1173fb68	12	file	564653207374617274656400	.rdata	NUL-terminated ASCII string 'VFS started' in .rdata logged by 0x100e9230	NUL-terminated ASCII string 'VFS started' in .rdata logged by 0x100e9230	true
 1173fb74	26	file	46696e697368656420564653206c6f61645f72656c6561736500	.rdata	NUL-terminated ASCII string 'Finished VFS load_release' in .rdata logged by 0x100e8e50	NUL-terminated ASCII string 'Finished VFS load_release' in .rdata logged by 0x100e8e50	true
@@ -852,6 +853,8 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 117d9270	6	file	50004f000000	.rdata	NUL-terminated UTF-16LE locale string L'PO' in .rdata for 0x10c8a0b0	NUL-terminated UTF-16LE locale string L'PO' in .rdata for 0x10c8a0b0	true
 117d9278	6	file	50004c000000	.rdata	NUL-terminated UTF-16LE locale string L'PL' in .rdata for 0x10c8a0b0	NUL-terminated UTF-16LE locale string L'PL' in .rdata for 0x10c8a0b0	true
 117df544	28	file	7600660073005f006c006f0067005f006c006500760065006c000000	.rdata	"UTF-16LE literal key L""vfs_log_level"" at 117df544..117df55f"	"UTF-16LE literal key L""vfs_log_level"" at 117df544..117df55f"	true
+117e0fac	2	file	3e00	.rdata	ASCII '>' template delimiter used by 0x112c0df0	ASCII '>' template delimiter used by 0x112c0df0	true
+117e0fd8	2	file	3c00	.rdata	ASCII '<' template delimiter used by 0x112c0df0	ASCII '<' template delimiter used by 0x112c0df0	true
 117e193c	8	file	640062005c000000	.rdata	NUL-terminated UTF-16LE DB folder prefix L'db\\' in .rdata	NUL-terminated UTF-16LE DB folder prefix L'db\\' in .rdata	true
 117e19e0	17	file	62756666657220746f6f20736d616c6c00	.rdata	NUL-terminated ASCII exception message 'buffer too small' in .rdata thrown by 0x10cba590	NUL-terminated ASCII exception message 'buffer too small' in .rdata thrown by 0x10cba590	true
 117e1a08	76	file	520045004d004f005400450020004100530053004500520054002000660072006f006d00200028006e0061006d0065003a002000250053002900200028004900500020002500780029000000	.rdata	NUL-terminated UTF-16LE remote assert banner L'REMOTE ASSERT from (name: %S) (IP %x)' in .rdata	NUL-terminated UTF-16LE remote assert banner L'REMOTE ASSERT from (name: %S) (IP %x)' in .rdata	true
@@ -900,6 +903,7 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 1183c294	4	file	2076ed10	.rdata	pe_data_export	??_7FxActor@Face@OC3Ent@@6B@	false
 1183c770	4	file	4076ed10	.rdata	pe_data_export	??_7FxActorInstance@Face@OC3Ent@@6B@	false
 1183c7a0	4	file	00c1ee10	.rdata	pe_data_export	??_7FxLogManager@Logging@Face@OC3Ent@@6B@	false
+11846b04	9	file	6e6f2076616c756500	.rdata	ASCII string 'no value' returned by lua_typename (0x10f44f10)	ASCII string 'no value' returned by lua_typename (0x10f44f10)	true
 11846b10	2	file	3f00	.rdata	ASCII string '?' returned by getobjname/kname fallback	ASCII string '?' returned by getobjname/kname fallback	true
 11846b2c	7	file	6d6574686f6400	.rdata	ASCII string 'method' returned by getobjname (0x10f47140)	ASCII string 'method' returned by getobjname (0x10f47140)	true
 11846c28	256	file	00000000000000000001020203030303040404040404040405050505050505050505050505050505060606060606060606060606060606060606060606060606060606060606060607070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808	.rdata	luaO_nilobject_ (8B) immediately followed by luaO_log2 256B lookup prefix (0x11846c30) in .rdata	luaO_nilobject_ (8B) immediately followed by luaO_log2 256B lookup prefix (0x11846c30) in .rdata	true
@@ -947,6 +951,8 @@ address	width	storage	initial_hex_le	section	kind	symbol	curated_global_pinned
 11898174	10	file	250066006b006d000000	.rdata	NUL-terminated UTF-16 format string u'%fkm' in .rdata used by switch case 13 of 0x112e4050	NUL-terminated UTF-16 format string u'%fkm' in .rdata used by switch case 13 of 0x112e4050	true
 11898258	24	file	520065006d006f007600650064005f006b00650079000000	.rdata	"UTF-16LE literal sentinel L""Removed_key"" initialized by 112e32b0"	"UTF-16LE literal sentinel L""Removed_key"" initialized by 112e32b0"	true
 11898270	22	file	55006e0075007300650064005f006b00650079000000	.rdata	"UTF-16LE literal sentinel L""Unused_key"" initialized by 112e32b0"	"UTF-16LE literal sentinel L""Unused_key"" initialized by 112e32b0"	true
+1189870c	7	file	20636f6e737400	.rdata	ASCII suffix ' const' stripped by 0x112c0df0	ASCII suffix ' const' stripped by 0x112c0df0	true
+11898714	12	file	506f696e7465723c25733e00	.rdata	ASCII format 'Pointer<%s>' used by 0x112c0df0	ASCII format 'Pointer<%s>' used by 0x112c0df0	true
 1189893c	33	file	25733a2073656374696f6e2074696d696e677320696e697469616c697365640a00	.rdata	NUL-terminated ASCII string '%s: section timings initialised\n' in .rdata formatted by 0x112dc9f0	NUL-terminated ASCII string '%s: section timings initialised\n' in .rdata formatted by 0x112dc9f0	true
 11898960	12	file	25733a20446f6e6520257300	.rdata	NUL-terminated ASCII string '%s: Done %s' in .rdata formatted by 0x112dcaf0	NUL-terminated ASCII string '%s: Done %s' in .rdata formatted by 0x112dcaf0	true
 11898970	94	file	25646d732064656c74612c2025646d7320746f74616c2c2025644d4220616c6c6f636174656420746f74616c2c2025642062797465732064656c746120616c6c6f63617465642c20746f74616c20556e69537472696e67733a2564290a00	.rdata	NUL-terminated ASCII suffix '%dms delta, ... UniStrings:%d)\n' in .rdata formatted by 0x112dcaf0	NUL-terminated ASCII suffix '%dms delta, ... UniStrings:%d)\n' in .rdata formatted by 0x112dcaf0	true

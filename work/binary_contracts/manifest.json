@@ -13,7 +13,7 @@
     "class_field_entries": 95747,
     "rtti_type_descriptors": 181,
     "rtti_complete_object_locators": 15,
-    "globals": 11036,
+    "globals": 11042,
     "exported_code_targets_pinned": 405
   },
   "distributions": {
@@ -285,6 +285,7 @@
       "16B GUID {E7B2FB72-D728-49B3-A5F2-18EBF5F1349E} (IGameExplorer interface) in .rdata passed to CoCreateInstance by 0x100edd70": 1,
       "first 24 bytes of the ASCII format 'IGameExplorer could not verify access.' in .rdata passed to 0x100de6d0 by 0x100edd70": 1,
       "first 24 bytes (12 UTF-16LE units) of L'-no_exception_handler' in .rdata compared by 0x100edd70": 1,
+      "ASCII ':' delimiter used by 0x112c0df0": 1,
       "NUL-terminated ASCII string 'VFS started' in .rdata logged by 0x100e9230": 1,
       "NUL-terminated ASCII string 'Finished VFS load_release' in .rdata logged by 0x100e8e50": 1,
       "NUL-terminated UTF-16LE string L'Crash.stack' in .rdata used by 0x100e8240": 1,
@@ -378,6 +379,8 @@
       "NUL-terminated UTF-16LE locale string L'PO' in .rdata for 0x10c8a0b0": 1,
       "NUL-terminated UTF-16LE locale string L'PL' in .rdata for 0x10c8a0b0": 1,
       "UTF-16LE literal key L\"vfs_log_level\" at 117df544..117df55f": 1,
+      "ASCII '>' template delimiter used by 0x112c0df0": 1,
+      "ASCII '<' template delimiter used by 0x112c0df0": 1,
       "NUL-terminated UTF-16LE DB folder prefix L'db\\\\' in .rdata": 1,
       "NUL-terminated ASCII exception message 'buffer too small' in .rdata thrown by 0x10cba590": 1,
       "NUL-terminated UTF-16LE remote assert banner L'REMOTE ASSERT from (name: %S) (IP %x)' in .rdata": 1,
@@ -412,6 +415,7 @@
       "NUL-terminated UTF-16LE table folder L'subtitle_timings_tables' in .rdata": 1,
       "ASCII string '\"]' used by luaO_chunkid (0x10f460e0); covers NUL sub-slice 0x1183b666": 1,
       "ASCII string '...' used by luaO_chunkid (0x10f460e0)": 1,
+      "ASCII string 'no value' returned by lua_typename (0x10f44f10)": 1,
       "ASCII string '?' returned by getobjname/kname fallback": 1,
       "ASCII string 'method' returned by getobjname (0x10f47140)": 1,
       "luaO_nilobject_ (8B) immediately followed by luaO_log2 256B lookup prefix (0x11846c30) in .rdata": 1,
@@ -459,6 +463,8 @@
       "NUL-terminated UTF-16 format string u'%fkm' in .rdata used by switch case 13 of 0x112e4050": 1,
       "UTF-16LE literal sentinel L\"Removed_key\" initialized by 112e32b0": 1,
       "UTF-16LE literal sentinel L\"Unused_key\" initialized by 112e32b0": 1,
+      "ASCII suffix ' const' stripped by 0x112c0df0": 1,
+      "ASCII format 'Pointer<%s>' used by 0x112c0df0": 1,
       "NUL-terminated ASCII string '%s: section timings initialised\\n' in .rdata formatted by 0x112dc9f0": 1,
       "NUL-terminated ASCII string '%s: Done %s' in .rdata formatted by 0x112dcaf0": 1,
       "NUL-terminated ASCII suffix '%dms delta, ... UniStrings:%d)\\n' in .rdata formatted by 0x112dcaf0": 1,
@@ -961,12 +967,12 @@
     }
   },
   "curated_reconciliation": {
-    "curated_functions_total": 1685,
-    "curated_in_canonical_index": 1654,
-    "curated_exact_body_sha256_match": 1636,
+    "curated_functions_total": 1709,
+    "curated_in_canonical_index": 1678,
+    "curated_exact_body_sha256_match": 1660,
     "curated_multi_range_expanded": 18,
     "curated_non_proc_slots": 31,
-    "curated_globals_matched": 964,
+    "curated_globals_matched": 970,
     "curated_vtables_matched": 85
   },
   "files": {
@@ -977,8 +983,8 @@
     },
     "function_contracts_part2.tsv": {
       "rows": 40640,
-      "bytes": 9473587,
-      "sha256": "1ecae25f6dc31dd6138723f5132d3070acd584a0c257ed42337937275dfd7cca"
+      "bytes": 9473995,
+      "sha256": "b43fde29424e2e5acf6372795b1318d3bad6198c5e380f960cbd98b011ab6d08"
     },
     "non_proc_curated_slots.tsv": {
       "rows": 31,
@@ -1001,9 +1007,9 @@
       "sha256": "534964ec1fa25fd15189a0fd007ba1412fe7fe339981ade410ca82a303f8e912"
     },
     "global_contracts.tsv": {
-      "rows": 11036,
-      "bytes": 965259,
-      "sha256": "829c2039330f92c2e29915b320a9c250bdd06d96b932fe49aec81771facc7cfb"
+      "rows": 11042,
+      "bytes": 966078,
+      "sha256": "4965baf3b1f46e4d3d2296cc918c9a97109f428710624086d5f92ce4677f18e5"
     }
   }
 }
