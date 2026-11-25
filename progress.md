@@ -291,6 +291,29 @@ All x64 work below is `BUILD_TESTING`-only unless stated otherwise.
   → `docs/x64_battle_entity_10cbe350.md`. Strings remain borrowed; this does not
   integrate gameplay or reproduce native string ownership.
 
+## Lifted tier
+
+A generated tier beside the handwritten one, reported separately from it. Every
+canonical function is translated instruction by instruction into C and compared
+with the original machine code, which runs natively in a debugged 32-bit child
+process that can execute nothing else. Design, trial protocol and exclusions:
+`docs/lifted_tier.md`. Results: `port/lifted/ledger_part*.tsv` and
+`port/lifted/manifest.json`. The generated C is not committed.
+
+- [x] Foundation (2026-11-25): shared trial model
+  (`port/lifted_runtime/lift_model.h`), lifter (`scripts/lift/`), lifted
+  runtime and runner (`port/lifted_runtime/`), reference debugger
+  (`tests/lift_ref/`), batch driver and ledger. First whole-inventory run:
+  81,271 of 81,280 functions verified
+  (1,279,150 comparable trials, every one matching),
+  0 mismatching, 9 not translated (5 use AVX, 4
+  save or restore the x87 environment). Matching trials reach
+  2,960,156 of 6,570,415 instructions
+  (45.1%);
+  43,467 functions are reached in full.
+  A verified function is pinned on the paths its trials take, with callees
+  replaced by deterministic stubs; it carries no named types.
+
 ## Type-recovery layers
 
 Step 2 of the project: types, layouts, and ownership. The code-recovery agent

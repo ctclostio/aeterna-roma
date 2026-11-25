@@ -1,0 +1,93 @@
+{
+  "model_version": 1,
+  "functions": 81280,
+  "status_counts": {
+    "verified": 81271,
+    "mismatch": 0,
+    "unsupported": 9,
+    "uncomparable": 0,
+    "untested": 0
+  },
+  "verified_by_mode": {
+    "fast": 80294,
+    "step": 977
+  },
+  "verified_trials": {
+    "comparable": 1279150,
+    "matched": 1279150
+  },
+  "coverage_histogram_of_verified": {
+    "0-9%": 1857,
+    "10-19%": 3760,
+    "20-29%": 5129,
+    "30-39%": 4071,
+    "40-49%": 3836,
+    "50-59%": 4036,
+    "60-69%": 3825,
+    "70-79%": 3694,
+    "80-89%": 4037,
+    "90-99%": 3559,
+    "100%": 43467
+  },
+  "instructions": {
+    "total": 6570415,
+    "covered_in_verified": 2960156,
+    "verified_functions_fully_covered": 43467
+  },
+  "trial_parameters": {
+    "seeds_per_function": 16,
+    "second_round_seeds": 64,
+    "functions_by_seeds": {
+      "16": 81255,
+      "64": 25
+    },
+    "min_comparable_trials": 8,
+    "step_budget": 4000,
+    "confirm_budget": 100000,
+    "reference_timeout_ms": 50
+  },
+  "reference_cpu": "Intel(R) Core(TM) i9-14900KS",
+  "tools": {
+    "python": "3.15.0",
+    "capstone": "5.0.7",
+    "msvc": "19.51.36260"
+  },
+  "tool_hash": "11eb529b75339ea8fc6039a6b5f5d9dbe3acce6bd4932d23cd02d03df64a1730",
+  "image_sha256": "0015b87ddb9ac4dc6939401dd134cede6d69fda5d78ae1ca9c9cdfc6cb8fefec",
+  "tool_sources": {
+    "port/lifted_runtime/lift_model.h": "4055dabd4b38a6a3af40db1bb54705d550903fc827a7a194899fdffde8843462",
+    "port/lifted_runtime/lift_rt.h": "0e8c03208f350d9c334554b9286cad34dcd1c081e803a3f544d0129cda118f7d",
+    "port/lifted_runtime/lift_rt.c": "c9892e04f19c43a82626276a625b544da3bf92d35485085455a4a33c509b2e9d",
+    "port/lifted_runtime/lift_main.c": "82c41f3b7d9603f035cdffb36e8d733f56cba1b17a07c4487b3d0b367fc02f60",
+    "tests/lift_ref/ref_dbg.c": "63523f59bdb1de8e410c251a89afbee65aab0edb7f95e158b51c3a51361c33bc",
+    "tests/lift_ref/ref_child.c": "5ae28e37861df87725b5a5074cb091bf8a750ebe0db4b61da89ccacc3c4178e2",
+    "scripts/lift/image.py": "b28fcc0aa449db6c1807aa745105e4106a31a866d847819b508e4a987b65edb5",
+    "scripts/lift/meta.py": "99cb992432528062b993c983af69f7ff2fa154452fdcdafc9a64bec9b17dc92c",
+    "scripts/lift/lifter.py": "19a2b26a579a7ad9ceb0ec0ea987d70432a5747e6961e4fdc6f41f55718047ab",
+    "scripts/lift/build_batch.py": "c8061d349ca997cac7a5c2e1309d6edc3d906180ac26159e9d509b10c8a186ee",
+    "scripts/lift/build_ref.py": "255ecce72ec3cebf7def4cdc7988dbea4b571fc56bf6092ec645a6c0d52f1d12",
+    "scripts/lift/toolchain.py": "f165b60480a6f49d8b51a476108cc4d530b20be15dba3cc0861739917d961118",
+    "scripts/lift/batch_verify.py": "5fcf0e52b18a3f3abc4ae6c36e8589000c1540959108a08fdb61ec878ca0022b",
+    "scripts/lift/ops/__init__.py": "1efdd9cabab48d819c2b29b1244890b1c4687d041eb02a8637025a3c17e1779e",
+    "scripts/lift/ops/arith.py": "006b0806cbce71937024c70761d017de6a465a14a7722a9bf53d16e1588ce560",
+    "scripts/lift/ops/base.py": "9478ae7786ba9305e04495e3b562f96f821f6de8ab96ba493a0657875fabb873",
+    "scripts/lift/ops/control.py": "df57bfd2aefa625b1cf472a2433d04f803da0d12ac4d632ccd54e317dbec0661",
+    "scripts/lift/ops/logic.py": "edd1b86bf22d57b3181e250cb305c5a0280ba81cc534d6fdd32d89bdb7ae1f86",
+    "scripts/lift/ops/misc.py": "7f19b7fe9ca23f2d22088b5cbccd7f0f24118e414933bc04fa95a429f98d232b",
+    "scripts/lift/ops/move.py": "1199796b34263e80be9bee3dc10291fd21897017806209309691bdbae7dc966f",
+    "scripts/lift/ops/string.py": "4b07f7d59110f0698e342d679a6b6941d6a05ba4626b86f317962931cc099d2a",
+    "scripts/lift/ops/thunks.py": "1885aac691aa8a1160350200b8ba9f5b727b07e54a56c9569f9dc6067620d471",
+    "work/binary_contracts/function_contracts_part1.tsv": "79c62ca4185d8e0bea295d5827158e0d9fb29093d078c97d30c3ae9b64ec45be",
+    "work/binary_contracts/function_contracts_part2.tsv": "dfaa27e03e9952fe8e286f96603f22bf9b67773610cdd07dd0b85816fdd9edcd"
+  },
+  "ledger": {
+    "ledger_part1.tsv": {
+      "rows": 40640,
+      "sha256": "2c5644747b65c6c03c9ed3561ad124111ecffe9ebe7b1c961f20243ddfdb32d8"
+    },
+    "ledger_part2.tsv": {
+      "rows": 40640,
+      "sha256": "a0ebc5a445a1084d8dc8ef3b9233eb104ee8cd0dbeefd643fd342dc517c943c6"
+    }
+  }
+}

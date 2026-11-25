@@ -67,6 +67,8 @@ header { display: grid; gap: 10px; }
 .bar i { position: absolute; inset: 0 auto 0 0; background: var(--accent); min-width: 3px; border-radius: 2px; }
 .bar.mid i { background: var(--amber); }
 .bar.low i { background: var(--crit); }
+.bar.split i { background: var(--mid); }
+.bar.split i.in { background: var(--accent); }
 
 .grid { display: grid; grid-template-columns: repeat(auto-fill, 9px); gap: 2px; }
 .grid span { width: 9px; height: 9px; border-radius: 1px; background: var(--open); }
@@ -114,7 +116,7 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
   </div>
 
   <section class="panel" id="row2" hidden>
-    <div class="head"><h2>Functions pinned, layer by layer</h2><p class="note">Function count in <code>contracts.json</code> at the commit that closed each layer. Dashed spans cover layers that landed together in one commit. Hover a point for its commit.</p></div>
+    <div class="head"><h2>Functions typed by hand, layer by layer</h2><p class="note">Function count in <code>contracts.json</code> at the commit that closed each layer. Dashed spans cover layers that landed together in one commit. Hover a point for its commit.</p></div>
     <div class="chart" id="chart"></div>
     <p class="note" id="pace"></p>
   </section>
@@ -145,7 +147,8 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
   var tone = function (p) { return p >= 90 ? '' : p >= 10 ? 'mid' : 'low'; };
   var pct = function (a, b) { return b ? 100 * a / b : null; };
   var cap = function (s) { return s.replace(/^[a-z]/, function (ch) { return ch.toUpperCase(); }); };
-  var round = function (p) { return p >= 10 ? p.toFixed(1).replace(/\.0$/, '') : p.toFixed(2); };
+  // A value just short of 100 is cut, not rounded, so it never reads as complete.
+  var round = function (p) { return p >= 99.95 && p < 100 ? (Math.floor(p * 100) / 100).toFixed(2) : p >= 10 ? p.toFixed(1).replace(/\.0$/, '') : p.toFixed(2); };
 
   fetch('status.json', { cache: 'no-cache' })
     .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
@@ -157,7 +160,7 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
   function find(rows, re) { for (var i = 0; i < rows.length; i++) if (re.test(rows[i].axis)) return rows[i]; return null; }
 
   function render(s) {
-    var t = s.tracker, c = s.contracts, p = s.progress, hist = s.history;
+    var t = s.tracker, c = s.contracts, L = s.lifted, p = s.progress, hist = s.history;
     var exp = find(t, /export/i), ident = find(t, /identification/i), play = find(t, /playable/i);
     var total = exp ? exp.total : null;
     var commitUrl = s.repo ? s.repo + '/commit/' + s.head.sha : null;
@@ -169,7 +172,8 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
     // Summary tiles
     var tiles = [];
     if (exp) tiles.push(['Analysis export', round(exp.pct) + '%', '', 'All ' + fmt(exp.total) + ' functions decompiled and exported.']);
-    tiles.push(['Type recovery', 'Layer ' + c.layer, '', fmt(c.functions) + ' functions pinned with native tests' + (hist.length ? ' since ' + hist[0].date : '') + '.']);
+    tiles.push(['Type recovery', 'Layer ' + c.layer, '', fmt(c.functions) + ' functions typed by hand and pinned with native tests' + (hist.length ? ' since ' + hist[0].date : '') + '.']);
+    tiles.push(['Lifted tier', fmt(L.verified), '', 'of ' + fmt(L.functions) + ' functions lifted to C by machine and matching the original code; trials reach ' + Math.floor(pct(L.instructions_covered, L.instructions)) + '% of instructions.']);
     if (p.ctest) tiles.push(['Test gates', p.ctest.passed + '/' + p.ctest.total, p.ctest.passed < p.ctest.total ? 'low' : '', 'Native CTest suites on strict and ASan builds.']);
     if (play) tiles.push(['Playable', play.state.split(' (')[0], 'low', play.meaning.split('. ')[0].replace(/\.?$/, '.')]);
     $('verdict').innerHTML = tiles.map(function (x) {
@@ -179,32 +183,37 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
     // Completion axes: tracker rows plus two derived from contracts.json
     var axes = t.map(function (r) { return { label: r.axis, val: r.state, pct: r.pct, below: r.below, sub: r.meaning_html }; });
     var at = ident ? t.indexOf(ident) + 1 : axes.length;
-    if (total) axes.splice(at, 0, { label: 'Types pinned with tests', val: fmt(c.functions) + ' / ' + fmt(total) + ' (' + round(pct(c.functions, total)) + '%)', pct: pct(c.functions, total),
-      sub: 'Plus ' + fmt(c.globals) + ' globals and ' + fmt(c.instruction_witnesses) + ' instruction witnesses in <code>contracts.json</code>.' });
+    // One bar, two tiers: the lifted tier in the light tone, the share typed by hand solid over it.
+    if (total) axes.splice(at, 0, { label: 'Functions pinned with tests', val: fmt(L.pinned) + ' / ' + fmt(L.functions) + ' (' + round(pct(L.pinned, L.functions)) + '%)',
+      pct: pct(L.pinned, L.functions), inner: pct(L.typed, L.functions),
+      sub: 'Solid: ' + fmt(L.typed) + ' typed by hand with named layouts (<code>contracts.json</code> pins ' + fmt(c.functions) + ' functions, ' + fmt(c.globals) + ' globals and ' + fmt(c.instruction_witnesses) + ' instruction witnesses). ' +
+        'Light: ' + fmt(L.lifted_only) + ' more lifted to C by machine and matching the original code on every comparable trial, at raw offsets with no named types (<code>port/lifted</code>). ' +
+        fmt(L.fully_covered) + ' lifted functions are reached in full by their trials; the rest are pinned on the paths the trials take.' });
     if (s.vtables_inventoried) axes.splice(at + 1, 0, { label: 'Vtables pinned', val: fmt(c.vtables) + ' / ' + fmt(s.vtables_inventoried) + ' (' + round(pct(c.vtables, s.vtables_inventoried)) + '%)',
       pct: pct(c.vtables, s.vtables_inventoried), sub: 'Pinned in <code>contracts.json</code> against the vtable inventory.' });
     $('axes').innerHTML = axes.map(function (a) {
       var w = a.pct == null ? null : a.below ? a.pct / 2 : Math.min(a.pct, 100);
       return '<div class="axis"><span class="label">' + esc(a.label) + '</span><span class="val">' + esc(a.val) + '</span>' +
-        (w == null ? '' : '<div class="bar ' + tone(a.pct) + '"><i style="width:' + w + '%"></i></div>') +
+        (w == null ? '' : '<div class="bar ' + (a.inner == null ? tone(a.pct) : 'split') + '"><i style="width:' + w + '%"></i>' +
+          (a.inner == null ? '' : '<i class="in" style="width:' + a.inner + '%"></i>') + '</div>') +
         '<span class="sub">' + a.sub + '</span></div>';
     }).join('');
 
     // Scale grid: one square per 100 functions
     if (total) {
-      var cells = Math.round(total / 100), named = ident ? Math.round(ident.done / 100) : 0, pinned = Math.max(1, Math.round(c.functions / 100));
+      var cells = Math.round(total / 100), typed = Math.max(1, Math.round(L.typed / 100)), pinned = Math.floor(L.pinned / 100);
       var g = $('grid'), frag = document.createDocumentFragment();
       for (var i = 0; i < cells; i++) {
         var sq = document.createElement('span');
-        if (i < pinned) sq.className = 'p'; else if (i < named) sq.className = 'n';
+        if (i < typed) sq.className = 'p'; else if (i < pinned) sq.className = 'n';
         frag.appendChild(sq);
       }
       g.appendChild(frag);
-      g.setAttribute('aria-label', cells + ' squares of about 100 functions each: ' + pinned + ' pinned with tests, ' + Math.max(0, named - pinned) + ' more named');
-      $('grid-note').textContent = 'Each square is about 100 of the ' + fmt(total) + ' functions. The two coloured sets are tracked separately and drawn nested only to show their size.';
-      $('legend').innerHTML = '<span><b style="background:var(--accent)"></b>Pinned with tests · ' + fmt(c.functions) + '</span>' +
-        (ident ? '<span><b style="background:var(--mid)"></b>Named · ' + fmt(ident.done) + '</span>' : '') +
-        '<span><b style="background:var(--open)"></b>Decompiled only</span>';
+      g.setAttribute('aria-label', cells + ' squares of about 100 functions each: ' + typed + ' typed by hand, ' + Math.max(0, pinned - typed) + ' more lifted by machine and tested');
+      $('grid-note').textContent = 'Each square is about 100 of the ' + fmt(total) + ' functions. The two tiers are tracked separately and drawn side by side only to show their size.';
+      $('legend').innerHTML = '<span><b style="background:var(--accent)"></b>Typed by hand, pinned with tests · ' + fmt(L.typed) + '</span>' +
+        '<span><b style="background:var(--mid)"></b>Lifted by machine, differential-tested · ' + fmt(L.lifted_only) + '</span>' +
+        '<span><b style="background:var(--open)"></b>Neither · ' + fmt(L.functions - L.pinned) + '</span>';
     }
 
     if (hist.length > 1) drawChart(hist);
@@ -226,7 +235,7 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
       return '<article class="card"><h3>' + esc(o.label) + '</h3><p>' + cap(o.html) + '</p></article>';
     }).join('');
 
-    $('foot').innerHTML = '<span>Rebuilt on every push to main from the README status table and open-work list, <code>progress.md</code>, <code>contracts.json</code> and its Git history, and <code>docs/x64_next_milestone_candidates.md</code>.</span>' +
+    $('foot').innerHTML = '<span>Rebuilt on every push to main from the README status table and open-work list, <code>progress.md</code>, <code>contracts.json</code> and its Git history, the lifted-tier ledger in <code>port/lifted</code>, and <code>docs/x64_next_milestone_candidates.md</code>.</span>' +
       '<span>Latest commit: ' + esc(s.head.subject) + '</span>' +
       (s.repo ? '<span><a href="' + esc(s.repo) + '">Repository</a></span>' : '');
 

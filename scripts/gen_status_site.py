@@ -7,6 +7,7 @@ Inputs (all tracked in Git, so the page needs no private exports):
 - progress.md: the x64 port milestones and the latest verification counts;
 - port/recovered_types/contracts.json: current pinned counts, plus its Git
   history for the per-layer growth curve;
+- port/lifted/: the lifted tier's manifest and ledger (docs/lifted_tier.md);
 - docs/x64_next_milestone_candidates.md: the next milestone and its status.
 
 Outputs in --out: index.html (copied from site/), status.json, and
@@ -24,6 +25,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACTS = "port/recovered_types/contracts.json"
+LIFTED = "port/lifted"
 NEXT_MILESTONE = "docs/x64_next_milestone_candidates.md"
 LAYER_KEY = re.compile(r"rea_layer(\d+)_evidence$")
 COUNTED = ("functions", "globals", "vtables", "instruction_witnesses")
@@ -133,6 +135,35 @@ def contract_counts(data: dict) -> dict:
     return {"layer": max(layers, default=1), **{k: len(data.get(k, [])) for k in COUNTED}}
 
 
+def lifted_counts(contracts: dict) -> dict:
+    """Lifted-tier totals from the committed ledger, and its union with the handwritten tier.
+
+    The two tiers stay separate numbers: "typed" counts handwritten functions
+    that are inventory rows, "lifted_only" the verified lifted functions that
+    are not handwritten, and "pinned" their sum.
+    """
+    base = ROOT / LIFTED
+    manifest = json.loads((base / "manifest.json").read_text(encoding="ascii"))
+    status = {}
+    for name in sorted(manifest["ledger"]):
+        for line in (base / name).read_text(encoding="ascii").splitlines()[1:]:
+            fields = line.split("\t", 4)
+            status[fields[0]] = fields[3]
+    typed = {f["address"] for f in contracts.get("functions", [])} & status.keys()
+    verified = {address for address, state in status.items() if state == "verified"}
+    return {
+        "functions": len(status),
+        "verified": len(verified),
+        "typed": len(typed),
+        "lifted_only": len(verified - typed),
+        "pinned": len(verified | typed),
+        "status_counts": manifest["status_counts"],
+        "instructions": manifest["instructions"]["total"],
+        "instructions_covered": manifest["instructions"]["covered_in_verified"],
+        "fully_covered": manifest["instructions"]["verified_functions_fully_covered"],
+    }
+
+
 def contract_history() -> list[dict]:
     by_layer: dict[int, dict] = {}
     log = git("log", "--reverse", "--format=%H%x09%cs%x09%s", "--", CONTRACTS)
@@ -156,6 +187,7 @@ def build_status() -> dict:
         "head": {"commit": sha[:7], "sha": sha, "date": date, "subject": subject},
         "tracker": tracker,
         "contracts": contract_counts(contracts),
+        "lifted": lifted_counts(contracts),
         "vtables_inventoried": num(vtables.group(1)) if vtables else None,
         "history": contract_history(),
         "open_work": parse_open_work(readme),
@@ -166,20 +198,23 @@ def build_status() -> dict:
 
 THEMES = {
     "light": {"bg": "#ffffff", "border": "#d0d7de", "ink": "#1f2328", "muted": "#59636e",
-              "track": "#e6ebe8", "good": "#1d7663", "mid": "#a86d12", "low": "#b2443a"},
+              "track": "#e6ebe8", "good": "#1d7663", "mid": "#a86d12", "low": "#b2443a", "lifted": "#8fc6b6"},
     "dark": {"bg": "#0d1117", "border": "#30363d", "ink": "#e6edf3", "muted": "#9198a1",
-             "track": "#21292e", "good": "#4fb89b", "mid": "#e2a64a", "low": "#e57c70"},
+             "track": "#21292e", "good": "#4fb89b", "mid": "#e2a64a", "low": "#e57c70", "lifted": "#2c6657"},
 }
 
 
-def card_rows(status: dict) -> list[tuple[str, str, float]]:
-    rows = [(r["axis"], r["state"].split(" (")[0] if r["done"] else r["state"], r["pct"])
+def card_rows(status: dict) -> list[tuple[str, str, float, float | None]]:
+    """(label, value, percent, percent typed by hand or None) per bar of the card.
+
+    The pinned-functions bar is the only one with two parts: the lifted tier
+    in a lighter tone and, over it, the share typed by hand.
+    """
+    rows = [(r["axis"], r["state"].split(" (")[0] if r["done"] else r["state"], r["pct"], None)
             for r in status["tracker"] if r["pct"] is not None]
-    export = next((r for r in status["tracker"] if r["total"]), None)
-    if export:
-        pinned = status["contracts"]["functions"]
-        rows.insert(2, ("Types pinned with tests", f"{pinned:,} / {export['total']:,}",
-                        100 * pinned / export["total"]))
+    lifted = status["lifted"]
+    rows.insert(2, ("Functions pinned with tests", f"{lifted['pinned']:,} / {lifted['functions']:,}",
+                    100 * lifted["pinned"] / lifted["functions"], 100 * lifted["typed"] / lifted["functions"]))
     return rows
 
 
@@ -193,7 +228,8 @@ def render_card(status: dict, theme: str) -> str:
     ct = status["progress"]["ctest"]
     sub = " · ".join(filter(None, [
         f"Layer {status['contracts']['layer']}",
-        f"{status['contracts']['functions']:,} functions pinned",
+        f"{status['contracts']['functions']:,} functions typed by hand",
+        f"{status['lifted']['lifted_only']:,} lifted",
         f"{ct['passed']}/{ct['total']} CTest" if ct else None,
         f"{status['head']['date']} · {status['head']['commit']}",
     ]))
@@ -208,9 +244,9 @@ def render_card(status: dict, theme: str) -> str:
         f'{html.escape(sub)}</text>',
     ]
     span = width - 48
-    for i, (label, value, pct) in enumerate(rows):
+    for i, (label, value, pct, typed) in enumerate(rows):
         y = top + i * step
-        fill = c["good"] if pct >= 90 else c["mid"] if pct >= 10 else c["low"]
+        fill = c["lifted"] if typed is not None else c["good"] if pct >= 90 else c["mid"] if pct >= 10 else c["low"]
         bar = max(3.0, span * min(pct, 100) / 100)
         parts += [
             f'<text x="24" y="{y + 10}" fill="{c["ink"]}" font-family="{sans}" font-size="13" '
@@ -220,6 +256,9 @@ def render_card(status: dict, theme: str) -> str:
             f'<rect x="24" y="{y + 18}" width="{span}" height="7" rx="2" fill="{c["track"]}"/>',
             f'<rect x="24" y="{y + 18}" width="{bar:.1f}" height="7" rx="2" fill="{fill}"/>',
         ]
+        if typed is not None:
+            parts.append(f'<rect x="24" y="{y + 18}" width="{max(3.0, span * typed / 100):.1f}" height="7" rx="2" '
+                         f'fill="{c["good"]}"/>')
     parts.append("</svg>\n")
     return "\n".join(parts)
 
