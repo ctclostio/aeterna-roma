@@ -12,7 +12,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
-import re
+import sys
 import unittest
 from pathlib import Path
 
@@ -23,6 +23,7 @@ COLUMNS = ["address", "bytes_sha256", "lift_sha256", "status", "mode", "trials",
            "insn_covered", "note"]
 STATUSES = {"verified", "mismatch", "unsupported", "uncomparable", "untested"}
 MIN_COMPARABLE = 8
+INPUT_COLUMNS = ("address", "body_ranges", "sha256", "callee_pop_bytes", "return_type")
 
 
 def read_tsv(path: Path) -> list[dict]:
@@ -81,26 +82,23 @@ class LedgerTests(unittest.TestCase):
 
     def test_ledger_was_made_by_these_sources(self) -> None:
         for name, digest in self.manifest["tool_sources"].items():
+            if name.endswith(".tsv"):
+                # Contract tables are pinned over the columns the tier reads; the
+                # others change with every handwritten layer (batch_verify.py).
+                h = hashlib.sha256()
+                for row in read_tsv(ROOT / name):
+                    h.update(("\t".join(row[c] for c in INPUT_COLUMNS) + "\n").encode())
+                self.assertEqual(h.hexdigest(), digest, name)
+                continue
             data = (ROOT / name).read_bytes().replace(b"\r\n", b"\n")
             self.assertEqual(hashlib.sha256(data).hexdigest(), digest, name)
         tracked = {p.relative_to(ROOT).as_posix() for p in (ROOT / "scripts" / "lift" / "ops").glob("*.py")}
         self.assertLessEqual(tracked, self.manifest["tool_sources"].keys())
 
     def test_readme_row_states_the_manifest(self) -> None:
-        readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        row = re.search(r"^\| Lifted C differential tests \| ([\d,]+) / ([\d,]+) instructions \(([\d.]+)%\) \| (.+)$",
-                        readme, re.M)
-        self.assertIsNotNone(row)
-        number = lambda text: int(text.replace(",", ""))
-        instructions, counts = self.manifest["instructions"], self.manifest["status_counts"]
-        self.assertEqual((number(row.group(1)), number(row.group(2))),
-                         (instructions["covered_in_verified"], instructions["total"]))
-        self.assertEqual(row.group(3), f"{100 * instructions['covered_in_verified'] / instructions['total']:.1f}")
-        meaning = row.group(4)
-        self.assertIn(f"{counts['verified']:,} of {self.manifest['functions']:,} functions", meaning)
-        self.assertIn(f"{self.manifest['verified_trials']['comparable']:,} trials", meaning)
-        self.assertIn(f"{instructions['verified_functions_fully_covered']:,} functions are reached in full", meaning)
-        self.assertIn(f"{counts['mismatch']} mismatches", meaning)
+        sys.path.insert(0, str(ROOT / "scripts" / "lift"))
+        import readme_row
+        self.assertIn(readme_row.row(self.manifest), (ROOT / "README.md").read_text(encoding="utf-8").splitlines())
 
 
 if __name__ == "__main__":

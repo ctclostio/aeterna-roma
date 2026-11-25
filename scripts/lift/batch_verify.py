@@ -27,6 +27,7 @@ mismatch stands.
 from __future__ import annotations
 
 import collections
+import csv
 import hashlib
 import json
 import subprocess
@@ -79,6 +80,9 @@ TOOL_INPUTS = (
     "work/binary_contracts/function_contracts_part1.tsv",
     "work/binary_contracts/function_contracts_part2.tsv",
 )
+# The columns of the contract tables this tier reads (image.load_functions). The
+# other columns change with every handwritten layer and decide nothing here.
+TOOL_INPUT_COLUMNS = ("address", "body_ranges", "sha256", "callee_pop_bytes", "return_type")
 
 
 @dataclass(frozen=True)
@@ -94,12 +98,23 @@ def _file_digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
+def _table_digest(path: Path) -> str:
+    """sha256 over TOOL_INPUT_COLUMNS of a contract table, one tab-joined line per row."""
+    h = hashlib.sha256()
+    with open(path, newline="", encoding="utf-8") as fh:
+        for row in csv.DictReader(fh, delimiter="\t"):
+            h.update(("\t".join(row[c] for c in TOOL_INPUT_COLUMNS) + "\n").encode())
+    return h.hexdigest()
+
+
 def source_hashes() -> dict[str, str]:
-    """sha256 of every tool source and input table, by repository path."""
+    """sha256 of every tool source and, over the columns read, of every input table, by repository path."""
     out = {}
-    for pattern in TOOL_SOURCES + TOOL_INPUTS:
+    for pattern in TOOL_SOURCES:
         for path in sorted(ROOT.glob(pattern)):
             out[path.relative_to(ROOT).as_posix()] = _file_digest(path)
+    for name in TOOL_INPUTS:
+        out[name] = _table_digest(ROOT / name)
     return out
 
 

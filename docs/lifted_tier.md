@@ -405,8 +405,10 @@ functions most of whose trials are excluded, for example because they fault at
 an address where the reference child has memory of its own.
 
 A batch lives in `generated/lifted/batches/<key>/`. The key hashes the sources
-of both sides, the lifter and `batch_verify.py`, the contract tables, the
-mapped image, the trial parameters and the batch's function list; a finished
+of both sides, the lifter and `batch_verify.py`, the columns of the contract
+tables this tier reads (`address`, `body_ranges`, `sha256`, `callee_pop_bytes`,
+`return_type`; the others change with every handwritten layer), the mapped
+image, the trial parameters and the batch's function list; a finished
 batch is skipped until one of them changes. `driver.py clean` removes the
 directories of other tool versions. Where two results cover a function, the
 second round's replaces the first round's and a newer one an older one, except

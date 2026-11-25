@@ -75,10 +75,19 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 2029)
-        self.assertEqual(result["globals"], 1130)
-        self.assertEqual(result["vtables"], 85)
-        self.assertEqual(result["instruction_witnesses"], 1599)
+        self.assertEqual(result["functions"], 2159)
+        self.assertEqual(result["globals"], 1192)
+        self.assertEqual(result["vtables"], 90)
+        self.assertEqual(result["instruction_witnesses"], 1707)
+        # the ledger header names the latest layer in the registry and carries the same counts
+        ledger = json.loads((Path(__file__).resolve().parents[1] / "port" / "recovered_types"
+                             / "verification.json").read_text(encoding="utf-8"))
+        latest = max(int(key[len("rea_layer"):-len("_evidence")]) for key in self.registry
+                     if key.startswith("rea_layer") and key.endswith("_evidence"))
+        counted = ("functions", "globals", "vtables", "instruction_witnesses")
+        self.assertEqual(ledger["current_layer"], f"layer{latest}")
+        self.assertEqual({key: ledger["original_image_contracts"][key] for key in counted},
+                         {key: result[key] for key in counted})
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -4436,7 +4445,7 @@ class TypeContractProvenanceTests(unittest.TestCase):
         fns = {f["address"]: f for f in self.registry["functions"]}
         globs = {g["address"]: g for g in self.registry["globals"]}
         value = lambda address: bytes.fromhex(globs[address]["initial_hex_le"])
-        layer = self.registry["functions"][-57:]
+        layer = self.registry["functions"][1972:2029]
         self.assertEqual((layer[0]["address"], layer[-1]["address"]), ("10f10330", "116c7fd5"))
         self.assertEqual({f["calling_convention"] for f in layer if f["address"] != "116a886e"}, {"cdecl"})
         self.assertEqual({f["receiver_register"] for f in layer}, {"none"})
@@ -4533,6 +4542,632 @@ class TypeContractProvenanceTests(unittest.TestCase):
             self.assertIn(text, layouts)
         for stale in ("rome2_curl_msg_32", "rome2_curl_sock_entry_32", "rome2_curl_multi_32 "):
             self.assertNotIn(stale, layouts)
+
+    def test_layer84_facefx_sdk_accessors_leaf_opens_p12_contracts(self):
+        ev = self.registry["rea_layer84_evidence"]
+        layer83 = self.registry["rea_layer83_evidence"]
+        self.assertEqual(ev["snapshot_mode"], "fresh_partition12_batched")
+        self.assertNotIn("partition12_sealed", ev)
+        self.assertEqual((ev["closed_evidence_records"], ev["new_evidence_records"], ev["retained_operation_envelopes"]), (64, 64, 64))
+        self.assertEqual(len(ev["new_records"]), 64)
+        self.assertEqual({r["operation"] for r in ev["new_records"]}, {"analyze_function"})
+        self.assertEqual(len({r["evidence_id"] for r in ev["new_records"]}), 64)
+        # the session ran on into Layer 85 and was closed there
+        self.assertEqual(ev["closed_snapshot_local_path"], "out/facefx-layer85-20261125/session.rea.json")
+        self.assertEqual(ev["closed_snapshot_sha256"], "1956b12bff85dbe00dfab7d1dcb2933dfba499d09aa4f0a2921b4175d8a1a3c7")
+        self.assertEqual(ev["validated_bundle_sha256"], "d584b90e32e988cdf1c78f4ebabc260ac7f13cbab4cf6fc92df393f66ef6e312")
+        self.assertEqual(ev["cumulative_validated_bundle_sha256"], ev["validated_bundle_sha256"])
+        self.assertEqual(ev["partition11_validated_bundle_sha256"], layer83["cumulative_validated_bundle_sha256"])
+        self.assertEqual(ev["partition10_validated_bundle_sha256"], layer83["partition10_validated_bundle_sha256"])
+        partition_records = [ev[f"partition{n}_validated_bundle_records"] for n in range(1, 12)]
+        self.assertEqual((partition_records[-1], sum(partition_records)), (120, 3034))
+        self.assertEqual((ev["prior_partitions_validated_records"], ev["cumulative_all_partitions_records"]), (3034, 3098))
+        self.assertEqual((ev["non_proc_slots"], ev["resource_constrained_slots"]), ([], []))
+        self.assertEqual(ev["closure_audit"]["recovered_functions"], 2093)
+        self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
+        self.assertEqual([(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]], [("11695ee2", "11695e3c")])
+
+        base, sections = contracts.parse_pe32(self.image)
+        fns = {f["address"]: f for f in self.registry["functions"]}
+        globs = {g["address"]: g for g in self.registry["globals"]}
+        value = lambda address: bytes.fromhex(globs[address]["initial_hex_le"])
+        code = lambda address: contracts.image_bytes(self.image, base, sections, int(address, 16), fns[address]["bytes"])[0]
+        layer = self.registry["functions"][2029:2093]
+        addresses = [f["address"] for f in layer]
+        self.assertEqual((addresses[0], addresses[-1], addresses), ("100e80c0", "10ed9a80", sorted(addresses)))
+        self.assertEqual(sum(f["bytes"] for f in layer), 1956)
+
+        # ABI: six cdecl statics and free functions; every other body is thiscall and pops its own arguments
+        cdecl = {"10ed65b0": 4, "10ed6680": 0, "10ed8360": 0, "10ed8390": 0, "10ed83c0": 8, "10ed9a80": 4}
+        thiscall_stack = {"10abed80": 4, "10be8b50": 4, "10ed5700": 4, "10ed59e0": 4, "10ed64a0": 4, "10ed7380": 4,
+                          "10ed7390": 4, "10ed75c0": 4, "10ed7600": 4, "10ed76c0": 4, "10ed7850": 4, "10ed78d0": 4,
+                          "10ed86d0": 4, "10ed8f50": 4, "10ed8fa0": 8, "10ed99c0": 8}
+        returns = {"10ed64a0": 3, "10ed7390": 3, "10ed7790": 2, "10ed77f0": 2, "10ed78d0": 2, "10ed7bf0": 2,
+                   "10ed86d0": 2, "10ed8f50": 2, "10ed9a80": 4}
+        for f in layer:
+            address = f["address"]
+            shape = (f["calling_convention"], f["receiver_register"], f["stack_argument_bytes"], f["callee_pop_bytes"])
+            if address in cdecl:
+                self.assertEqual(shape, ("cdecl", "none", cdecl[address], 0), address)
+            else:
+                stack = thiscall_stack.get(address, 0)
+                self.assertEqual(shape, ("thiscall", "ECX", stack, stack), address)
+            self.assertNotIn("tail_exit", f)
+            self.assertEqual(len(f["return_instruction_addresses"]), returns.get(address, 1), address)
+            ret = code(address)[-3:] if shape[3] else code(address)[-1:]
+            self.assertEqual(ret, b"\xc2" + struct.pack("<H", shape[3]) if shape[3] else b"\xc3", address)
+
+        # one-instruction accessors: the whole body is opcode, ModRM [ECX + offset] and RET, and the
+        # offset is the one the layout header asserts
+        layouts = (Path(__file__).resolve().parents[1] / "port" / "recovered_types" / "guest32_layouts.h").read_text(encoding="utf-8")
+        operand = lambda offset: bytes([0x41, offset]) if offset < 0x80 else b"\x81" + struct.pack("<I", offset)
+        anim_set, anim, actor = "rome2_fx_anim_set_prefix_32", "rome2_fx_anim_prefix_32", "rome2_fx_actor_prefix_32"
+        instance, manager = "rome2_fx_actor_instance_prefix_32", "rome2_fx_event_manager_prefix_32"
+        accessors = (
+            # LEA EAX, [ECX + offset]
+            (0x8D, "10170450", 0x0C, anim_set, "owning_actor_name"), (0x8D, "1018aba0", 0x10, anim_set, "anim_group"),
+            (0x8D, "1018aba0", 0x10, instance, "channel_bank"), (0x8D, "101a9b80", 0x30, anim_set, "references"),
+            (0x8D, "105e13a0", 0x34, anim, "event_take"), (0x8D, "10ed7830", 0x68, anim, "event_template"),
+            (0x8D, "10298bc0", 0x84, anim, "phon_word_list"), (0x8D, "101f8940", 0xB4, anim, "audio_asset_path"),
+            (0x8D, "10a34830", 0xD0, anim, "audio_asset_name"), (0x8D, "102e3420", 0x2C, actor, "decompiled_face_graph"),
+            (0x8D, "104447e0", 0x4C, actor, "compiled_face_graph"), (0x8D, "10ed7880", 0x60F0, actor, "phoneme_map"),
+            (0x8D, "10ed77e0", 0x610C, actor, "editor_only_data"),
+            (0x8D, "10298bd0", 0xAC, instance, "weighted_bone_transforms"),
+            (0x8D, "10ed7370", 0x110, instance, "accumulated_base_channel_track_values"),
+            # MOV EAX, [ECX + offset]
+            (0x8B, "10a2d1e0", 0xB0, anim, "editor_only_data_va"), (0x8B, "10371c70", 0xEC, anim, "audio_asset_index"),
+            (0x8B, "10a281c0", 0xF0, anim, "audio_asset_pointer_va"), (0x8B, "105421e0", 0xC4, instance, "client_event_count"),
+            (0x8B, "1085b040", 0xD0, instance, "max_client_event_count"),
+            (0x8B, "10a2a300", 0x108, instance, "curve_state_pool_length"),
+            # MOV AL, [ECX + offset]
+            (0x8A, "1054d080", 0x08, anim_set, "is_published"), (0x8A, "1054d080", 0x08, actor, "should_client_relink"),
+            (0x8A, "1054d6a0", 0x09, actor, "is_open_in_studio"), (0x8A, "105d0f20", 0x0A, actor, "is_published"),
+            (0x8A, "105d0bb0", 0x0C, instance, "is_no_work_frame"), (0x8A, "106364c0", 0x0D, instance, "is_open_in_studio"),
+            # FLD dword [ECX + offset]
+            (0xD9, "10228780", 0x24, anim, "real_start_time"), (0xD9, "10a9a5c0", 0x28, anim, "real_end_time"),
+            (0xD9, "103bf2c0", 0x2C, anim, "curves_start_time"), (0xD9, "101db470", 0x30, anim, "curves_end_time"),
+            (0xD9, "10ed7840", 0xF4, anim, "frame_rate"), (0xD9, "101b0ee0", 0x04, manager, "pause_time"),
+        )
+        for opcode, address, offset, record, field in accessors:
+            self.assertEqual(code(address), bytes([opcode]) + operand(offset) + b"\xc3", address)
+            self.assertIn(f"ROME2_LAYOUT_ASSERT({record}, {field}, 0x{offset:02x});", layouts)
+        # nested fields: the group name inside the set's group, and the reference list's count
+        self.assertEqual((code("100e80c0"), code("100e8110")), (b"\x8d\x41\x14\xc3", b"\x8b\x41\x34\xc3"))
+        self.assertIn("ROME2_LAYOUT_ASSERT(rome2_fx_anim_group_prefix_32, name, 0x04);", layouts)
+        self.assertIn("ROME2_LAYOUT_ASSERT(rome2_fx_list_32, count, 0x04);", layouts)
+        self.assertEqual(code("105699b0"), b"\x8a\x01\xc3")  # IsPaused: MOV AL, [ECX]
+        self.assertEqual(code("10ed7770"), b"\xd9\x41\x2c\xd8\x61\x30\xc3")  # FLD start; FSUB end
+        self.assertEqual(code("10ed7c10"), b"\x83\x39\xff\x0f\x95\xc0\xc3")  # CMP [ECX], -1; SETNZ AL
+        self.assertEqual(code("10abed80"), b"\x8b\x44\x24\x04\x89\x81\xf0\x00\x00\x00\xc2\x04\x00")
+        for text in ('_Static_assert(sizeof(rome2_fx_list_node_32) == 0x0c, "fx list node 32 size");',
+                     '_Static_assert(sizeof(rome2_fx_anim_group_prefix_32) == 0x20, "fx anim group prefix 32 size");',
+                     '_Static_assert(sizeof(rome2_fx_actor_bone_record_32) == 0x40, "fx actor bone record 32 size");',
+                     '_Static_assert(sizeof(rome2_fx_event_prefix_32) == 0xac, "fx event prefix 32 size");',
+                     '_Static_assert(sizeof(rome2_fx_event_manager_prefix_32) == 0x48, "fx event manager prefix 32 size");',
+                     '_Static_assert(sizeof(rome2_fx_functor_32) == 0x04, "fx functor 32 size");',
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, default_anim_group, 0x60b4);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, anim_groups_va, 0x60d4);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, anim_group_count, 0x60dc);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, mounted_anim_sets, 0x60e0);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, bone_records_va, 0x14);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, bone_count, 0x1c);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, actor_va, 0x08);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, node_final_values_va, 0x38);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_event_prefix_32, time_88, 0x88);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_event_manager_prefix_32, events_va, 0x10);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_event_manager_prefix_32, event_count, 0x18);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_event_manager_prefix_32, active_flags_va, 0x1c);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_event_manager_prefix_32, active_flag_count, 0x24);"):
+            self.assertIn(text, layouts)
+        for stale in ("rome2_fx_play_result_32", "rome2_fx_event_manager_32 ", "unique_id_seed", "client_event_vtp"):
+            self.assertNotIn(stale, layouts)
+
+        # the constructor writes 3 bytes and 15 dwords: 0xcf000000 at +4, zeroes elsewhere, byte 1 at +0x34
+        ctor = code("10ed7de0")
+        self.assertEqual(ctor[:5] + ctor[-5:], b"\xc6\x01\x00\x8b\xc1" + b"\xc6\x41\x44\x00\xc3")
+        stores = list(range(5, 5 + 12 * 7, 7)) + list(range(93, 93 + 3 * 7, 7))
+        self.assertEqual({ctor[i:i + 2] for i in stores}, {b"\xc7\x41"})
+        dwords = [struct.unpack_from("<BI", ctor, i + 2) for i in stores]
+        self.assertEqual(dwords, [(0x04, 0xCF000000)] + [(o, 0) for o in range(0x08, 0x34, 4)] + [(0x38, 0), (0x3C, 0), (0x40, 0)])
+        self.assertEqual(ctor[89:93], b"\xc6\x41\x34\x01")
+
+        # error-string table: 16 {code, text} rows, codes 0..14 then -1, each restated by the model
+        source = (Path(__file__).resolve().parents[1] / "port" / "recovered_types" / "facefx_sdk_accessors_leaf_ops.c").read_text(encoding="utf-8")
+        header = (Path(__file__).resolve().parents[1] / "port" / "recovered_types" / "facefx_sdk_accessors_leaf_ops.h").read_text(encoding="utf-8")
+        table = value("1183a958")
+        self.assertEqual(len(table), 128)
+        rows = [struct.unpack_from("<iI", table, i) for i in range(0, 128, 8)]
+        self.assertEqual([c for c, _ in rows], list(range(15)) + [-1])
+        self.assertEqual([t for _, t in rows[:15]], sorted(t for _, t in rows[:15]))
+        for row_code, text_va in rows:
+            text = value(f"{text_va:08x}")
+            self.assertEqual(text[-1:], b"\0")
+            self.assertIn(f'{{{row_code}, 0x{text_va:08x}u, "{text[:-1].decode()}"}},', source)
+        self.assertEqual((value("1183a9d8"), value("1178701c")), (b"Success\0", b"UNKNOWN\0"))
+        self.assertTrue(value("1183ab70").startswith(b"The unmount operation was refused because an actor instance"))
+        self.assertEqual(value("1183acb4"), b"Unknown FX_ERROR code: \0")
+        self.assertIn('"Unknown FX_ERROR code: "', source)
+        self.assertIn("ROME2_FX_ERROR_STRING_ROWS = 16,", header)
+        # the event-time sentinel and the four .data zero-fill pointers
+        self.assertEqual(struct.unpack("<f", value("1183b014"))[0], -2147483648.0)
+        self.assertEqual(value("1183b014"), struct.pack("<I", 0xCF000000))
+        self.assertIn("ROME2_FX_INVALID_TIME_BITS 0xcf000000u", header)
+        for address in ("119f3890", "11fadb6c", "11fadb70", "11fadb7c"):
+            self.assertEqual((globs[address]["storage"], globs[address]["width"]), ("zero_fill", 4))
+        self.assertEqual(len(self.registry["globals"][1130:1153]), 23)
+        self.assertEqual({g["storage"] for g in self.registry["globals"][1137:1153]}, {"file"})
+
+        # FxResourceManager vtable: one slot, a destructor that is not part of the recovered set
+        vtables = {v["address"]: v["first_slot_code_identity"] for v in self.registry["vtables"]}
+        self.assertEqual(vtables["1183a798"], "10ed61e0")
+        self.assertNotIn("10ed61e0", fns)
+        self.assertEqual(code("10ed5700")[4:10], b"\xc7\x01" + struct.pack("<I", 0x1183A798))
+        self.assertIn("ROME2_FX_VTABLE_RESOURCE_MANAGER = 0x1183a798,", header)
+
+        witnesses = {w["address"]: w["hex"] for w in self.registry["instruction_witnesses"]}
+        self.assertEqual(len(self.registry["instruction_witnesses"][1599:1624]), 25)
+        self.assertEqual(witnesses["10ed6680"], "b853080000")
+        self.assertIn("ROME2_FX_SDK_VERSION = 0x853,", header)
+        self.assertEqual(witnesses["10ed5704"], "c70198a78311")
+        self.assertEqual((witnesses["10ed64bb"], witnesses["10ed73d1"], witnesses["10ed78de"]), ("6a0c", "6a0c", "6a0c"))
+        self.assertEqual((witnesses["10ed64ff"], witnesses["10ed6551"]), ("8b0d7cdbfa11", "83c220"))
+        # table + 8 is the next row's code, table + 4 the current row's text
+        self.assertEqual((witnesses["10ed65c7"], witnesses["10ed6621"]), ("8b04f560a98311", "8b04f55ca98311"))
+        self.assertEqual((witnesses["10ed65da"], witnesses["10ed65e3"], witnesses["10ed6604"]), ("83b98400000001", "6a01", "68b4ac8311"))
+        self.assertEqual((witnesses["10ed7de5"], witnesses["10ed9a63"]), ("c74104000000cf", "c74604000000cf"))
+        self.assertEqual(witnesses["10ed7e39"], "c6413401")
+        self.assertEqual((witnesses["10ed86ff"], witnesses["10ed8f6a"]), ("69c0ac000000", "ff5030"))
+        # functor implementation slots: +0 destroy, +4 clone, +8 invoke; audio actions 1 (pause) and 2 (resume)
+        self.assertEqual((witnesses["10ed8375"], witnesses["10ed9ab3"], witnesses["10ed83e4"], witnesses["10ed8ff4"]),
+                         ("ff10", "ff5004", "ff5008", "ff5008"))
+        self.assertEqual((witnesses["10ed8fde"], witnesses["10ed9a3a"]), ("c744241001000000", "c744241002000000"))
+        self.assertIn("ROME2_FX_AUDIO_CALLBACK_ACTION_ON_PAUSE = 1,", header)
+        self.assertIn("ROME2_FX_AUDIO_CALLBACK_ACTION_ON_RESUME = 2", header)
+        self.assertEqual((witnesses["10ed99ed"], witnesses["10ed9a8b"]), ("f30f100514b08311", "6a04"))
+        # every body is named next to its model, and the folded exports are spelled out in the registry
+        for address in addresses:
+            self.assertIn(f"0x{address}", source, address)
+        self.assertIn("FxActorInstance::GetChannelBank", fns["1018aba0"]["scope"])
+        self.assertIn("FxActor::ShouldClientRelink", fns["1054d080"]["scope"])
+        self.assertIn("FxMountUnmountResult", fns["10be8b50"]["scope"])
+        self.assertIn("FxAnim::GetStartTime", fns["10228780"]["scope"])
+        self.assertIn("FxAnim::GetAnimCurveM", fns["10ed7380"]["scope"])
+
+        # DLL exports: 64 bodies carry 78 names; with this layer's registry 247 FaceFX names at 218
+        # addresses and 16 curl_ names remained
+        through_layer84 = {f["address"] for f in self.registry["functions"][:2093]}
+        rva_offset = lambda rva: next(raw + rva - start for start, _, raw, size in sections if start <= rva < start + size)
+        pe = struct.unpack_from("<I", self.image, 0x3C)[0]
+        directory = rva_offset(struct.unpack_from("<I", self.image, pe + 24 + 96)[0])
+        name_count, functions_rva, names_rva, ordinals_rva = struct.unpack_from("<4I", self.image, directory + 0x18)
+        exports = {}
+        for index in range(name_count):
+            name_at = rva_offset(struct.unpack_from("<I", self.image, rva_offset(names_rva) + index * 4)[0])
+            ordinal = struct.unpack_from("<H", self.image, rva_offset(ordinals_rva) + index * 2)[0]
+            target = base + struct.unpack_from("<I", self.image, rva_offset(functions_rva) + ordinal * 4)[0]
+            name = self.image[name_at:self.image.index(b"\0", name_at)].decode()
+            exports.setdefault(f"{target:08x}", []).append(name)
+        self.assertTrue(all(address in exports for address in addresses))
+        self.assertEqual(sum(len(exports[address]) for address in addresses), 78)
+        self.assertEqual(sum(len(exports[address]) > 1 for address in addresses), 11)
+        self.assertEqual(len(exports["10be8b50"]), 4)
+        facefx = {a: [n for n in names if "@Face@OC3Ent@@" in n] for a, names in exports.items() if a not in through_layer84}
+        self.assertEqual((sum(map(len, facefx.values())), sum(bool(names) for names in facefx.values())), (247, 218))
+        self.assertEqual(sum(n.startswith("curl_") for a, names in exports.items() if a not in through_layer84 for n in names), 16)
+
+    def test_layer84_revision1_held_functor_and_fld_fidelity(self):
+        self.assertEqual(self.registry["rea_layer84_evidence"]["model_revision"]["revision"], 1)
+        fns = {f["address"]: f for f in self.registry["functions"]}
+        base, sections = contracts.parse_pe32(self.image)
+
+        def code(address, size):
+            return contracts.image_bytes(self.image, base, sections, address, size)[0].hex()
+
+        # both Clear bodies load the functor static into ESI once, release PUSH 4 / PUSH ESI and store 0 last
+        for load, release, clear, static in ((0x10ED8361, 0x10ED8377, 0x10ED8382, "6cdbfa11"),
+                                             (0x10ED8391, 0x10ED83A7, 0x10ED83B2, "70dbfa11")):
+            self.assertEqual(code(load, 6), "8b35" + static)
+            self.assertEqual(code(release, 3), "6a0456")
+            self.assertEqual(code(clear, 10), "c705" + static + "00000000")
+        # SetAudioCallback: the same single load; the installed half swaps through ESI, the other half stores ESI
+        self.assertEqual(code(0x10ED9A81, 6), "8b356cdbfa11")
+        self.assertEqual(code(0x10ED9ADD, 4), "8b0e8906")
+        self.assertEqual(code(0x10ED9AB8, 6), "89356cdbfa11")
+        for address in ("10ed8360", "10ed9a80"):
+            self.assertIn("loads the functor pointer at 0x11fadb6c once", fns[address]["scope"])
+        # Pause and Resume: the [+0x24] count, and a NULL functor pointer skips the call
+        self.assertEqual((code(0x10ED8FAC, 3), code(0x10ED99D0, 3)), ("8b6f24", "8b6e24"))
+        self.assertEqual((code(0x10ED8FB6, 6), code(0x10ED8FC9, 4), code(0x10ED8FF7, 6)),
+                         ("8b0d6cdbfa11", "85c97430", "8b0d6cdbfa11"))
+        self.assertEqual(code(0x10ED9A1F, 10), "8b0d6cdbfa1185c9742a")
+        for address in ("10ed8fa0", "10ed99c0"):
+            self.assertIn("[+0x24] slots", fns[address]["scope"])
+            self.assertIn("is non-NULL", fns[address]["scope"])
+        # FindAnimGroup compares against the argument in memory each time
+        self.assertEqual((code(0x10ED6508, 2), code(0x10ED6547, 2), code(0x10ED656D, 2)), ("3b0e", "3b06", "3b06"))
+        # the float accessors are FLD m32; RET, and GetEndTime returns its stack copy through FLD too
+        for address, offset in ((0x101B0EE0, "04"), (0x10228780, "24"), (0x10A9A5C0, "28"),
+                                (0x103BF2C0, "2c"), (0x101DB470, "30")):
+            self.assertEqual(code(address, 4), "d941" + offset + "c3")
+        self.assertEqual(code(0x10ED7840, 7), "d981f4000000c3")
+        self.assertEqual(code(0x10ED7850, 13), "8b49388b442404d90481c20400")
+        self.assertEqual(code(0x10ED7814, 15), "f30f104128f30f110424d9042459c3")
+        root = Path(__file__).resolve().parents[1] / "port" / "recovered_types"
+        source = (root / "facefx_sdk_accessors_leaf_ops.c").read_text(encoding="utf-8")
+        header = (root / "facefx_sdk_accessors_leaf_ops.h").read_text(encoding="utf-8")
+        tests = (root / "test_facefx_sdk_accessors_leaf_ops.c").read_text(encoding="utf-8")
+        self.assertEqual(source.count("l84_fld(l84_load_f32("), 7)
+        self.assertIn("return l84_fld(end);", source)
+        self.assertIn("bits |= 0x00400000u;", source)
+        # the released and rewritten functor is the one captured before the hook runs
+        self.assertIn("ctx->operator_delete(ctx, functor_va, (uint32_t)sizeof(rome2_fx_functor_32));", source)
+        self.assertIn("target = rome2_l80_mut_ptr(ctx->fx, installed_va, (uint32_t)sizeof(rome2_fx_functor_32));", source)
+        # FxSDKGetErrorString hands back the row's text pointer (0x10ed6621)
+        self.assertEqual(code(0x10ED6621, 7), "8b04f55ca98311")
+        self.assertIn("const char *rome2_l84_fx_sdk_get_error_string(rome2_l80_fx_ctx *fx, int32_t error, uint32_t *text_va);", header)
+        self.assertIn("*text_va = l84_error_rows[index].text_va;", source)
+        globs = {g["address"]: g for g in self.registry["globals"]}
+        table = bytes.fromhex(globs["1183a958"]["initial_hex_le"])
+        for row in range(15):
+            self.assertIn(f"0x{struct.unpack_from('<I', table, row * 8 + 4)[0]:08x}u", tests)
+        self.assertEqual(struct.unpack_from("<I", table, 15 * 8 + 4)[0], 0x1178701C)
+        self.assertIn("text_va == 0x1178701cu", tests)
+
+    def test_layer85_facefx_class_group_list_frame_extends_p12_contracts(self):
+        ev = self.registry["rea_layer85_evidence"]
+        layer84 = self.registry["rea_layer84_evidence"]
+        self.assertEqual(ev["snapshot_mode"], "extending_layer84_batched_p12")
+        self.assertNotIn("partition12_sealed", ev)
+        self.assertEqual((ev["closed_evidence_records"], ev["new_evidence_records"], ev["retained_operation_envelopes"],
+                          ev["reused_layer84_evidence_records"], ev["extra_evidence_views_count"]), (130, 66, 66, 64, 0))
+        self.assertEqual(len(ev["new_records"]), 66)
+        self.assertEqual({r["operation"] for r in ev["new_records"]}, {"analyze_function"})
+        new_ids = {r["evidence_id"] for r in ev["new_records"]}
+        self.assertEqual(len(new_ids), 66)
+        self.assertFalse(new_ids & {r["evidence_id"] for r in layer84["new_records"]})
+        self.assertTrue(all(r["retained_local_path"].startswith("out/facefx-layer85-20261125/fn-") for r in ev["new_records"]))
+        # one REA session carried Layers 84 and 85 and was closed here
+        self.assertEqual((ev["closed_snapshot_local_path"], ev["closed_snapshot_sha256"]),
+                         (layer84["closed_snapshot_local_path"], layer84["closed_snapshot_sha256"]))
+        self.assertEqual(ev["validated_bundle_sha256"], "62f85de91d3f2bc3f235112d1e32b88841fb222bbdbf1094e6a0ae8d8b037bab")
+        self.assertEqual(ev["cumulative_validated_bundle_sha256"], ev["validated_bundle_sha256"])
+        self.assertEqual(ev["cumulative_validated_bundle_records"], 130)
+        for n in range(1, 12):
+            for suffix in ("local_path", "sha256", "records"):
+                key = f"partition{n}_validated_bundle_{suffix}"
+                self.assertEqual(ev[key], layer84[key], key)
+        self.assertEqual((ev["prior_partitions_validated_records"], ev["cumulative_all_partitions_records"]), (3034, 3164))
+        self.assertEqual((ev["non_proc_slots"], ev["resource_constrained_slots"]), ([], []))
+        self.assertEqual(ev["closure_audit"]["recovered_functions"], 2159)
+        self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
+        self.assertEqual([(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]], [("11695ee2", "11695e3c")])
+
+        base, sections = contracts.parse_pe32(self.image)
+        fns = {f["address"]: f for f in self.registry["functions"]}
+        globs = {g["address"]: g for g in self.registry["globals"]}
+        value = lambda address: bytes.fromhex(globs[address]["initial_hex_le"])
+        read = lambda va, size: contracts.image_bytes(self.image, base, sections, va, size)[0]
+        code = lambda address: read(int(address, 16), fns[address]["bytes"])
+        u32 = lambda va: struct.unpack("<I", read(va, 4))[0]
+        rel32 = lambda at, target: struct.pack("<i", target - (at + 5))
+        layer = self.registry["functions"][2093:2159]
+        addresses = [f["address"] for f in layer]
+        self.assertEqual((addresses[0], addresses[-1], addresses), ("1033c6a0", "10f09320", sorted(addresses)))
+        self.assertEqual(sum(f["bytes"] for f in layer), 7013)
+
+        # ABI: eleven cdecl statics; every other body is thiscall and pops its own arguments
+        cdecl = {"10ed9af0": 4, "10ed9b60": 0, "10edef40": 0, "10ee2ad0": 0, "10ee5410": 0, "10ee56f0": 0, "10ee5c50": 4,
+                 "10ee7570": 0, "10ee8c10": 0, "10eeae80": 0, "10ef3310": 0}
+        thiscall_stack = {"10eda380": 0, "10ee37e0": 0, "10ee49f0": 0, "10ee54d0": 0, "10ee9050": 0, "10ee9060": 0,
+                          "10eeaed0": 0, "10ef3260": 0, "10ee75b0": 8, "10eea950": 8}
+        tail_exits = {"10ed65a0": ("10ed65a3", "10efd5c0"), "10ed78a0": ("10ed78a3", "10efd610"),
+                      "10ed7970": ("10ed7973", "10efd630"), "10ed7980": ("10ed7986", "10ed7990"),
+                      "10ee47e0": ("10ee47e6", "10eda4c0"), "10ee47f0": ("10ee47f6", "10eda4c0"),
+                      "10ee7860": ("10ee7863", "10ede180")}
+        returns = {"10ed9af0": 4, "10eda380": 2, "10ee2ad0": 2, "10ee37e0": 2, "10ee3810": 2, "10ee39d0": 2,
+                   "10ee4840": 2, "10ee5410": 2, "10ee5450": 2, "10ee5490": 2, "10ee58c0": 2, "10ee5900": 2,
+                   "10ee5c60": 3, "10ee5cb0": 3, "10ee6050": 2, "10ee63f0": 2, "10ee7460": 2, "10ee7570": 2,
+                   "10ee8c10": 2, "10eea950": 2, "10eeae80": 2, "10ef2e80": 2, "10ef3310": 2, "10efd5c0": 2}
+        # bodies whose last instruction is a backward JMP to an earlier epilogue: JMP address and length
+        backward_jmp_end = {"10ee5760": (0x10EE5803, 2), "10ee5810": (0x10EE58B3, 2), "10ee8a70": (0x10EE8C07, 2),
+                            "10ee9b60": (0x10EE9CC0, 5), "10efd630": (0x10EFD9C8, 5)}
+        for f in layer:
+            address = f["address"]
+            start, body = int(address, 16), code(address)
+            shape = (f["calling_convention"], f["receiver_register"], f["stack_argument_bytes"], f["callee_pop_bytes"])
+            if address in cdecl:
+                self.assertEqual(shape, ("cdecl", "none", cdecl[address], 0), address)
+            else:
+                stack = thiscall_stack.get(address, 4)
+                self.assertEqual(shape, ("thiscall", "ECX", stack, stack), address)
+            ret = b"\xc2" + struct.pack("<H", shape[3]) if shape[3] else b"\xc3"
+            if address in tail_exits:
+                jmp, target = tail_exits[address]
+                self.assertEqual(f["tail_exit"], {"kind": "direct_jmp", "address": jmp, "target": target})
+                self.assertNotIn("return_instruction_addresses", f)
+                self.assertEqual(body[-5:], b"\xe9" + rel32(int(jmp, 16), int(target, 16)), address)
+                self.assertEqual(fns[target]["callee_pop_bytes"], shape[3], address)
+            elif address == "10ee54d0":
+                self.assertEqual(f["tail_exit"], {"kind": "indirect_jmp", "address": "10ee55ce", "hex": "ff6004"})
+                self.assertEqual(body[-3:], b"\xff\x60\x04")
+            else:
+                self.assertNotIn("tail_exit", f)
+                listed = f["return_instruction_addresses"]
+                self.assertEqual(len(listed), returns.get(address, 1), address)
+                for at in listed:
+                    self.assertEqual(body[int(at, 16) - start:][:len(ret)], ret, at)
+                if address in backward_jmp_end:
+                    jmp, size = backward_jmp_end[address]
+                    self.assertEqual(jmp + size, start + len(body), address)
+                    encoded = body[jmp - start:]
+                    self.assertEqual(encoded[0], 0xEB if size == 2 else 0xE9, address)
+                    displacement = struct.unpack("<b" if size == 2 else "<i", encoded[1:])[0]
+                    self.assertTrue(start <= jmp + size + displacement < jmp, address)
+                else:
+                    self.assertEqual(body[-len(ret):], ret, address)
+
+        root = Path(__file__).resolve().parents[1] / "port" / "recovered_types"
+        layouts = (root / "guest32_layouts.h").read_text(encoding="utf-8")
+        source = (root / "facefx_sdk_group_list_frame_ops.c").read_text(encoding="utf-8")
+        header = (root / "facefx_sdk_group_list_frame_ops.h").read_text(encoding="utf-8")
+        anim_set, anim, actor = "rome2_fx_anim_set_prefix_32", "rome2_fx_anim_prefix_32", "rome2_fx_actor_prefix_32"
+        instance, group = "rome2_fx_actor_instance_prefix_32", "rome2_fx_anim_group_prefix_32"
+
+        def laid_out(record, field, offset):
+            self.assertIn(f"ROME2_LAYOUT_ASSERT({record}, {field}, 0x{offset:02x});", layouts)
+
+        # ADD ECX, offset; JMP thunks: the offset is the embedded sub-object the layout header places there
+        add_ecx = lambda offset: b"\x83\xc1" + bytes([offset]) if offset < 0x80 else b"\x81\xc1" + struct.pack("<I", offset)
+        for address, offset in (("10ed65a0", 0x0C), ("10ed78a0", 0x0C), ("10ed7970", 0x0C), ("10ed7980", 0x100),
+                                ("10ee47e0", 0xD0), ("10ee47f0", 0xB4), ("10ee7860", 0x0C)):
+            self.assertEqual(code(address)[:-5], add_ecx(offset), address)
+        self.assertIn("ROME2_FX_ACTOR_BONE_TABLE_OFFSET = 0x0c", header)
+        laid_out(instance, "curve_state_pool_va", 0x100)
+        laid_out(anim, "audio_asset_name", 0xD0)
+        laid_out(anim, "audio_asset_path", 0xB4)
+        laid_out(anim_set, "owning_actor_name", 0x0C)
+        self.assertIn("bone table records at FxActor +0x14", layouts)
+
+        # byte setters: MOV AL, [ESP+4]; MOV [ECX + offset], AL; RET 4
+        for address, offset, record, field in (("10ee7850", 0x08, anim_set, "is_published"),
+                                               ("10ee7850", 0x08, actor, "should_client_relink"),
+                                               ("10eea2e0", 0x09, actor, "is_open_in_studio"),
+                                               ("10eea2f0", 0x0A, actor, "is_published"),
+                                               ("10eebbd0", 0x0D, instance, "is_open_in_studio")):
+            self.assertEqual(code(address), b"\x8a\x44\x24\x04\x88\x41" + bytes([offset]) + b"\xc2\x04\x00", address)
+            laid_out(record, field, offset)
+        self.assertEqual(code("10ee47d0"), b"\x8b\x44\x24\x04\x89\x81\xec\x00\x00\x00\xc2\x04\x00")
+        laid_out(anim, "audio_asset_index", 0xEC)
+        # SetAutomaticGarbageCollection: MOV ECX, [ECX+4]; MOV AL, [ESP+4]; MOV [ECX+0x10], AL
+        self.assertEqual(code("10edd130"), b"\x8b\x49\x04\x8a\x44\x24\x04\x88\x41\x10\xc2\x04\x00")
+        laid_out("rome2_fx_resource_manager_32", "state_va", 0x04)
+        laid_out("rome2_fx_resource_manager_state_32", "automatic_garbage_collection", 0x10)
+        # the instance list: MOV EAX, [ECX+0x60ec] and LEA EAX, [ECX+0x60e8]
+        self.assertEqual((code("10ee9050"), code("10ee9060")), (b"\x8b\x81\xec\x60\x00\x00\xc3", b"\x8d\x81\xe8\x60\x00\x00\xc3"))
+        laid_out(actor, "instances", 0x60E8)
+        laid_out("rome2_fx_list_32", "count", 0x04)
+        # the log-error flag byte: MOV AL, [flag] and MOV AL, [ESP+4]; MOV [flag], AL
+        flag = struct.pack("<I", 0x11974FA0)
+        self.assertEqual((code("10ee56f0"), code("10ee5c50")), (b"\xa0" + flag + b"\xc3", b"\x8a\x44\x24\x04\xa2" + flag + b"\xc3"))
+        self.assertEqual((value("11974fa0"), globs["11974fa0"]["storage"]), (b"\x01", "file"))
+        self.assertIn("ctx->log_error_on_animation_not_found = 1u;", source)
+        # End iterators: MOV EAX, [ESP+4]; ADD ECX, tree; MOV [EAX], ECX; MOV dword [EAX+4], 0; RET 4
+        for address, tree, field in (("10ee55e0", 0x08, "anims"), ("10ee5600", 0x14, "sub_groups")):
+            self.assertEqual(code(address), b"\x8b\x44\x24\x04\x83\xc1" + bytes([tree]) + b"\x89\x08\xc7\x40\x04\x00\x00\x00\x00\xc2\x04\x00")
+            laid_out(group, field, tree)
+        laid_out("rome2_fx_tree_iterator_32", "node_va", 0x04)
+
+        # class queries: the descriptor from vtable slot +0, then a tail JMP ahead of the NULL path's RET 4
+        self.assertEqual(code("1033c6a0"), b"\x3b\x4c\x24\x04\x0f\x94\xc0\xc2\x04\x00")
+        for address, target in (("10ed78b0", 0x1033C6A0), ("10ed7950", 0x10EF2E80)):
+            at = int(address, 16) + 10
+            self.assertEqual(code(address), b"\x8b\x01\xff\x10\x85\xc0\x74\x07\x8b\xc8\xe9" + rel32(at, target) + b"\x32\xc0\xc2\x04\x00")
+            self.assertEqual(fns[address]["return_instruction_addresses"], [f"{at + 7:08x}"])
+            self.assertEqual(fns[f"{target:08x}"]["callee_pop_bytes"], 4)
+        # the base-chain walk at +8 of FxClass
+        self.assertEqual(code("10ef2e80"), bytes.fromhex("85c9740f8b4424043bc8740c8b490885c975f532c0c20400b001c20400"))
+        self.assertIn("ROME2_LAYOUT_ASSERT(rome2_fx_class_32, base_class_va, 0x08);", layouts)
+        # RemoveAndDestroy: PUSH arg; CALL Remove; SETNZ BL; vtable slot +8 with flag 1 on a result
+        for address, remove in (("10ee5700", 0x10EE5760), ("10ee5730", 0x10EE5810)):
+            self.assertEqual(code(address), b"\x53\xff\x74\x24\x08\xe8" + rel32(int(address, 16) + 5, remove)
+                             + bytes.fromhex("85c00f95c385c074098b108bc86a01ff52088ac35bc20400"))
+
+        # static class descriptors: each body is fixed by its cached base, base initialiser, construct
+        # routine, instance size, version and name string
+        push = lambda number: bytes([0x6A, number]) if number < 0x80 else b"\x68" + struct.pack("<I", number)
+        named_object_cache, object_cache = struct.pack("<I", 0x11FADBA8), struct.pack("<I", 0x11FADBA4)
+        classes = (("10ee2ad0", named_object_cache, 0x10EF3310, 0x10ED6440, 0xF8, 10, "1183bcf4", "FxAnim"),
+                   ("10ee5410", named_object_cache, 0x10EF3310, 0x10ED6460, 0x20, 1, "1183bf9c", "FxAnimGroup"),
+                   ("10ee7570", named_object_cache, 0x10EF3310, 0x10ED6480, 0x38, 1, "1183c068", "FxAnimSet"),
+                   ("10ee8c10", named_object_cache, 0x10EF3310, 0x10ED6420, 0x6118, 5, "1183c2a4", "FxActor"),
+                   ("10eeae80", named_object_cache, 0x10EF3310, 0x100DBC00, 0x11C, 0, "1183c788", "FxActorInstance"),
+                   ("10ef3310", object_cache, 0x10EF31C0, 0x10EF3350, 0x08, 0, "1183ce40", "FxNamedObject"))
+        for address, cache, base_init, construct, size, version, name_va, name in classes:
+            at = int(address, 16)
+            head = b"\x56\x6a\x18\xe8" + rel32(at + 3, 0x10ED3F40) + b"\x8b\xf0\x83\xc4\x04\x85\xf6"
+            middle = (b"\xa1" + cache + b"\x85\xc0\x75\x0a\xe8" + rel32(at + 0x1A, base_init) + b"\xa3" + cache
+                      + b"\x68" + struct.pack("<I", construct) + push(size) + b"\x50" + push(version)
+                      + b"\x68" + struct.pack("<I", int(name_va, 16)) + b"\x8b\xce")
+            call_at = at + len(head) + 2 + len(middle)
+            tail = b"\xe8" + rel32(call_at, 0x10EF2A10) + b"\x5e\xc3\x33\xc0\x5e\xc3"
+            self.assertEqual(code(address), head + b"\x74" + bytes([len(middle) + 7]) + middle + tail, address)
+            self.assertEqual(value(name_va), name.encode() + b"\0")
+            self.assertIn(f"= 0x{construct:08x}u", header)
+            if cache == named_object_cache:
+                self.assertIn(f'l85_static_class_init(ctx, "{name}", {version}u, 0x{size:x}u, ROME2_L85_VA_', source)
+        self.assertIn('ctx->names, block_va, "FxNamedObject", 0u, ctx->names->fx_object_class_va,', source)
+        self.assertIn("(uint32_t)sizeof(rome2_fx_named_object_32), ROME2_L85_VA_FX_NAMED_OBJECT_CONSTRUCT);", source)
+        for text in ('_Static_assert(sizeof(rome2_fx_class_32) == 0x18, "fx class 32 size");',
+                     '_Static_assert(sizeof(rome2_fx_named_object_32) == 0x08, "fx named object 32 size");',
+                     '_Static_assert(sizeof(rome2_fx_anim_prefix_32) == 0xf8, "fx anim prefix 32 size");',
+                     '_Static_assert(sizeof(rome2_fx_anim_group_prefix_32) == 0x20, "fx anim group prefix 32 size");',
+                     '_Static_assert(sizeof(rome2_fx_anim_set_prefix_32) == 0x38, "fx anim set prefix 32 size");',
+                     '_Static_assert(sizeof(rome2_fx_resource_manager_state_32) == 0x14, "fx resource manager state 32 size");',
+                     '_Static_assert(sizeof(rome2_fx_avl_name_node_prefix_32) == 0x1c, "fx avl name node prefix 32 size");',
+                     '_Static_assert(sizeof(rome2_fx_anim_curve_prefix_32) == 0x28, "fx anim curve prefix 32 size");',
+                     '_Static_assert(sizeof(rome2_fx_compressed_anim_curve_prefix_32) == 0x18, "fx compressed anim curve prefix 32 size");',
+                     '_Static_assert(sizeof(rome2_fx_bone_link_32) == 0x2c, "fx bone link 32 size");',
+                     '_Static_assert(sizeof(rome2_fx_weighted_bone_transform_32) == 0x2c, "fx weighted bone transform 32 size");',
+                     '_Static_assert(sizeof(rome2_fx_cache_handle_32) == 0x0c, "fx cache handle 32 size");',
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_avl_name_node_prefix_32, value_va, 0x08);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_avl_name_node_prefix_32, parent_va, 0x10);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_avl_name_node_prefix_32, left_va, 0x14);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_avl_name_node_prefix_32, right_va, 0x18);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, frame_state_74, 0x74);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, frame_words_va, 0x78);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, frame_word_count, 0x7c);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, node_bitset_va, 0xa0);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_actor_bone_record_32, links_va, 0x34);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_actor_bone_record_32, link_count, 0x3c);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_weighted_bone_transform_32, weight, 0x28);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_event_prefix_32, bound_50, 0x50);",
+                     "ROME2_LAYOUT_ASSERT(rome2_fx_event_prefix_32, bound_54, 0x54);"):
+            self.assertIn(text, layouts)
+
+        # EndFrame: memset([+0x78], 0, [+0x7c] << 2); [+0x74] = 0; reached through vtable slot +0x14 only
+        self.assertEqual(code("10eeaed0"), b"\x56\x8b\xf1\x8b\x46\x7c\xc1\xe0\x02\x50\x6a\x00\xff\x76\x78\xe8"
+                         + rel32(0x10EEAEDF, 0x116BE510) + b"\x83\xc4\x0c\xc7\x46\x74\x00\x00\x00\x00\x5e\xc3")
+        self.assertEqual((u32(0x1183C770 + 0x14), value("1183c784")), (0x10EEAED0, struct.pack("<I", 0x10EEAED0)))
+        # InitializeFrame: IMUL EAX, [ECX+0x10], 0x2c; memcpy(instance[+0xac], [ECX+0x14], EAX)
+        self.assertEqual(code("10efd610"), b"\x6b\x41\x10\x2c\x50\x8b\x44\x24\x08\xff\x71\x14\xff\xb0\xac\x00\x00\x00\xe8"
+                         + rel32(0x10EFD622, 0x116BD8D0) + b"\x83\xc4\x0c\xc2\x04\x00")
+        laid_out(instance, "weighted_bone_transforms", 0xAC)
+        # the FxNamedObject constructor: FxObject bind, vtable, FxName copy from NullName at +4
+        self.assertEqual(code("10ef3260"), b"\x56\x8b\xf1\xe8" + rel32(0x10EF3263, 0x10EF3160) + b"\x68" + struct.pack("<I", 0x11FADB7C)
+                         + b"\x8d\x4e\x04\xc7\x06" + struct.pack("<I", 0x1183CE30) + b"\xe8" + rel32(0x10EF3276, 0x10EDDE70)
+                         + b"\x8b\xc6\x5e\xc3")
+
+        # vtables: the two tree-bearing classes, FxNamedObject and FxActorInstance
+        vtables = {v["address"]: v["first_slot_code_identity"] for v in self.registry["vtables"]}
+        self.assertEqual([v["address"] for v in self.registry["vtables"][86:90]], ["1183bf74", "1183bf8c", "1183c770", "1183ce30"])
+        self.assertEqual((vtables["1183bf74"], vtables["1183bf8c"], vtables["1183c770"], vtables["1183ce30"]),
+                         ("10ee5190", "10ed7680", "10ed7640", "10ef3390"))
+        for enumerator, address in (("ANIM_GROUP_TREE", 0x1183BF74), ("ANIM_GROUP", 0x1183BF8C),
+                                    ("ACTOR_INSTANCE", 0x1183C770), ("NAMED_OBJECT", 0x1183CE30)):
+            self.assertIn(f"ROME2_FX_VTABLE_{enumerator} = 0x{address:08x}u", header)
+        # the tree slots the group bodies call (+4 clear, +0xc insert, +0x10 unlink) are not recovered
+        tree_slots = [u32(0x1183BF74 + offset) for offset in (0x04, 0x0C, 0x10)]
+        self.assertEqual(tree_slots, [0x10EDEEE0, 0x10EE6490, 0x10EE6810])
+        self.assertFalse({f"{slot:08x}" for slot in tree_slots} & set(fns))
+        for address in ("10ee5190", "10ed7680", "10ed7640", "10ef3390"):
+            self.assertNotIn(address, fns)
+
+        # globals: nine data cells, then thirty strings every one of which the model restates
+        cells = self.registry["globals"][1153:1162]
+        self.assertEqual([g["address"] for g in cells], ["117580d8", "117667f8", "1183c784", "1183c798", "1183c79c",
+                                                         "11974fa0", "11bd14ac", "11fadba4", "11fadba8"])
+        self.assertEqual([(g["storage"], g["width"]) for g in cells[6:]], [("zero_fill", 4)] * 3)
+        self.assertEqual((struct.unpack("<f", value("117667f8"))[0], struct.unpack("<f", value("117580d8"))[0]), (24.0, 120.0))
+        self.assertIn("#define ROME2_FX_MIN_FRAME_RATE 24.0f", header)
+        self.assertIn("#define ROME2_FX_MAX_FRAME_RATE 120.0f", header)
+        self.assertIn("if (frame_rate >= ROME2_FX_MIN_FRAME_RATE && ROME2_FX_MAX_FRAME_RATE >= frame_rate) {", source)
+        self.assertEqual((value("1183c798"), value("1183c79c")), (struct.pack("<I", 0x3F7FFFFE), struct.pack("<I", 0x3F800001)))
+        self.assertIn("#define ROME2_FX_QUAT_NORM_LOW_BITS 0x3f7ffffeu", header)
+        self.assertIn("#define ROME2_FX_QUAT_NORM_HIGH_BITS 0x3f800001u", header)
+        strings = self.registry["globals"][1162:1192]
+        self.assertEqual(len(strings), 30)
+        self.assertEqual({g["storage"] for g in strings}, {"file"})
+        self.assertEqual([g["address"] for g in strings], sorted(g["address"] for g in strings))
+        for g in strings:
+            text = bytes.fromhex(g["initial_hex_le"])
+            self.assertEqual((text[-1:], text.count(b"\0"), len(text)), (b"\0", 1, g["width"]), g["address"])
+            self.assertIn('"' + text[:-1].decode().replace('"', '\\"') + '"', source, g["address"])
+        self.assertEqual(value("1183c6d4"), b'" [\0')
+        self.assertEqual(value("1183c1bc"), b"FxAnimSet::AddReference: duplicate reference detected\0")
+
+        witnesses = {w["address"]: w["hex"] for w in self.registry["instruction_witnesses"]}
+        self.assertEqual(len(self.registry["instruction_witnesses"][1624:1707]), 83)
+        # record strides and block sizes
+        self.assertEqual((witnesses["10ee3843"], witnesses["10ee3a03"], witnesses["10efd5f3"], witnesses["10ed87e7"]),
+                         ("83c628", "83c618", "83c640", "81c6ac000000"))
+        self.assertEqual((witnesses["10efd610"], witnesses["10ed79c0"], witnesses["10ed79c3"]), ("6b41102c", "8d0440", "c1e004"))
+        self.assertIn("ROME2_FX_CURVE_STATE_BYTES = 0x30,", header)
+        self.assertEqual((witnesses["10ee75ba"], witnesses["10eda389"], witnesses["10ed9afb"], witnesses["10ee2ad1"]),
+                         ("6a0c", "6a14", "6a04", "6a18"))
+        self.assertEqual(witnesses["10eda4da"], "83ff10")
+        # log levels: 2 for the frame-rate and reference entries, 3 for instance errors, 4 for the rest
+        self.assertEqual((witnesses["10ee4889"], witnesses["10ee751e"]), ("6a02", "6a02"))
+        self.assertEqual((witnesses["10ee8be0"], witnesses["10ee9bd2"]), ("6a03", "6a03"))
+        self.assertEqual((witnesses["10ee8b43"], witnesses["10ee9c4e"], witnesses["10edef55"]), ("6a04", "6a04", "6a04"))
+        self.assertEqual(witnesses["10edef4c"], "83b98400000004")
+        # counts: the reference list at [list+4], the instance list at FxActor +0x60ec
+        self.assertEqual((witnesses["10ee7501"], witnesses["10ee7730"]), ("ff4604", "ff4f04"))
+        self.assertEqual((witnesses["10ee8b2a"], witnesses["10ee9c39"]), ("ff86ec600000", "ff8fec600000"))
+        # indirect calls: object slots +0/+4/+8 and tree slots +4/+0xc/+0x10
+        self.assertEqual((witnesses["10ed9b59"], witnesses["10ed9b23"], witnesses["10ee37f1"], witnesses["10ee54ff"], witnesses["10ee5719"]),
+                         ("ff10", "ff5004", "ff5008", "ff5008", "ff5208"))
+        self.assertEqual((witnesses["10ee5548"], witnesses["10ee5c86"], witnesses["10ee5cd6"], witnesses["10ee57f5"], witnesses["10ee58a5"]),
+                         ("ff5004", "ff520c", "ff520c", "ff5210", "ff5210"))
+        self.assertEqual(witnesses["10ee5577"], "e8" + rel32(0x10EE5577, 0x10EE54D0).hex())
+        # constructors and statics
+        self.assertEqual((witnesses["10eda383"], witnesses["10eda38b"]), ("8935ac14bd11", "c70698a78311"))
+        self.assertEqual((witnesses["10ee49f8"], witnesses["10ee4a0e"], witnesses["10ee4a23"]),
+                         ("c7068cbf8311", "c7460874bf8311", "c7461474bf8311"))
+        self.assertEqual((witnesses["10ed9b82"], witnesses["10ed9bad"]), ("c7056cdbfa1100000000", "c70570dbfa1100000000"))
+        # float tests: the frame-rate bounds, the event sentinel and the quaternion bounds
+        self.assertEqual((witnesses["10ee484c"], witnesses["10ee4858"]), ("0f2f0df8677611", "f30f1005d8807511"))
+        self.assertEqual((witnesses["10ed8740"], witnesses["10ed87df"]), ("f30f100514b08311", "0f43c8"))
+        self.assertEqual((witnesses["10efd98b"], witnesses["10efd99c"], witnesses["10efd9af"]),
+                         ("f30f10059cc78311", "0f2f1d98c78311", "f30f51c3"))
+        self.assertEqual((witnesses["10efd768"], witnesses["10efd6ce"], witnesses["10f0934d"]), ("0f2ec1", "83ffff", "0f2fc1"))
+
+        # every body is named next to its model, and the folded exports are spelled out in the registry
+        for address in addresses:
+            self.assertIn(f"0x{address}", source, address)
+        self.assertIn("IsA and IsExactKindOf of FxActor, FxActorInstance, FxAnim, FxAnimGroup and FxAnimSet", fns["10ed78b0"]["scope"])
+        self.assertIn("FxActor::SetShouldClientRelink", fns["10ee7850"]["scope"])
+        self.assertIn("EndAnimations and ReverseEndAnimations", fns["10ee55e0"]["scope"])
+        self.assertIn("EndSubGroups and ReverseEndSubGroups", fns["10ee5600"]["scope"])
+
+        # DLL exports: 55 bodies carry 79 names; 168 FaceFX names at 163 addresses and 16 curl_ names remain
+        through_layer85 = {f["address"] for f in self.registry["functions"][:2159]}
+        rva_offset = lambda rva: next(raw + rva - start for start, _, raw, size in sections if start <= rva < start + size)
+        pe = struct.unpack_from("<I", self.image, 0x3C)[0]
+        directory = rva_offset(struct.unpack_from("<I", self.image, pe + 24 + 96)[0])
+        name_count, functions_rva, names_rva, ordinals_rva = struct.unpack_from("<4I", self.image, directory + 0x18)
+        exports = {}
+        for index in range(name_count):
+            name_at = rva_offset(struct.unpack_from("<I", self.image, rva_offset(names_rva) + index * 4)[0])
+            ordinal = struct.unpack_from("<H", self.image, rva_offset(ordinals_rva) + index * 2)[0]
+            target = base + struct.unpack_from("<I", self.image, rva_offset(functions_rva) + ordinal * 4)[0]
+            name = self.image[name_at:self.image.index(b"\0", name_at)].decode()
+            exports.setdefault(f"{target:08x}", []).append(name)
+        unexported = {"1033c6a0", "10ed7990", "10eda4c0", "10ee75b0", "10ef2e80", "10ef3260", "10ef3310", "10efd5c0",
+                      "10efd610", "10efd630", "10f09320"}
+        self.assertEqual({address for address in addresses if address not in exports}, unexported)
+        exported = [address for address in addresses if address in exports]
+        self.assertEqual((len(exported), sum(len(exports[address]) for address in exported)), (55, 79))
+        self.assertEqual({address: len(exports[address]) for address in exported if len(exports[address]) > 1},
+                         {"10ed78b0": 10, "10ed7950": 5, "10ee5450": 2, "10ee5490": 2, "10ee55e0": 4, "10ee5600": 4,
+                          "10ee58c0": 2, "10ee5900": 2, "10ee7850": 2})
+        self.assertEqual(sorted(n.split("@")[1] for n in exports["10ed7950"]),
+                         ["FxActor", "FxActorInstance", "FxAnim", "FxAnimGroup", "FxAnimSet"])
+        self.assertTrue(all(n.startswith("?IsKindOf@") for n in exports["10ed7950"]))
+        self.assertEqual(exports["10eea950"], ["?_findInstance@FxActor@Face@OC3Ent@@IAE_NPAVFxActorInstance@23@AAVIterator@?$FxList@PAVFxActorInstance@Face@OC3Ent@@@23@@Z"])
+        facefx = {a: [n for n in names if "@Face@OC3Ent@@" in n] for a, names in exports.items() if a not in through_layer85}
+        self.assertEqual((sum(map(len, facefx.values())), sum(bool(names) for names in facefx.values())), (168, 163))
+        self.assertEqual(sum(n.startswith("curl_") for a, names in exports.items() if a not in through_layer85 for n in names), 16)
+
+    def test_layer85_revision1_event_link_offset(self):
+        self.assertEqual(self.registry["rea_layer85_evidence"]["model_revision"]["revision"], 1)
+        base, sections = contracts.parse_pe32(self.image)
+        # HasWorkThisFrame, from the load of event +0x0c to the range rebuild: MOV ECX, [ESI+EAX+0xc];
+        # TEST ECX, ECX; JZ +0x1a; MOVSS XMM0, [ESI+EAX+0x88]; SUBSS XMM0, [ECX+0x24];
+        # MOVSS [ESI+EAX+0x88], XMM0; MOV EAX, [EDI+0x10]; PUSH ECX; LEA ECX, [ESI+EAX].
+        # The float at +0x24 is all the body reads of the object the event names.
+        linked = contracts.image_bytes(self.image, base, sections, 0x10ED8790, 0x26)[0]
+        self.assertEqual(linked.hex(), "8b4c060c" "85c9" "741a" "f30f10840688000000" "f30f5c4124"
+                         "f30f11840688000000" "8b4710" "51" "8d0c06")
+        root = Path(__file__).resolve().parents[1] / "port" / "recovered_types"
+        header = (root / "facefx_sdk_group_list_frame_ops.h").read_text(encoding="utf-8")
+        source = (root / "facefx_sdk_group_list_frame_ops.c").read_text(encoding="utf-8")
+        tests = (root / "test_facefx_sdk_group_list_frame_ops.c").read_text(encoding="utf-8")
+        self.assertIn("ROME2_FX_EVENT_LINK_VALUE_OFFSET = 0x24", header)
+        self.assertIn("event->link_0c_va + ROME2_FX_EVENT_LINK_VALUE_OFFSET", source)
+        # the FxEvent scale at +0x24 belongs to the range rebuild 0x10f09320 alone
+        self.assertEqual(contracts.image_bytes(self.image, base, sections, 0x10F09320, 5)[0].hex(), "f30f104924")
+        self.assertNotIn("L85_OFFSET(rome2_fx_event_prefix_32, scale_24)", source)
+        self.assertIn("put_f32(L85_LINKED_VA + 0x24u, 0.25f);", tests)
 
     def test_tail_exit_indirect_jmp_mutations_rejected(self):
         for mutator, pattern in (
