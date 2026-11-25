@@ -2355,3 +2355,20 @@ callees.
   and **976** clean-public Python tests (**343** skipped) on Python 3.14 and 3.15
   (`clean_eng=0`, `clean_crt=0`, `noret_or_thunk=0` across **1,623** functions;
   jump target `0x10cb6520` and Layers 74–79 remain in Partition 9).
+
+### Layer 74 — CRT `strtod`, SSE2 `pow`/`powf`, string helpers & `_setjmp3`/`_longjmp` (2026-11-24)
+
+- Extended **Partition 9** in [out/startup-layer74-20261124](out/startup-layer74-20261124/) (`extending_layer73_batched_p9`) across **23** CRT functions (`0x116982e7..0x116d7042`) closing all remaining C/CRT non-Lua call dependencies (`open_direct_call_edges == 0`, 2 jump edges remain):
+  - `0x116982e7..0x1169896c`: `c_string_character_source<char>` floating-point parser, `inf`/`nan` matchers, and rollback lambda.
+  - `0x1169b981`, `0x1169f29b`: `__libm_sse2_powf` and `__libm_sse2_pow`.
+  - `0x1169deb3..0x1169f284`: `strtoul`, `strncpy`, `common_strtod_l`/`strtod`, `strcspn`, `strncat`, `__strcoll_l`/`strcoll`.
+  - `0x116bf467..0x116d7042`: `longjmp` (`direct_jmp` to `0x116c1eb0`), `__setjmp3`, `___except_validate_jump_buffer`, `___longjmp_internal` (indirect `jmp [edx+0x14]`), two-range SEH4 probe `__rt_probe_read4@4`, and `KERNEL32.DLL::RtlUnwind` IAT thunk.
+- Extended [contracts.json](port/recovered_types/contracts.json) to **1,646** functions,
+  **945** globals (`5` non-overlapping slices in `.rdata`: `0x11910d70..0x11925da8`), **85** vtables, and **1,538** instruction witnesses (`+9`), backed by **112** Partition 9 validated REA records (`84` reused Layer 73 + `28` new Layer 74; **2,487** cumulative across Partitions 1–9).
+- Locked 3 fixed-width `guest32_layouts.h` views (`rome2_startup_crt_cstr_source12_32`, `rome2_startup_crt_jump_buf64_32`, `rome2_startup_crt_exc_record24_32`) and bounded C17 models in [startup_crt_strtod_setjmp_ops.h](port/recovered_types/startup_crt_strtod_setjmp_ops.h) and [startup_crt_strtod_setjmp_ops.c](port/recovered_types/startup_crt_strtod_setjmp_ops.c), exercised by **22 check groups** in [test_startup_crt_strtod_setjmp_ops.c](port/recovered_types/test_startup_crt_strtod_setjmp_ops.c).
+- Verified **131/131** native CTest suites on both `/W4 /WX /sdl /GS /guard:cf /analyze`
+  and ASan, **115** contract tests on Python 3.15 (`11,017` PE-verified
+  whole-binary globals in [manifest.json](work/binary_contracts/manifest.json)),
+  and **978** clean-public Python tests (**345** skipped) on Python 3.14 and 3.15
+  (`clean_eng=0`, `clean_crt=0`, `noret_or_thunk=0` across **1,646** functions;
+  Lua Layers 75–78 and advice bridge Layer 79 remain in Partition 9).

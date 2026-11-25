@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 1623)
-        self.assertEqual(result["globals"], 940)
+        self.assertEqual(result["functions"], 1646)
+        self.assertEqual(result["globals"], 945)
         self.assertEqual(result["vtables"], 85)
-        self.assertEqual(result["instruction_witnesses"], 1529)
+        self.assertEqual(result["instruction_witnesses"], 1538)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -820,7 +820,7 @@ class TypeContractProvenanceTests(unittest.TestCase):
                 "1168bcc3", "11695540", "11696308", "11696528", "11699af7", "11699b02",
                 "1169b820", "1169e653", "1169ecd8", "116a1729", "116a511c", "116a5864", "116a586f", "116ade23", "116ae58e", "116afb0a",
                 "116b4b50", "116b56b1", "116b5f67", "116bd8d0", "116bde50",
-            } | {"116b0517", "116aaee6", "1168d030", "116adaed"} | {"100edd70"} | {"116c0bf0", "116d7250"},
+            } | {"116b0517", "116aaee6", "1168d030", "116adaed"} | {"100edd70"} | {"116c0bf0", "116d7250"} | {"116c223f"},
         )
         base, sections = contracts.parse_pe32(self.image)
         expected_gaps = {
@@ -871,6 +871,7 @@ class TypeContractProvenanceTests(unittest.TestCase):
             "116bde50": [24, 1, 1, 3, 1, 17, 1, 3, 1, 5, 9],
             "116c0bf0": [40, 8],
             "116d7250": [22],
+            "116c223f": [24],
         }
         for address, gaps in expected_gaps.items():
             helper = helpers[address]
@@ -4140,6 +4141,48 @@ class TypeContractProvenanceTests(unittest.TestCase):
             [(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]],
             [("11695ee2", "11695e3c"), ("10cb0440", "10cb6520")],
         )
+
+    def test_layer74_startup_crt_strtod_setjmp_contracts(self):
+        by_fn = {f["address"]: f for f in self.registry["functions"]}
+        layer74_addrs = [
+            "116982e7", "1169835b", "11698744", "116987e5", "116988f4", "11698930", "1169896c",
+            "1169b981", "1169deb3", "1169e3f0", "1169efaa", "1169f033", "1169f050", "1169f0a0",
+            "1169f1d5", "1169f284", "1169f29b", "116bf467", "116bf480", "116c0fcd", "116c1eb0",
+            "116c223f", "116d7042",
+        ]
+        for addr in layer74_addrs:
+            self.assertIn(addr, by_fn)
+        self.assertEqual(by_fn["116bf467"]["tail_exit"], {"kind": "direct_jmp", "address": "116bf474", "target": "116c1eb0"})
+        self.assertEqual(by_fn["116c1eb0"]["tail_exit"], {"kind": "indirect_jmp", "address": "116c1f5a", "hex": "ff6214"})
+        self.assertEqual(by_fn["116d7042"]["tail_exit"], {"kind": "iat_jmp", "address": "116d7042", "iat_slot": "1172f118"})
+        self.assertEqual([(r["start"], r["end"]) for r in by_fn["116c223f"]["body_ranges"]], [("116c223f", "116c2258"), ("116c2271", "116c228c")])
+        by_g = {g["address"]: g for g in self.registry["globals"]}
+        for gaddr in ("11910d70", "11911080", "119134e0", "1191aa30", "11925da8"):
+            self.assertIn(gaddr, by_g)
+        ev = self.registry["rea_layer74_evidence"]
+        self.assertEqual(ev["snapshot_mode"], "extending_layer73_batched_p9")
+        self.assertEqual(ev["new_evidence_records"], 28)
+        self.assertEqual(ev["reused_layer73_evidence_records"], 84)
+        self.assertEqual(ev["cumulative_validated_bundle_records"], 112)
+        self.assertEqual(ev["cumulative_all_partitions_records"], 2487)
+        self.assertEqual(ev["closure_audit"]["recovered_functions"], 1646)
+        self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
+        self.assertEqual([(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]], [("11695ee2", "11695e3c"), ("10cb0440", "10cb6520")])
+
+    def test_tail_exit_indirect_jmp_mutations_rejected(self):
+        for mutator, pattern in (
+            (lambda te: te.update({"address": "116c1f58"}), "tail_exit indirect_jmp address disagrees"),
+            (lambda te: te.update({"hex": "ffe0"}), "tail_exit indirect_jmp address disagrees"),
+            (lambda te: te.update({"hex": "eb00"}), "tail_exit indirect_jmp opcode disagrees"),
+            (lambda te: te.update({"hex": "ff6218"}), "tail_exit indirect_jmp hex disagrees"),
+        ):
+            registry = copy.deepcopy(self.registry)
+            for fn in registry["functions"]:
+                if fn["address"] == "116c1eb0":
+                    mutator(fn["tail_exit"])
+                    break
+            with self.assertRaisesRegex(ValueError, pattern):
+                contracts.validate_contracts(self.image, registry)
 
     def test_direct_jmp_short_mismatch_rejected(self):
         registry = copy.deepcopy(self.registry)

@@ -3867,5 +3867,44 @@ ROME2_LAYOUT_ASSERT(rome2_startup_crt_input_proc112_32, field_width_lo_30, 0x30)
 ROME2_LAYOUT_ASSERT(rome2_startup_crt_input_proc112_32, locale_68, 0x68);
 ROME2_LAYOUT_ASSERT(rome2_startup_crt_input_proc112_32, va_arglist_6c, 0x6c);
 
+typedef struct rome2_startup_crt_cstr_source12_32 {
+    uint32_t source_ptr_00;                      /* 00 c_string_character_source* */
+    uint32_t ch_ptr_04;                          /* 04 char* current char storage */
+    uint32_t saved_pos_ptr_08;                   /* 08 char** saved rollback cursor */
+} rome2_startup_crt_cstr_source12_32;
+_Static_assert(sizeof(rome2_startup_crt_cstr_source12_32) == 0x0c, "startup crt cstr source12 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_cstr_source12_32, ch_ptr_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_cstr_source12_32, saved_pos_ptr_08, 0x08);
+
+typedef struct rome2_startup_crt_jump_buf64_32 {
+    uint32_t ebp_00;                             /* 00 saved EBP */
+    uint32_t ebx_04;                             /* 04 saved EBX */
+    uint32_t edi_08;                             /* 08 saved EDI */
+    uint32_t esi_0c;                             /* 0c saved ESI */
+    uint32_t esp_10;                             /* 10 saved ESP */
+    uint32_t eip_14;                             /* 14 target EIP (jmp [edx+0x14]) */
+    uint32_t registration_18;                    /* 18 fs:[0] SEH node */
+    uint32_t trylevel_1c;                        /* 1c EH3/EH4 trylevel */
+    uint32_t cookie_20;                          /* 20 0x56433230 ('VC20') */
+    uint32_t unwind_func_24;                     /* 24 optional SEH4 unwind callback */
+    uint32_t unwind_data_28[6];                  /* 28..3f extended unwind payload */
+} rome2_startup_crt_jump_buf64_32;
+_Static_assert(sizeof(rome2_startup_crt_jump_buf64_32) == 0x40, "startup crt jump buf64 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_jump_buf64_32, eip_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_jump_buf64_32, registration_18, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_jump_buf64_32, cookie_20, 0x20);
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_jump_buf64_32, unwind_func_24, 0x24);
+
+typedef struct rome2_startup_crt_exc_record24_32 {
+    uint32_t exception_code_00;                  /* 00 e.g. 0x80000026 STATUS_LONGJUMP */
+    uint32_t exception_flags_04;                 /* 04 */
+    uint32_t exception_record_08;                /* 08 */
+    uint32_t exception_address_0c;               /* 0c */
+    uint32_t number_parameters_10;               /* 10 */
+    uint32_t param0_14;                          /* 14 */
+} rome2_startup_crt_exc_record24_32;
+_Static_assert(sizeof(rome2_startup_crt_exc_record24_32) == 0x18, "startup crt exc record24 32 size");
+ROME2_LAYOUT_ASSERT(rome2_startup_crt_exc_record24_32, number_parameters_10, 0x10);
+
 #undef ROME2_LAYOUT_ASSERT
 #endif

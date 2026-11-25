@@ -139,11 +139,23 @@ def validate_contracts(image: bytes, registry: dict) -> dict:
             if returns is not None:
                 raise ValueError(f"tail_exit and return_instruction_addresses are mutually exclusive: {function['address']}")
             kind = tail_exit.get("kind") if isinstance(tail_exit, dict) else None
-            if kind not in ("direct_jmp", "direct_jmp_short", "iat_jmp", "noreturn_call", "noreturn_iat_call") or not isinstance(tail_exit.get("address"), str):
+            if kind not in ("direct_jmp", "direct_jmp_short", "indirect_jmp", "iat_jmp", "noreturn_call", "noreturn_iat_call") or not isinstance(tail_exit.get("address"), str):
                 raise ValueError(f"invalid tail_exit contract: {function['address']}")
             pc = int(tail_exit["address"], 16)
             last_start, last_data = parts[-1]
-            if kind == "direct_jmp_short":
+            if kind == "indirect_jmp":
+                raw_hex = tail_exit.get("hex")
+                try:
+                    expected = bytes.fromhex(raw_hex) if isinstance(raw_hex, str) else b""
+                except ValueError as exc:
+                    raise ValueError(f"tail_exit {kind} hex disagrees: {function['address']}") from exc
+                if len(expected) < 2 or expected[0] != 0xFF or ((expected[1] >> 3) & 7) != 4:
+                    raise ValueError(f"tail_exit {kind} opcode disagrees: {function['address']}")
+                if pc < last_start or pc + len(expected) != last_start + len(last_data):
+                    raise ValueError(f"tail_exit {kind} address disagrees: {function['address']}")
+                if last_data[pc - last_start:pc - last_start + len(expected)] != expected:
+                    raise ValueError(f"tail_exit {kind} hex disagrees: {function['address']}")
+            elif kind == "direct_jmp_short":
                 if pc < last_start or pc + 2 != last_start + len(last_data):
                     raise ValueError(f"tail_exit {kind} address disagrees: {function['address']}")
                 insn = last_data[pc - last_start:pc - last_start + 2]
