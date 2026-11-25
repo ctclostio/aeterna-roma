@@ -4199,6 +4199,31 @@ ROME2_LAYOUT_ASSERT(rome2_lua_wrapper_ring20_32, wrapper_va, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_lua_wrapper_ring20_32, parent_lua_state_va, 0x0c);
 ROME2_LAYOUT_ASSERT(rome2_lua_wrapper_ring20_32, registry_ref, 0x10);
 
+/* Observed prefix of the script-context object 0x112adf80 receives in ECX. */
+typedef struct rome2_lua_script_owner_prefix24_32 {
+    uint32_t vptr_va;
+    uint32_t wrapper_va;
+    uint32_t parent_wrapper_va;
+    uint32_t unobserved0c;
+    uint32_t unobserved10;
+    uint8_t creates_master_state;
+    uint8_t pad15[3];
+} rome2_lua_script_owner_prefix24_32;
+_Static_assert(sizeof(rome2_lua_script_owner_prefix24_32) == 0x18, "lua script owner prefix 24B size");
+ROME2_LAYOUT_ASSERT(rome2_lua_script_owner_prefix24_32, wrapper_va, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_lua_script_owner_prefix24_32, parent_wrapper_va, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_lua_script_owner_prefix24_32, creates_master_state, 0x14);
+
+/* Stack event 0x10cb6520 builds twice (vtables 0x117df87c and 0x117df6fc). */
+typedef struct rome2_advice_lua_event20_32 {
+    uint32_t vptr_va;
+    uint8_t name_string12[12];
+    uint32_t payload_va;
+} rome2_advice_lua_event20_32;
+_Static_assert(sizeof(rome2_advice_lua_event20_32) == 0x14, "advice lua event 20B size");
+ROME2_LAYOUT_ASSERT(rome2_advice_lua_event20_32, name_string12, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_advice_lua_event20_32, payload_va, 0x10);
+
 typedef struct rome2_fx_memory_allocation_policy_32 {
     int32_t alloc_type;
     uint8_t use_default_hooks;
@@ -4262,6 +4287,89 @@ typedef struct rome2_fx_mount_result_32 {
     int32_t error_code;
 } rome2_fx_mount_result_32;
 _Static_assert(sizeof(rome2_fx_mount_result_32) == 0x04, "fx mount result 32 size");
+
+/* Layer 81: FaceFX FxString, FxName, AVL name table, FxClientEvent, FxClass (Partition 10 seal) */
+typedef struct rome2_fx_string_32 {
+    char inline_buf[16];
+    uint32_t data_va;
+    uint32_t capacity;
+    uint32_t length;
+} rome2_fx_string_32;
+_Static_assert(sizeof(rome2_fx_string_32) == 0x1c, "fx string 32 size");
+
+typedef struct rome2_fx_name_32 {
+    uint32_t entry_va;
+} rome2_fx_name_32;
+_Static_assert(sizeof(rome2_fx_name_32) == 0x04, "fx name 32 size");
+
+typedef struct rome2_fx_name_entry_32 {
+    uint32_t vtable_va; /* 0x1183b970 */
+    int32_t ref_count;
+    uint32_t fx_string_va;
+} rome2_fx_name_entry_32;
+_Static_assert(sizeof(rome2_fx_name_entry_32) == 0x0c, "fx name entry 32 size");
+
+typedef struct rome2_fx_avl_bucket_32 {
+    uint32_t vtable_va; /* 0x1183b9c0 */
+    uint32_t root_va;
+    uint32_t node_count;
+} rome2_fx_avl_bucket_32;
+_Static_assert(sizeof(rome2_fx_avl_bucket_32) == 0x0c, "fx avl bucket 32 size");
+
+typedef struct rome2_fx_name_table_header_32 {
+    uint32_t unique_count;
+    uint32_t total_added;
+    uint32_t total_removed;
+    uint32_t hash_collisions;
+    uint32_t probe_hits;
+} rome2_fx_name_table_header_32;
+_Static_assert(sizeof(rome2_fx_name_table_header_32) == 0x14, "fx name table header 32 size");
+
+typedef struct rome2_fx_avl_string_node_32 {
+    uint32_t vtable_va; /* 0x1183b99c */
+    rome2_fx_string_32 key;
+    uint32_t value_va;
+    uint32_t reserved24;
+    uint32_t parent_va;
+    uint32_t left_va;
+    uint32_t right_va;
+    int16_t balance;
+    int16_t height;
+} rome2_fx_avl_string_node_32;
+_Static_assert(sizeof(rome2_fx_avl_string_node_32) == 0x38, "fx avl string node 32 size");
+
+typedef struct rome2_fx_client_event_32 {
+    rome2_fx_name_32 animation_group_name;
+    rome2_fx_name_32 animation_name;
+    float start_time_offset;
+    float magnitude_scale;
+    float blend_in_time;
+    float blend_out_time;
+    float duration_scale;
+    uint8_t should_persist_values;
+    uint8_t pad1d[3];
+    uint32_t event_id;
+    rome2_fx_name_32 custom_payload;
+} rome2_fx_client_event_32;
+_Static_assert(sizeof(rome2_fx_client_event_32) == 0x28, "fx client event 32 size");
+
+typedef struct rome2_fx_class_32 {
+    rome2_fx_name_32 name;
+    uint16_t current_version;
+    uint16_t pad06;
+    uint32_t base_class_va;
+    uint32_t num_children;
+    uint32_t size;
+    uint32_t construct_fn_va;
+} rome2_fx_class_32;
+_Static_assert(sizeof(rome2_fx_class_32) == 0x18, "fx class 32 size");
+
+typedef struct rome2_fx_class_array_32 {
+    uint32_t items_va;
+    uint32_t capacity;
+    uint32_t count;
+} rome2_fx_class_array_32;
+_Static_assert(sizeof(rome2_fx_class_array_32) == 0x0c, "fx class array 32 size");
 
 #undef ROME2_LAYOUT_ASSERT
 #endif

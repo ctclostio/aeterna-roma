@@ -13,7 +13,7 @@
     "class_field_entries": 95747,
     "rtti_type_descriptors": 181,
     "rtti_complete_object_locators": 15,
-    "globals": 11141,
+    "globals": 11167,
     "exported_code_targets_pinned": 405
   },
   "distributions": {
@@ -50,9 +50,12 @@
       "advice/Lua bridge image slice (24B) in .rdata/.data used by Layer 79": 5,
       "advice/Lua bridge image slice (5B) in .rdata/.data used by Layer 79": 5,
       "advice/Lua bridge image slice (8B) in .rdata/.data used by Layer 79": 5,
+      "FaceFX FxName/FxClass .rdata string slice (12B) used by Layer 81": 3,
+      "FaceFX FxName/FxClass .rdata string slice (9B) used by Layer 81": 3,
       "advice/Lua bridge image slice (11B) in .rdata/.data used by Layer 79": 2,
       "advice/Lua bridge image slice (2B) in .rdata/.data used by Layer 79": 2,
       "advice/Lua bridge image slice (13B) in .rdata/.data used by Layer 79": 2,
+      "FaceFX FxName/FxClass .rdata string slice (13B) used by Layer 81": 2,
       "advice/Lua bridge image slice (16B) in .rdata/.data used by Layer 79": 2,
       "unit-card extent float bits": 2,
       "1-byte flag (initial 0) in .data cleared by 0x100dbf80": 2,
@@ -241,6 +244,7 @@
       "NUL-terminated ASCII string 'Warscape/MipLevel' in .rdata used by 0x100d2860": 1,
       "NUL-terminated ASCII string 'Warscape/TexelDensity' in .rdata used by 0x100d2860": 1,
       "static path-separator string \"\\\" (0x5c,0x00,0x00,0x00) followed by version string \"1.21\"": 1,
+      "FaceFX FxName/FxClass .rdata string slice (3B) used by Layer 81": 1,
       "UTF-16LE space literal L\" \" in .rdata used by preferences writer 0x100dacb0": 1,
       "ASCII newline-comment delimiter \" #\\r\\n\" in .rdata used by preferences writer 0x100dacb0": 1,
       "ASCII comma separator \", \" in .rdata used by preferences writer 0x100dacb0": 1,
@@ -389,6 +393,7 @@
       "8-byte 2-slot DB table base vtable {0x1033d400, 0x116bd8af} in .rdata": 1,
       "ASCII string 'tail' used by auxgetinfo (0x10f46d50)": 1,
       "Static ASCII \"map/set<T> too long\" error literal pushed by 0x112a3320": 1,
+      "FaceFX FxName/FxClass .rdata string slice (2B) used by Layer 81": 1,
       "NUL-terminated UTF-16 closing paren literal u')' in .rdata used by math formatters": 1,
       "ASCII '%' character literal used by luaO_pushvfstring (0x10f462d0)": 1,
       "ASCII 'n' vararg count table key used by luaD_precall (0x10f48190)": 1,
@@ -426,6 +431,7 @@
       "NUL-terminated ASCII key 'VIDEO_TUTORIAL' in .rdata for 0x10ce6120": 1,
       "NUL-terminated ASCII HKCU path 'Software\\The Creative Assembly\\Launcher\\214950' in .rdata queried by 0x11302cc0/0x11303db0/0x113048b0": 1,
       "NUL-terminated ASCII HKCU path 'Software\\The Creative Assembly\\Rome2' in .rdata fallback for 0x11302cc0/0x11303db0/0x113048b0": 1,
+      "FaceFX FxName/FxClass .rdata string slice (8B) used by Layer 81": 1,
       "NUL-terminated ASCII format string 'Loading database: %s\\n' in .rdata": 1,
       "NUL-terminated ASCII format string ' (%d records) ' in .rdata": 1,
       "NUL-terminated ASCII name 'subtitle_timings_table' in .rdata": 1,
@@ -435,7 +441,22 @@
       "NUL-terminated UTF-16LE table folder L'subtitle_timings_tables' in .rdata": 1,
       "4-space indentation literal '    ' used by FxLogEntry::GetStream (0x10ed4cd0)": 1,
       "ASCII string '\"]' used by luaO_chunkid (0x10f460e0); covers NUL sub-slice 0x1183b666": 1,
+      "FaceFX FxName/FxClass .rdata string slice (24B) used by Layer 81": 1,
+      "FaceFX FxName/FxClass .rdata string slice (34B) used by Layer 81": 1,
+      "FaceFX FxName/FxClass .rdata string slice (64B) used by Layer 81": 1,
+      "FaceFX FxName/FxClass .rdata string slice (40B) used by Layer 81": 1,
+      "FaceFX FxName/FxClass .rdata string slice (59B) used by Layer 81": 1,
+      "FaceFX FxName/FxClass .rdata string slice (28B) used by Layer 81": 1,
+      "FaceFX FxName/FxClass .rdata string slice (29B) used by Layer 81": 1,
+      "FaceFX FxName/FxClass .rdata string slice (23B) used by Layer 81": 1,
+      "FaceFX FxName/FxClass .rdata string slice (31B) used by Layer 81": 1,
+      "FaceFX FxName/FxClass .rdata string slice (30B) used by Layer 81": 1,
+      "FaceFX FxName/FxClass .rdata string slice (32B) used by Layer 81": 1,
+      "FaceFX FxName/FxClass .rdata string slice (4B) used by Layer 81": 1,
       "ASCII string '...' used by luaO_chunkid (0x10f460e0)": 1,
+      "FaceFX FxName/FxClass .rdata string slice (60B) used by Layer 81": 1,
+      "FaceFX FxName/FxClass .rdata string slice (37B) used by Layer 81": 1,
+      "FaceFX FxName/FxClass .rdata string slice (68B) used by Layer 81": 1,
       "ASCII string 'no value' returned by lua_typename (0x10f44f10)": 1,
       "ASCII string '?' returned by getobjname/kname fallback": 1,
       "ASCII string 'method' returned by getobjname (0x10f47140)": 1,
@@ -1026,24 +1047,24 @@
     }
   },
   "curated_reconciliation": {
-    "curated_functions_total": 1871,
-    "curated_in_canonical_index": 1840,
-    "curated_exact_body_sha256_match": 1822,
+    "curated_functions_total": 1918,
+    "curated_in_canonical_index": 1887,
+    "curated_exact_body_sha256_match": 1869,
     "curated_multi_range_expanded": 18,
     "curated_non_proc_slots": 31,
-    "curated_globals_matched": 1069,
+    "curated_globals_matched": 1095,
     "curated_vtables_matched": 85
   },
   "files": {
     "function_contracts_part1.tsv": {
       "rows": 40640,
-      "bytes": 9393309,
-      "sha256": "f55d024ab1ac94c51287f277040b46ccbb1282163e0ebd10bc7ecf4887bf696c"
+      "bytes": 9393326,
+      "sha256": "79c62ca4185d8e0bea295d5827158e0d9fb29093d078c97d30c3ae9b64ec45be"
     },
     "function_contracts_part2.tsv": {
       "rows": 40640,
-      "bytes": 9476613,
-      "sha256": "fe6cc87729be60b961f5421609e9bb12fa4a51c970c8c18d15c1198ccced4bc2"
+      "bytes": 9477395,
+      "sha256": "afc65f217d39b93064f794f3310cf87ce20fc90abf1f164d16a5968a67d4b3df"
     },
     "non_proc_curated_slots.tsv": {
       "rows": 31,
@@ -1066,9 +1087,9 @@
       "sha256": "534964ec1fa25fd15189a0fd007ba1412fe7fe339981ade410ca82a303f8e912"
     },
     "global_contracts.tsv": {
-      "rows": 11141,
-      "bytes": 985858,
-      "sha256": "16ce94b8fbb8b2249c182d1bca2bf1d0ea12511c0fcc95eae2740648d59ae6d3"
+      "rows": 11167,
+      "bytes": 991327,
+      "sha256": "75c6691263fe56adde12e11e1a5da097987c20a66fcefd8a2da1ed3ce38e2309"
     }
   }
 }

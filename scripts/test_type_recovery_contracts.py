@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 1871)
-        self.assertEqual(result["globals"], 1069)
+        self.assertEqual(result["functions"], 1918)
+        self.assertEqual(result["globals"], 1095)
         self.assertEqual(result["vtables"], 85)
-        self.assertEqual(result["instruction_witnesses"], 1573)
+        self.assertEqual(result["instruction_witnesses"], 1577)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -4295,6 +4295,21 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual(ev["closure_audit"]["recovered_functions"], 1871)
         self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
         self.assertEqual([(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]], [("11695ee2", "11695e3c")])
+
+    def test_layer81_facefx_name_avl_sealed_p10_contracts(self):
+        ev = self.registry["rea_layer81_evidence"]
+        self.assertTrue(ev["partition10_sealed"])
+        self.assertEqual(ev["snapshot_mode"], "extending_layer80_batched_p10_sealed")
+        self.assertEqual(ev["closed_evidence_records"], 132)
+        self.assertEqual(ev["new_evidence_records"], 73)
+        self.assertEqual(ev["reused_layer80_evidence_records"], 59)
+        self.assertEqual(ev["cumulative_all_partitions_records"], 2914)
+        self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
+        self.assertEqual([(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]], [("11695ee2", "11695e3c")])
+        fn_by_addr = {f["address"].lower(): f for f in self.registry["functions"]}
+        self.assertIn("10ed57f0", fn_by_addr)
+        self.assertEqual(fn_by_addr["10ed57f0"]["tail_exit"]["kind"], "direct_jmp")
+        self.assertEqual(fn_by_addr["10ed57f0"]["tail_exit"]["target"], "10ede090")
 
     def test_tail_exit_indirect_jmp_mutations_rejected(self):
         for mutator, pattern in (
