@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 1813)
-        self.assertEqual(result["globals"], 1068)
+        self.assertEqual(result["functions"], 1871)
+        self.assertEqual(result["globals"], 1069)
         self.assertEqual(result["vtables"], 85)
-        self.assertEqual(result["instruction_witnesses"], 1569)
+        self.assertEqual(result["instruction_witnesses"], 1573)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -4273,6 +4273,26 @@ class TypeContractProvenanceTests(unittest.TestCase):
             self.assertIn(addr, fns)
             self.assertEqual(fns[addr]["calling_convention"], "cdecl")
         self.assertEqual(ev["closure_audit"]["recovered_functions"], 1813)
+        self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
+        self.assertEqual([(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]], [("11695ee2", "11695e3c")])
+
+    def test_layer80_facefx_alloc_singleton_log_contracts(self):
+        ev = self.registry["rea_layer80_evidence"]
+        self.assertEqual(ev["snapshot_mode"], "fresh_partition10_batched")
+        self.assertEqual(ev["closed_evidence_records"], 59)
+        self.assertEqual(ev["new_evidence_records"], 59)
+        self.assertEqual(ev["prior_partitions_validated_records"], 2782)
+        self.assertEqual(ev["cumulative_all_partitions_records"], 2841)
+        self.assertEqual(ev["non_proc_slots"], [])
+        self.assertEqual(ev["resource_constrained_slots"], [])
+        fns = {f["address"]: f for f in self.registry["functions"]}
+        for addr in ("10ed3f40", "10ed4030", "11688295"):
+            self.assertIn(addr, fns)
+            self.assertEqual(fns[addr]["calling_convention"], "cdecl")
+        for addr in ("10ed3d60", "10eec0a0", "10ed4a70"):
+            self.assertIn(addr, fns)
+            self.assertEqual(fns[addr]["calling_convention"], "thiscall")
+        self.assertEqual(ev["closure_audit"]["recovered_functions"], 1871)
         self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
         self.assertEqual([(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]], [("11695ee2", "11695e3c")])
 

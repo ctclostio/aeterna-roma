@@ -4199,5 +4199,69 @@ ROME2_LAYOUT_ASSERT(rome2_lua_wrapper_ring20_32, wrapper_va, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_lua_wrapper_ring20_32, parent_lua_state_va, 0x0c);
 ROME2_LAYOUT_ASSERT(rome2_lua_wrapper_ring20_32, registry_ref, 0x10);
 
+typedef struct rome2_fx_memory_allocation_policy_32 {
+    int32_t alloc_type;
+    uint8_t use_default_hooks;
+    uint8_t pad05[3];
+    uint32_t alloc_fn_va;
+    uint32_t alloc_dbg_fn_va;
+    uint32_t free_fn_va;
+} rome2_fx_memory_allocation_policy_32;
+_Static_assert(sizeof(rome2_fx_memory_allocation_policy_32) == 0x14, "fx memory alloc policy 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_memory_allocation_policy_32, use_default_hooks, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_fx_memory_allocation_policy_32, alloc_fn_va, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_fx_memory_allocation_policy_32, alloc_dbg_fn_va, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_fx_memory_allocation_policy_32, free_fn_va, 0x10);
+
+typedef struct rome2_fx_log_stream_32 {
+    uint32_t cursor;
+    char buf[0x400];
+} rome2_fx_log_stream_32;
+_Static_assert(sizeof(rome2_fx_log_stream_32) == 0x404, "fx log stream 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_log_stream_32, cursor, 0x00);
+ROME2_LAYOUT_ASSERT(rome2_fx_log_stream_32, buf, 0x04);
+
+typedef struct rome2_fx_log_entry_32 {
+    rome2_fx_log_stream_32 stream;
+    uint32_t log_va;
+    int32_t level;
+} rome2_fx_log_entry_32;
+_Static_assert(sizeof(rome2_fx_log_entry_32) == 0x40c, "fx log entry 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_log_entry_32, log_va, 0x404);
+ROME2_LAYOUT_ASSERT(rome2_fx_log_entry_32, level, 0x408);
+
+typedef struct rome2_fx_log_32 {
+    uint32_t listeners_va[32];
+} rome2_fx_log_32;
+_Static_assert(sizeof(rome2_fx_log_32) == 0x80, "fx log 32 size");
+
+typedef struct rome2_fx_log_manager_32 {
+    uint32_t vtable_va;
+    rome2_fx_log_32 log;
+    int32_t max_log_level;
+    uint32_t tab_level;
+} rome2_fx_log_manager_32;
+_Static_assert(sizeof(rome2_fx_log_manager_32) == 0x8c, "fx log manager 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_log_manager_32, log, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_fx_log_manager_32, max_log_level, 0x84);
+ROME2_LAYOUT_ASSERT(rome2_fx_log_manager_32, tab_level, 0x88);
+
+typedef struct rome2_fx_actor_load_result_32 {
+    int32_t error_code;
+    int32_t secondary_error;
+    uint8_t flags08;
+    uint8_t pad09[3];
+    uint32_t actor_va;
+} rome2_fx_actor_load_result_32;
+_Static_assert(sizeof(rome2_fx_actor_load_result_32) == 0x10, "fx actor load result 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_load_result_32, secondary_error, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_load_result_32, flags08, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_load_result_32, actor_va, 0x0c);
+
+typedef struct rome2_fx_mount_result_32 {
+    int32_t error_code;
+} rome2_fx_mount_result_32;
+_Static_assert(sizeof(rome2_fx_mount_result_32) == 0x04, "fx mount result 32 size");
+
 #undef ROME2_LAYOUT_ASSERT
 #endif
