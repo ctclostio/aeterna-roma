@@ -19,13 +19,7 @@ typedef struct rome2_fx_mount_unmount_result_32 {
     int32_t unmount_err;
 } rome2_fx_mount_unmount_result_32;
 
-typedef struct rome2_l80_fx_slab_bucket {
-    uint32_t block_size;
-    uint32_t slab_base_va;
-    uint8_t next_free_idx;
-    uint8_t free_count;
-    uint8_t capacity;
-} rome2_l80_fx_slab_bucket;
+enum { ROME2_FX_MEMORY_POOL_COUNT = 16 };
 
 typedef struct rome2_l80_fx_ctx {
     uint8_t *arena_bytes;
@@ -33,8 +27,13 @@ typedef struct rome2_l80_fx_ctx {
     uint32_t arena_size;
     uint32_t heap_cursor;
 
-    uint8_t slab_enabled; /* 0x11fadb54 */
-    rome2_l80_fx_slab_bucket slabs[16]; /* 0x11fada90 */
+    uint8_t pooling_enabled;                                   /* 0x11fadb54 */
+    rome2_fx_memory_pool_32 pools[ROME2_FX_MEMORY_POOL_COUNT]; /* 0x11fada90 */
+    /*
+     * Stand-ins for the policy's allocate (0x11fadb58) and free (0x11fadb60)
+     * pointers. Without them allocation bumps heap_cursor through the arena
+     * and a free releases nothing.
+     */
     uint32_t (*custom_alloc)(struct rome2_l80_fx_ctx *ctx, uint32_t bytes);
     void (*custom_free)(struct rome2_l80_fx_ctx *ctx, uint32_t ptr_va, uint32_t bytes);
 
@@ -67,7 +66,7 @@ rome2_fx_memory_allocation_policy_32 *rome2_l80_alloc_policy_ctor_default(
 rome2_fx_memory_allocation_policy_32 *rome2_l80_alloc_policy_ctor_full(
     rome2_fx_memory_allocation_policy_32 *self,
     int32_t alloc_type,
-    uint8_t use_default_hooks,
+    uint8_t use_memory_pools,
     uint32_t alloc_fn_va,
     uint32_t alloc_dbg_fn_va,
     uint32_t free_fn_va);
@@ -79,6 +78,13 @@ rome2_fx_memory_allocation_policy_32 *rome2_l80_alloc_policy_assign(
     const rome2_fx_memory_allocation_policy_32 *other);
 uint32_t rome2_l80_fx_allocate(rome2_l80_fx_ctx *ctx, uint32_t bytes);
 void rome2_l80_fx_free(rome2_l80_fx_ctx *ctx, uint32_t ptr_va, uint32_t bytes);
+/*
+ * Pool construction is outside the recovered set and carries no contract pin:
+ * 0x10ed48d0 builds one pool with its first chunk, and memory startup
+ * (0x10ed4270) calls it for block sizes 8, 0x10 .. 0x80 when pooling is on.
+ */
+uint32_t rome2_l80_memory_pool_init(rome2_l80_fx_ctx *ctx, uint32_t pool_index, uint32_t block_size);
+void rome2_l80_memory_pools_startup(rome2_l80_fx_ctx *ctx);
 
 /* Singletons (0x10ed3cd0, 0x10ed3ce0, 0x10ed3dc0, 0x10ed48c0, 0x10ed5660, 0x10ed5670, 0x10ed57d0, 0x10ed7890) */
 uint32_t rome2_l80_singleton_log_mgr_ctor(rome2_l80_fx_ctx *ctx, uint32_t self_va);

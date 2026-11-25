@@ -4317,6 +4317,46 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
         self.assertEqual([(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]], [("11695ee2", "11695e3c")])
 
+    def test_layer80_revision1_pool_allocator_fidelity(self):
+        self.assertEqual(self.registry["rea_layer80_evidence"]["model_revision"]["revision"], 1)
+        fns = {f["address"]: f for f in self.registry["functions"]}
+        base, sections = contracts.parse_pe32(self.image)
+
+        def code(address, size):
+            return contracts.image_bytes(self.image, base, sections, address, size)[0].hex()
+
+        # FxAllocate: 12-byte pool records at 0x11fada90, blocks-per-chunk byte at +4,
+        # chunk growth and the fall-through both go to the policy pointer 0x11fadb58
+        self.assertEqual(code(0x10ED3F51, 11), "399090dafa11731583c00c")
+        self.assertEqual(code(0x10ED3FA6, 7), "8a1cad94dafa11")
+        self.assertEqual(code(0x10ED3F92, 8), "6a10ff1558dbfa11")
+        self.assertEqual(code(0x10ED3F68, 6), "ff2558dbfa11")
+        # FxFree: chunk span from the same byte, policy free pointer 0x11fadb60
+        self.assertEqual(code(0x10ED4077, 8), "0fb6349d94dafa11")
+        self.assertEqual(code(0x10ED4067, 6), "ff1560dbfa11")
+        for address in ("10ed3f40", "10ed4030"):
+            self.assertNotIn("slab", fns[address]["scope"])
+        self.assertIn("0x11fada90", fns["10ed3f40"]["scope"])
+        self.assertIn("0x11fadb60", fns["10ed4030"]["scope"])
+        # byte-wide writes: the policy flag at +4 and the load result flag at +8 leave their padding
+        self.assertEqual(code(0x10ED3D98, 4), "c6410400")
+        self.assertEqual(code(0x10ED3D38, 6), "8a4204884104")
+        self.assertEqual(code(0x10ED568F, 4), "c6410800")
+        self.assertEqual(code(0x10ED581E, 6), "8a4208884108")
+        for address in ("10ed3d30", "10ed3d60", "10ed3d90", "10ed3e20"):
+            self.assertIn("bUseMemoryPools", fns[address]["scope"])
+        for address in ("10ed5680", "10ed5810"):
+            self.assertIn("+0x09..+0x0b", fns[address]["scope"])
+        # common_vsprintf default mode: -1 for zero capacity, -2 when the output fills the buffer
+        self.assertEqual(code(0x116883F7, 7), "85db750583ceff")
+        self.assertEqual(code(0x1168840A, 3), "6afe5e")
+        self.assertNotIn("two-pass", fns["1168974d"]["scope"])
+        layouts = (Path(__file__).resolve().parents[1] / "port" / "recovered_types" / "guest32_layouts.h").read_text(encoding="utf-8")
+        self.assertIn("ROME2_LAYOUT_ASSERT(rome2_fx_memory_allocation_policy_32, use_memory_pools, 0x04);", layouts)
+        self.assertIn('_Static_assert(sizeof(rome2_fx_memory_pool_32) == 0x0c, "fx memory pool 32 size");', layouts)
+        self.assertIn("ROME2_LAYOUT_ASSERT(rome2_fx_memory_pool_chunk_32, free_count, 0x09);", layouts)
+        self.assertNotIn("use_default_hooks", layouts)
+
     def test_layer81_facefx_name_avl_sealed_p10_contracts(self):
         ev = self.registry["rea_layer81_evidence"]
         self.assertTrue(ev["partition10_sealed"])

@@ -3,13 +3,14 @@
 #include <stdio.h>
 #include <string.h>
 
+enum { L80_CHUNK_WALK_LIMIT = 0x10000 };
+
 void rome2_l80_ctx_init(
     rome2_l80_fx_ctx *ctx,
     uint8_t *arena_bytes,
     uint32_t base_va,
     uint32_t arena_size,
     uint32_t heap_start_va) {
-    uint32_t i;
     if (ctx == NULL) {
         return;
     }
@@ -18,9 +19,6 @@ void rome2_l80_ctx_init(
     ctx->arena_base_va = base_va;
     ctx->arena_size = arena_size;
     ctx->heap_cursor = heap_start_va;
-    for (i = 0u; i < 16u; ++i) {
-        ctx->slabs[i].block_size = (i + 1u) * 8u;
-    }
 }
 
 void *rome2_l80_mut_ptr(const rome2_l80_fx_ctx *ctx, uint32_t va, uint32_t bytes) {
@@ -42,13 +40,17 @@ const void *rome2_l80_const_ptr(const rome2_l80_fx_ctx *ctx, uint32_t va, uint32
     return rome2_l80_mut_ptr(ctx, va, bytes);
 }
 
-/* 0x10ed3d90 */
+/* 0x10ed3d90: byte +4 is cleared, bytes +5..+7 are left alone. */
 rome2_fx_memory_allocation_policy_32 *rome2_l80_alloc_policy_ctor_default(
     rome2_fx_memory_allocation_policy_32 *self) {
     if (self == NULL) {
         return NULL;
     }
-    memset(self, 0, sizeof(*self));
+    self->alloc_type = 0;
+    self->use_memory_pools = 0u;
+    self->alloc_fn_va = 0u;
+    self->alloc_dbg_fn_va = 0u;
+    self->free_fn_va = 0u;
     return self;
 }
 
@@ -56,7 +58,7 @@ rome2_fx_memory_allocation_policy_32 *rome2_l80_alloc_policy_ctor_default(
 rome2_fx_memory_allocation_policy_32 *rome2_l80_alloc_policy_ctor_full(
     rome2_fx_memory_allocation_policy_32 *self,
     int32_t alloc_type,
-    uint8_t use_default_hooks,
+    uint8_t use_memory_pools,
     uint32_t alloc_fn_va,
     uint32_t alloc_dbg_fn_va,
     uint32_t free_fn_va) {
@@ -64,14 +66,21 @@ rome2_fx_memory_allocation_policy_32 *rome2_l80_alloc_policy_ctor_full(
         return NULL;
     }
     self->alloc_type = alloc_type;
-    self->use_default_hooks = use_default_hooks;
-    self->pad05[0] = 0u;
-    self->pad05[1] = 0u;
-    self->pad05[2] = 0u;
+    self->use_memory_pools = use_memory_pools;
     self->alloc_fn_va = alloc_fn_va;
     self->alloc_dbg_fn_va = alloc_dbg_fn_va;
     self->free_fn_va = free_fn_va;
     return self;
+}
+
+static void l80_alloc_policy_copy_fields(
+    rome2_fx_memory_allocation_policy_32 *self,
+    const rome2_fx_memory_allocation_policy_32 *other) {
+    self->alloc_type = other->alloc_type;
+    self->use_memory_pools = other->use_memory_pools;
+    self->alloc_fn_va = other->alloc_fn_va;
+    self->alloc_dbg_fn_va = other->alloc_dbg_fn_va;
+    self->free_fn_va = other->free_fn_va;
 }
 
 /* 0x10ed3d30 */
@@ -81,7 +90,7 @@ rome2_fx_memory_allocation_policy_32 *rome2_l80_alloc_policy_ctor_copy(
     if (self == NULL || other == NULL) {
         return self;
     }
-    *self = *other;
+    l80_alloc_policy_copy_fields(self, other);
     return self;
 }
 
@@ -90,78 +99,217 @@ rome2_fx_memory_allocation_policy_32 *rome2_l80_alloc_policy_assign(
     rome2_fx_memory_allocation_policy_32 *self,
     const rome2_fx_memory_allocation_policy_32 *other) {
     if (self != NULL && other != NULL && self != other) {
-        *self = *other;
+        l80_alloc_policy_copy_fields(self, other);
     }
     return self;
 }
 
-/* 0x10ed3f40 */
-uint32_t rome2_l80_fx_allocate(rome2_l80_fx_ctx *ctx, uint32_t bytes) {
+/* The call through the policy's allocate pointer at 0x11fadb58. */
+static uint32_t l80_system_alloc(rome2_l80_fx_ctx *ctx, uint32_t bytes) {
     uint32_t aligned;
-    uint32_t i;
+    uint32_t off;
     uint32_t va;
-    if (ctx == NULL || bytes == 0u) {
-        return 0u;
-    }
-    ++ctx->alloc_calls;
-    if (ctx->slab_enabled != 0u) {
-        for (i = 0u; i < 16u; ++i) {
-            rome2_l80_fx_slab_bucket *sb = &ctx->slabs[i];
-            if (bytes <= sb->block_size && sb->slab_base_va != 0u && sb->free_count > 0u) {
-                uint32_t blk_va = sb->slab_base_va + (uint32_t)sb->next_free_idx * sb->block_size;
-                const uint8_t *blk = (const uint8_t *)rome2_l80_const_ptr(ctx, blk_va, 1u);
-                if (blk != NULL) {
-                    sb->next_free_idx = *blk;
-                    --sb->free_count;
-                    return blk_va;
-                }
-            }
-        }
-    }
     if (ctx->custom_alloc != NULL) {
         return ctx->custom_alloc(ctx, bytes);
+    }
+    if (bytes == 0u || bytes > 0xfffffff8u) {
+        return 0u; /* bounded: the host arena hands out no empty block */
     }
     aligned = (bytes + 7u) & ~7u;
     if (ctx->heap_cursor < ctx->arena_base_va) {
         return 0u;
     }
-    {
-        uint32_t off = ctx->heap_cursor - ctx->arena_base_va;
-        if (off > ctx->arena_size || aligned > ctx->arena_size - off) {
-            return 0u;
-        }
+    off = ctx->heap_cursor - ctx->arena_base_va;
+    if (off > ctx->arena_size || aligned > ctx->arena_size - off) {
+        return 0u;
     }
     va = ctx->heap_cursor;
     ctx->heap_cursor += aligned;
     return va;
 }
 
-/* 0x10ed4030 */
+/* The call through the policy's free pointer at 0x11fadb60. */
+static void l80_system_free(rome2_l80_fx_ctx *ctx, uint32_t ptr_va, uint32_t bytes) {
+    if (ctx->custom_free != NULL) {
+        ctx->custom_free(ctx, ptr_va, bytes);
+    }
+}
+
+static rome2_fx_memory_pool_chunk_32 *l80_chunk(const rome2_l80_fx_ctx *ctx, uint32_t chunk_va) {
+    if (chunk_va == 0u) {
+        return NULL;
+    }
+    return (rome2_fx_memory_pool_chunk_32 *)rome2_l80_mut_ptr(
+        ctx, chunk_va, (uint32_t)sizeof(rome2_fx_memory_pool_chunk_32));
+}
+
+/*
+ * Chunk construction as written in FxAllocate's growth path and in the pool
+ * constructor: a 0x10 record, linked before its blocks are allocated, with
+ * free block k holding k + 1 in its first byte.
+ */
+static rome2_fx_memory_pool_chunk_32 *l80_chunk_create(
+    rome2_l80_fx_ctx *ctx,
+    const rome2_fx_memory_pool_32 *pool,
+    uint32_t *link) {
+    uint32_t chunk_va = l80_system_alloc(ctx, (uint32_t)sizeof(rome2_fx_memory_pool_chunk_32));
+    rome2_fx_memory_pool_chunk_32 *chunk = l80_chunk(ctx, chunk_va);
+    uint32_t count = pool->blocks_per_chunk;
+    uint8_t *blocks;
+    uint32_t i;
+    if (chunk == NULL) {
+        return NULL; /* bounded: the original writes through the failed allocation */
+    }
+    chunk->next_va = 0u;
+    *link = chunk_va;
+    chunk->bytes = count * pool->block_size;
+    chunk->blocks_va = l80_system_alloc(ctx, chunk->bytes);
+    chunk->next_free = 0u;
+    chunk->free_count = (uint8_t)count;
+    blocks = (chunk->blocks_va == 0u || chunk->bytes == 0u)
+        ? NULL
+        : (uint8_t *)rome2_l80_mut_ptr(ctx, chunk->blocks_va, chunk->bytes);
+    if (blocks == NULL) {
+        chunk->free_count = 0u; /* bounded: the original threads the list through the failed allocation */
+        return chunk;
+    }
+    for (i = 0u; i < count; ++i) {
+        blocks[i * pool->block_size] = (uint8_t)(i + 1u);
+    }
+    return chunk;
+}
+
+static uint32_t l80_chunk_pop(
+    const rome2_l80_fx_ctx *ctx,
+    const rome2_fx_memory_pool_32 *pool,
+    rome2_fx_memory_pool_chunk_32 *chunk) {
+    uint32_t block_va = chunk->blocks_va + (uint32_t)chunk->next_free * pool->block_size;
+    const uint8_t *block = (const uint8_t *)rome2_l80_const_ptr(ctx, block_va, 1u);
+    if (block == NULL) {
+        return 0u; /* bounded */
+    }
+    chunk->next_free = *block;
+    chunk->free_count--;
+    return block_va;
+}
+
+/*
+ * 0x10ed3f40: with pooling on, the first pool whose block size covers the
+ * request serves it from the first chunk with a free block, growing the chunk
+ * list at its tail when every chunk is full. Larger requests, and every
+ * request with pooling off, go to the policy's allocate pointer.
+ */
+uint32_t rome2_l80_fx_allocate(rome2_l80_fx_ctx *ctx, uint32_t bytes) {
+    uint32_t i;
+    if (ctx == NULL) {
+        return 0u;
+    }
+    ++ctx->alloc_calls;
+    if (ctx->pooling_enabled != 0u) {
+        for (i = 0u; i < ROME2_FX_MEMORY_POOL_COUNT; ++i) {
+            const rome2_fx_memory_pool_32 *pool = &ctx->pools[i];
+            rome2_fx_memory_pool_chunk_32 *last = NULL;
+            rome2_fx_memory_pool_chunk_32 *chunk;
+            uint32_t chunk_va = pool->first_chunk_va;
+            uint32_t steps = 0u;
+            if (bytes > pool->block_size) {
+                continue;
+            }
+            while (chunk_va != 0u) {
+                chunk = l80_chunk(ctx, chunk_va);
+                if (chunk == NULL || steps++ >= L80_CHUNK_WALK_LIMIT) {
+                    return 0u; /* bounded */
+                }
+                if (chunk->free_count != 0u) {
+                    return l80_chunk_pop(ctx, pool, chunk);
+                }
+                last = chunk;
+                chunk_va = chunk->next_va;
+            }
+            if (last == NULL) {
+                return 0u; /* bounded: the original allocates the record, then links it through a NULL tail */
+            }
+            chunk = l80_chunk_create(ctx, pool, &last->next_va);
+            if (chunk == NULL || chunk->free_count == 0u) {
+                return 0u;
+            }
+            return l80_chunk_pop(ctx, pool, chunk);
+        }
+    }
+    return l80_system_alloc(ctx, bytes);
+}
+
+/*
+ * 0x10ed4030: the size picks the pool exactly as in FxAllocate, the address
+ * picks the chunk, and the block becomes the head of that chunk's free list.
+ */
 void rome2_l80_fx_free(rome2_l80_fx_ctx *ctx, uint32_t ptr_va, uint32_t bytes) {
     uint32_t i;
     if (ctx == NULL || ptr_va == 0u) {
         return;
     }
     ++ctx->free_calls;
-    if (ctx->slab_enabled != 0u) {
-        for (i = 0u; i < 16u; ++i) {
-            rome2_l80_fx_slab_bucket *sb = &ctx->slabs[i];
-            if (bytes <= sb->block_size && sb->slab_base_va != 0u && sb->capacity > 0u) {
-                uint32_t span = (uint32_t)sb->capacity * sb->block_size;
-                if (ptr_va >= sb->slab_base_va && ptr_va < sb->slab_base_va + span) {
-                    uint8_t *blk = (uint8_t *)rome2_l80_mut_ptr(ctx, ptr_va, 1u);
-                    if (blk != NULL) {
-                        *blk = sb->next_free_idx;
-                        sb->next_free_idx = (uint8_t)((ptr_va - sb->slab_base_va) / sb->block_size);
-                        ++sb->free_count;
-                        return;
-                    }
-                }
+    if (ctx->pooling_enabled != 0u) {
+        for (i = 0u; i < ROME2_FX_MEMORY_POOL_COUNT; ++i) {
+            const rome2_fx_memory_pool_32 *pool = &ctx->pools[i];
+            uint32_t span = (uint32_t)pool->blocks_per_chunk * pool->block_size;
+            uint32_t chunk_va = pool->first_chunk_va;
+            uint32_t steps = 0u;
+            if (bytes > pool->block_size) {
+                continue;
             }
+            while (chunk_va != 0u && steps++ < L80_CHUNK_WALK_LIMIT) {
+                rome2_fx_memory_pool_chunk_32 *chunk = l80_chunk(ctx, chunk_va);
+                if (chunk == NULL) {
+                    return; /* bounded */
+                }
+                if (ptr_va >= chunk->blocks_va && ptr_va - chunk->blocks_va < span) {
+                    uint8_t *block = (uint8_t *)rome2_l80_mut_ptr(ctx, ptr_va, 1u);
+                    if (block == NULL) {
+                        return; /* bounded */
+                    }
+                    *block = chunk->next_free;
+                    chunk->free_count++;
+                    chunk->next_free = (uint8_t)((ptr_va - chunk->blocks_va) / pool->block_size);
+                    return;
+                }
+                chunk_va = chunk->next_va;
+            }
+            return; /* bounded: the original writes through the NULL chunk when none holds the pointer */
         }
     }
-    if (ctx->custom_free != NULL) {
-        ctx->custom_free(ctx, ptr_va, bytes);
+    l80_system_free(ctx, ptr_va, bytes);
+}
+
+/* 0x10ed48d0 (not in the recovered set): blocks per chunk is 0x1000 / size, capped at 0xff. */
+uint32_t rome2_l80_memory_pool_init(rome2_l80_fx_ctx *ctx, uint32_t pool_index, uint32_t block_size) {
+    rome2_fx_memory_pool_32 *pool;
+    uint32_t count;
+    if (ctx == NULL || pool_index >= ROME2_FX_MEMORY_POOL_COUNT || block_size == 0u) {
+        return 0u; /* bounded: the original divides by the block size */
+    }
+    pool = &ctx->pools[pool_index];
+    count = 0x1000u / block_size;
+    pool->block_size = block_size;
+    if (count >= 0x100u) {
+        count = 0xffu;
+    } else if (count == 0u) {
+        count = block_size * 8u;
+    }
+    pool->blocks_per_chunk = (uint8_t)count;
+    pool->first_chunk_va = 0u;
+    (void)l80_chunk_create(ctx, pool, &pool->first_chunk_va);
+    return pool->first_chunk_va;
+}
+
+/* The pool loop of memory startup 0x10ed4270 (not in the recovered set). */
+void rome2_l80_memory_pools_startup(rome2_l80_fx_ctx *ctx) {
+    uint32_t i;
+    if (ctx == NULL || ctx->pooling_enabled == 0u) {
+        return;
+    }
+    for (i = 0u; i < ROME2_FX_MEMORY_POOL_COUNT; ++i) {
+        (void)rome2_l80_memory_pool_init(ctx, i, (i + 1u) * 8u);
     }
 }
 
@@ -267,7 +415,10 @@ uint32_t rome2_l80_safe_bool_play_result(const int32_t *play_status) {
 /* 0x10ed5680, 0x10ed5810, 0x10ed5830, 0x10ed7bc0, 0x10ed6100 */
 rome2_fx_actor_load_result_32 *rome2_l80_actor_load_result_ctor(rome2_fx_actor_load_result_32 *self) {
     if (self != NULL) {
-        memset(self, 0, sizeof(*self));
+        self->error_code = 0;
+        self->secondary_error = 0;
+        self->flags08 = 0u;
+        self->actor_va = 0u;
     }
     return self;
 }
@@ -276,7 +427,11 @@ rome2_fx_actor_load_result_32 *rome2_l80_actor_load_result_assign_move(
     rome2_fx_actor_load_result_32 *self,
     const rome2_fx_actor_load_result_32 *other) {
     if (self != NULL && other != NULL) {
-        *self = *other;
+        /* 0x10ed5810 moves the byte at +8 alone; the copy assignment moves all four dwords */
+        self->error_code = other->error_code;
+        self->secondary_error = other->secondary_error;
+        self->flags08 = other->flags08;
+        self->actor_va = other->actor_va;
     }
     return self;
 }
@@ -572,6 +727,9 @@ int32_t rome2_l80_common_vsprintf(
             ctx->last_errno = 0x16;
         }
         return -1;
+    }
+    if (dst != NULL && cap == 0u) {
+        return -1; /* 0x116883f7: a buffer without capacity fails with errno untouched */
     }
 #pragma warning(push)
 #pragma warning(disable:4774)

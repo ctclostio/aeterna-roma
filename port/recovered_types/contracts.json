@@ -28747,7 +28747,7 @@
       "callee_pop_bytes": 4,
       "calling_convention": "thiscall",
       "ordinary_return": "FxMemoryAllocationPolicy* __thiscall ctor(const policy&)",
-      "scope": "copies 20B allocation policy fields",
+      "scope": "copies the allocation type, the bUseMemoryPools byte at +0x04 and the three function pointers; +0x05..+0x07 are not written",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "10ed3d52"
@@ -28761,8 +28761,8 @@
       "stack_argument_bytes": 20,
       "callee_pop_bytes": 20,
       "calling_convention": "thiscall",
-      "ordinary_return": "FxMemoryAllocationPolicy* __thiscall ctor(type, flag, alloc, allocDbg, free)",
-      "scope": "initializes 20B allocation policy with function pointers",
+      "ordinary_return": "FxMemoryAllocationPolicy* __thiscall ctor(type, bool use_memory_pools, alloc, allocDbg, free)",
+      "scope": "stores the allocation type, the bUseMemoryPools byte at +0x04 and the three function pointers; +0x05..+0x07 are not written",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "10ed3d84"
@@ -28777,7 +28777,7 @@
       "callee_pop_bytes": 0,
       "calling_convention": "thiscall",
       "ordinary_return": "FxMemoryAllocationPolicy* __thiscall ctor()",
-      "scope": "zero-initializes 20B allocation policy",
+      "scope": "zeroes the allocation type, the bUseMemoryPools byte at +0x04 and the three function pointers; +0x05..+0x07 are not written",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "10ed3db1"
@@ -28837,7 +28837,7 @@
       "callee_pop_bytes": 4,
       "calling_convention": "thiscall",
       "ordinary_return": "FxMemoryAllocationPolicy* __thiscall operator=(const policy&)",
-      "scope": "assigns 20B allocation policy checking self-assignment",
+      "scope": "unless self-assigned copies the allocation type, the bUseMemoryPools byte at +0x04 and the three function pointers; +0x05..+0x07 are not written",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "10ed3e46"
@@ -28852,7 +28852,7 @@
       "callee_pop_bytes": 0,
       "calling_convention": "cdecl",
       "ordinary_return": "void* FxAllocate(size_t bytes)",
-      "scope": "allocates from 16 FaceFX fixed-size slab pools or configured system allocator",
+      "scope": "with the pooling flag 0x11fadb54 set, the first of the 16 12B pool records at 0x11fada90 whose block size covers the request pops a block from its first 0x10B chunk with a free block, appending a chunk through the policy allocate pointer 0x11fadb58 when all are full; larger requests and pooling off tail-jump to that pointer",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "10ed4005",
@@ -28869,7 +28869,7 @@
       "callee_pop_bytes": 0,
       "calling_convention": "cdecl",
       "ordinary_return": "void FxFree(void *ptr, size_t bytes)",
-      "scope": "returns block to 16 FaceFX fixed-size slab pools or configured system deallocator",
+      "scope": "ignores NULL; with the pooling flag set, the first pool whose block size covers the size pushes the block onto the free list of the chunk whose address range holds it; larger sizes and pooling off call the policy free pointer 0x11fadb60 with (ptr, bytes)",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "10ed4072",
@@ -29171,7 +29171,7 @@
       "callee_pop_bytes": 0,
       "calling_convention": "thiscall",
       "ordinary_return": "FxActorLoadResult* __thiscall FxActorLoadResult()",
-      "scope": "zero-initializes 0x10B actor/animset load result",
+      "scope": "zeroes dwords +0x00, +0x04 and +0x0c and the byte at +0x08; +0x09..+0x0b are not written",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "10ed569a"
@@ -29201,7 +29201,7 @@
       "callee_pop_bytes": 4,
       "calling_convention": "thiscall",
       "ordinary_return": "FxActorLoadResult* __thiscall operator=(FxActorLoadResult&&)",
-      "scope": "moves 0x10B load result fields and returns this",
+      "scope": "copies dwords +0x00, +0x04 and +0x0c and the byte at +0x08, leaving +0x09..+0x0b, and returns this",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "10ed582c"
@@ -29384,7 +29384,7 @@
       "callee_pop_bytes": 0,
       "calling_convention": "cdecl",
       "ordinary_return": "int common_vsprintf(uint64 opts, char *buf, size_t cap, const char *fmt, locale, va_list)",
-      "scope": "validates pointers and executes __crt_stdio_output string formatting",
+      "scope": "EINVAL and -1 for a NULL format or a NULL buffer with capacity; runs the __crt_stdio_output string processor; with a buffer and default options returns -1 for zero capacity and -2 with buf[cap-1] = 0 when the output fills the buffer, otherwise terminates and returns the count",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "116883f6"
@@ -29415,7 +29415,7 @@
       "callee_pop_bytes": 0,
       "calling_convention": "thiscall",
       "ordinary_return": "int __thiscall output_processor::process()",
-      "scope": "executes two-pass CRT printf format state machine over format string",
+      "scope": "runs the CRT printf format state machine over the format string once: the pass counter at +0x450 reaches 2 after the single pass and returns the character count at +0x18; an invalid state sets EINVAL and returns -1",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "11689782"
@@ -48122,7 +48122,7 @@
     {
       "address": "10ed3f40",
       "hex": "803d54dbfa1100",
-      "purpose": "0x10ed3f40 FxAllocate slab pool flag check"
+      "purpose": "0x10ed3f40 FxAllocate memory pooling flag check (0x11fadb54)"
     },
     {
       "address": "10ed4030",
@@ -72297,7 +72297,19 @@
     "limitations": [
       "Layer 80 begins Partition 10 (fresh_partition10_batched: 59 records) alongside sealed Partitions 1-9 (2,782 prior; 2,841 cumulative across 1,871 functions)",
       "Only Direct CALL/JMP closure is audited statically; FxLog virtual Log() dispatch and FxMemoryAllocationPolicy function pointers remain callback-injected in bounded C17 tests"
-    ]
+    ],
+    "model_revision": {
+      "revision": 1,
+      "date": "2026-11-25",
+      "evidence": "same 59 Layer 80 records; no new REA operations",
+      "summary": [
+        "FxAllocate/FxFree model rewritten against the retained assembly: 16 pool records of 12 bytes (block size, blocks-per-chunk byte, first chunk) at 0x11fada90, each with a singly linked list of 0x10-byte chunk records (blocks, byte size, next-free index byte, free-count byte, next) whose free blocks hold the next free index in their first byte; a full pool grows by one chunk at the list tail through the policy allocate pointer; the model had one host slab per bucket and no growth",
+        "pool sizes come from memory startup 0x10ed4270 and the pool constructor 0x10ed48d0, both outside the recovered set and modelled from the canonical decompilation as unpinned adaptations: block sizes 8..0x80 in steps of 8, 0x1000 / size blocks per chunk capped at 0xff",
+        "rome2_fx_memory_allocation_policy_32 +0x04 is bUseMemoryPools (copied to 0x11fadb54 by startup), not a default-hooks flag; the constructors and the assignment leave +0x05..+0x07 unwritten",
+        "FxActorLoadResult constructor and move assignment skip +0x09..+0x0b; the copy assignment moves all 16 bytes",
+        "common_vsprintf returns -1 for a buffer with zero capacity; output_processor::process is a single pass"
+      ]
+    }
   },
   "rea_layer81_evidence": {
     "scope": "47 Layer 81 Partition 10 FaceFX FxName hash/AVL table, FxString, FxClientEvent, and FxClass static class init routines sealing Partition 10 (26 exports; 0x10411670..0x10f06b40)",

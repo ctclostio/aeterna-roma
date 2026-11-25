@@ -4226,17 +4226,43 @@ ROME2_LAYOUT_ASSERT(rome2_advice_lua_event20_32, payload_va, 0x10);
 
 typedef struct rome2_fx_memory_allocation_policy_32 {
     int32_t alloc_type;
-    uint8_t use_default_hooks;
-    uint8_t pad05[3];
+    uint8_t use_memory_pools; /* the process copy at 0x11fadb54 gates the fixed-size pools */
+    uint8_t pad05[3];         /* never written by the constructors or the assignment */
     uint32_t alloc_fn_va;
     uint32_t alloc_dbg_fn_va;
     uint32_t free_fn_va;
 } rome2_fx_memory_allocation_policy_32;
 _Static_assert(sizeof(rome2_fx_memory_allocation_policy_32) == 0x14, "fx memory alloc policy 32 size");
-ROME2_LAYOUT_ASSERT(rome2_fx_memory_allocation_policy_32, use_default_hooks, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_fx_memory_allocation_policy_32, use_memory_pools, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_fx_memory_allocation_policy_32, alloc_fn_va, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_fx_memory_allocation_policy_32, alloc_dbg_fn_va, 0x0c);
 ROME2_LAYOUT_ASSERT(rome2_fx_memory_allocation_policy_32, free_fn_va, 0x10);
+
+/* One of the 16 records at 0x11fada90 walked by FxAllocate (0x10ed3f40) and FxFree (0x10ed4030). */
+typedef struct rome2_fx_memory_pool_32 {
+    uint32_t block_size;
+    uint8_t blocks_per_chunk;
+    uint8_t pad05[3];
+    uint32_t first_chunk_va;
+} rome2_fx_memory_pool_32;
+_Static_assert(sizeof(rome2_fx_memory_pool_32) == 0x0c, "fx memory pool 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_memory_pool_32, blocks_per_chunk, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_fx_memory_pool_32, first_chunk_va, 0x08);
+
+/* Chunk record of a pool; a free block's first byte holds the index of the next free block. */
+typedef struct rome2_fx_memory_pool_chunk_32 {
+    uint32_t blocks_va;
+    uint32_t bytes;
+    uint8_t next_free;
+    uint8_t free_count;
+    uint8_t pad0a[2];
+    uint32_t next_va;
+} rome2_fx_memory_pool_chunk_32;
+_Static_assert(sizeof(rome2_fx_memory_pool_chunk_32) == 0x10, "fx memory pool chunk 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_memory_pool_chunk_32, bytes, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_fx_memory_pool_chunk_32, next_free, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_fx_memory_pool_chunk_32, free_count, 0x09);
+ROME2_LAYOUT_ASSERT(rome2_fx_memory_pool_chunk_32, next_va, 0x0c);
 
 typedef struct rome2_fx_log_stream_32 {
     uint32_t cursor;
@@ -4275,7 +4301,7 @@ typedef struct rome2_fx_actor_load_result_32 {
     int32_t error_code;
     int32_t secondary_error;
     uint8_t flags08;
-    uint8_t pad09[3];
+    uint8_t pad09[3]; /* skipped by the constructor and the move assignment, copied by the copy assignment */
     uint32_t actor_va;
 } rome2_fx_actor_load_result_32;
 _Static_assert(sizeof(rome2_fx_actor_load_result_32) == 0x10, "fx actor load result 32 size");

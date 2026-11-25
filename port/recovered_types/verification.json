@@ -66310,6 +66310,143 @@
       "Partition 10 Layer 81 (FaceFX FxName/AVL/FxClientEvent/FxClass)"
     ]
   },
+  "layer80_revision1": {
+    "status": "Layer 80 audited against the retained original-image evidence; allocator model and tests rewritten, remaining model confirmed; verified with bounded C17 /analyze and ASan suites, original-image contract verification and clean-public regression coverage",
+    "revises": "layer80",
+    "base_commit": "4950ef4",
+    "original_image_contracts": {
+      "schema": "rome2-recovered-types-v1",
+      "verified": true,
+      "functions": 1972,
+      "globals": 1096,
+      "vtables": 85,
+      "instruction_witnesses": 1581,
+      "scope": "static original-image evidence; native behavior requires separate tests"
+    },
+    "python_focused_contract_tests": 126,
+    "native_tests": {
+      "analyze": {
+        "suites": 139,
+        "failed": 0,
+        "local_ctest_log": "out/bridge-layer80r1-20261125/wt-analyze/Testing/Temporary/LastTest.log",
+        "log_sha256": "2b3c84c8c851a6c1d906aed374900479d3f5f781dc6fa6b9607e461577bf7e19",
+        "junit_sha256": "4b6869efee2cd0d46c85fbe3d22d6e9a283f8376335b24e3cc3338ad4583590c"
+      },
+      "asan": {
+        "suites": 139,
+        "failed": 0,
+        "local_ctest_log": "out/bridge-layer80r1-20261125/wt-asan/Testing/Temporary/LastTest.log",
+        "log_sha256": "b00c3a56082350ad291524b132c661147cd31fb103744bb88291075a89e4a623",
+        "junit_sha256": "417e42d533494c1bcf2fc53910d59d7d4f5c7afbb2bc670a85de213ec29c1c71"
+      },
+      "assertions_enabled": true
+    },
+    "facefx_alloc_singleton_log_ops_tests": {
+      "suites": 1,
+      "active_checks": 7,
+      "cases": [
+        "test_allocation_policy",
+        "test_fx_allocate_without_pools",
+        "test_fx_allocate_with_pools",
+        "test_singletons_and_results",
+        "test_log_stream",
+        "test_log_listeners_and_entries",
+        "test_crt_sprintf_s"
+      ]
+    },
+    "original_observations": [
+      "0x10ed3f40: pooling flag byte 0x11fadb54; 16 records of 0xc at 0x11fada90 (+0 block size, +4 blocks-per-chunk byte, +8 first chunk) scanned for block size >= request (unsigned); chunk walk for free-count byte +9 != 0; pop = blocks + next-free byte (+8) * block size, new head read from the block's first byte",
+      "0x10ed3f40 growth: CALL [0x11fadb58](0x10), record +0xc zeroed and linked through the last chunk's +0xc, +4 = blocks-per-chunk * block size, +0 = CALL [0x11fadb58](that size), +8 = 0, +9 = count, block k's first byte = k + 1, then block 0 popped; no fitting pool or pooling off: JMP [0x11fadb58]",
+      "0x10ed4030: NULL returns; pool chosen by size as in FxAllocate; chunk chosen by blocks <= ptr < blocks + blocks-per-chunk * block size; *ptr = next-free byte, free count incremented, next-free = (ptr - blocks) / block size; otherwise CALL [0x11fadb60](ptr, bytes)",
+      "0x10ed3d30 / 0x10ed3d60 / 0x10ed3d90 / 0x10ed3e20: dword +0, byte +4, dwords +8, +0xc, +0x10; +5..+7 never written",
+      "0x10ed5680 and 0x10ed5810: dwords +0, +4, +0xc and byte +8; 0x10ed5830: one 16-byte MOVUPS",
+      "0x11688295 default options with a buffer: capacity 0 -> -1 (0x116883f7); output filling the buffer -> buf[cap-1] = 0 and -2 (0x1168840a); 0x1168974d: pass counter +0x450 returns the count at +0x18 when it reaches 2",
+      "audited without change: FxSafeBool operators (0 = true, 0xffffffff = false), singleton constructors/destructors, FxLogStream append/format routines (\"%d\", \"%f\", \"%p\" through a 64-byte sprintf_s buffer, 0x3ff character limit), FxLog listener slots, FxLogEntry flush, FxLogManager, common_vsprintf_s and the sprintf_s wrapper"
+    ],
+    "native_adaptations": [
+      "Pool construction 0x10ed48d0 and the pool loop of memory startup 0x10ed4270 are outside the recovered set; modelled from the canonical decompilation without contract pins (block sizes 8..0x80 in steps of 8; 0x1000 / size blocks per chunk, 0xff when that reaches 0x100, the low byte of size * 8 when it is 0)",
+      "The pool records are context fields; chunk records and blocks live in the guest arena; the policy allocate and free pointers are host callbacks with an arena bump when absent",
+      "An empty chunk list, a failed chunk allocation and a pointer no chunk holds return early where the original writes through NULL"
+    ],
+    "layout_corrections": [
+      "rome2_fx_memory_allocation_policy_32: +0x04 renamed use_memory_pools (was use_default_hooks)",
+      "added rome2_fx_memory_pool_32 (0x0c) and rome2_fx_memory_pool_chunk_32 (0x10)"
+    ],
+    "contract_text_corrections": {
+      "functions": 10,
+      "globals": 0,
+      "instruction_witnesses": 1,
+      "byte_hashes_changed": 0
+    },
+    "public_python_clean": {
+      "checkout": "tracked public files at the revision commit, no original image/canonical exports",
+      "runs": [
+        {
+          "tests": 989,
+          "skipped": 355,
+          "failures": 0,
+          "errors": 0,
+          "version": "3.14"
+        },
+        {
+          "tests": 989,
+          "skipped": 355,
+          "failures": 0,
+          "errors": 0,
+          "version": "3.15"
+        }
+      ],
+      "original_image_dependent_skip_reason": "Total War Rome II/empire.retail.dll, canonical exports and private reports absent"
+    },
+    "rea": {
+      "new_operation_envelopes": 0,
+      "evidence": "out/facefx-layer80-20261125 (59 Layer 80 records)"
+    },
+    "local_logs": "out/bridge-layer80r1-20261125/",
+    "source_hash_scope": "files changed by this revision, UTF-8 text with LF line endings, excluding verification.json itself",
+    "sources": [
+      {
+        "path": "docs/vfs_recovery.md",
+        "bytes": 229504,
+        "sha256": "c59a73260b0c21b48032f63ba4bb98cead00f8707b4683449ae38dfbfe16da02"
+      },
+      {
+        "path": "port/recovered_types/contracts.json",
+        "bytes": 3654868,
+        "sha256": "8022b87e64ff1f278006c7407cfce8f042326f9f7c4add96af5346dc8d09b71e"
+      },
+      {
+        "path": "port/recovered_types/facefx_alloc_singleton_log_ops.c",
+        "bytes": 24670,
+        "sha256": "e413b96419f7737cdfdc6dea30a524faeb5d8c3ee65e77f0b2a4182af51b678c"
+      },
+      {
+        "path": "port/recovered_types/facefx_alloc_singleton_log_ops.h",
+        "bytes": 8629,
+        "sha256": "fe463979832bd06fed18a25ca82ec9951f532ecab6dd62b4471a3df243a8bec1"
+      },
+      {
+        "path": "port/recovered_types/guest32_layouts.h",
+        "bytes": 259254,
+        "sha256": "d5642137004a42c374aecc0b6a8b945d5cd7e1a6be0f098f16120f6b380d5654"
+      },
+      {
+        "path": "port/recovered_types/test_facefx_alloc_singleton_log_ops.c",
+        "bytes": 24318,
+        "sha256": "c943549030deae887faadfe1e0cb06e86fbafb0611776d8151c526e742044143"
+      },
+      {
+        "path": "progress.md",
+        "bytes": 210495,
+        "sha256": "4d4748e1ee9d7a764404df48eb4e6fb0329515653fe8cb74b237e08b519ad190"
+      },
+      {
+        "path": "scripts/test_type_recovery_contracts.py",
+        "bytes": 273983,
+        "sha256": "1ab223d29ef4a2c7b110f6c0cf06501a35f23fe73097ad732fcc5d83217d1438"
+      }
+    ]
+  },
   "layer81": {
     "status": "verified with bounded C17 /analyze and ASan suites, updated original-image contract verification, and clean-public regression coverage",
     "original_image_contracts": {
