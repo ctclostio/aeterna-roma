@@ -361,16 +361,16 @@ static void test_value_types(void) {
 
     /* 0x10ed5700: the class vtable, not the source's, and the data member */
     assert(rome2_l84_resource_manager_ctor_copy(&target, &source) == &target);
-    assert(target.vtable_va == 0x1183a798u && target.field_04 == 0x12345678u);
+    assert(target.vtable_va == 0x1183a798u && target.state_va == 0x12345678u);
     assert(source.vtable_va == 0xdeadbeefu);
 
     /* 0x10ed59e0: the data member only */
     target.vtable_va = 0x0badf00du;
-    source.field_04 = 0x9abcdef0u;
+    source.state_va = 0x9abcdef0u;
     assert(rome2_l84_resource_manager_assign(&target, &source) == &target);
-    assert(target.vtable_va == 0x0badf00du && target.field_04 == 0x9abcdef0u);
+    assert(target.vtable_va == 0x0badf00du && target.state_va == 0x9abcdef0u);
     assert(rome2_l84_resource_manager_assign(&target, NULL) == &target);
-    assert(target.field_04 == 0x9abcdef0u);
+    assert(target.state_va == 0x9abcdef0u);
     assert(rome2_l84_resource_manager_ctor_copy(NULL, &source) == NULL);
 
     /* 0x10ed7bf0: true only when both error codes are zero */

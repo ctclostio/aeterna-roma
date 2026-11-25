@@ -157,7 +157,7 @@ rome2_fx_resource_manager_32 *rome2_l84_resource_manager_ctor_copy(
     const rome2_fx_resource_manager_32 *other) {
     if (self != NULL && other != NULL) {
         self->vtable_va = ROME2_FX_VTABLE_RESOURCE_MANAGER;
-        self->field_04 = other->field_04;
+        self->state_va = other->state_va;
     }
     return self;
 }
@@ -167,7 +167,7 @@ rome2_fx_resource_manager_32 *rome2_l84_resource_manager_assign(
     rome2_fx_resource_manager_32 *self,
     const rome2_fx_resource_manager_32 *other) {
     if (self != NULL && other != NULL) {
-        self->field_04 = other->field_04;
+        self->state_va = other->state_va;
     }
     return self;
 }

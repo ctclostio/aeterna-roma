@@ -33024,6 +33024,1040 @@
         "10ed9ac9",
         "10ed9aec"
       ]
+    },
+    {
+      "address": "1033c6a0",
+      "bytes": 10,
+      "sha256": "e420433dd6bd65ed21f9536bca0b082a36ebdb8084db4f82f793405deee9a327",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall fxclass_is_same(const FxClass*) const",
+      "scope": "CMP ECX, [ESP+4]; SETZ AL: class descriptors are compared by address; reached by the tail jump of 0x10ed78b0",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "1033c6a7"
+      ]
+    },
+    {
+      "address": "10ed65a0",
+      "bytes": 8,
+      "sha256": "1fd6d7bedca7c35f8c793d53de81bc01d589984351d2f05e46e797422d389a9e",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "uint __thiscall FxActor::FindBone(const FxName&) const",
+      "scope": "ADD ECX, 0xc; JMP 0x10efd5c0: the bone-table scan on the table embedded at +0x0c",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "direct_jmp",
+        "address": "10ed65a3",
+        "target": "10efd5c0"
+      }
+    },
+    {
+      "address": "10ed78a0",
+      "bytes": 8,
+      "sha256": "e553e0f721c8a9dc5fb711ef46e45e3ab94722f021f4aed67f8ad7d88fa78768",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxActor::InitializeFrame(FxActorInstance&) const",
+      "scope": "ADD ECX, 0xc; JMP 0x10efd610: the reference-transform copy on the bone table at +0x0c",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "direct_jmp",
+        "address": "10ed78a3",
+        "target": "10efd610"
+      }
+    },
+    {
+      "address": "10ed78b0",
+      "bytes": 20,
+      "sha256": "63ebeb545e8bcc35fb48fe0787b81f9f5daa68b98cb393926dca66fcdc36ed79",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxObject::IsA(const FxClass*) const",
+      "scope": "calls the object's vtable slot +0 for its class descriptor; a NULL descriptor returns AL = 0 through the RET 4 at 0x10ed78c1, otherwise the body tail-jumps (0x10ed78ba) to FxClass::operator== 0x1033c6a0 with the argument still on the stack; one folded body behind ten exports: IsA and IsExactKindOf of FxActor, FxActorInstance, FxAnim, FxAnimGroup and FxAnimSet",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed78c1"
+      ]
+    },
+    {
+      "address": "10ed7950",
+      "bytes": 20,
+      "sha256": "9867c44f2702d41154c864c36a5b12d1986d14ac005c5138a3c190428150da5d",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxObject::IsKindOf(const FxClass*) const",
+      "scope": "calls the object's vtable slot +0 for its class descriptor; a NULL descriptor returns AL = 0 through the RET 4 at 0x10ed7961, otherwise the body tail-jumps (0x10ed795a) to the base-chain walk 0x10ef2e80; one folded body behind the IsKindOf exports of the same five classes",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed7961"
+      ]
+    },
+    {
+      "address": "10ed7970",
+      "bytes": 8,
+      "sha256": "abc2c1d0d9b5704bdd8e63b11334abdb6eac46b639cec69e1b7e1e0083e41c0c",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxActor::ProcessFrame(FxActorInstance&) const",
+      "scope": "ADD ECX, 0xc; JMP 0x10efd630: the per-bone blend on the bone table at +0x0c",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "direct_jmp",
+        "address": "10ed7973",
+        "target": "10efd630"
+      }
+    },
+    {
+      "address": "10ed7980",
+      "bytes": 11,
+      "sha256": "dee6b2135bb71531469661ffd63cabae77813e631d7f790b5db079748f844b46",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxActorInstance::ReleaseCurveStateHandle(FxCacheHandle<FxCurveState>&)",
+      "scope": "ADD ECX, 0x100; JMP 0x10ed7990: the cache release on the curve-state cache at +0x100",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "direct_jmp",
+        "address": "10ed7986",
+        "target": "10ed7990"
+      }
+    },
+    {
+      "address": "10ed7990",
+      "bytes": 90,
+      "sha256": "c6c95730091eab45f8f2d883b360e351d74af54bdc2127682ece6b2538013bdc",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall curve_state_cache_release(FxCacheHandle<FxCurveState>&)",
+      "scope": "a handle {count, pool offset, block} whose count is 0xffffffff is left alone; a pool offset other than 0xffffffff zero-fills count bytes at [ECX] + offset through 0x116be510; a non-zero count with pool offset 0xffffffff releases the block through FxFree(block, count * 0x30); the handle is then stored as {0xffffffff, 0xffffffff, 0}",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed79e7"
+      ]
+    },
+    {
+      "address": "10ed8710",
+      "bytes": 239,
+      "sha256": "910bc9e024fe583ceb984ea01d32a107b7736bdb9349108deb301f33586d5bb5",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxEventManager::HasWorkThisFrame(float)",
+      "scope": "over the [+0x24] slots whose flag byte in [+0x1c] is non-zero: an 0xacB event at [+0x10] whose float at +0x88 equals the 0x1183b014 sentinel (unordered counts as different) is started by copying +0x18 to +0x90, storing +0x90 plus the argument at +0x84, copying +0x84 to +0x88, subtracting from +0x88 the float at +0x24 of the object linked at +0x0c when that pointer is set, and calling 0x10f09320 with 0.0f; every flagged slot then latches the result to 1 when the argument is not below its [+0x84] (COMISS; CMOVNC), and AL returns the latch",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed87fc"
+      ]
+    },
+    {
+      "address": "10ed9af0",
+      "bytes": 109,
+      "sha256": "95f33b0d1e37e25e00cd4f9fa8881168c31fce3ee030852d62e17ba65062b658",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void FxEventManager::SetCustomEventCallback(const FxFunctor&)",
+      "scope": "loads the functor pointer at 0x11fadb70 once; when it is set: clones the argument's implementation through its vtable slot +4 (NULL stays NULL), swaps it into that functor and destroys the previous implementation through slot +0 with flag 1, leaving the global as it is; otherwise allocates a 4B functor through 0x100d12b0, stores the clone and publishes it, a failed allocation storing NULL in the global",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed9b20",
+        "10ed9b2f",
+        "10ed9b39",
+        "10ed9b5c"
+      ]
+    },
+    {
+      "address": "10ed9b60",
+      "bytes": 89,
+      "sha256": "c339e39891d2121af318e3f16c2245a342f302c76d6b3a689df67951963ecbd1",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void FxEventManager::Shutdown(void)",
+      "scope": "for the functor pointer at 0x11fadb6c and then the one at 0x11fadb70: when set, destroys its implementation through vtable slot +0 with flag 1 if non-NULL, releases the 4B functor through 0x116835d7(ptr, 4) and clears the global",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ed9bb8"
+      ]
+    },
+    {
+      "address": "10eda380",
+      "bytes": 78,
+      "sha256": "4d515652de0acf043fa4b2a34adf9284a55bc280d2c0ccb7487ce0553a5081a6",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxResourceManager* __thiscall FxResourceManager::FxResourceManager()",
+      "scope": "stores this in the singleton pointer 0x11bd14ac, then the class vtable 0x1183a798 at +0; FxAllocate(0x14) supplies a state record whose four dwords and the byte at +0x10 are zeroed and whose address is stored at +4, a failed allocation storing NULL there; returns this",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10eda3c2",
+        "10eda3cd"
+      ]
+    },
+    {
+      "address": "10eda4c0",
+      "bytes": 318,
+      "sha256": "3eb1b476da484c2542fccc072a4bcee6ce5ced0f1fa1e3a2cc7d5d09d59d0d00",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxString& __thiscall fxstring_assign(const FxString&)",
+      "scope": "builds a temporary copy and swaps it with *this: capacity is length + 1, or 0 for an empty source; a capacity above 0x10 takes FxAllocate(capacity), otherwise the temporary's 16B inline buffer is used; the text is copied through 0x116bd8d0 and terminated when the length is non-zero; the swap moves exactly length bytes between inline buffers, exchanges data pointer, capacity and length, and the block *this owned is released through FxFree with its old capacity; returns this",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10eda5fb"
+      ]
+    },
+    {
+      "address": "10edd130",
+      "bytes": 13,
+      "sha256": "31345eecbb7c2fa806f7ce03755dc11698c15cc6225712f991c945426c469184",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxResourceManager::SetAutomaticGarbageCollection(bool)",
+      "scope": "stores the argument byte at +0x10 of the state record pointed to by +4",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10edd13a"
+      ]
+    },
+    {
+      "address": "10edef40",
+      "bytes": 1041,
+      "sha256": "083aeb296fa9c7a19b293c85b7e34713a1689531af62e298dbe65b750daad04c",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void FxName::DumpNameTableStatsToLog(void)",
+      "scope": "against the FxLogManager singleton (0x119f3890) and its level at +0x84: a level-4 \"Name table stats:\" entry when the level is at least 4, SetTabLevel(tab level + 1), FxName::GetNameStats (0x10edf860) into ten zeroed stack dwords, then nine level-4 entries (unique names, peak collisions, peak unique names, peak probes, used / total hash bins, minimum, maximum and average bin size, bytes used), each behind its own CMP [ECX+0x84], 4 whose failure jumps past every remaining entry, and SetTabLevel(tab level - 1)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10edf350"
+      ]
+    },
+    {
+      "address": "10ee2ad0",
+      "bytes": 67,
+      "sha256": "5b6126fc2f1d19cf3e7d6a3ca145acc1fdc7ca832a95271239386bf419e21d3d",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "FxClass* FxAnim::AllocateStaticClassFxAnim(void)",
+      "scope": "FxAllocate(0x18), NULL returning 0; describes FxNamedObject through 0x10ef3310 when the cached descriptor 0x11fadba8 is NULL, then constructs FxClass(\"FxAnim\", 10, base, 0xf8, 0x10ed6440) through 0x10ef2a10 in the block and returns it",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee2b0e",
+        "10ee2b12"
+      ]
+    },
+    {
+      "address": "10ee37e0",
+      "bytes": 38,
+      "sha256": "b9c3b93525c9b90302e706f2dca68c4a20f7e23d795e9ece14af0b81d55fdc99",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxAnim::DestroyEditorOnlyData()",
+      "scope": "a NULL pointer at +0xb0 returns AL = 0; otherwise the object is destroyed through its vtable slot +8 with flag 1, the pointer cleared and AL = 1 returned",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee3801",
+        "10ee3805"
+      ]
+    },
+    {
+      "address": "10ee3810",
+      "bytes": 77,
+      "sha256": "12aed689278c988bfa88b4502c3264f26e167f1b2f81dcd4b8c790eecb4d8025",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "uint __thiscall FxAnim::FindAnimCurve(const FxName&) const",
+      "scope": "scans the [+0x14] records of 0x28B at [+0x0c] (count read once, array pointer per record); a record name at +4 with a NULL entry is first bound to FxName::NullName (0x11fadb7c); returns the index of the first record whose entry pointer equals the argument's, or 0xffffffff",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee3851",
+        "10ee385a"
+      ]
+    },
+    {
+      "address": "10ee39d0",
+      "bytes": 77,
+      "sha256": "eca770b24be8d6f6ed2a3f979b12d8ef6c58996bdfc4e1a82f38b6aff2f7f8a7",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "uint __thiscall FxAnim::FindCompressedAnimCurve(const FxName&) const",
+      "scope": "the 0x10ee3810 scan over the [+0x20] records of 0x18B at [+0x18], name at record +4",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee3a11",
+        "10ee3a1a"
+      ]
+    },
+    {
+      "address": "10ee47d0",
+      "bytes": 13,
+      "sha256": "4b138c682de597834071e93de645b06c76a84e4bc1c36652b0910f3a5219de49",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxAnim::SetAudioAssetIndex(uint)",
+      "scope": "stores the argument into the dword at +0xec",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee47da"
+      ]
+    },
+    {
+      "address": "10ee47e0",
+      "bytes": 11,
+      "sha256": "23fabaedbf1283d9b2f76a87e172a2afeb12f7b2b754826b52b6c250654bf4e7",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxAnim::SetAudioAssetName(const FxString&)",
+      "scope": "ADD ECX, 0xd0; JMP 0x10eda4c0: FxString assignment to the string at +0xd0",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "direct_jmp",
+        "address": "10ee47e6",
+        "target": "10eda4c0"
+      }
+    },
+    {
+      "address": "10ee47f0",
+      "bytes": 11,
+      "sha256": "421e4ceb95eb9e97eac6487c1acd9c5c46779528f07a1ca6593e0542dc1d4d58",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxAnim::SetAudioAssetPath(const FxString&)",
+      "scope": "ADD ECX, 0xb4; JMP 0x10eda4c0: FxString assignment to the string at +0xb4",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "direct_jmp",
+        "address": "10ee47f6",
+        "target": "10eda4c0"
+      }
+    },
+    {
+      "address": "10ee4840",
+      "bytes": 205,
+      "sha256": "bb530ccbf58d458b248eabbf8412de140f71b6a9f27dab07c53166b046189f01",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxAnim::SetFrameRate(float)",
+      "scope": "a rate that is not below 24.0f (0x117667f8) and not above 120.0f (0x117580d8) is stored at +0xf4 and AL = 1 returned (RET at 0x10ee4876); any other rate, a NaN included, leaves +0xf4 alone, writes a level-2 \"An attempt to set an invalid frame rate of <rate> on animation \"<name>\" was ignored\" entry when the log level is at least 2, and returns AL = 0",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee4876",
+        "10ee490a"
+      ]
+    },
+    {
+      "address": "10ee49f0",
+      "bytes": 60,
+      "sha256": "dba467306519f49c3927aa8c8e2c7d52784e93d5109aee4b3e035e80139a6333",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxAnimGroup* __thiscall FxAnimGroup::FxAnimGroup()",
+      "scope": "runs the FxNamedObject constructor 0x10ef3260, stores the class vtable 0x1183bf8c at +0, zeroes the root and count of the animation tree (+0x0c, +0x10) and of the sub-group tree (+0x18, +0x1c) and stores the tree vtable 0x1183bf74 at +8 and +0x14; returns this",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee4a2b"
+      ]
+    },
+    {
+      "address": "10ee5410",
+      "bytes": 64,
+      "sha256": "00340d4e27221f90db27d2d0b6cb8155217a70c243523c61cab60434b70269fc",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "FxClass* FxAnimGroup::AllocateStaticClassFxAnimGroup(void)",
+      "scope": "the 0x10ee2ad0 sequence constructing FxClass(\"FxAnimGroup\", 1, base, 0x20, 0x10ed6460)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee544b",
+        "10ee544f"
+      ]
+    },
+    {
+      "address": "10ee5450",
+      "bytes": 52,
+      "sha256": "70c055b416b2132b56b6091553b3854cfcb01969de3e65e6d7099889cfcc646b",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "Iterator __thiscall FxAnimGroup::BeginAnimations()",
+      "scope": "stores {this+8, leftmost node of the tree rooted at [+0x0c] or NULL} through the hidden result pointer and returns it; exported for the Iterator and ConstIterator overloads",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee5473",
+        "10ee5481"
+      ]
+    },
+    {
+      "address": "10ee5490",
+      "bytes": 52,
+      "sha256": "d1f5c18e3cd723ca60651263cad39d87475662b02961e427a4302a5d99cb4e92",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "Iterator __thiscall FxAnimGroup::BeginSubGroups()",
+      "scope": "stores {this+0x14, leftmost node of the tree rooted at [+0x18] or NULL} through the hidden result pointer and returns it; exported for the Iterator and ConstIterator overloads",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee54b3",
+        "10ee54c1"
+      ]
+    },
+    {
+      "address": "10ee54d0",
+      "bytes": 257,
+      "sha256": "3bf8dc71b8094ccef397e3dfd960ca1b2f6c65535f1a14446c2804a89cd7f82e",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxAnimGroup::Clear()",
+      "scope": "walks the animation tree in key order (leftmost node, then in-order successors through the right child +0x18 and parent +0x10), destroying each non-NULL value at node +8 through its vtable slot +8 with flag 1 and zeroing it, then calls slot +4 of the tree at +8; walks the sub-group tree the same way, calling this body on each value before destroying it, and leaves through JMP [EAX+4] on the tree at +0x14",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "indirect_jmp",
+        "address": "10ee55ce",
+        "hex": "ff6004"
+      }
+    },
+    {
+      "address": "10ee55e0",
+      "bytes": 19,
+      "sha256": "603329e4a1211ede0fc8768e73bf47e3dffeea351bd0b71ba61715c201a8db3c",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "Iterator __thiscall FxAnimGroup::EndAnimations()",
+      "scope": "stores {this+8, NULL} through the hidden result pointer and returns it; one folded body behind four exports: EndAnimations and ReverseEndAnimations, Iterator and ConstIterator",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee55f0"
+      ]
+    },
+    {
+      "address": "10ee5600",
+      "bytes": 19,
+      "sha256": "84cf15264d7615082fb9b0e3a132677bfc70bf196ab7b689da5641818a47b0fd",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "Iterator __thiscall FxAnimGroup::EndSubGroups()",
+      "scope": "stores {this+0x14, NULL} through the hidden result pointer and returns it; one folded body behind four exports: EndSubGroups and ReverseEndSubGroups, Iterator and ConstIterator",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee5610"
+      ]
+    },
+    {
+      "address": "10ee56f0",
+      "bytes": 6,
+      "sha256": "14edad17e4dc85be87502f92d23d0ba69cd2a37b15d0b3038f303b10a77425c7",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "bool FxAnimGroup::GetLogErrorOnAnimationNotFound(void)",
+      "scope": "MOV AL, [0x11974fa0]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee56f5"
+      ]
+    },
+    {
+      "address": "10ee5700",
+      "bytes": 34,
+      "sha256": "739ae8d56bd103a7695bdaa8d760616de9443925e2a46b5aa1aa906d0f80b2d9",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxAnimGroup::RemoveAndDestroyAnim(const FxName&)",
+      "scope": "calls RemoveAnim 0x10ee5760; a non-NULL result is destroyed through its vtable slot +8 with flag 1 and AL = 1 returned, a NULL result returns AL = 0",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee571f"
+      ]
+    },
+    {
+      "address": "10ee5730",
+      "bytes": 34,
+      "sha256": "a60559f40bd8c29be627d771f2fb6df0a4fe866658bd8c37e1ebe60caaa81d71",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxAnimGroup::RemoveAndDestroySubGroup(const FxName&)",
+      "scope": "the 0x10ee5700 sequence over RemoveSubGroup 0x10ee5810",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee574f"
+      ]
+    },
+    {
+      "address": "10ee5760",
+      "bytes": 165,
+      "sha256": "eba6af929ba887f5f1806f91279fccff33939e41fbea7bda3cebb4abe3fb2dea",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxAnim* __thiscall FxAnimGroup::RemoveAnim(const FxName&)",
+      "scope": "searches the tree at +8: at each node an empty argument name is first bound to FxName::NullName (0x11fadb7c); an entry pointer equal to the node key at +4 ends the search, otherwise the two FxName::GetAsCstr (0x10edf6e0) texts are compared bytewise and the search goes to the left child (+0x14) only when the argument sorts lower, else to the right child (+0x18), equal text included; the found node, or NULL, is written to a stack slot whose address goes to the tree's vtable slot +0x10, and the node's value at +8, or NULL, is returned (RET 4 at 0x10ee57fe; the body ends in the backward JMP at 0x10ee5803)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee57fe"
+      ]
+    },
+    {
+      "address": "10ee5810",
+      "bytes": 165,
+      "sha256": "7f729c25bcbf46ca777fe35308ba1ae036abbe7948dd89d815815e354906e45a",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxAnimGroup* __thiscall FxAnimGroup::RemoveSubGroup(const FxName&)",
+      "scope": "the 0x10ee5760 body over the tree at +0x14 (RET 4 at 0x10ee58ae; ends in the backward JMP at 0x10ee58b3)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee58ae"
+      ]
+    },
+    {
+      "address": "10ee58c0",
+      "bytes": 52,
+      "sha256": "f507f1f811a3fcbd83fcc0d3be2a15ff5a2dd8e5bcd9a75f00c958b7b2055499",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "ReverseIterator __thiscall FxAnimGroup::ReverseBeginAnimations()",
+      "scope": "stores {this+8, rightmost node of the tree rooted at [+0x0c] or NULL} through the hidden result pointer and returns it; exported for the Iterator and ConstIterator overloads",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee58e3",
+        "10ee58f1"
+      ]
+    },
+    {
+      "address": "10ee5900",
+      "bytes": 52,
+      "sha256": "2e39b7009664cc8c8cc49683da7b0f32a0a4159bcbd997fe42cc3144ed584c1d",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "ReverseIterator __thiscall FxAnimGroup::ReverseBeginSubGroups()",
+      "scope": "stores {this+0x14, rightmost node of the tree rooted at [+0x18] or NULL} through the hidden result pointer and returns it; exported for the Iterator and ConstIterator overloads",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee5923",
+        "10ee5931"
+      ]
+    },
+    {
+      "address": "10ee5c50",
+      "bytes": 10,
+      "sha256": "b9e881e259474fc89508bc4a1b6dc50dbbc9ca691234650d206071b509d9217a",
+      "receiver_register": "none",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "void FxAnimGroup::SetLogErrorOnAnimationNotFound(bool)",
+      "scope": "stores the argument byte at 0x11974fa0",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee5c59"
+      ]
+    },
+    {
+      "address": "10ee5c60",
+      "bytes": 80,
+      "sha256": "e987caa01d131933752eff5d4e5ea00f1dfb086b8e85fe411acdb21dc89e228c",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxAnimGroup::_addAnim(FxAnim*)",
+      "scope": "a NULL argument returns AL = 0; otherwise the vtable slot +0xc of the tree at +8 is called with a stack result iterator, the tree's root slot (+0x0c), the animation's name at +4 and the address of the argument slot, and AL = 1 only when both dwords of the result are non-zero",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee5c9d",
+        "10ee5ca5",
+        "10ee5cad"
+      ]
+    },
+    {
+      "address": "10ee5cb0",
+      "bytes": 80,
+      "sha256": "b7046529d868505ecf3753912dfa85b630a4e6c1291462274ac4d082afbecd86",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxAnimGroup::_addSubGroup(FxAnimGroup*)",
+      "scope": "the 0x10ee5c60 body over the tree at +0x14 and its root slot at +0x18",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee5ced",
+        "10ee5cf5",
+        "10ee5cfd"
+      ]
+    },
+    {
+      "address": "10ee6050",
+      "bytes": 153,
+      "sha256": "c4496735f8816ed552eab39a39bdcde8c4e5fd1ca2932b8fe1b43184f533f86a",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxAnim* __thiscall FxAnimGroup::_findAnim(const FxName&)",
+      "scope": "searches the tree at +8: at each node an empty argument name is first bound to FxName::NullName (0x11fadb7c); an entry pointer equal to the node key at +4 ends the search, otherwise the two FxName::GetAsCstr (0x10edf6e0) texts are compared bytewise and the search goes to the left child (+0x14) only when the argument sorts lower, else to the right child (+0x18), equal text included; returns the found node's value at +8, or NULL",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee60dd",
+        "10ee60e6"
+      ]
+    },
+    {
+      "address": "10ee63f0",
+      "bytes": 153,
+      "sha256": "3aa6593cf25a80f10a57b1a3535575d0649639bf9e972e4985a3f72382c92b37",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxAnimGroup* __thiscall FxAnimGroup::_findSubGroup(const FxName&)",
+      "scope": "the 0x10ee6050 body over the tree at +0x14",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee647d",
+        "10ee6486"
+      ]
+    },
+    {
+      "address": "10ee7460",
+      "bytes": 257,
+      "sha256": "ab25b8cd5470696ac849c629e02d4d28659db5ab6a9defa78b82041ab8d4ac7c",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxAnimSet::AddReference(FxActor*)",
+      "scope": "runs FxList::Find 0x10ee75b0 on the reference list at +0x30 and creates the list sentinel through FxAllocate(0xc), linked to itself, when the head pointer is NULL; an iterator off the sentinel writes a level-2 \"FxAnimSet::AddReference: duplicate reference detected\" entry when the log level is at least 2; otherwise a 0xcB node {actor, sentinel, old tail} from FxAllocate is linked ahead of the sentinel and the count at +0x34 incremented (RET 4 at 0x10ee750c)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee750c",
+        "10ee755e"
+      ]
+    },
+    {
+      "address": "10ee7570",
+      "bytes": 64,
+      "sha256": "e9ee7e4dd96f14efc9133a61cb5bd9757f94873a9c398d8415cce7cc845867bc",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "FxClass* FxAnimSet::AllocateStaticClassFxAnimSet(void)",
+      "scope": "the 0x10ee2ad0 sequence constructing FxClass(\"FxAnimSet\", 1, base, 0x38, 0x10ed6480)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee75ab",
+        "10ee75af"
+      ]
+    },
+    {
+      "address": "10ee75b0",
+      "bytes": 84,
+      "sha256": "e1dffadbda2078db576e7f612fba00080a372a335f1e67d410395a3e21c4a8a9",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "Iterator* __thiscall fxlist_find(Iterator* out, T* const* value)",
+      "scope": "creates the list sentinel through FxAllocate(0xc), linked to itself, when the head pointer is NULL; *out starts at the sentinel's next node and is stored again at each step until it reaches the sentinel or a node whose item at +0 equals *value; returns out (RET 8)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee7601"
+      ]
+    },
+    {
+      "address": "10ee7670",
+      "bytes": 206,
+      "sha256": "9e3c1a8f1282354038deb25cb4ffacd66471af40eab534a02ef2a066e358d69d",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxAnimSet::RemoveReference(FxActor*)",
+      "scope": "runs FxList::Find 0x10ee75b0 on the reference list at +0x30 and creates the list sentinel through FxAllocate(0xc), linked to itself, when the head pointer is NULL; an iterator on the sentinel writes a level-2 \"FxAnimSet::RemoveReference: invalid reference detected\" entry when the log level is at least 2; otherwise the node is unlinked from both neighbours, released through FxFree(node, 0xc) and the count at +0x34 decremented",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee773b"
+      ]
+    },
+    {
+      "address": "10ee7850",
+      "bytes": 10,
+      "sha256": "12375b6375d16ca11559771917ca1872de3dea07a108bfdfb42c67f63cf05302",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxAnimSet::SetIsPublished(bool)",
+      "scope": "MOV [ECX+8], AL; the folded body is also exported as FxActor::SetShouldClientRelink",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee7857"
+      ]
+    },
+    {
+      "address": "10ee7860",
+      "bytes": 8,
+      "sha256": "b547d24a2d5a0b17815b4fc376902676cf38b25f5904974321063a23e7ac8807",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxAnimSet::SetOwningActorName(const FxName&)",
+      "scope": "ADD ECX, 0xc; JMP 0x10ede180: FxName assignment to the name at +0x0c",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "tail_exit": {
+        "kind": "direct_jmp",
+        "address": "10ee7863",
+        "target": "10ede180"
+      }
+    },
+    {
+      "address": "10ee8a70",
+      "bytes": 409,
+      "sha256": "72d99da8c663c6b3426fec200e2e4679cc5381c66239f5d8432d2547f2321608",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxActor::AddInstance(FxActorInstance*)",
+      "scope": "creates the list sentinel through FxAllocate(0xc), linked to itself, when the head pointer is NULL for the instance list at +0x60e8 and scans it for the argument; a hit writes a level-3 \"Attempt to add duplicate actor instance!\" entry when the log level is at least 3; a miss links a 0xcB node {instance, sentinel, old tail} from FxAllocate ahead of the sentinel, increments the count at +0x60ec and, when the log level is at least 4, writes \"Added instance <pointer> to the actor named \"<name>\" [<count> instances].\" (RET 4 at 0x10ee8bce; the body ends in the backward JMP at 0x10ee8c07)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee8bce"
+      ]
+    },
+    {
+      "address": "10ee8c10",
+      "bytes": 67,
+      "sha256": "ac12dee9a2193ce74157a146f52eba69df3495b977f9d398da8d5d6ed0ff746a",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "FxClass* FxActor::AllocateStaticClassFxActor(void)",
+      "scope": "the 0x10ee2ad0 sequence constructing FxClass(\"FxActor\", 5, base, 0x6118, 0x10ed6420)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee8c4e",
+        "10ee8c52"
+      ]
+    },
+    {
+      "address": "10ee9050",
+      "bytes": 7,
+      "sha256": "787ff20494a194bfd4e7847ce8a8d7f3fb4e46b40df2c50055cff129e5b7dfc5",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "uint __thiscall FxActor::GetInstanceCount() const",
+      "scope": "returns the dword at +0x60ec",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee9056"
+      ]
+    },
+    {
+      "address": "10ee9060",
+      "bytes": 7,
+      "sha256": "2ec59bdef50c3c72cfa01ec010537bf9c46b8b80ef66ea6261dd7c17cad5d4c6",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "const FxList<FxActorInstance*>& __thiscall FxActor::GetInstances() const",
+      "scope": "LEA EAX, [ECX+0x60e8]",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee9066"
+      ]
+    },
+    {
+      "address": "10ee9b60",
+      "bytes": 357,
+      "sha256": "9abcd0e4e483ed02800ef60e01239919b97f9c221166c64b40c6b67f36c30890",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxActor::RemoveInstance(FxActorInstance*)",
+      "scope": "creates the list sentinel through FxAllocate(0xc), linked to itself, when the head pointer is NULL for the instance list at +0x60e8 and scans it for the argument; a miss writes a level-3 \"Attempt to remove non-existing actor instance!\" entry when the log level is at least 3 (RET 4 at 0x10ee9c11); a hit off the sentinel is unlinked, released through FxFree(node, 0xc) and the count at +0x60ec decremented, then, when the log level is at least 4, \"Removed instance <pointer> from the actor named \"<name>\" [<count> instances].\" is written (the body ends in the backward JMP at 0x10ee9cc0)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ee9c11"
+      ]
+    },
+    {
+      "address": "10eea2e0",
+      "bytes": 10,
+      "sha256": "db26a46bf8bd3b0b0d40f16897c7b9f53aaec82cb1cf17d6eb55342728e87884",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxActor::SetIsOpenInStudio(bool)",
+      "scope": "MOV [ECX+9], AL",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10eea2e7"
+      ]
+    },
+    {
+      "address": "10eea2f0",
+      "bytes": 10,
+      "sha256": "e0d34373f17228285ee2b96ae01a2d6b5aeafcb3cf72721d1e1004f8b907b142",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxActor::SetIsPublished(bool)",
+      "scope": "MOV [ECX+0x0a], AL",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10eea2f7"
+      ]
+    },
+    {
+      "address": "10eea950",
+      "bytes": 107,
+      "sha256": "fd8ef4a68046b0faa7be97260c725183c2930e6f9923ae53cfc7b701a95c3a2a",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 8,
+      "callee_pop_bytes": 8,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall FxActor::_findInstance(FxActorInstance*, FxList<FxActorInstance*>::Iterator&)",
+      "scope": "creates the list sentinel through FxAllocate(0xc), linked to itself, when the head pointer is NULL for the instance list at +0x60e8; the first node whose item equals the first argument is stored through the second and AL = 1 returned; reaching the sentinel returns AL = 0 with *out unwritten (RET 8 on both paths)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10eea9ad",
+        "10eea9b8"
+      ]
+    },
+    {
+      "address": "10eeae80",
+      "bytes": 67,
+      "sha256": "7b59fa40c7a34d5cbfdd9f43799de4e8fe37926f7ba8659828fe7c17c42771b7",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "FxClass* FxActorInstance::AllocateStaticClassFxActorInstance(void)",
+      "scope": "the 0x10ee2ad0 sequence constructing FxClass(\"FxActorInstance\", 0, base, 0x11c, 0x100dbc00)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10eeaebe",
+        "10eeaec2"
+      ]
+    },
+    {
+      "address": "10eeaed0",
+      "bytes": 32,
+      "sha256": "3dac5f693ce4ca16162944b77b8a76391fd665f7d0474cf0ed4f50c0a3b572cf",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxActorInstance::EndFrame()",
+      "scope": "zero-fills [+0x7c] << 2 bytes at [+0x78] through 0x116be510 and stores 0 at +0x74; reached through slot +0x14 of the FxActorInstance vtable 0x1183c770",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10eeaeef"
+      ]
+    },
+    {
+      "address": "10eebbd0",
+      "bytes": 10,
+      "sha256": "54f0acab716e2dc97db74af7cf7e8fa8c80de8d9ac674297cd0d7beef9ad7a06",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall FxActorInstance::SetIsOpenInStudio(bool)",
+      "scope": "MOV [ECX+0x0d], AL",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10eebbd7"
+      ]
+    },
+    {
+      "address": "10ef2e80",
+      "bytes": 29,
+      "sha256": "65c59c7714a98410e307e6705e6118f8c7cb413fdf49c260f2c657e193ba5126",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "bool __thiscall fxclass_is_kind_of(const FxClass*) const",
+      "scope": "a NULL this returns AL = 0; otherwise follows the base-class pointer at +8 from this until a descriptor equals the argument (AL = 1) or the chain ends (AL = 0); reached by the tail jump of 0x10ed7950",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ef2e95",
+        "10ef2e9a"
+      ]
+    },
+    {
+      "address": "10ef3260",
+      "bytes": 31,
+      "sha256": "6b23abb24dd6db36da9b8d49000cd6868f5882b7ba069b721cb3ddc9bd2b4d37",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "thiscall",
+      "ordinary_return": "FxNamedObject* __thiscall fxnamedobject_ctor()",
+      "scope": "runs the FxObject bind 0x10ef3160, stores the class vtable 0x1183ce30 at +0 and copy-constructs the name at +4 from FxName::NullName (0x11fadb7c) through 0x10edde70; returns this",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ef327e"
+      ]
+    },
+    {
+      "address": "10ef3310",
+      "bytes": 64,
+      "sha256": "aa2a51ff1e413222d366929318103cef0abb0111012d0cb09c82358cc9b7ee15",
+      "receiver_register": "none",
+      "stack_argument_bytes": 0,
+      "callee_pop_bytes": 0,
+      "calling_convention": "cdecl",
+      "ordinary_return": "FxClass* fxnamedobject_static_class_init()",
+      "scope": "FxAllocate(0x18), NULL returning 0; describes FxObject through 0x10ef31c0 when the cached descriptor 0x11fadba4 is NULL, then constructs FxClass(\"FxNamedObject\", 0, base, 8, 0x10ef3350) through 0x10ef2a10 in the block and returns it",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10ef334b",
+        "10ef334f"
+      ]
+    },
+    {
+      "address": "10efd5c0",
+      "bytes": 77,
+      "sha256": "62c243a6b00a1824b4dad9d16f2f05455668d057385a4813a63265cb32067753",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "uint __thiscall bone_table_find_bone(const FxName&) const",
+      "scope": "the 0x10ee3810 scan over the [+0x10] bone records of 0x40B at [+8], name at record +8",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10efd601",
+        "10efd60a"
+      ]
+    },
+    {
+      "address": "10efd610",
+      "bytes": 29,
+      "sha256": "129d277b8e324f195e694a5a772c1ee1cf45abce5d59ca797a6ff890e548b581",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall bone_table_initialize_frame(FxActorInstance&) const",
+      "scope": "copies [+0x10] * 0x2c bytes from the reference transforms at [+0x14] to the instance's output array at [instance+0xac] through 0x116bd8d0",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10efd62a"
+      ]
+    },
+    {
+      "address": "10efd630",
+      "bytes": 925,
+      "sha256": "9ac1cb31b5efdb7693f3d6414e2c5e9a90ed401caa0fbcba4ffc1ae7a397fc31",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall bone_table_process_frame(FxActorInstance&) const",
+      "scope": "for each of the [+0x10] bone records of 0x40B at [+8]: the record's [+0x3c] links of 0x2cB at [+0x34] are scanned for a node index whose bit is set in the bitset at [instance+0xa0]; the first hit copies the record's 0x28B reference transform at +0x0c to the 0x2cB output element at [instance+0xac] and blends in every link whose node value at [instance+0x38] is not 0.0 (unordered counts as different): position and scale deltas scaled by the value, rotation multiplied by (1 + w*v, x*v, y*v, z*v), then rescales the rotation by 1/sqrt(n) unless its squared length n lies strictly between 0x1183c798 and 0x1183c79c; with or without such a hit, a record whose first dword is not 0xffffffff then has that node's value copied into the output's dword at +0x28 (RET 4 at 0x10efd701; the body ends in the backward JMP at 0x10efd9c8)",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10efd701"
+      ]
+    },
+    {
+      "address": "10f09320",
+      "bytes": 78,
+      "sha256": "09f3019061c13b60b00cffaf909f4920c9d81819a8fb770754967342fb36c6e2",
+      "receiver_register": "ECX",
+      "stack_argument_bytes": 4,
+      "callee_pop_bytes": 4,
+      "calling_convention": "thiscall",
+      "ordinary_return": "void __thiscall fxevent_set_time_offset(float offset)",
+      "scope": "stores the argument at +0x18, [+0x10] * [+0x24] + argument at +0x50 and [+0x14] * [+0x24] + argument at +0x54; when 0.0 > [+0x24] and the first bound exceeds the second (COMISS; JBE on both), the two bounds are stored exchanged",
+      "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
+      "return_instruction_addresses": [
+        "10f0936b"
+      ]
     }
   ],
   "globals": [
@@ -42204,6 +43238,318 @@
       "initial_hex_le": "554e4b4e4f574e00",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117580d8",
+      "width": 4,
+      "kind": "float 120.0f in .rdata, the upper frame-rate bound FxAnim::SetFrameRate loads at 0x10ee4858",
+      "initial_hex_le": "0000f042",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "117667f8",
+      "width": 4,
+      "kind": "float 24.0f in .rdata, the lower frame-rate bound FxAnim::SetFrameRate compares at 0x10ee484c",
+      "initial_hex_le": "0000c041",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183c784",
+      "width": 4,
+      "kind": "slot +0x14 of the FxActorInstance vtable 0x1183c770 in .rdata, holding FxActorInstance::EndFrame 0x10eeaed0",
+      "initial_hex_le": "d0aeee10",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183c798",
+      "width": 4,
+      "kind": "float 0.99999988f (0x3f7ffffe) in .rdata, the lower squared-length bound the bone blend compares at 0x10efd99c",
+      "initial_hex_le": "feff7f3f",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183c79c",
+      "width": 4,
+      "kind": "float 1.00000012f (0x3f800001) in .rdata, the upper squared-length bound the bone blend loads at 0x10efd98b",
+      "initial_hex_le": "0100803f",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11974fa0",
+      "width": 1,
+      "kind": "FxAnimGroup log-error-on-animation-not-found flag byte in .data, initially 1, read at 0x10ee56f0 and written at 0x10ee5c54",
+      "initial_hex_le": "01",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11bd14ac",
+      "width": 4,
+      "kind": "FxSingleton<FxResourceManager>::_singleton pointer in the .data zero-fill tail stored by the constructor at 0x10eda383",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11fadba4",
+      "width": 4,
+      "kind": "cached FxObject class descriptor pointer in the .data zero-fill tail read and filled by 0x10ef3310",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "11fadba8",
+      "width": 4,
+      "kind": "cached FxNamedObject class descriptor pointer in the .data zero-fill tail read and filled by the five AllocateStaticClass bodies",
+      "initial_hex_le": "00000000",
+      "storage": "zero_fill",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183bb7c",
+      "width": 18,
+      "kind": "\"Name table stats:\" in .rdata, heading FxName::DumpNameTableStatsToLog pushes at 0x10edef77",
+      "initial_hex_le": "4e616d65207461626c652073746174733a00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183bb90",
+      "width": 14,
+      "kind": "\" unique names\" in .rdata, suffix of the first DumpNameTableStatsToLog entry (0x10edf067)",
+      "initial_hex_le": "20756e69717565206e616d657300",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183bba0",
+      "width": 17,
+      "kind": "\" peak collisions\" in .rdata, suffix of the second DumpNameTableStatsToLog entry (0x10edf0bc)",
+      "initial_hex_le": "207065616b20636f6c6c6973696f6e7300",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183bbb4",
+      "width": 19,
+      "kind": "\" peak unique names\" in .rdata, suffix of the third DumpNameTableStatsToLog entry (0x10edf111)",
+      "initial_hex_le": "207065616b20756e69717565206e616d657300",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183bbc8",
+      "width": 13,
+      "kind": "\" peak probes\" in .rdata, suffix of the fourth DumpNameTableStatsToLog entry (0x10edf166)",
+      "initial_hex_le": "207065616b2070726f62657300",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183bbd8",
+      "width": 9,
+      "kind": "\" used / \" in .rdata, infix of the fifth DumpNameTableStatsToLog entry (0x10edf1bb)",
+      "initial_hex_le": "2075736564202f2000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183bbe4",
+      "width": 17,
+      "kind": "\" total hash bins\" in .rdata, suffix of the fifth DumpNameTableStatsToLog entry (0x10edf1d2)",
+      "initial_hex_le": "20746f74616c20686173682062696e7300",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183bbf8",
+      "width": 19,
+      "kind": "\"minimum bin size: \" in .rdata, prefix of the sixth DumpNameTableStatsToLog entry (0x10edf21c)",
+      "initial_hex_le": "6d696e696d756d2062696e2073697a653a2000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183bc0c",
+      "width": 19,
+      "kind": "\"maximum bin size: \" in .rdata, prefix of the seventh DumpNameTableStatsToLog entry (0x10edf271)",
+      "initial_hex_le": "6d6178696d756d2062696e2073697a653a2000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183bc20",
+      "width": 19,
+      "kind": "\"average bin size: \" in .rdata, prefix of the eighth DumpNameTableStatsToLog entry (0x10edf2c6)",
+      "initial_hex_le": "617665726167652062696e2073697a653a2000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183bc34",
+      "width": 12,
+      "kind": "\" bytes used\" in .rdata, suffix of the ninth DumpNameTableStatsToLog entry (0x10edf322)",
+      "initial_hex_le": "206279746573207573656400",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183bcf4",
+      "width": 7,
+      "kind": "\"FxAnim\" in .rdata, class name AllocateStaticClassFxAnim pushes at 0x10ee2b01",
+      "initial_hex_le": "4678416e696d00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183bcfc",
+      "width": 44,
+      "kind": "\"An attempt to set an invalid frame rate of \" in .rdata, prefix of the FxAnim::SetFrameRate refusal entry (0x10ee48ab)",
+      "initial_hex_le": "416e20617474656d707420746f2073657420616e20696e76616c6964206672616d652072617465206f662000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183bd28",
+      "width": 16,
+      "kind": "\" on animation \"\" in .rdata, infix of the FxAnim::SetFrameRate refusal entry (0x10ee48cd)",
+      "initial_hex_le": "206f6e20616e696d6174696f6e202200",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183bd38",
+      "width": 14,
+      "kind": "\"\" was ignored\" in .rdata, suffix of the FxAnim::SetFrameRate refusal entry (0x10ee48eb)",
+      "initial_hex_le": "22207761732069676e6f72656400",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183bf9c",
+      "width": 12,
+      "kind": "\"FxAnimGroup\" in .rdata, class name AllocateStaticClassFxAnimGroup pushes at 0x10ee543e",
+      "initial_hex_le": "4678416e696d47726f757000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183c068",
+      "width": 10,
+      "kind": "\"FxAnimSet\" in .rdata, class name AllocateStaticClassFxAnimSet pushes at 0x10ee759e",
+      "initial_hex_le": "4678416e696d53657400",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183c1bc",
+      "width": 54,
+      "kind": "\"FxAnimSet::AddReference: duplicate reference detected\" in .rdata, level-2 entry FxAnimSet::AddReference pushes at 0x10ee7540",
+      "initial_hex_le": "4678416e696d5365743a3a4164645265666572656e63653a206475706c6963617465207265666572656e636520646574656374656400",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183c1f4",
+      "width": 55,
+      "kind": "\"FxAnimSet::RemoveReference: invalid reference detected\" in .rdata, level-2 entry FxAnimSet::RemoveReference pushes at 0x10ee76f8",
+      "initial_hex_le": "4678416e696d5365743a3a52656d6f76655265666572656e63653a20696e76616c6964207265666572656e636520646574656374656400",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183c2a4",
+      "width": 8,
+      "kind": "\"FxActor\" in .rdata, class name AllocateStaticClassFxActor pushes at 0x10ee8c41",
+      "initial_hex_le": "46784163746f7200",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183c6ac",
+      "width": 16,
+      "kind": "\"Added instance \" in .rdata, prefix of the FxActor::AddInstance level-4 entry (0x10ee8b65)",
+      "initial_hex_le": "416464656420696e7374616e63652000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183c6bc",
+      "width": 22,
+      "kind": "\" to the actor named \"\" in .rdata, infix of the FxActor::AddInstance level-4 entry (0x10ee8b79)",
+      "initial_hex_le": "20746f20746865206163746f72206e616d6564202200",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183c6d4",
+      "width": 4,
+      "kind": "\"\" [\" in .rdata, infix shared by the AddInstance (0x10ee8b97) and RemoveInstance (0x10ee9ca2) level-4 entries",
+      "initial_hex_le": "22205b00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183c6d8",
+      "width": 13,
+      "kind": "\" instances].\" in .rdata, suffix shared by the AddInstance (0x10ee8bb0) and RemoveInstance (0x10ee9cbb) level-4 entries",
+      "initial_hex_le": "20696e7374616e6365735d2e00",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183c6e8",
+      "width": 41,
+      "kind": "\"Attempt to add duplicate actor instance!\" in .rdata, level-3 entry FxActor::AddInstance pushes at 0x10ee8c02",
+      "initial_hex_le": "417474656d707420746f20616464206475706c6963617465206163746f7220696e7374616e63652100",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183c714",
+      "width": 18,
+      "kind": "\"Removed instance \" in .rdata, prefix of the FxActor::RemoveInstance level-4 entry (0x10ee9c70)",
+      "initial_hex_le": "52656d6f76656420696e7374616e63652000",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183c728",
+      "width": 24,
+      "kind": "\" from the actor named \"\" in .rdata, infix of the FxActor::RemoveInstance level-4 entry (0x10ee9c84)",
+      "initial_hex_le": "2066726f6d20746865206163746f72206e616d6564202200",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183c740",
+      "width": 47,
+      "kind": "\"Attempt to remove non-existing actor instance!\" in .rdata, level-3 entry FxActor::RemoveInstance pushes at 0x10ee9bf4",
+      "initial_hex_le": "417474656d707420746f2072656d6f7665206e6f6e2d6578697374696e67206163746f7220696e7374616e63652100",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183c788",
+      "width": 16,
+      "kind": "\"FxActorInstance\" in .rdata, class name AllocateStaticClassFxActorInstance pushes at 0x10eeaeb1",
+      "initial_hex_le": "46784163746f72496e7374616e636500",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
+    },
+    {
+      "address": "1183ce40",
+      "width": 14,
+      "kind": "\"FxNamedObject\" in .rdata, class name AllocateStaticClassFxNamedObject pushes at 0x10ef333e",
+      "initial_hex_le": "46784e616d65644f626a65637400",
+      "storage": "file",
+      "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
     }
   ],
   "vtables": [
@@ -42636,6 +43982,26 @@
       "address": "1183a798",
       "first_slot_code_identity": "10ed61e0",
       "scope": "1-slot FxResourceManager vtable in .rdata stored by the copy constructor 0x10ed5700; slot 0 is the vector deleting destructor 0x10ed61e0, which is outside the recovered set"
+    },
+    {
+      "address": "1183bf74",
+      "first_slot_code_identity": "10ee5190",
+      "scope": "6-slot FxName-keyed tree vtable in .rdata stored twice by the FxAnimGroup constructor 0x10ee49f0; slot +4 (0x10edeee0) empties the tree for FxAnimGroup::Clear, slot +0xc (0x10ee6490) inserts for AddAnim/AddSubGroup and slot +0x10 (0x10ee6810) unlinks for RemoveAnim/RemoveSubGroup; all slots are outside the recovered set"
+    },
+    {
+      "address": "1183bf8c",
+      "first_slot_code_identity": "10ed7680",
+      "scope": "4-slot FxAnimGroup vtable in .rdata stored by the constructor 0x10ee49f0; its slots are outside the recovered set"
+    },
+    {
+      "address": "1183c770",
+      "first_slot_code_identity": "10ed7640",
+      "scope": "6-slot FxActorInstance vtable in .rdata; slot +0x14 is FxActorInstance::EndFrame 0x10eeaed0, the only slot in the recovered set besides the shared stubs 0x100f3d00 and 0x100d6560 at +0x0c and +0x10"
+    },
+    {
+      "address": "1183ce30",
+      "first_slot_code_identity": "10ef3390",
+      "scope": "4-slot FxNamedObject vtable in .rdata stored by the constructor 0x10ef3260; its slots are outside the recovered set"
     }
   ],
   "instruction_witnesses": [
@@ -50758,6 +52124,421 @@
       "address": "10ed9ab3",
       "hex": "ff5004",
       "purpose": "0x10ed9ab3 FxEventManager::SetAudioCallback calls implementation vtable slot +4 (clone)"
+    },
+    {
+      "address": "10ed65a0",
+      "hex": "83c10c",
+      "purpose": "0x10ed65a0 FxActor::FindBone steps to the bone table at +0x0c"
+    },
+    {
+      "address": "10ed7980",
+      "hex": "81c100010000",
+      "purpose": "0x10ed7980 curve-state handle release steps to the cache at +0x100"
+    },
+    {
+      "address": "10ed79c0",
+      "hex": "8d0440",
+      "purpose": "0x10ed79c0 cache release scales the count by 3 (0x30B curve states)"
+    },
+    {
+      "address": "10ed79c3",
+      "hex": "c1e004",
+      "purpose": "0x10ed79c3 cache release scales the count by 16 (0x30B curve states)"
+    },
+    {
+      "address": "10ed8740",
+      "hex": "f30f100514b08311",
+      "purpose": "0x10ed8740 FxEventManager::HasWorkThisFrame loads the event-time sentinel"
+    },
+    {
+      "address": "10ed87df",
+      "hex": "0f43c8",
+      "purpose": "0x10ed87df HasWorkThisFrame latches 1 when the time is not below [+0x84]"
+    },
+    {
+      "address": "10ed87e7",
+      "hex": "81c6ac000000",
+      "purpose": "0x10ed87e7 HasWorkThisFrame steps the 0xacB events"
+    },
+    {
+      "address": "10ed9afb",
+      "hex": "6a04",
+      "purpose": "0x10ed9afb FxEventManager::SetCustomEventCallback pushes the 4B FxFunctor size"
+    },
+    {
+      "address": "10ed9b23",
+      "hex": "ff5004",
+      "purpose": "0x10ed9b23 SetCustomEventCallback calls implementation vtable slot +4 (clone)"
+    },
+    {
+      "address": "10ed9b59",
+      "hex": "ff10",
+      "purpose": "0x10ed9b59 SetCustomEventCallback destroys the previous implementation"
+    },
+    {
+      "address": "10ed9b82",
+      "hex": "c7056cdbfa1100000000",
+      "purpose": "0x10ed9b82 FxEventManager::Shutdown clears the audio callback pointer"
+    },
+    {
+      "address": "10ed9bad",
+      "hex": "c70570dbfa1100000000",
+      "purpose": "0x10ed9bad FxEventManager::Shutdown clears the custom-event callback pointer"
+    },
+    {
+      "address": "10eda383",
+      "hex": "8935ac14bd11",
+      "purpose": "0x10eda383 FxResourceManager constructor stores the singleton pointer"
+    },
+    {
+      "address": "10eda389",
+      "hex": "6a14",
+      "purpose": "0x10eda389 FxResourceManager constructor pushes the 0x14B state-record size"
+    },
+    {
+      "address": "10eda38b",
+      "hex": "c70698a78311",
+      "purpose": "0x10eda38b FxResourceManager constructor stores the class vtable"
+    },
+    {
+      "address": "10eda4da",
+      "hex": "83ff10",
+      "purpose": "0x10eda4da FxString::operator= tests the capacity against the 16B inline buffer"
+    },
+    {
+      "address": "10edd137",
+      "hex": "884110",
+      "purpose": "0x10edd137 SetAutomaticGarbageCollection stores the flag byte"
+    },
+    {
+      "address": "10edef4c",
+      "hex": "83b98400000004",
+      "purpose": "0x10edef4c DumpNameTableStatsToLog tests the log level against 4"
+    },
+    {
+      "address": "10edef55",
+      "hex": "6a04",
+      "purpose": "0x10edef55 DumpNameTableStatsToLog pushes log level 4"
+    },
+    {
+      "address": "10edf020",
+      "hex": "e83b080000",
+      "purpose": "0x10edf020 DumpNameTableStatsToLog calls FxName::GetNameStats"
+    },
+    {
+      "address": "10ee2ad1",
+      "hex": "6a18",
+      "purpose": "0x10ee2ad1 AllocateStaticClassFxAnim pushes the 0x18B FxClass size"
+    },
+    {
+      "address": "10ee2af4",
+      "hex": "684064ed10",
+      "purpose": "0x10ee2af4 AllocateStaticClassFxAnim pushes the construct routine"
+    },
+    {
+      "address": "10ee2af9",
+      "hex": "68f8000000",
+      "purpose": "0x10ee2af9 AllocateStaticClassFxAnim pushes the 0xf8B instance size"
+    },
+    {
+      "address": "10ee2aff",
+      "hex": "6a0a",
+      "purpose": "0x10ee2aff AllocateStaticClassFxAnim pushes class version 10"
+    },
+    {
+      "address": "10ee37f1",
+      "hex": "ff5008",
+      "purpose": "0x10ee37f1 FxAnim::DestroyEditorOnlyData calls vtable slot +8"
+    },
+    {
+      "address": "10ee3843",
+      "hex": "83c628",
+      "purpose": "0x10ee3843 FxAnim::FindAnimCurve steps the 0x28B records"
+    },
+    {
+      "address": "10ee3a03",
+      "hex": "83c618",
+      "purpose": "0x10ee3a03 FxAnim::FindCompressedAnimCurve steps the 0x18B records"
+    },
+    {
+      "address": "10ee47e0",
+      "hex": "81c1d0000000",
+      "purpose": "0x10ee47e0 FxAnim::SetAudioAssetName steps to the string at +0xd0"
+    },
+    {
+      "address": "10ee47f0",
+      "hex": "81c1b4000000",
+      "purpose": "0x10ee47f0 FxAnim::SetAudioAssetPath steps to the string at +0xb4"
+    },
+    {
+      "address": "10ee484c",
+      "hex": "0f2f0df8677611",
+      "purpose": "0x10ee484c FxAnim::SetFrameRate compares the rate with 24.0f"
+    },
+    {
+      "address": "10ee4858",
+      "hex": "f30f1005d8807511",
+      "purpose": "0x10ee4858 FxAnim::SetFrameRate loads 120.0f"
+    },
+    {
+      "address": "10ee4889",
+      "hex": "6a02",
+      "purpose": "0x10ee4889 FxAnim::SetFrameRate pushes log level 2"
+    },
+    {
+      "address": "10ee49f8",
+      "hex": "c7068cbf8311",
+      "purpose": "0x10ee49f8 FxAnimGroup constructor stores the class vtable"
+    },
+    {
+      "address": "10ee4a0e",
+      "hex": "c7460874bf8311",
+      "purpose": "0x10ee4a0e FxAnimGroup constructor stores the animation tree vtable at +8"
+    },
+    {
+      "address": "10ee4a23",
+      "hex": "c7461474bf8311",
+      "purpose": "0x10ee4a23 FxAnimGroup constructor stores the sub-group tree vtable at +0x14"
+    },
+    {
+      "address": "10ee5434",
+      "hex": "686064ed10",
+      "purpose": "0x10ee5434 AllocateStaticClassFxAnimGroup pushes the construct routine"
+    },
+    {
+      "address": "10ee5439",
+      "hex": "6a20",
+      "purpose": "0x10ee5439 AllocateStaticClassFxAnimGroup pushes the 0x20B instance size"
+    },
+    {
+      "address": "10ee54ff",
+      "hex": "ff5008",
+      "purpose": "0x10ee54ff FxAnimGroup::Clear destroys an animation through slot +8"
+    },
+    {
+      "address": "10ee5548",
+      "hex": "ff5004",
+      "purpose": "0x10ee5548 FxAnimGroup::Clear empties the animation tree (slot +4)"
+    },
+    {
+      "address": "10ee5577",
+      "hex": "e854ffffff",
+      "purpose": "0x10ee5577 FxAnimGroup::Clear clears a sub-group through itself"
+    },
+    {
+      "address": "10ee56f0",
+      "hex": "a0a04f9711",
+      "purpose": "0x10ee56f0 GetLogErrorOnAnimationNotFound reads the flag byte"
+    },
+    {
+      "address": "10ee5719",
+      "hex": "ff5208",
+      "purpose": "0x10ee5719 RemoveAndDestroyAnim destroys the removed animation"
+    },
+    {
+      "address": "10ee57c5",
+      "hex": "c1f81f",
+      "purpose": "0x10ee57c5 FxAnimGroup::RemoveAnim reduces the text comparison to its sign"
+    },
+    {
+      "address": "10ee57f5",
+      "hex": "ff5210",
+      "purpose": "0x10ee57f5 FxAnimGroup::RemoveAnim calls tree vtable slot +0x10"
+    },
+    {
+      "address": "10ee58a5",
+      "hex": "ff5210",
+      "purpose": "0x10ee58a5 FxAnimGroup::RemoveSubGroup calls tree vtable slot +0x10"
+    },
+    {
+      "address": "10ee5c54",
+      "hex": "a2a04f9711",
+      "purpose": "0x10ee5c54 SetLogErrorOnAnimationNotFound stores the flag byte"
+    },
+    {
+      "address": "10ee5c86",
+      "hex": "ff520c",
+      "purpose": "0x10ee5c86 FxAnimGroup::AddAnim calls tree vtable slot +0xc"
+    },
+    {
+      "address": "10ee5cd6",
+      "hex": "ff520c",
+      "purpose": "0x10ee5cd6 FxAnimGroup::AddSubGroup calls tree vtable slot +0xc"
+    },
+    {
+      "address": "10ee7501",
+      "hex": "ff4604",
+      "purpose": "0x10ee7501 FxAnimSet::AddReference increments the list count"
+    },
+    {
+      "address": "10ee751e",
+      "hex": "6a02",
+      "purpose": "0x10ee751e FxAnimSet::AddReference pushes log level 2"
+    },
+    {
+      "address": "10ee7594",
+      "hex": "688064ed10",
+      "purpose": "0x10ee7594 AllocateStaticClassFxAnimSet pushes the construct routine"
+    },
+    {
+      "address": "10ee7599",
+      "hex": "6a38",
+      "purpose": "0x10ee7599 AllocateStaticClassFxAnimSet pushes the 0x38B instance size"
+    },
+    {
+      "address": "10ee75ba",
+      "hex": "6a0c",
+      "purpose": "0x10ee75ba FxList::Find pushes the 0xcB list-node size for FxAllocate"
+    },
+    {
+      "address": "10ee7730",
+      "hex": "ff4f04",
+      "purpose": "0x10ee7730 FxAnimSet::RemoveReference decrements the list count"
+    },
+    {
+      "address": "10ee7854",
+      "hex": "884108",
+      "purpose": "0x10ee7854 FxAnimSet::SetIsPublished stores the byte at +8"
+    },
+    {
+      "address": "10ee7860",
+      "hex": "83c10c",
+      "purpose": "0x10ee7860 FxAnimSet::SetOwningActorName steps to the name at +0x0c"
+    },
+    {
+      "address": "10ee8b2a",
+      "hex": "ff86ec600000",
+      "purpose": "0x10ee8b2a FxActor::AddInstance increments the instance count"
+    },
+    {
+      "address": "10ee8b43",
+      "hex": "6a04",
+      "purpose": "0x10ee8b43 FxActor::AddInstance pushes log level 4"
+    },
+    {
+      "address": "10ee8be0",
+      "hex": "6a03",
+      "purpose": "0x10ee8be0 FxActor::AddInstance pushes log level 3 for the duplicate entry"
+    },
+    {
+      "address": "10ee8c34",
+      "hex": "682064ed10",
+      "purpose": "0x10ee8c34 AllocateStaticClassFxActor pushes the construct routine"
+    },
+    {
+      "address": "10ee8c39",
+      "hex": "6818610000",
+      "purpose": "0x10ee8c39 AllocateStaticClassFxActor pushes the 0x6118B instance size"
+    },
+    {
+      "address": "10ee8c3f",
+      "hex": "6a05",
+      "purpose": "0x10ee8c3f AllocateStaticClassFxActor pushes class version 5"
+    },
+    {
+      "address": "10ee9bd2",
+      "hex": "6a03",
+      "purpose": "0x10ee9bd2 FxActor::RemoveInstance pushes log level 3 for the missing-instance entry"
+    },
+    {
+      "address": "10ee9c39",
+      "hex": "ff8fec600000",
+      "purpose": "0x10ee9c39 FxActor::RemoveInstance decrements the instance count"
+    },
+    {
+      "address": "10ee9c4e",
+      "hex": "6a04",
+      "purpose": "0x10ee9c4e FxActor::RemoveInstance pushes log level 4"
+    },
+    {
+      "address": "10eea2e4",
+      "hex": "884109",
+      "purpose": "0x10eea2e4 FxActor::SetIsOpenInStudio stores the byte at +9"
+    },
+    {
+      "address": "10eea2f4",
+      "hex": "88410a",
+      "purpose": "0x10eea2f4 FxActor::SetIsPublished stores the byte at +0x0a"
+    },
+    {
+      "address": "10eeaea4",
+      "hex": "6800bc0d10",
+      "purpose": "0x10eeaea4 AllocateStaticClassFxActorInstance pushes the construct routine"
+    },
+    {
+      "address": "10eeaea9",
+      "hex": "681c010000",
+      "purpose": "0x10eeaea9 AllocateStaticClassFxActorInstance pushes the 0x11cB instance size"
+    },
+    {
+      "address": "10eeaed6",
+      "hex": "c1e002",
+      "purpose": "0x10eeaed6 FxActorInstance::EndFrame scales the word count to bytes"
+    },
+    {
+      "address": "10eebbd4",
+      "hex": "88410d",
+      "purpose": "0x10eebbd4 FxActorInstance::SetIsOpenInStudio stores the byte at +0x0d"
+    },
+    {
+      "address": "10ef3268",
+      "hex": "687cdbfa11",
+      "purpose": "0x10ef3268 FxNamedObject constructor pushes FxName::NullName"
+    },
+    {
+      "address": "10ef3270",
+      "hex": "c70630ce8311",
+      "purpose": "0x10ef3270 FxNamedObject constructor stores the class vtable"
+    },
+    {
+      "address": "10ef3334",
+      "hex": "685033ef10",
+      "purpose": "0x10ef3334 AllocateStaticClassFxNamedObject pushes the construct routine"
+    },
+    {
+      "address": "10ef3339",
+      "hex": "6a08",
+      "purpose": "0x10ef3339 AllocateStaticClassFxNamedObject pushes the 8B instance size"
+    },
+    {
+      "address": "10efd5f3",
+      "hex": "83c640",
+      "purpose": "0x10efd5f3 bone-table FindBone steps the 0x40B bone records"
+    },
+    {
+      "address": "10efd610",
+      "hex": "6b41102c",
+      "purpose": "0x10efd610 bone-table InitializeFrame scales the bone count by the 0x2cB transform"
+    },
+    {
+      "address": "10efd6ce",
+      "hex": "83ffff",
+      "purpose": "0x10efd6ce bone-table ProcessFrame tests the weight node index against 0xffffffff"
+    },
+    {
+      "address": "10efd768",
+      "hex": "0f2ec1",
+      "purpose": "0x10efd768 bone-table ProcessFrame compares a link's node value with 0.0"
+    },
+    {
+      "address": "10efd98b",
+      "hex": "f30f10059cc78311",
+      "purpose": "0x10efd98b bone-table ProcessFrame loads the upper squared-length bound"
+    },
+    {
+      "address": "10efd99c",
+      "hex": "0f2f1d98c78311",
+      "purpose": "0x10efd99c bone-table ProcessFrame compares with the lower squared-length bound"
+    },
+    {
+      "address": "10efd9af",
+      "hex": "f30f51c3",
+      "purpose": "0x10efd9af bone-table ProcessFrame takes the root of the squared length"
+    },
+    {
+      "address": "10f0934d",
+      "hex": "0f2fc1",
+      "purpose": "0x10f0934d FxEvent time-range update compares 0.0 with the scale at +0x24"
     }
   ],
   "ownership": {
@@ -76994,5 +78775,542 @@
         "tests added for the argument load at each FindAnimGroup compare (0x10ed6508, 0x10ed6547, 0x10ed656d), an unset FxName::NullName, a callback that rebinds the audio functor static during Pause and Resume, and each correction above"
       ]
     }
+  },
+  "rea_layer85_evidence": {
+    "scope": "66 Layer 85 Partition 12 FaceFX class-descriptor, FxString, FxAnimGroup tree, FxList, FxEventManager and per-frame bone routines of FxAnim, FxAnimGroup, FxAnimSet, FxActor, FxActorInstance, FxNamedObject, FxClass and FxResourceManager (79 exports; 0x1033c6a0..0x10f09320), 39 image-pinned data globals and 4 vtables",
+    "snapshot_mode": "extending_layer84_batched_p12",
+    "new_records": [
+      {
+        "evidence_id": "ev_3ef534a627654acf7a4d0148789a21430a9ad95af9edba866e4ab04c180f9d50",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-1033c6a0.json",
+        "retained_record_sha256": "4581ebf7b824d5fed53785301e59f4ad1f9c8b3cdbd79d843606d243047429bc",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_71ec740f1b86d5283218fc4a82ab38dd7f4cd160c993b5ab59e09595e9d28d55",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ed65a0.json",
+        "retained_record_sha256": "7276c47e624affa751e61336f77bef74ae98a6fd11ac3089fc4b796f0ff33513",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_1f979ecc0a9a58ce4c1a1480aaa1fb8c47c38dafab2a8087f659fae28baae53a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ed78a0.json",
+        "retained_record_sha256": "3dc764266fa660ae68459f93a9831ca370b22a69d627139082e75cd827ef9aec",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_fdc48d156eef1be62a9e70da8358f22e2d21cd51a72b0d883144032d2e4e1710",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ed78b0.json",
+        "retained_record_sha256": "5c80847479c3f60de12e9530185dbc7206b7b55a9cd1ee6216b3bf09c47bf49d",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_5448813ebea6977f18c481f6e6b8a2816a57a78784e141bd73d75055607eb831",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ed7950.json",
+        "retained_record_sha256": "d85022c44e5ae8d72b7c437e1c188d9791120281d8b24a5c76066615c9b39fa7",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c02e6ec0fba5ecb5540fc6c099801239293d3385d00817bc128766ba44a6268a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ed7970.json",
+        "retained_record_sha256": "a95ab3474be12a2b6bd2a1d46f189b21f3bbb7dc20db00f5b30d1cd3bb979d37",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_309fba2ccdcb71b3e0e2ec23058d6aa8e980672b5441d5295ab632ca7f73c41a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ed7980.json",
+        "retained_record_sha256": "649b294ca4e7c9c1bd1279b11a481b85d2f52f5f93e6e9ef3a573a1af96445c6",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7180dbef463e555a04ae85e52b5ac85062ee9bf1d8b3d5b06b672758ef8dff4b",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ed7990.json",
+        "retained_record_sha256": "7da02c481d430ac932d43afe2ecd0158b53a45923d8b17ed7af3ef58fb48c3f4",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7ed13695ffe72a2dee3c760f1357813f56aa06ada0b553fbd91ae1cb3f4409ea",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ed8710.json",
+        "retained_record_sha256": "e5f0095740ea7c0b29d185036d53ed0798c39e90b879acdb2cbbe25b0b7a5e06",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_552035d64e36ab56401d2cc04a40eda9493d1861641ab9e377abdfa31082d636",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ed9af0.json",
+        "retained_record_sha256": "c91e4f97f95e4026e0dbf80ea0ac86fd4b0ebce799e323a5bdeafddfbfea33be",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_638d6814be2573c178bac81934e6bca54647ef412eee303f64b19c4071caf7fa",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ed9b60.json",
+        "retained_record_sha256": "49983e1d7d8b4307205d87fac21cc855c7f8d364d021f5d73d0d175ee1e841a7",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_6c607cc21be6aae00cde8a509c39d7038bfd07bfef072294fa75991d963d153f",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10eda380.json",
+        "retained_record_sha256": "1e2dc468d5f4fb13b9005374a1ac1179acc3509d2095db78c4da5f1929bdfbf0",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_58f95c3cda32655100aaec0636d6c4bad7d4572d396700897c06ef502dc4af3d",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10eda4c0.json",
+        "retained_record_sha256": "37c33bb7dab04d66700fc3a2c452e5562589a7a4af4cf7800ffb220b18416bf5",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_77dfbf754248b92b2f5354253ec810d7dc7b0a1465c2533e4bb600d8f615315a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10edd130.json",
+        "retained_record_sha256": "64929a9432e21ac472cf245afe73df641f9337b2164b5026c047cb885cc3fb99",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_531e29ccbfdc0ecac4bf2090141337938a6cdcb4ae93a94595d98d6740fb7f1e",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10edef40.json",
+        "retained_record_sha256": "93b322e75108e57eab340ab352a26016da4eba559439f4be5a6eefb445cee2a4",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_d10eb456e903527d4bdb68b4d66f0681eb181ae7f18920dd29c5fb95a85d8a7b",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee2ad0.json",
+        "retained_record_sha256": "049f44312be1d47cf01fb65910e59e777bcd4baaae3aba7839e1885d3cfa58be",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_20e07a5911645501278e1ad228aa983f66e843be2030956f8abfbe8d81fc6120",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee37e0.json",
+        "retained_record_sha256": "e2fdb077e9cc268936f42e6d1d52bfb64a7955a4d160b1a0f2823956c70e91dc",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_51b4ff48467f0fe623394972fed044f002a6ca0fcfdd4ac7a11ad92342189bd7",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee3810.json",
+        "retained_record_sha256": "daf699348f47435a07336122c275be4c6ae2331d6cb5fcc33b2a467eea7a0e21",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_8c550bf15d8569a3de3cf3933f59b0817ae835059e241825b065bdca38d54f8a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee39d0.json",
+        "retained_record_sha256": "c7bb3b4187177d7130edface1649836545e3f5b0ecb6e7e5b44faa2dd92e847f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_dd3c3b2d2d526d15c16488c49cd1e13abd47b5441171c1de001212c9cb655771",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee47d0.json",
+        "retained_record_sha256": "95747c4f20cb1e4517be6ca4a32fc16a9cde9ff0f43f60ae8ab881405e8b9641",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_abdfba3d6f34d94ae11eca7dfa24e30c81262bb7270bf0f029842abcea68ffb7",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee47e0.json",
+        "retained_record_sha256": "132ef22630c66c62bac4f6ad25ced5f2b3f518b8dbf5e1048dfdb478278a7990",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_e2d57fb67aff699891a0e459a46c136f4ee63368c1fa0d57525b0c188fa65a09",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee47f0.json",
+        "retained_record_sha256": "9ed5c3bc5e8258f5d8adbf740e8d23de38bd20a037dd5428911adb3eb4409e62",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_73a7791c48840e575afca63b3cc7a0dab0b429112bdc66deac8951f1282ca534",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee4840.json",
+        "retained_record_sha256": "815334c35c9399443680f98710a416ac980bd38bf9f65539040a67d9a8eadbea",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_bcbadd76bee92ecef95bfab3cc27958c448e47bab9c236218def756bb0756f3f",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee49f0.json",
+        "retained_record_sha256": "1a6ec8dcf067d8a159ad4a5e88c0d77bbd062389543a9524f16677d0a9fc6f20",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_a769c46efc860fa31c82ac7228102c727d0acf85412cbd7695b04baf2dfa5f3d",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee5410.json",
+        "retained_record_sha256": "d4a043f1f9826a5c79f70dd8894fa63630868c9a11742a6af75cfdda2edf4c45",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_20bd2bb77f7f900fe22ac1be54440505da742db3bda4502a35ffeebf38722dbd",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee5450.json",
+        "retained_record_sha256": "511809bddc79baa94c61d1d158ee9935ff57e286dd4b029a8a8a76b461b16c2d",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_baab60da86de35157e4102a76e3f266f0dad49b257781dd9898c3cd5e1aace0c",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee5490.json",
+        "retained_record_sha256": "5d1ef5481e4c2c1ad620d211dcc8e7e06cf4549863e4e74235465af86cc98aea",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_f536e804b8288f00941fc7662871ab7e1e5e55758df79a0c63efd5f42d04455b",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee54d0.json",
+        "retained_record_sha256": "e5b27a25764085fdb3d996a360210041cd3bb6db77eaa09d38cb53220b85dbe7",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_426e1452b6d1fe37eb2c74fc0a88dd6d76f3fe0d4cd6ef2ecab070ec6a3d5856",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee55e0.json",
+        "retained_record_sha256": "7457504b1ecbdf589dd7f9645a30996fbdfd1d4683289b6ee674bb62138a9bae",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_4fd0339f2ebc1e6fb3151084cc03fff4b2c651bf0f3c397963934d0001fbc119",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee5600.json",
+        "retained_record_sha256": "ce77a3cce9a459d56f5b26cfc0cefc033b6c3022a6ec6a19aba09c0d4ff67c83",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_26652f7a6c570c0efc5ec680a5272b77d84c6407f3d31f5b54c9f77c2151bee5",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee56f0.json",
+        "retained_record_sha256": "80166ba3a732b2adde5598bb6406f1466e03b7292e6536b8580db1d968cbc20f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_bf84b60b27356279ef47080d599118fd22b36307aab464a123cd0712cfa3ef3d",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee5700.json",
+        "retained_record_sha256": "2c9f1c5060f90fefa08f6e7ef39a0fce3a9f00e2675a9eb3315bb1a444366f7a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_03617dfa72423beb94c278aac01da02816b28abf6ef92919cf2006b0e927af6a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee5730.json",
+        "retained_record_sha256": "361db9c780073cf90c9c95e6209db68fbd47bbcead14b1c52293c754d2cbc3f5",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_694af688ed07be893027963e41fc3afcdbc28417f788e6069cbba147828ced7b",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee5760.json",
+        "retained_record_sha256": "e8e045c7a6157351f572f2f5f9a1c7131ecf4b086824378aeaef5d527b430147",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_1b52d11ba3f0e8e4284fab2a9e7b09185f3901e2d8743b7777aefab87b81ab54",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee5810.json",
+        "retained_record_sha256": "72843485fabc4f114bb5fa7ade01b36934f89e55fefaa29085b36a230ba11e4c",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_947fccc1e9205cb5db5b0b0b4dd4a0029f1359e5240b74f0b7f85c417def690a",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee58c0.json",
+        "retained_record_sha256": "ccf4ac7e0e7a13266306472c420b2d2809dc5d5d9c44261cf7efd3e99e65f321",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_806f1e1d3090d62affc6d3921b5c0e8275524a107c4412a5e9c3dc857f7573e6",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee5900.json",
+        "retained_record_sha256": "7f1a2d5fc626a64eb3c8951549e7ffcc7858d93d18cd5efc1b12916b8e37f6b3",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_3496e320fd45298ddaa72bf0a09e5cd39ba40f9b8cbae04c46d5e542fdf20459",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee5c50.json",
+        "retained_record_sha256": "d9f4f979b2d10530b52940c4f85dde5e7da11a66d6594fac80f6af8c729fbef6",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_6b04ffd063ec52a3727d0be4c08b4754d562f3bc1150bc476327c4c81b9d9694",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee5c60.json",
+        "retained_record_sha256": "bee2967e92a1b44ba9c45934aea76b1525810d380751f6ee283cf12fd4a5077f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_913b2dfb7233b5a9e2b17c7c26dc1bd83b0f090303a789c6eda59045e289267d",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee5cb0.json",
+        "retained_record_sha256": "8a71f784a33de27eae56c51dbebfd73339ed93283224ff98f78df63052f1a0a8",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_feab29306fa81c5b72e8accf9afcdd6c5fa8363c5059a9807a88df9b1b993cd7",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee6050.json",
+        "retained_record_sha256": "f385e739a038ad4b58c67217445f93cad2fbe9093da73324a124eea712cee0ad",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_54e440a00199da8587db29f7d7f32c364ad99a66c24a1da508dddcf797fb88d3",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee63f0.json",
+        "retained_record_sha256": "bf9cbed7207a5ac6f06ae81f8d81de14ef7d02ea765a5059c3bc6d13bc9a2637",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_0935ff1cb2f743ee711c119d2d62483a3c26c7373ae4932ca901b9e914263a9c",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee7460.json",
+        "retained_record_sha256": "41c7682e0405a03deba368bdd195e30a3a84f8730e8dcc9d1706f24792b8f420",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_e633bfb0e090151f0c6676d3167387c25e2ce05512294580280b0efa74edc4a9",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee7570.json",
+        "retained_record_sha256": "058a6d9db3b0970a3301690ea63fa990d639ad7419268010298a4507367cd90f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_261158cb484e2f3e29b300b6f7bdaffd695296a3aac5e35368ce2d9a37d9cf0b",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee75b0.json",
+        "retained_record_sha256": "32d4a6b6d8b8cfff0b7993cfeb582311cffa404551588d310356499cb817d364",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_258452d9270b827870fedbf53d8bedfa2dbb67ab3b97bb51af922debe9240a15",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee7670.json",
+        "retained_record_sha256": "22b44e70e6d9feba3cdd043d01c31c1a28af1f5003c6027ccefd8a2ab6551f13",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_7efb910f0ed034753f7b6c5384e3a189784dce03985aafa1539a623bbca47bcb",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee7850.json",
+        "retained_record_sha256": "b83106c45664a2c1f40f14c94618cd7a4881f02e6360ac2628ae5658dbcad7f0",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_6cc11d958740901b634d187e5f94c09ff7cdf7c706eed186872a50989c1a1698",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee7860.json",
+        "retained_record_sha256": "48e479ee4779b442b6ced8d2fd5c98f3ce076316448b5d0fdf267bf4f328a714",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_10371413f09a0a66730c7a1a699c8b51b53ae441742c20252a121a9ca5adc8c7",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee8a70.json",
+        "retained_record_sha256": "1179f59374de16d7ab0c46e202b22e0874256ddcc2f46a99c6f0ca657c7e7bb2",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_fa6dfa3d72549f0bf19475092cb75e11ab235bc00fc47423d5178a24034a51f6",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee8c10.json",
+        "retained_record_sha256": "51b44bbfe026a655f25ec0dfb6d3050efa4a49cf3daeb4e3d9623efa495c847b",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_9539b4f996092d60c71e2416ca29891d0c9a0c750c6fda15e73574d8da70cf39",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee9050.json",
+        "retained_record_sha256": "a621d3a695c8d6b63b63d3d8858b6fc60c0fa9bed6b0529b5adba1926286a474",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_c01231491bd5ee4be91f9ce48b5bbb5501df12c8df9d5b409edb7dab10f3a4a5",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee9060.json",
+        "retained_record_sha256": "dc81fb032547529aa2cb06268bd6308031a0a12fe11194025b277702601e3896",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_05e4a61de468de9c1abac2a8e918d2fbc44e6c2404218889d0a0e8215faddf33",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ee9b60.json",
+        "retained_record_sha256": "c6ff65188cd655125f2286c55eff30050c6d2e7601995dd2859144cb0e5e797a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_33d52fbe8a838262c29510fbbff2e5b3f83677e8c2df21ce98e9e019acc2ccf3",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10eea2e0.json",
+        "retained_record_sha256": "63b11710bcdd985d0973c5a842479fb779a735caa546c7d3a145ca03b8351b67",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_f0cc8bc40f708bfc52af2ba09597061a496a1f1feaf37a2bf70d19b8fc600978",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10eea2f0.json",
+        "retained_record_sha256": "cc3d4eb728b8ed40d88f1468f4a904417f356198ad9fbafb9f0290536c33ba85",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_53765c6d35ad7ddad847f742d09abbbf2039ebd738de115f94f2aed58e2c737c",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10eea950.json",
+        "retained_record_sha256": "3b54dd216fd326db08b4727e4ada2b3118ff36f4d561feb06fa1687a815a1404",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_95be854657c696d8dd66613ac9e3da7bc5c4bc19c7b622a8e47b8e4e391ec135",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10eeae80.json",
+        "retained_record_sha256": "e50a3ecfb6da38337471103465dd657ac2f0dd56057612640bb7578970810b21",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_96f986f687251a1c716eb29056e5c0bceba91089cfc486f5b6430d4f7ca994de",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10eeaed0.json",
+        "retained_record_sha256": "d6802f23a1ca45ef2012ad60d367ce760fbc70bd6fbd03e5d319843e232d43f9",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_a310d4a1843b051fbd630b25b3abce3cec19a5463b3d7129cb020b9c02bfac94",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10eebbd0.json",
+        "retained_record_sha256": "06b232fce2cfc9a05ddf40eb76fc7967f7cac086d5c62d2500d0b8654ff4b37f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_34c19e8c24603614720e4b23fec7954ac609575a990c82d9a5d8b0f2d73e16bb",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ef2e80.json",
+        "retained_record_sha256": "5feaa0a3792643a2e24088e10cc6d8ce3aefebaf5520e3090939dcef7a61d3e8",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_0e0ce924b65e4944123f5f2c24bf34d2bcdb5269cfa995a941af54de0d506ead",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ef3260.json",
+        "retained_record_sha256": "3f4bb6f98f75ce7f36d4e9e3346cf0864d56055a6bf0c8a628019af7dc2f567f",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_a7a38c1b2d5bdaa7c660cacf0892de6560a9cdada3dfa24578c9ef36182405ff",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10ef3310.json",
+        "retained_record_sha256": "8d7d0fec018ae9ee0015a266ee55a80034c06ee59e397551cd3365e7b4dd004a",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_2e6abc5706f6eacfd3ca34abf700dbd5249d6a6a8fcfb35ee96dddc640907a4d",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10efd5c0.json",
+        "retained_record_sha256": "0ff8756aff743d6d8acf5456e27f56230fb334ef23ec1b4908de232afb319721",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_89b9c3c8576a5ddbc47e4ae3816f4e0f0995dcc4b2475732a96a6d7e4fb9ad55",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10efd610.json",
+        "retained_record_sha256": "77cdb29af445a05492870e0b5e5a9c70667ff6fe5e5a8b637aee189433d8de23",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_da54eed2bb54bbd7e9c36efae3a73a1c829364bb8717534ff3d088e4e1c43505",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10efd630.json",
+        "retained_record_sha256": "456d30120f5e81050cc8e577cc8122dfe0407ebfdec9591d71459dc9e5f56d5d",
+        "retained_record_format": "original MCP result envelope"
+      },
+      {
+        "evidence_id": "ev_03fda0f83fdbfe1e6aa66c1a827b0c1068b7455d0f9cf4fab6797275ec0e6917",
+        "operation": "analyze_function",
+        "retained_local_path": "out/facefx-layer85-20261125/fn-10f09320.json",
+        "retained_record_sha256": "ad5965bd26ce15f4c0b944189ca2268af5e3a68013b971d9fb6cb8b55f4108ff",
+        "retained_record_format": "original MCP result envelope"
+      }
+    ],
+    "closed_snapshot_local_path": "out/facefx-layer85-20261125/session.rea.json",
+    "closed_snapshot_sha256": "1956b12bff85dbe00dfab7d1dcb2933dfba499d09aa4f0a2921b4175d8a1a3c7",
+    "closed_evidence_records": 130,
+    "new_evidence_records": 66,
+    "retained_operation_envelopes": 66,
+    "reused_layer84_evidence_records": 64,
+    "extra_evidence_views_count": 0,
+    "validated_bundle_local_path": "out/facefx-layer85-20261125/validated-evidence-bundle.json",
+    "validated_bundle_sha256": "62f85de91d3f2bc3f235112d1e32b88841fb222bbdbf1094e6a0ae8d8b037bab",
+    "cumulative_validated_bundle_local_path": "out/facefx-layer85-20261125/cumulative-validated-evidence-bundle.json",
+    "cumulative_validated_bundle_sha256": "62f85de91d3f2bc3f235112d1e32b88841fb222bbdbf1094e6a0ae8d8b037bab",
+    "cumulative_validated_bundle_records": 130,
+    "partition1_validated_bundle_local_path": "out/vfs-layer24-20261114/validated-evidence-bundle.json",
+    "partition1_validated_bundle_sha256": "475ab7199d42e3cb2a866a007302f7868344303e3bfda6f975c2e19ae2040a0e",
+    "partition1_validated_bundle_records": 367,
+    "partition2_validated_bundle_local_path": "out/vfs-layer41-20261115/cumulative-validated-evidence-bundle.json",
+    "partition2_validated_bundle_sha256": "691eee5f4134ecfe5fa9ace57f78daead53f4c917e0aa4db243de429f03b0a7c",
+    "partition2_validated_bundle_records": 743,
+    "partition3_validated_bundle_local_path": "out/vfs-layer49-20261115/cumulative-validated-evidence-bundle.json",
+    "partition3_validated_bundle_sha256": "1fd402dd9c34d773769dcdb3f634bda90c0947c76f316a09467979c24c3459f6",
+    "partition3_validated_bundle_records": 264,
+    "partition4_validated_bundle_local_path": "out/vfs-layer55-20261115/cumulative-validated-evidence-bundle.json",
+    "partition4_validated_bundle_sha256": "b58b048ddae09bcbfb1c517792a7160c07bb1b1a0c2683464ead236f63eda3b0",
+    "partition4_validated_bundle_records": 181,
+    "partition5_validated_bundle_local_path": "out/vfs-layer58-20261115/validated-evidence-bundle.json",
+    "partition5_validated_bundle_sha256": "f8a0cfd64b101c746df29ef4cd126b4b610b618e63163255feebce22c81c258a",
+    "partition5_validated_bundle_records": 118,
+    "partition6_validated_bundle_local_path": "out/startup-layer62-20261119/cumulative-validated-evidence-bundle.json",
+    "partition6_validated_bundle_sha256": "da0f43dcf31accf01b85e3d85679908e2f930b4f9b68e0bc5dcf59769935a53a",
+    "partition6_validated_bundle_records": 252,
+    "partition7_validated_bundle_local_path": "out/startup-layer66-20261124/cumulative-validated-evidence-bundle.json",
+    "partition7_validated_bundle_sha256": "de90311e12db70e6ac2aae91c0523ea76e8fbbaae414e652e6a2665aaff44741",
+    "partition7_validated_bundle_records": 193,
+    "partition8_validated_bundle_local_path": "out/startup-layer71-20261124/cumulative-validated-evidence-bundle.json",
+    "partition8_validated_bundle_sha256": "d1e0cc84583aad43fe0757bc525b609c1558a1bb786b80d4c599b26d386e2541",
+    "partition8_validated_bundle_records": 257,
+    "partition9_validated_bundle_local_path": "out/startup-layer79-20261124/cumulative-validated-evidence-bundle.json",
+    "partition9_validated_bundle_sha256": "803f0707ce4405b10cabddf508f3822cc100250283bafa3d26792090caf9f7fc",
+    "partition9_validated_bundle_records": 407,
+    "partition10_validated_bundle_local_path": "out/facefx-layer81-20261125/validated-evidence-bundle.json",
+    "partition10_validated_bundle_sha256": "0dd9ee3985c9202147877b2b7871d021ce67d1f59212592bcade4227431b965d",
+    "partition10_validated_bundle_records": 132,
+    "partition11_validated_bundle_local_path": "out/curl-layer83-20261125/cumulative-validated-evidence-bundle.json",
+    "partition11_validated_bundle_sha256": "70c0d4aaabe3e23085126fa74e10446c0006349f34a45c66861f98a5115a922e",
+    "partition11_validated_bundle_records": 120,
+    "prior_partitions_validated_records": 3034,
+    "cumulative_all_partitions_records": 3164,
+    "non_proc_slots": [],
+    "resource_constrained_slots": [],
+    "closure_audit": {
+      "method": "linear sweep of every recovered body range in the pinned image; each direct rel8/rel32 CALL, JMP and Jcc target is tested against the recovered body ranges",
+      "recovered_functions": 2159,
+      "open_direct_call_edges": 0,
+      "direct_jump_edges_leaving_recovered_bodies": [
+        {
+          "source": "11695ee2",
+          "instruction": "11695f26",
+          "target": "11695e3c"
+        }
+      ]
+    },
+    "limitations": [
+      "Layer 85 extends Partition 12 (extending_layer84_batched_p12: 64 reused + 66 new = 130 Partition 12 records) alongside sealed Partitions 1-11 (3,034 prior; 3,164 cumulative across 2,159 functions); Partition 12 stays open, with 168 FaceFX export names at 163 addresses and 16 curl_ names still outside the recovered set",
+      "0x10ed65a0, 0x10ed78a0, 0x10ed7970, 0x10ed7980, 0x10ee47e0, 0x10ee47f0 and 0x10ee7860 are ADD ECX / JMP thunks with direct_jmp tail exits and 0x10ee54d0 leaves through JMP [EAX+4] (indirect_jmp); 0x10ed78b0 and 0x10ed7950 hold a mid-body tail JMP to 0x1033c6a0 and 0x10ef2e80 ahead of their own RET 4, so only the RET is a contract exit; 0x10ee5760, 0x10ee5810, 0x10ee8a70, 0x10ee9b60 and 0x10efd630 end in a backward JMP and list their single RET explicitly",
+      "The object vtable slots +0 (class descriptor) and +8 (deleting destructor), the functor implementation slots +0/+4 and the tree vtable 0x1183bf74 slots +4, +0xc and +0x10 are reached only through register-indirect CALL/JMP, which the direct-edge closure audit does not follow; they stay callback-injected in the bounded C17 tests",
+      "9 bodies carry more than one export name (ten IsA/IsExactKindOf names at 0x10ed78b0, five IsKindOf names at 0x10ed7950, the Iterator/ConstIterator and End/ReverseEnd folds of the six FxAnimGroup iterator bodies and FxActor::SetShouldClientRelink at 0x10ee7850), so 55 exported bodies carry 79 export names; 11 bodies have no export name and are named from their callers and bytes",
+      "The 39 globals (30 strings, four floats, the FxActorInstance vtable slot at 0x1183c784, the flag byte 0x11974fa0 and three .data zero-fill pointers) and the 4 vtables are pinned from the image by the contract validator without a retained REA read_bytes envelope; the constants 0x1173e2d0, 0x1183b014 and the pointers 0x119f3890, 0x11fadb6c, 0x11fadb70 and 0x11fadb7c these bodies also use were pinned by earlier layers",
+      "Direct CALL closure is 0 open edges and direct JMP/Jcc closure remains 1 single-tail edge: 0x11695ee2 -> 0x11695e3c"
+    ]
   }
 }

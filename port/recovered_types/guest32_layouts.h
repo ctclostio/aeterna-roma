@@ -4649,14 +4649,23 @@ _Static_assert(sizeof(rome2_fx_list_node_32) == 0x0c, "fx list node 32 size");
 ROME2_LAYOUT_ASSERT(rome2_fx_list_node_32, next_va, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_fx_list_node_32, prev_va, 0x08);
 
-/* FxAnimGroup: 0x20-byte stride at 0x10ed6551 and 0x10ed73b7; only the name is read. */
+/*
+ * FxAnimGroup: 0x20-byte stride at 0x10ed6551 and 0x10ed73b7. The constructor
+ * 0x10ee49f0 stamps vtable 0x1183bf8c and two FxName-keyed trees, each with
+ * vtable 0x1183bf74 and a zeroed root and count.
+ */
 typedef struct rome2_fx_anim_group_prefix_32 {
-    uint32_t field_00;
+    uint32_t vtable_va;
     rome2_fx_name_32 name;
-    uint8_t reserved08[0x18];
+    rome2_fx_avl_bucket_32 anims;      /* nodes hold FxAnim pointers */
+    rome2_fx_avl_bucket_32 sub_groups; /* nodes hold FxAnimGroup pointers */
 } rome2_fx_anim_group_prefix_32;
 _Static_assert(sizeof(rome2_fx_anim_group_prefix_32) == 0x20, "fx anim group prefix 32 size");
 ROME2_LAYOUT_ASSERT(rome2_fx_anim_group_prefix_32, name, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_group_prefix_32, anims, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_group_prefix_32, sub_groups, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_fx_avl_bucket_32, root_va, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_fx_avl_bucket_32, node_count, 0x08);
 
 typedef struct rome2_fx_anim_set_prefix_32 {
     uint8_t reserved00[0x08];
@@ -4673,11 +4682,15 @@ ROME2_LAYOUT_ASSERT(rome2_fx_anim_set_prefix_32, anim_group, 0x10);
 ROME2_LAYOUT_ASSERT(rome2_fx_anim_set_prefix_32, references, 0x30);
 
 typedef struct rome2_fx_anim_prefix_32 {
-    uint8_t reserved00[0x0c];
+    uint8_t reserved00[0x04];
+    rome2_fx_name_32 name;              /* quoted by the SetFrameRate warning (0x10ee48d9) */
+    uint8_t reserved08[0x04];
     uint32_t anim_curves_va;            /* 0x28-byte FxAnimCurve records */
-    uint8_t reserved10[0x08];
+    uint8_t reserved10[0x04];
+    uint32_t anim_curve_count;          /* bounds FindAnimCurve (0x10ee3818) */
     uint32_t compressed_anim_curves_va; /* 0x18-byte FxCompressedAnimCurve records */
-    uint8_t reserved1c[0x08];
+    uint8_t reserved1c[0x04];
+    uint32_t compressed_anim_curve_count; /* bounds FindCompressedAnimCurve (0x10ee39d8) */
     float real_start_time;
     float real_end_time;
     float curves_start_time;
@@ -4693,8 +4706,11 @@ typedef struct rome2_fx_anim_prefix_32 {
     float frame_rate;
 } rome2_fx_anim_prefix_32;
 _Static_assert(sizeof(rome2_fx_anim_prefix_32) == 0xf8, "fx anim prefix 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, name, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, anim_curves_va, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, anim_curve_count, 0x14);
 ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, compressed_anim_curves_va, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, compressed_anim_curve_count, 0x20);
 ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, real_start_time, 0x24);
 ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, real_end_time, 0x28);
 ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, curves_start_time, 0x2c);
@@ -4709,19 +4725,34 @@ ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, audio_asset_index, 0xec);
 ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, audio_asset_pointer_va, 0xf0);
 ROME2_LAYOUT_ASSERT(rome2_fx_anim_prefix_32, frame_rate, 0xf4);
 
-/* Record of the bone array at FxActor +0x14: GetBone returns record + 4, GetBoneName record + 8. */
+/*
+ * Record of the bone array at FxActor +0x14: GetBone returns record + 4, GetBoneName record + 8.
+ * ProcessFrame (0x10efd630) reads the rest: the 0x28-byte reference transform it
+ * copies out, the link array it blends in and the node that supplies the weight.
+ */
 typedef struct rome2_fx_actor_bone_record_32 {
-    uint32_t field_00;
-    uint32_t bone_field_00; /* the FxBone starts here */
+    uint32_t weight_node_index; /* face graph node whose value becomes the bone weight; 0xffffffff for none */
+    uint32_t bone_field_00;     /* the FxBone starts here */
     rome2_fx_name_32 bone_name;
-    uint8_t reserved0c[0x34];
+    float reference_pos[3];
+    float reference_rot[4];     /* w, x, y, z */
+    float reference_scale[3];
+    uint32_t links_va;          /* rome2_fx_bone_link_32 records */
+    uint8_t reserved38[0x04];
+    uint32_t link_count;
 } rome2_fx_actor_bone_record_32;
 _Static_assert(sizeof(rome2_fx_actor_bone_record_32) == 0x40, "fx actor bone record 32 size");
 ROME2_LAYOUT_ASSERT(rome2_fx_actor_bone_record_32, bone_field_00, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_fx_actor_bone_record_32, bone_name, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_bone_record_32, reference_pos, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_bone_record_32, reference_rot, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_bone_record_32, reference_scale, 0x28);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_bone_record_32, links_va, 0x34);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_bone_record_32, link_count, 0x3c);
 
 typedef struct rome2_fx_actor_prefix_32 {
-    uint8_t reserved0000[0x08];
+    uint8_t reserved0000[0x04];
+    rome2_fx_name_32 name;        /* quoted by the AddInstance and RemoveInstance log entries */
     uint8_t should_client_relink; /* FxActor::ShouldClientRelink is the body at 0x1054d080 */
     uint8_t is_open_in_studio;
     uint8_t is_published;
@@ -4729,7 +4760,8 @@ typedef struct rome2_fx_actor_prefix_32 {
     uint32_t bone_records_va;
     uint8_t reserved0018[0x04];
     uint32_t bone_count;
-    uint8_t reserved0020[0x0c];
+    uint32_t reference_bone_transforms_va; /* 0x2c-byte records InitializeFrame copies to the instance */
+    uint8_t reserved0024[0x08];
     uint8_t decompiled_face_graph[0x20]; /* FxFaceGraph, address only */
     uint8_t compiled_face_graph[0x6068]; /* FxCompiledFaceGraph, address only */
     rome2_fx_anim_group_prefix_32 default_anim_group;
@@ -4737,16 +4769,19 @@ typedef struct rome2_fx_actor_prefix_32 {
     uint8_t reserved60d8[0x04];
     uint32_t anim_group_count;
     rome2_fx_list_32 mounted_anim_sets;  /* nodes hold FxAnimSet pointers */
-    uint8_t reserved60e8[0x08];
+    rome2_fx_list_32 instances;          /* nodes hold FxActorInstance pointers */
     uint8_t phoneme_map[0x1c];           /* FxPhonemeMap, address only */
     uint8_t editor_only_data[0x04];      /* FxArray<unsigned char>, address only */
 } rome2_fx_actor_prefix_32;
 _Static_assert(sizeof(rome2_fx_actor_prefix_32) == 0x6110, "fx actor prefix 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, name, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, should_client_relink, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, is_open_in_studio, 0x09);
 ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, is_published, 0x0a);
 ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, bone_records_va, 0x14);
 ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, bone_count, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, reference_bone_transforms_va, 0x20);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, instances, 0x60e8);
 ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, decompiled_face_graph, 0x2c);
 ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, compiled_face_graph, 0x4c);
 ROME2_LAYOUT_ASSERT(rome2_fx_actor_prefix_32, default_anim_group, 0x60b4);
@@ -4764,12 +4799,24 @@ typedef struct rome2_fx_actor_instance_prefix_32 {
     uint8_t reserved0e[0x02];
     uint8_t channel_bank[0x28];             /* FxChannelBank, address only; GetChannelBank is the body at 0x1018aba0 */
     uint32_t node_final_values_va;          /* float per face graph node */
-    uint8_t reserved3c[0x70];
-    uint8_t weighted_bone_transforms[0x18]; /* FxArray<FxWeightedBoneTransform>, address only */
+    uint8_t reserved3c[0x38];
+    uint32_t frame_state_74;                /* zeroed by EndFrame (0x10eeaee7) */
+    uint32_t frame_words_va;                /* dword array EndFrame zero-fills */
+    uint32_t frame_word_count;
+    uint8_t reserved80[0x20];
+    uint32_t node_bitset_va;                /* one bit per face graph node; ProcessFrame recomputes a bone linked to a set bit */
+    uint8_t reserveda4[0x08];
+    /*
+     * FxArray<FxWeightedBoneTransform>; 0x10298bd0 returns its address. The
+     * first dword is the element pointer the frame bodies write through.
+     */
+    uint8_t weighted_bone_transforms[0x18];
     uint32_t client_event_count;
     uint8_t reservedc8[0x08];
     uint32_t max_client_event_count;
-    uint8_t reservedd4[0x34];
+    uint8_t reservedd4[0x2c];
+    uint32_t curve_state_pool_va;           /* first dword of the cache ReleaseCurveStateHandle passes on (ADD ECX, 0x100) */
+    uint8_t reserved104[0x04];
     uint32_t curve_state_pool_length;
     uint8_t reserved10c[0x04];
     uint8_t accumulated_base_channel_track_values[0x04]; /* FxArray<float>, address only */
@@ -4780,6 +4827,11 @@ ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, is_no_work_frame, 0x0c);
 ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, is_open_in_studio, 0x0d);
 ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, channel_bank, 0x10);
 ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, node_final_values_va, 0x38);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, frame_state_74, 0x74);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, frame_words_va, 0x78);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, frame_word_count, 0x7c);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, node_bitset_va, 0xa0);
+ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, curve_state_pool_va, 0x100);
 ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, weighted_bone_transforms, 0xac);
 ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, client_event_count, 0xc4);
 ROME2_LAYOUT_ASSERT(rome2_fx_actor_instance_prefix_32, max_client_event_count, 0xd0);
@@ -4796,13 +4848,35 @@ _Static_assert(offsetof(rome2_fx_actor_prefix_32, should_client_relink) ==
 
 /* FxEvent record of the manager array: 0xac-byte stride at 0x10ed86ff, 0x10ed8f72, 0x10ed8ffe and 0x10ed9a54. */
 typedef struct rome2_fx_event_prefix_32 {
-    uint32_t vtable_va; /* IsPlaying calls slot +0x30 */
-    uint8_t reserved04[0x84];
-    float time_88;      /* shifted by Resume unless it holds -2147483648.0f */
-    uint8_t reserved8c[0x20];
+    uint32_t vtable_va;   /* IsPlaying calls slot +0x30 */
+    uint8_t reserved04[0x08];
+    uint32_t link_0c_va;  /* when non-NULL, HasWorkThisFrame subtracts the float at +0x24 of this object from time_88 */
+    float range_min_10;   /* 0x10f09320 scales both by scale_24 and adds its argument to form bound_50 and bound_54 */
+    float range_max_14;
+    float offset_18;      /* the argument of 0x10f09320 */
+    uint8_t reserved1c[0x08];
+    float scale_24;
+    uint8_t reserved28[0x28];
+    float bound_50;       /* swapped with bound_54 when scale_24 is negative and they come out reversed */
+    float bound_54;
+    uint8_t reserved58[0x2c];
+    float time_84;        /* HasWorkThisFrame reports work once its argument reaches this */
+    float time_88;        /* shifted by Resume unless it holds -2147483648.0f */
+    uint8_t reserved8c[0x04];
+    float time_90;        /* offset_18 as HasWorkThisFrame latched it */
+    uint8_t reserved94[0x18];
 } rome2_fx_event_prefix_32;
 _Static_assert(sizeof(rome2_fx_event_prefix_32) == 0xac, "fx event prefix 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_event_prefix_32, link_0c_va, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_fx_event_prefix_32, range_min_10, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_fx_event_prefix_32, range_max_14, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_fx_event_prefix_32, offset_18, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_fx_event_prefix_32, scale_24, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_fx_event_prefix_32, bound_50, 0x50);
+ROME2_LAYOUT_ASSERT(rome2_fx_event_prefix_32, bound_54, 0x54);
+ROME2_LAYOUT_ASSERT(rome2_fx_event_prefix_32, time_84, 0x84);
 ROME2_LAYOUT_ASSERT(rome2_fx_event_prefix_32, time_88, 0x88);
+ROME2_LAYOUT_ASSERT(rome2_fx_event_prefix_32, time_90, 0x90);
 
 /* FxEventManager as its constructor 0x10ed7de0 writes it; field_* are only zeroed there. */
 typedef struct rome2_fx_event_manager_prefix_32 {
@@ -4855,10 +4929,143 @@ _Static_assert(sizeof(rome2_fx_functor_32) == 0x04, "fx functor 32 size");
 /* FxResourceManager: the vector deleting destructor in its vtable (0x10ed61e0) steps 8 bytes per element. */
 typedef struct rome2_fx_resource_manager_32 {
     uint32_t vtable_va; /* 0x1183a798 */
-    uint32_t field_04;
+    uint32_t state_va;  /* rome2_fx_resource_manager_state_32 from FxAllocate(0x14), or 0 (0x10eda3bc, 0x10eda3c3) */
 } rome2_fx_resource_manager_32;
 _Static_assert(sizeof(rome2_fx_resource_manager_32) == 0x08, "fx resource manager 32 size");
-ROME2_LAYOUT_ASSERT(rome2_fx_resource_manager_32, field_04, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_fx_resource_manager_32, state_va, 0x04);
+
+/*
+ * Layer 85: FaceFX class registration, FxAnimGroup trees, FxList membership
+ * and per-frame bone and event work (Partition 12).
+ */
+
+/* The base-class chain the kind-of walk at 0x10ef2e80 follows (MOV ECX, [ECX + 8]). */
+ROME2_LAYOUT_ASSERT(rome2_fx_class_32, base_class_va, 0x08);
+
+/* The record the FxResourceManager constructor 0x10eda380 allocates: four zeroed dwords and one zeroed byte. */
+typedef struct rome2_fx_resource_manager_state_32 {
+    uint32_t field_00;
+    uint32_t field_04;
+    uint32_t field_08;
+    uint32_t field_0c;
+    uint8_t automatic_garbage_collection; /* SetAutomaticGarbageCollection (0x10edd137) */
+    uint8_t pad11[3];                     /* never written */
+} rome2_fx_resource_manager_state_32;
+_Static_assert(sizeof(rome2_fx_resource_manager_state_32) == 0x14, "fx resource manager state 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_resource_manager_state_32, automatic_garbage_collection, 0x10);
+
+/* FxNamedObject as its constructor 0x10ef3260 writes it: vtable 0x1183ce30 and a copy of FxName::NullName. */
+typedef struct rome2_fx_named_object_32 {
+    uint32_t vtable_va;
+    rome2_fx_name_32 name;
+} rome2_fx_named_object_32;
+_Static_assert(sizeof(rome2_fx_named_object_32) == 0x08, "fx named object 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_named_object_32, name, 0x04);
+_Static_assert(offsetof(rome2_fx_anim_group_prefix_32, name) == offsetof(rome2_fx_named_object_32, name),
+               "FxAnimGroup starts with its FxNamedObject base");
+
+/* Node of an FxAnimGroup tree, as the walks and searches at 0x10ee5450..0x10ee6488 read it. */
+typedef struct rome2_fx_avl_name_node_prefix_32 {
+    uint32_t field_00;
+    rome2_fx_name_32 key;
+    uint32_t value_va; /* FxAnim or FxAnimGroup pointer; Clear destroys it and stores 0 */
+    uint32_t field_0c;
+    uint32_t parent_va;
+    uint32_t left_va;
+    uint32_t right_va;
+} rome2_fx_avl_name_node_prefix_32;
+_Static_assert(sizeof(rome2_fx_avl_name_node_prefix_32) == 0x1c, "fx avl name node prefix 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_avl_name_node_prefix_32, key, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_fx_avl_name_node_prefix_32, value_va, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_fx_avl_name_node_prefix_32, parent_va, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_fx_avl_name_node_prefix_32, left_va, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_fx_avl_name_node_prefix_32, right_va, 0x18);
+
+/* Tree iterator the Begin and End bodies fill: the tree, then the node (0 at the end). */
+typedef struct rome2_fx_tree_iterator_32 {
+    uint32_t tree_va;
+    uint32_t node_va;
+} rome2_fx_tree_iterator_32;
+_Static_assert(sizeof(rome2_fx_tree_iterator_32) == 0x08, "fx tree iterator 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_tree_iterator_32, node_va, 0x04);
+
+/* FxAnimCurve record: 0x28-byte stride at 0x10ee3843; only the name is read. */
+typedef struct rome2_fx_anim_curve_prefix_32 {
+    uint32_t field_00;
+    rome2_fx_name_32 name;
+    uint8_t reserved08[0x20];
+} rome2_fx_anim_curve_prefix_32;
+_Static_assert(sizeof(rome2_fx_anim_curve_prefix_32) == 0x28, "fx anim curve prefix 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_anim_curve_prefix_32, name, 0x04);
+
+/* FxCompressedAnimCurve record: 0x18-byte stride at 0x10ee3a03; only the name is read. */
+typedef struct rome2_fx_compressed_anim_curve_prefix_32 {
+    uint32_t field_00;
+    rome2_fx_name_32 name;
+    uint8_t reserved08[0x10];
+} rome2_fx_compressed_anim_curve_prefix_32;
+_Static_assert(sizeof(rome2_fx_compressed_anim_curve_prefix_32) == 0x18, "fx compressed anim curve prefix 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_compressed_anim_curve_prefix_32, name, 0x04);
+
+/*
+ * The sub-object at FxActor +0x0c that FindBone, InitializeFrame and
+ * ProcessFrame forward to (ADD ECX, 0xc; JMP).
+ */
+typedef struct rome2_fx_actor_bone_table_prefix_32 {
+    uint8_t reserved00[0x08];
+    uint32_t bone_records_va; /* rome2_fx_actor_bone_record_32 records */
+    uint8_t reserved0c[0x04];
+    uint32_t bone_count;
+    uint32_t reference_bone_transforms_va;
+} rome2_fx_actor_bone_table_prefix_32;
+_Static_assert(sizeof(rome2_fx_actor_bone_table_prefix_32) == 0x18, "fx actor bone table prefix 32 size");
+_Static_assert(offsetof(rome2_fx_actor_prefix_32, bone_records_va) ==
+                   0x0c + offsetof(rome2_fx_actor_bone_table_prefix_32, bone_records_va),
+               "bone table records at FxActor +0x14");
+_Static_assert(offsetof(rome2_fx_actor_prefix_32, bone_count) ==
+                   0x0c + offsetof(rome2_fx_actor_bone_table_prefix_32, bone_count),
+               "bone table count at FxActor +0x1c");
+_Static_assert(offsetof(rome2_fx_actor_prefix_32, reference_bone_transforms_va) ==
+                   0x0c + offsetof(rome2_fx_actor_bone_table_prefix_32, reference_bone_transforms_va),
+               "bone table reference transforms at FxActor +0x20");
+
+/* Link of a bone to a face graph node: the node's value scales these deltas (0x10efd750..0x10efd936). */
+typedef struct rome2_fx_bone_link_32 {
+    uint32_t node_index;
+    float pos[3];
+    float rot[4]; /* w, x, y, z; 1.0 is added to the scaled w */
+    float scale[3];
+} rome2_fx_bone_link_32;
+_Static_assert(sizeof(rome2_fx_bone_link_32) == 0x2c, "fx bone link 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_bone_link_32, pos, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_fx_bone_link_32, rot, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_fx_bone_link_32, scale, 0x20);
+
+/* Element of the instance's bone output and of the actor's reference array: 0x2c-byte stride (IMUL at 0x10efd610). */
+typedef struct rome2_fx_weighted_bone_transform_32 {
+    float pos[3];
+    float rot[4]; /* w, x, y, z */
+    float scale[3];
+    float weight; /* copied as a dword from the node value array (0x10efd6df) */
+} rome2_fx_weighted_bone_transform_32;
+_Static_assert(sizeof(rome2_fx_weighted_bone_transform_32) == 0x2c, "fx weighted bone transform 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_weighted_bone_transform_32, rot, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_fx_weighted_bone_transform_32, scale, 0x1c);
+ROME2_LAYOUT_ASSERT(rome2_fx_weighted_bone_transform_32, weight, 0x28);
+_Static_assert(offsetof(rome2_fx_actor_bone_record_32, links_va) -
+                       offsetof(rome2_fx_actor_bone_record_32, reference_pos) ==
+                   offsetof(rome2_fx_weighted_bone_transform_32, weight),
+               "the reference transform is the 0x28 bytes ahead of the weight");
+
+/* FxCacheHandle<FxCurveState> as 0x10ed7990 releases it. */
+typedef struct rome2_fx_cache_handle_32 {
+    uint32_t count;       /* 0xffffffff once released */
+    uint32_t pool_offset; /* byte offset into the cache's pool, or 0xffffffff for a block of its own */
+    uint32_t block_va;    /* FxAllocate'd block of count * 0x30 bytes when pool_offset is 0xffffffff */
+} rome2_fx_cache_handle_32;
+_Static_assert(sizeof(rome2_fx_cache_handle_32) == 0x0c, "fx cache handle 32 size");
+ROME2_LAYOUT_ASSERT(rome2_fx_cache_handle_32, pool_offset, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_fx_cache_handle_32, block_va, 0x08);
 
 #undef ROME2_LAYOUT_ASSERT
 #endif
