@@ -40,7 +40,7 @@
       "static_rdata_ptr": 7912,
       "static_fn_ptr": 888,
       "static_vptr_instance": 584,
-      "pe_iat_slot": 478,
+      "pe_iat_slot": 477,
       "msvc_rtti_type_descriptor": 181,
       "curated": 46,
       "pe_data_export": 29,
@@ -167,6 +167,7 @@
       "IAT slot in .rdata (SHELL32.dll!SHCreateDirectoryExW) called by 0x101016c0": 1,
       "IAT slot in .rdata (SHELL32.dll!SHGetFolderPathW) called by 0x101016c0": 1,
       "IAT slot in .rdata (SHLWAPI.dll!PathAppendW) called by 0x101016c0": 1,
+      "OpenSSL IAT slot SSL_SESSION_free (4B) used by Layer 82": 1,
       "IAT slot in .rdata (USER32.dll!LoadStringW) called by 0x100df270": 1,
       "IAT slot in .rdata called indirectly by 0x112d8e20": 1,
       "IAT slot USER32!IsWindow called by 0x100ec5c0": 1,
@@ -1086,12 +1087,12 @@
     }
   },
   "curated_reconciliation": {
-    "curated_functions_total": 1918,
-    "curated_in_canonical_index": 1887,
-    "curated_exact_body_sha256_match": 1869,
+    "curated_functions_total": 1972,
+    "curated_in_canonical_index": 1941,
+    "curated_exact_body_sha256_match": 1923,
     "curated_multi_range_expanded": 18,
     "curated_non_proc_slots": 31,
-    "curated_globals_matched": 1095,
+    "curated_globals_matched": 1096,
     "curated_vtables_matched": 85
   },
   "files": {
@@ -1102,8 +1103,8 @@
     },
     "function_contracts_part2.tsv": {
       "rows": 40640,
-      "bytes": 9477395,
-      "sha256": "afc65f217d39b93064f794f3310cf87ce20fc90abf1f164d16a5968a67d4b3df"
+      "bytes": 9478313,
+      "sha256": "fdbed001b9dc8b0d390bf3bb133a2483ffc6ad6a206e87cfd73462bfc037c388"
     },
     "non_proc_curated_slots.tsv": {
       "rows": 31,
@@ -1127,8 +1128,8 @@
     },
     "global_contracts.tsv": {
       "rows": 11167,
-      "bytes": 992039,
-      "sha256": "e21f40ec5ae09e8ce96b7570da8d5ab11e30903a8ec822846e53242cede754ca"
+      "bytes": 992114,
+      "sha256": "e71c2a12fb57ac2e502e240bd4f8bc5c39f8b612e94088e548d0a83dd9e61cd1"
     }
   }
 }

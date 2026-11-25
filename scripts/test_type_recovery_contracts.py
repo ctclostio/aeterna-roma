@@ -75,10 +75,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 1918)
-        self.assertEqual(result["globals"], 1095)
+        self.assertEqual(result["functions"], 1972)
+        self.assertEqual(result["globals"], 1096)
         self.assertEqual(result["vtables"], 85)
-        self.assertEqual(result["instruction_witnesses"], 1577)
+        self.assertEqual(result["instruction_witnesses"], 1581)
 
     def test_cdecl_stack_arity_is_separate_from_return_pop(self):
         helper = next(f for f in self.registry["functions"] if f["address"] == "10102bc0")
@@ -4331,6 +4331,27 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertIn("10ed57f0", fn_by_addr)
         self.assertEqual(fn_by_addr["10ed57f0"]["tail_exit"]["kind"], "direct_jmp")
         self.assertEqual(fn_by_addr["10ed57f0"]["tail_exit"]["target"], "10ede090")
+
+    def test_layer82_curl_util_printf_slist_share_contracts(self):
+        ev = self.registry["rea_layer82_evidence"]
+        self.assertEqual(ev["snapshot_mode"], "fresh_partition11_batched")
+        self.assertEqual(ev["closed_evidence_records"], 55)
+        self.assertEqual(ev["new_evidence_records"], 55)
+        self.assertEqual(ev["prior_partitions_validated_records"], 2914)
+        self.assertEqual(ev["cumulative_all_partitions_records"], 2969)
+        self.assertEqual(ev["non_proc_slots"], [])
+        self.assertEqual(ev["resource_constrained_slots"], [])
+        fns = {f["address"].lower(): f for f in self.registry["functions"]}
+        for addr in ("10f10c20", "10f1ff20", "10f20a00", "10f3af80"):
+            self.assertIn(addr, fns)
+            self.assertEqual(fns[addr]["calling_convention"], "cdecl")
+        self.assertEqual(fns["116c7f4b"]["tail_exit"]["kind"], "iat_jmp")
+        self.assertEqual(fns["116c7f4b"]["tail_exit"]["iat_slot"], "1172f5e4")
+        self.assertEqual(fns["10f2d4f0"]["tail_exit"]["kind"], "direct_jmp")
+        self.assertEqual(fns["10f2d4f0"]["tail_exit"]["target"], "116c7f4b")
+        self.assertEqual(ev["closure_audit"]["recovered_functions"], 1972)
+        self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
+        self.assertEqual([(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]], [("11695ee2", "11695e3c")])
 
     def test_tail_exit_indirect_jmp_mutations_rejected(self):
         for mutator, pattern in (

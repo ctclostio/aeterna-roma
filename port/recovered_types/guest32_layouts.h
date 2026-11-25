@@ -4371,5 +4371,90 @@ typedef struct rome2_fx_class_array_32 {
 } rome2_fx_class_array_32;
 _Static_assert(sizeof(rome2_fx_class_array_32) == 0x0c, "fx class array 32 size");
 
+/* Layer 82: libcurl utilities, lists, hash, cookies, share, SSL session entry */
+typedef struct rome2_curl_slist_32 {
+    uint32_t data_va;
+    uint32_t next_va;
+} rome2_curl_slist_32;
+_Static_assert(sizeof(rome2_curl_slist_32) == 0x08, "curl slist 32 size");
+
+typedef struct rome2_curl_llist_element_32 {
+    uint32_t ptr_va;
+    uint32_t prev_va;
+    uint32_t next_va;
+} rome2_curl_llist_element_32;
+_Static_assert(sizeof(rome2_curl_llist_element_32) == 0x0c, "curl llist element 32 size");
+
+typedef struct rome2_curl_llist_32 {
+    uint32_t head_va;
+    uint32_t tail_va;
+    uint32_t dtor_fn_va;
+    uint32_t size;
+} rome2_curl_llist_32;
+_Static_assert(sizeof(rome2_curl_llist_32) == 0x10, "curl llist 32 size");
+
+typedef struct rome2_curl_hash_32 {
+    uint32_t table_va;
+    uint32_t hash_func_va;
+    uint32_t comp_func_va;
+    uint32_t dtor_va;
+    int32_t slots;
+    uint32_t size;
+} rome2_curl_hash_32;
+_Static_assert(sizeof(rome2_curl_hash_32) == 0x18, "curl hash 32 size");
+
+typedef struct rome2_curl_cookie_32 {
+    uint32_t next_va;
+    uint32_t name_va;
+    uint32_t value_va;
+    uint32_t path_va;
+    uint32_t domain_va;
+    uint32_t expires;
+    uint32_t expirestr_va;
+    uint32_t tailmatch;
+    uint32_t spath_va;
+    uint32_t secure;
+    uint32_t version_va;
+    uint32_t maxage_va;
+} rome2_curl_cookie_32;
+_Static_assert(sizeof(rome2_curl_cookie_32) == 0x30, "curl cookie 32 size");
+
+typedef struct rome2_curl_cookie_info_32 {
+    uint32_t cookies_va;
+    uint32_t filename_va;
+} rome2_curl_cookie_info_32;
+_Static_assert(sizeof(rome2_curl_cookie_info_32) == 0x08, "curl cookie info 32 size");
+
+typedef struct rome2_curl_ssl_sessionid_32 {
+    uint32_t name_va;        /* 0x00 */
+    uint32_t sessionid_va;   /* 0x04 */
+    uint32_t reserved08;     /* 0x08 */
+    uint32_t idsize;         /* 0x0c */
+    uint32_t age;            /* 0x10 */
+    uint32_t reserved14[4];  /* 0x14..0x20 */
+    uint32_t capath_va;      /* 0x24 */
+    uint32_t cafile_va;      /* 0x28 */
+    uint32_t reserved2c[2];  /* 0x2c..0x30 */
+    uint32_t cipher_list_va; /* 0x34 */
+    uint32_t egdsocket_va;   /* 0x38 */
+    uint32_t random_file_va; /* 0x3c */
+    uint32_t reserved40[5];  /* 0x40..0x50 */
+} rome2_curl_ssl_sessionid_32;
+_Static_assert(sizeof(rome2_curl_ssl_sessionid_32) == 0x54, "curl ssl sessionid 32 size");
+
+typedef struct rome2_curl_share_32 {
+    uint32_t specifier;
+    uint32_t dirty;
+    uint32_t lockfunc_va;
+    uint32_t unlockfunc_va;
+    uint32_t clientdata_va;
+    uint32_t hostcache_va;
+    uint32_t cookies_va;
+    uint32_t sslsession_va;
+    uint32_t max_ssl_sessions;
+    int32_t access_flag;
+} rome2_curl_share_32;
+_Static_assert(sizeof(rome2_curl_share_32) == 0x28, "curl share 32 size");
+
 #undef ROME2_LAYOUT_ASSERT
 #endif
