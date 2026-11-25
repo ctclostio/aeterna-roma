@@ -1152,6 +1152,12 @@ uint32_t rome2_l78_lua_newstate(rome2_l77_ctx *ctx, uint32_t frealloc_va, uint32
     uint32_t g_va;
     uint32_t gt_va;
     uint32_t reg_va;
+    int32_t ti;
+    static const char *const k_tm_names[17] = {
+        "__index", "__newindex", "__gc", "__mode", "__eq",
+        "__add", "__sub", "__mul", "__div", "__mod", "__pow", "__unm",
+        "__len", "__lt", "__le", "__concat", "__call"
+    };
     if (ctx == NULL) {
         return 0u;
     }
@@ -1176,6 +1182,12 @@ uint32_t rome2_l78_lua_newstate(rome2_l77_ctx *ctx, uint32_t frealloc_va, uint32
     lg->g.gcstepmul = 200;
     lg->g.gc_threshold = 0x1000000u;
 
+    /*
+     * The original reaches f_luaopen (0x10f46950) by pointer through
+     * luaD_rawrunprotected; that body is not recovered. Its stock Lua 5.1.4
+     * effects are adapted inline: stack, globals/registry tables, string
+     * table, and the 17 fixed luaT_init event names.
+     */
     rome2_l78_stack_init(ctx, lg_va, lg_va);
     rome2_l77_luaS_resize(ctx, lg_va, 32u);
     gt_va = rome2_l77_luaH_new(ctx, lg_va, 0, 2);
@@ -1186,41 +1198,48 @@ uint32_t rome2_l78_lua_newstate(rome2_l77_ctx *ctx, uint32_t frealloc_va, uint32
         lg->l.l_gt.tt = ROME2_LUA_TTABLE;
         lg->g.l_registry.value_u32 = reg_va;
         lg->g.l_registry.tt = ROME2_LUA_TTABLE;
+    }
+    for (ti = 0; ti < 17; ++ti) {
+        uint32_t ts_va = rome2_l77_luaS_newlstr(ctx, lg_va, k_tm_names[ti], strlen(k_tm_names[ti]));
+        rome2_lua_tstring_hdr_32 *ts = (ts_va != 0u)
+            ? (rome2_lua_tstring_hdr_32 *)rome2_l75_mut_ptr(ctx->arena, ts_va, sizeof(*ts))
+            : NULL;
+        if (ts != NULL) {
+            ts->marked |= 0x20u;
+        }
+        lg = (rome2_lua_lg_32 *)rome2_l75_mut_ptr(ctx->arena, lg_va, sizeof(*lg));
+        if (lg != NULL) {
+            lg->g.tmname_va[ti] = ts_va;
+        }
+    }
+    lg = (rome2_lua_lg_32 *)rome2_l75_mut_ptr(ctx->arena, lg_va, sizeof(*lg));
+    if (lg != NULL) {
         lg->g.gc_threshold = 4u * lg->g.totalbytes;
     }
     return lg_va;
 }
 
-/* 0x116cfa80 */
-void rome2_l78_luaopen_string(rome2_l77_ctx *ctx, uint32_t l_va) {
-    static const rome2_l78_reg strlib[] = {
-        { "byte",    0x116cd010u },
-        { "char",    0x116cd170u },
-        { "dump",    0x116cd270u },
-        { "find",    0x116cf870u },
-        { "format",  0x116cf390u },
-        { "gfind",   0x116ce3f0u },
-        { "gmatch",  0x116ce390u },
-        { "gsub",    0x116ce420u },
-        { "len",     0x116cd000u },
-        { "lower",   0x116cd0c0u },
-        { "match",   0x116cf890u },
-        { "rep",     0x116cd1e0u },
-        { "reverse", 0x116cd080u },
-        { "sub",     0x116cd020u },
-        { "upper",   0x116cd120u },
+/* 0x116cfa80: luaL_openlibs over the 9-entry lualibs table at 0x11921f10. */
+void rome2_l78_luaL_openlibs(rome2_l77_ctx *ctx, uint32_t l_va) {
+    static const rome2_l78_reg lualibs[] = {
+        { "",        0x116d0ba0u },
+        { "package", 0x116d6af0u },
+        { "table",   0x116d14f0u },
+        { "io",      0x116d24c0u },
+        { "os",      0x116d2e90u },
+        { "string",  0x116d3ea0u },
+        { "math",    0x116d5440u },
+        { "debug",   0x116d6160u },
+        { "bit",     0x116d7000u },
         { NULL, 0u }
     };
+    const rome2_l78_reg *lib;
     if (ctx == NULL) {
         return;
     }
-    rome2_l78_luaL_register(ctx, l_va, "string", strlib);
-    rome2_l78_lua_createtable(ctx, l_va, 0, 1);
-    rome2_l78_lua_pushstring(ctx, l_va, "");
-    rome2_l76_lua_pushvalue(ctx->arena, l_va, -2);
-    (void)rome2_l76_lua_setmetatable(ctx->arena, l_va, -2);
-    rome2_l76_lua_settop(ctx->arena, l_va, -2);
-    rome2_l76_lua_pushvalue(ctx->arena, l_va, -2);
-    rome2_l78_lua_setfield(ctx, l_va, -2, "__index");
-    rome2_l76_lua_settop(ctx->arena, l_va, -2);
+    for (lib = lualibs; lib->func_va != 0u; ++lib) {
+        rome2_l78_lua_pushcclosure(ctx, l_va, lib->func_va, 0);
+        rome2_l78_lua_pushstring(ctx, l_va, lib->name);
+        rome2_l78_lua_call(ctx, l_va, 1, 0);
+    }
 }

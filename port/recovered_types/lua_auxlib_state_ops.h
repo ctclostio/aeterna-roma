@@ -70,7 +70,7 @@ void rome2_l78_luaL_register(
     const char *libname,
     const rome2_l78_reg *regs);
 
-/* State, GC, Debug, VM & Stringlib (0x10f468c0..0x116cfa80) */
+/* State, GC, Debug, VM & luaL_openlibs (0x10f468c0..0x116cfa80) */
 void rome2_l78_close_state(rome2_l77_ctx *ctx, uint32_t l_va);
 uint32_t rome2_l78_luaE_newthread(rome2_l77_ctx *ctx, uint32_t l_va);
 uint32_t rome2_l78_lua_newstate(rome2_l77_ctx *ctx, uint32_t frealloc_va, uint32_t ud_va);
@@ -103,6 +103,6 @@ int32_t rome2_l78_luaV_tostring(
     rome2_l77_ctx *ctx,
     uint32_t l_va,
     uint32_t obj_va);
-void rome2_l78_luaopen_string(rome2_l77_ctx *ctx, uint32_t l_va);
+void rome2_l78_luaL_openlibs(rome2_l77_ctx *ctx, uint32_t l_va);
 
 #endif

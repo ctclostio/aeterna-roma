@@ -11,7 +11,19 @@ static uint32_t f32_bits(float f) {
     return u;
 }
 
+static uint32_t g_l78_openlib_va[16];
+static char g_l78_openlib_name[16][16];
+static uint32_t g_l78_openlib_count = 0u;
+
 static int32_t mock_l78_c_handler(rome2_l77_ctx *ctx, uint32_t l_va, uint32_t cfn_va) {
+    if (cfn_va >= 0x116d0000u && cfn_va < 0x116d8000u) {
+        const char *name = rome2_l78_lua_tolstring(ctx, l_va, 1, NULL);
+        assert(g_l78_openlib_count < 16u && name != NULL);
+        g_l78_openlib_va[g_l78_openlib_count] = cfn_va;
+        (void)strncpy_s(g_l78_openlib_name[g_l78_openlib_count], 16u, name, 15u);
+        ++g_l78_openlib_count;
+        return 0;
+    }
     if (cfn_va == 0xdead0001u) {
         const char *msg = rome2_l78_lua_tolstring(ctx, l_va, 1, NULL);
         (void)rome2_l78_lua_pushfstring(ctx, l_va, "handled:%s", msg != NULL ? msg : "");
@@ -155,12 +167,29 @@ static void test_l78_auxlib_refs_errors_and_stringlib(void) {
     }
     rome2_l76_lua_settop(&arena, l_va, 0);
 
-    /* luaopen_string + metatable check */
-    rome2_l78_luaopen_string(&ctx, l_va);
-    rome2_l78_lua_getfield(&ctx, l_va, ROME2_LUA_GLOBALSINDEX, "string");
-    assert(rome2_l76_lua_type(&arena, l_va, -1) == ROME2_LUA_TTABLE);
-    rome2_l78_lua_getfield(&ctx, l_va, -1, "sub");
-    assert(rome2_l76_lua_type(&arena, l_va, -1) == ROME2_LUA_TFUNCTION);
+    /* luaL_openlibs calls each lualibs[] opener once, in table order, with its name */
+    g_l78_openlib_count = 0u;
+    rome2_l78_luaL_openlibs(&ctx, l_va);
+    assert(g_l78_openlib_count == 9u);
+    assert(g_l78_openlib_va[0] == 0x116d0ba0u && g_l78_openlib_name[0][0] == '\0');
+    assert(g_l78_openlib_va[1] == 0x116d6af0u && strcmp(g_l78_openlib_name[1], "package") == 0);
+    assert(g_l78_openlib_va[5] == 0x116d3ea0u && strcmp(g_l78_openlib_name[5], "string") == 0);
+    assert(g_l78_openlib_va[8] == 0x116d7000u && strcmp(g_l78_openlib_name[8], "bit") == 0);
+    assert(rome2_l76_lua_gettop(&arena, l_va) == 0);
+
+    /* lua_newstate leaves the 17 tag-method names interned, so __index dispatch works */
+    rome2_l78_lua_createtable(&ctx, l_va, 0, 0);
+    rome2_l78_lua_createtable(&ctx, l_va, 0, 1);
+    rome2_l78_lua_createtable(&ctx, l_va, 0, 1);
+    rome2_l78_lua_pushstring(&ctx, l_va, "inherited");
+    rome2_l78_lua_setfield(&ctx, l_va, -2, "k");
+    rome2_l78_lua_setfield(&ctx, l_va, -2, "__index");
+    (void)rome2_l76_lua_setmetatable(&arena, l_va, -2);
+    rome2_l78_lua_getfield(&ctx, l_va, -1, "k");
+    {
+        const char *ks = rome2_l78_lua_tolstring(&ctx, l_va, -1, NULL);
+        assert(ks != NULL && strcmp(ks, "inherited") == 0);
+    }
     rome2_l76_lua_settop(&arena, l_va, 0);
 
     /* Protected pcall + error handler + lua_getinfo */

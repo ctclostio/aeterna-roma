@@ -28337,8 +28337,8 @@
       "stack_argument_bytes": 4,
       "callee_pop_bytes": 0,
       "calling_convention": "cdecl",
-      "ordinary_return": "void luaopen_string(lua_State *L)",
-      "scope": "registers built-in string library entries from 0x11921f10 table",
+      "ordinary_return": "void luaL_openlibs(lua_State *L)",
+      "scope": "walks the lualibs[] {name, opener} table at 0x11921f10, calling each opener with its name through lua_call(L, 1, 0)",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "116cfaba"
@@ -28352,8 +28352,8 @@
       "stack_argument_bytes": 4,
       "callee_pop_bytes": 4,
       "calling_convention": "thiscall",
-      "ordinary_return": "int __thiscall dispatch_advice_lua_events(void *self, void *event_obj)",
-      "scope": "iterates Lua events[name] handlers binding EMPIREUTILITY::EVENT/TWUI::Component pointers and returning count",
+      "ordinary_return": "int __thiscall dispatch_lua_event(script_context *self, event *event_obj)",
+      "scope": "for each events[event->name()] handler: boxes the event pointer through udata_lookup, sets a context table (component, string) as its metatable __index, calls the handler through 0x112ad700(1, 1) and counts boolean true results",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "10ca3319",
@@ -28368,8 +28368,8 @@
       "stack_argument_bytes": 0,
       "callee_pop_bytes": 0,
       "calling_convention": "cdecl",
-      "ordinary_return": "void trigger_highest_priority_advice_thread()",
-      "scope": "selects lowest priority advice item from 0x1196fc28 array, activates listener, and dispatches Lua event",
+      "ordinary_return": "void trigger_highest_priority_advice()",
+      "scope": "raises the active-advice event, picks the first queue entry at 0x1196fc28 with the strictly lowest detail priority (+0x4c), dismisses every other entry, activates the winner, appends it to the history vector at 0x1196fc14 and raises the advice-issued event",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "10cb67eb"
@@ -28383,8 +28383,8 @@
       "stack_argument_bytes": 4,
       "callee_pop_bytes": 0,
       "calling_convention": "cdecl",
-      "ordinary_return": "void dispatch_advice_if_lua_enabled(void *advice_obj)",
-      "scope": "guards LUA script state validity before forwarding advice_obj to 0x10ca32d0",
+      "ordinary_return": "void dispatch_event_if_lua_enabled(event *event_obj)",
+      "scope": "forwards event_obj to 0x10ca32d0 on the top script context of the stack at 0x1196fc0c when event slots +0x10 and +0xbc both return true and that context is non-null",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "10cb88ce"
@@ -28398,8 +28398,8 @@
       "stack_argument_bytes": 8,
       "callee_pop_bytes": 8,
       "calling_convention": "thiscall",
-      "ordinary_return": "void __thiscall lua_state_pcall_or_err(void **state_box, uint nargs, int nresults)",
-      "scope": "pushes 0x112be4c0 error handler, verifies function target, runs lua_pcall or reports type error",
+      "ordinary_return": "void __thiscall wrapper_pcall(script_wrapper *self, int nargs, int nresults)",
+      "scope": "inserts the 0x112be4c0 handler at stack index 1, then lua_pcall(nargs, nresults, 1) when the callee is a function, otherwise reports the type mismatch and drops callee and arguments; removes the handler either way",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "112ad755",
@@ -28414,8 +28414,8 @@
       "stack_argument_bytes": 0,
       "callee_pop_bytes": 0,
       "calling_convention": "cdecl",
-      "ordinary_return": "lua_State* create_empire_lua_master_state()",
-      "scope": "creates root Lua state, opens stdlibs, configures lookup/udata_lookup weak tables and Empire globals",
+      "ordinary_return": "lua_State* create_empire_lua_state()",
+      "scope": "lua_newstate + luaL_openlibs, weak lookup ('k') and udata_lookup ('v') tables, the defined flag table, dofile/loadfile, a package.loaders entry inserted at slot 1, string.sub/find/length overrides, vfs.exists, decoda_name and CliExecute",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "112addbe"
@@ -28429,8 +28429,8 @@
       "stack_argument_bytes": 8,
       "callee_pop_bytes": 0,
       "calling_convention": "cdecl",
-      "ordinary_return": "void init_empire_lua_thread_wrapper(void *wrapper, int *parent_state)",
-      "scope": "initializes Lua wrapper state, sets _G/__index fallback, registers wrapper in 0x119e1090 ring, opens 'shane' reg",
+      "ordinary_return": "void init_lua_thread_wrapper(script_wrapper *wrapper, script_wrapper *parent)",
+      "scope": "lazily builds the process state at 0x12031f0c (adding RequireRegister and system.ClearRequiredFiles), creates a thread on the parent or process state with an environment inheriting its globals, records lookup[thread] = wrapper, links a 20B node at the 0x119e1090 ring head, registers the seven-name 'out' library and calls owner slot +0x10",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "112adf7c"
@@ -28444,8 +28444,8 @@
       "stack_argument_bytes": 0,
       "callee_pop_bytes": 0,
       "calling_convention": "fastcall",
-      "ordinary_return": "void* __fastcall get_or_init_lua_script_context(int ctx)",
-      "scope": "lazily allocates 24B script wrapper on first use from master or parent Lua state",
+      "ordinary_return": "script_wrapper* get_or_init_script_wrapper(script_context *self /* ECX */)",
+      "scope": "returns the wrapper cached at self+4 or allocates a 24B wrapper, creating its own state when the byte at self+0x14 is set and otherwise threading off the parent wrapper at self+8; stores NULL at self+4 when the allocation fails",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "112adfff",
@@ -28460,8 +28460,8 @@
       "stack_argument_bytes": 4,
       "callee_pop_bytes": 0,
       "calling_convention": "cdecl",
-      "ordinary_return": "void* lookup_lua_wrapper_owner(lua_State *L)",
-      "scope": "queries registry lookup table for userdata owner associated with lua_State L",
+      "ordinary_return": "script_wrapper* lookup_lua_wrapper(lua_State *L)",
+      "scope": "returns the userdata stored at the global lookup table under light userdata key L, or NULL",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "112ae068"
@@ -28471,12 +28471,12 @@
       "address": "112ae710",
       "bytes": 8,
       "sha256": "52b09ccedc65c9d55a9cbf949898d8fcbde7bc420768614eb38843d49a786df4",
-      "receiver_register": "none",
+      "receiver_register": "ECX",
       "stack_argument_bytes": 0,
       "callee_pop_bytes": 0,
-      "calling_convention": "cdecl",
-      "ordinary_return": "lua_State* get_current_lua_state_raw()",
-      "scope": "returns raw lua_State* from thread script wrapper via 0x112adf80",
+      "calling_convention": "fastcall",
+      "ordinary_return": "lua_State* get_script_lua_state(script_context *self /* ECX */)",
+      "scope": "forwards ECX to 0x112adf80 and returns the first dword of the wrapper without a NULL test",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "112ae717"
@@ -28490,8 +28490,8 @@
       "stack_argument_bytes": 8,
       "callee_pop_bytes": 0,
       "calling_convention": "cdecl",
-      "ordinary_return": "void register_lua_pointer_metatable(lua_State *L, const char *tname)",
-      "scope": "creates named metatable populating 'type', '__tostring' (0x112ae7b0), and '__eq' (0x112ae770)",
+      "ordinary_return": "void set_pointer_metatable(lua_State *L, const char *tname)",
+      "scope": "luaL_newmetatable(tname); on first creation sets 'type', '__tostring' (0x112ae7b0) and '__eq' (0x112ae770); then lua_setmetatable(L, -2)",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "112af4a1"
@@ -28505,8 +28505,8 @@
       "stack_argument_bytes": 8,
       "callee_pop_bytes": 0,
       "calling_convention": "cdecl",
-      "ordinary_return": "void format_lua_typed_value(CString *out, lua_State *L)",
-      "scope": "formats typename and string/boolean/float representation of top stack slot",
+      "ordinary_return": "void append_lua_typed_value(CString *out, lua_State *L)",
+      "scope": "appends '<typename>: ' for the stack top, then nil / true / false / the number truncated to an unsigned integer / the string, nothing for other types; pops the value",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "112afb4e",
@@ -28522,7 +28522,7 @@
       "callee_pop_bytes": 0,
       "calling_convention": "cdecl",
       "ordinary_return": "int lua_error_traceback_handler(lua_State *L)",
-      "scope": "logs stack traceback with local variables and upvalues on Lua error",
+      "scope": "pops the error message, and when lookup yields a wrapper logs 'Lua Error: [owner], label, message' plus per-frame function, local-variable and upvalue lines through [0x11fb5b30]; returns 0 values",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "112be996"
@@ -28533,11 +28533,11 @@
       "bytes": 380,
       "sha256": "95026b44aaa1f7ab9de69aed3c7f32d76dda1fec55c1f5f42bbbec294abd9de3",
       "receiver_register": "none",
-      "stack_argument_bytes": 4,
+      "stack_argument_bytes": 8,
       "callee_pop_bytes": 0,
       "calling_convention": "cdecl",
-      "ordinary_return": "void format_lua_upvalues(lua_State *L, CString *out)",
-      "scope": "appends formatted upvalue names and values of active closure onto out",
+      "ordinary_return": "void append_lua_upvalues(lua_State *L, CString *out)",
+      "scope": "when the stack top is a function appends one '--> name type: value' line per upvalue",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "112c6f0b"
@@ -28552,7 +28552,7 @@
       "callee_pop_bytes": 0,
       "calling_convention": "cdecl",
       "ordinary_return": "void report_lua_type_mismatch(lua_State *L, int expected_type, int found_type)",
-      "scope": "formats 'Trying to retrieve type %s, found type %s' error and invokes traceback handler",
+      "scope": "formats 'Trying to retrieve type %s, found type %s', pushes it through lua_pushfstring and calls 0x112be4c0",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "112dbcf8"
@@ -38154,7 +38154,7 @@
     {
       "address": "11921f10",
       "width": 64,
-      "kind": "string library registration table slice at 0x11921f10 used by luaopen_string (0x116cfa80)",
+      "kind": "lualibs[] {name, opener} table prefix (8 of 9 entries) walked by luaL_openlibs (0x116cfa80)",
       "initial_hex_le": "d0da7311a00b6d1124377a11f06a6d1190708411f0146d11601f9211c0246d11641f9211902e6d1190f17d11a03e6d11681f921140546d11b887891160616d11",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38162,7 +38162,7 @@
     {
       "address": "1174022c",
       "width": 42,
-      "kind": "advice/Lua bridge image slice (42B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'Trying to retrieve type %s, found type %s' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "547279696e6720746f20726574726965766520747970652025732c20666f756e64207479706520257300",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38170,7 +38170,7 @@
     {
       "address": "11741c44",
       "width": 4,
-      "kind": "advice/Lua bridge image slice (4B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'sub' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "73756200",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38178,7 +38178,7 @@
     {
       "address": "1174beb8",
       "width": 24,
-      "kind": "advice/Lua bridge image slice (24B) in .rdata/.data used by Layer 79",
+      "kind": "base event vtable prefix (6 slots) written around the frame events of 0x10cb6520",
       "initial_hex_le": "1032161090bd1810afd86b110003181000690d1000690d10",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38186,7 +38186,7 @@
     {
       "address": "11751040",
       "width": 5,
-      "kind": "advice/Lua bridge image slice (5B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'type' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "7479706500",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38194,7 +38194,7 @@
     {
       "address": "117521e0",
       "width": 4,
-      "kind": "advice/Lua bridge image slice (4B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'out' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "6f757400",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38202,7 +38202,7 @@
     {
       "address": "1175388c",
       "width": 7,
-      "kind": "advice/Lua bridge image slice (7B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'length' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "6c656e67746800",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38210,7 +38210,7 @@
     {
       "address": "11753d9c",
       "width": 3,
-      "kind": "advice/Lua bridge image slice (3B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal ': ' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "3a2000",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38218,7 +38218,7 @@
     {
       "address": "11753da0",
       "width": 6,
-      "kind": "advice/Lua bridge image slice (6B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'false' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "66616c736500",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38226,7 +38226,7 @@
     {
       "address": "11756760",
       "width": 8,
-      "kind": "advice/Lua bridge image slice (8B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal '__index' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "5f5f696e64657800",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38234,7 +38234,7 @@
     {
       "address": "11757d04",
       "width": 11,
-      "kind": "advice/Lua bridge image slice (11B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal '__tostring' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "5f5f746f737472696e6700",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38242,7 +38242,7 @@
     {
       "address": "11757d38",
       "width": 5,
-      "kind": "advice/Lua bridge image slice (5B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal '__eq' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "5f5f657100",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38250,7 +38250,7 @@
     {
       "address": "11757ea0",
       "width": 2,
-      "kind": "advice/Lua bridge image slice (2B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'v': udata_lookup __mode set by 0x112ada40",
       "initial_hex_le": "7600",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38258,7 +38258,7 @@
     {
       "address": "11757eb0",
       "width": 2,
-      "kind": "advice/Lua bridge image slice (2B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'k': lookup __mode set by 0x112ada40",
       "initial_hex_le": "6b00",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38266,7 +38266,7 @@
     {
       "address": "11757eb4",
       "width": 7,
-      "kind": "advice/Lua bridge image slice (7B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal '__mode' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "5f5f6d6f646500",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38274,7 +38274,7 @@
     {
       "address": "11757ec0",
       "width": 163,
-      "kind": "advice/Lua bridge image slice (163B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'class UTILITYDLL::LUA::State &__thiscall UTILITYDLL::LUA::State::operato...' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "636c617373205554494c495459444c4c3a3a4c55413a3a537461746520265f5f7468697363616c6c205554494c495459444c4c3a3a4c55413a3a53746174653a3a6f70657261746f72203c3c3c636c61737320545755493a3a436f6d706f6e656e743e28636f6e737420636c617373205554494c495459444c4c3a3a4c55413a3a506f696e7465723c636c61737320545755493a3a436f6d706f6e656e743e20262900",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38282,7 +38282,7 @@
     {
       "address": "11757f64",
       "width": 13,
-      "kind": "advice/Lua bridge image slice (13B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'udata_lookup' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "75646174615f6c6f6f6b757000",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38290,7 +38290,7 @@
     {
       "address": "117a3724",
       "width": 8,
-      "kind": "advice/Lua bridge image slice (8B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'package' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "7061636b61676500",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38298,7 +38298,7 @@
     {
       "address": "117a374c",
       "width": 12,
-      "kind": "advice/Lua bridge image slice (12B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'decoda_name' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "6465636f64615f6e616d6500",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38306,7 +38306,7 @@
     {
       "address": "117b0390",
       "width": 4,
-      "kind": "advice/Lua bridge image slice (4B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'tom' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "746f6d00",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38314,7 +38314,7 @@
     {
       "address": "117b6444",
       "width": 7,
-      "kind": "advice/Lua bridge image slice (7B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'events' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "6576656e747300",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38322,7 +38322,7 @@
     {
       "address": "117df190",
       "width": 7,
-      "kind": "advice/Lua bridge image slice (7B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'string' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "737472696e6700",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38330,7 +38330,7 @@
     {
       "address": "117df6fc",
       "width": 24,
-      "kind": "advice/Lua bridge image slice (24B) in .rdata/.data used by Layer 79",
+      "kind": "advice-issued frame event vtable prefix (6 slots) used by 0x10cb6520",
       "initial_hex_le": "a0fdc91090bd18106069ca100003181000690d1000690d10",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38338,7 +38338,7 @@
     {
       "address": "117df87c",
       "width": 24,
-      "kind": "advice/Lua bridge image slice (24B) in .rdata/.data used by Layer 79",
+      "kind": "active-advice frame event vtable prefix (6 slots) used by 0x10cb6520",
       "initial_hex_le": "a0fdc91090bd18107069ca100003181000690d1000690d10",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38346,7 +38346,7 @@
     {
       "address": "117e0e54",
       "width": 10,
-      "kind": "advice/Lua bridge image slice (10B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'component' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "636f6d706f6e656e7400",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38354,7 +38354,7 @@
     {
       "address": "117e1880",
       "width": 186,
-      "kind": "advice/Lua bridge image slice (186B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'class UTILITYDLL::LUA::State &__thiscall UTILITYDLL::LUA::State::operato...' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "636c617373205554494c495459444c4c3a3a4c55413a3a537461746520265f5f7468697363616c6c205554494c495459444c4c3a3a4c55413a3a53746174653a3a6f70657261746f72203c3c3c636f6e737420636c61737320454d504952455554494c4954593a3a4556454e543e28636f6e737420636c617373205554494c495459444c4c3a3a4c55413a3a506f696e7465723c636c61737320454d504952455554494c4954593a3a4556454e5420636f6e7374203e20262900",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38362,7 +38362,7 @@
     {
       "address": "1184707c",
       "width": 4,
-      "kind": "advice/Lua bridge image slice (4B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'nil' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "6e696c00",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38370,7 +38370,7 @@
     {
       "address": "11896760",
       "width": 64,
-      "kind": "advice/Lua bridge image slice (64B) in .rdata/.data used by Layer 79",
+      "kind": "luaL_Reg table {shane, dylan, tom, kostas, ting, scott_b, design} -> 0x100dbc00 plus NULL terminator, registered as 'out' by 0x112addc0",
       "initial_hex_le": "7073891100bc0d107873891100bc0d1090037b1100bc0d108073891100bc0d108873891100bc0d109073891100bc0d109873891100bc0d100000000000000000",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38378,7 +38378,7 @@
     {
       "address": "11897370",
       "width": 6,
-      "kind": "advice/Lua bridge image slice (6B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'shane' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "7368616e6500",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38386,7 +38386,7 @@
     {
       "address": "11897378",
       "width": 6,
-      "kind": "advice/Lua bridge image slice (6B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'dylan' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "64796c616e00",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38394,7 +38394,7 @@
     {
       "address": "11897380",
       "width": 7,
-      "kind": "advice/Lua bridge image slice (7B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'kostas' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "6b6f7374617300",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38402,7 +38402,7 @@
     {
       "address": "11897684",
       "width": 7,
-      "kind": "advice/Lua bridge image slice (7B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'system' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "73797374656d00",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38410,7 +38410,7 @@
     {
       "address": "11898720",
       "width": 7,
-      "kind": "advice/Lua bridge image slice (7B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'lookup' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "6c6f6f6b757000",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38418,7 +38418,7 @@
     {
       "address": "11898728",
       "width": 7,
-      "kind": "advice/Lua bridge image slice (7B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'dofile' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "646f66696c6500",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38426,7 +38426,7 @@
     {
       "address": "11898730",
       "width": 9,
-      "kind": "advice/Lua bridge image slice (9B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'loadfile' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "6c6f616466696c6500",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38434,7 +38434,7 @@
     {
       "address": "1189873c",
       "width": 8,
-      "kind": "advice/Lua bridge image slice (8B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'loaders' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "6c6f616465727300",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38442,7 +38442,7 @@
     {
       "address": "11898744",
       "width": 5,
-      "kind": "advice/Lua bridge image slice (5B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'find' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "66696e6400",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38450,7 +38450,7 @@
     {
       "address": "1189874c",
       "width": 7,
-      "kind": "advice/Lua bridge image slice (7B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'exists' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "65786973747300",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38458,7 +38458,7 @@
     {
       "address": "11898754",
       "width": 4,
-      "kind": "advice/Lua bridge image slice (4B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'vfs' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "76667300",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38466,7 +38466,7 @@
     {
       "address": "11898758",
       "width": 13,
-      "kind": "advice/Lua bridge image slice (13B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'Parent State' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "506172656e7420537461746500",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38474,7 +38474,7 @@
     {
       "address": "11898768",
       "width": 11,
-      "kind": "advice/Lua bridge image slice (11B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'CliExecute' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "436c694578656375746500",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38482,7 +38482,7 @@
     {
       "address": "11898774",
       "width": 16,
-      "kind": "advice/Lua bridge image slice (16B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'RequireRegister' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "52657175697265526567697374657200",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38490,7 +38490,7 @@
     {
       "address": "11898784",
       "width": 19,
-      "kind": "advice/Lua bridge image slice (19B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'ClearRequiredFiles' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "436c656172526571756972656446696c657300",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38498,7 +38498,7 @@
     {
       "address": "11898798",
       "width": 8,
-      "kind": "advice/Lua bridge image slice (8B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'defined' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "646566696e656400",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38506,7 +38506,7 @@
     {
       "address": "118987a0",
       "width": 14,
-      "kind": "advice/Lua bridge image slice (14B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'final_release' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "66696e616c5f72656c6561736500",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38514,7 +38514,7 @@
     {
       "address": "118987b0",
       "width": 6,
-      "kind": "advice/Lua bridge image slice (6B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'intel' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "696e74656c00",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38522,7 +38522,7 @@
     {
       "address": "118987b8",
       "width": 6,
-      "kind": "advice/Lua bridge image slice (6B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'debug' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "646562756700",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38530,7 +38530,7 @@
     {
       "address": "118987c0",
       "width": 5,
-      "kind": "advice/Lua bridge image slice (5B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'demo' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "64656d6f00",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38538,7 +38538,7 @@
     {
       "address": "118987c8",
       "width": 6,
-      "kind": "advice/Lua bridge image slice (6B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'demo2' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "64656d6f3200",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38546,7 +38546,7 @@
     {
       "address": "118987d0",
       "width": 6,
-      "kind": "advice/Lua bridge image slice (6B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'tom_s' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "746f6d5f7300",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38554,7 +38554,7 @@
     {
       "address": "118987d8",
       "width": 5,
-      "kind": "advice/Lua bridge image slice (5B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal '--> ' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "2d2d3e2000",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38562,7 +38562,7 @@
     {
       "address": "118987e0",
       "width": 24,
-      "kind": "advice/Lua bridge image slice (24B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal '(error with no message)' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "286572726f722077697468206e6f206d6573736167652900",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38570,7 +38570,7 @@
     {
       "address": "118987f8",
       "width": 24,
-      "kind": "advice/Lua bridge image slice (24B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'Lua Error: [%s], %s\\n%s\\n' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "4c7561204572726f723a205b25735d2c2025730a25730a00",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38578,7 +38578,7 @@
     {
       "address": "11898810",
       "width": 6,
-      "kind": "advice/Lua bridge image slice (6B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal 'Slnfu' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "536c6e667500",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38586,7 +38586,7 @@
     {
       "address": "11898818",
       "width": 27,
-      "kind": "advice/Lua bridge image slice (27B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal '%d. Function (%s):(%s):%d\\n' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "25642e2046756e6374696f6e20282573293a282573293a25640a00",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38594,7 +38594,7 @@
     {
       "address": "11898834",
       "width": 22,
-      "kind": "advice/Lua bridge image slice (22B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal '> Local Variables\\n%s\\n' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "3e204c6f63616c205661726961626c65730a25730a00",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38602,7 +38602,7 @@
     {
       "address": "1189884c",
       "width": 15,
-      "kind": "advice/Lua bridge image slice (15B) in .rdata/.data used by Layer 79",
+      "kind": "ASCII literal '> Upvalues\\n%s\\n' referenced by the Layer 79 advice/Lua bridge",
       "initial_hex_le": "3e20557076616c7565730a25730a00",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38610,7 +38610,7 @@
     {
       "address": "1196fc08",
       "width": 4,
-      "kind": "advice/Lua bridge image slice (4B) in .rdata/.data used by Layer 79",
+      "kind": "script-context stack depth dword read by 0x10cb8880 and 0x10cb6520",
       "initial_hex_le": "00000000",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38618,7 +38618,7 @@
     {
       "address": "1196fc0c",
       "width": 8,
-      "kind": "advice/Lua bridge image slice (8B) in .rdata/.data used by Layer 79",
+      "kind": "script-context stack data pointer and following dword read by 0x10cb8880 and 0x10cb6520",
       "initial_hex_le": "00000000ffffffff",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38626,7 +38626,7 @@
     {
       "address": "1196fc14",
       "width": 4,
-      "kind": "advice/Lua bridge image slice (4B) in .rdata/.data used by Layer 79",
+      "kind": "advice history vector capacity dword (image value 0x100) doubled by 0x10cb6520",
       "initial_hex_le": "00010000",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38634,7 +38634,7 @@
     {
       "address": "1196fc18",
       "width": 4,
-      "kind": "advice/Lua bridge image slice (4B) in .rdata/.data used by Layer 79",
+      "kind": "advice history vector count dword incremented by 0x10cb6520",
       "initial_hex_le": "00000000",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38642,7 +38642,7 @@
     {
       "address": "1196fc28",
       "width": 4,
-      "kind": "advice/Lua bridge image slice (4B) in .rdata/.data used by Layer 79",
+      "kind": "advice queue data pointer scanned by 0x10cb6520",
       "initial_hex_le": "00000000",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38650,7 +38650,7 @@
     {
       "address": "119e108c",
       "width": 4,
-      "kind": "advice/Lua bridge image slice (4B) in .rdata/.data used by Layer 79",
+      "kind": "script-wrapper ring tail pointer, image value &0x119e1090 (empty ring), updated by 0x112addc0",
       "initial_hex_le": "90109e11",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -38658,7 +38658,7 @@
     {
       "address": "119e1090",
       "width": 16,
-      "kind": "advice/Lua bridge image slice (16B) in .rdata/.data used by Layer 79",
+      "kind": "script-wrapper ring head slot and following 12 bytes; head updated by 0x112addc0",
       "initial_hex_le": "00000000000000000000803f00000000",
       "storage": "file",
       "scope": "initial pinned-image storage only; no runtime population, complete class/table bounds, native ownership or callable prototype inferred"
@@ -47126,7 +47126,7 @@
     {
       "address": "116cfa80",
       "hex": "56578b7c240c",
-      "purpose": "0x116cfa80 luaopen_string registration loop entry"
+      "purpose": "0x116cfa80 luaL_openlibs lualibs[] loop entry"
     },
     {
       "address": "10ca32d0",
@@ -69848,7 +69848,7 @@
     ]
   },
   "rea_layer78_evidence": {
-    "scope": "36 Layer 78 Partition 9 Lua 5.1.4 auxlib, public push/get/set/call API, coroutine state creation/teardown, and luaopen_string functions (0x10f43cd0..0x116cfa80)",
+    "scope": "36 Layer 78 Partition 9 Lua 5.1.4 auxlib, public push/get/set/call API, coroutine state creation/teardown, and luaL_openlibs functions (0x10f43cd0..0x116cfa80)",
     "snapshot_mode": "extending_layer77_batched_p9",
     "new_records": [
       {
@@ -70822,7 +70822,19 @@
       "Partition 9 is sealed at Layer 79 (extending_layer78_batched_p9_sealed: 327 reused + 80 new = 407 Partition 9 records) alongside sealed Partitions 1-8 (2,375 prior; 2,782 cumulative across 1,813 functions)",
       "Three read_bytes slices in extra-*.json (0x1173dad4 inside 0x1173dad0, 0x1173f1f4 inside 0x1173f1f0, 0x1196fc1c overlapping 0x1196fc24) are retained as provenance envelopes without duplicating overlapping entries in contracts.globals",
       "Direct CALL closure is 0 open edges and direct JMP/Jcc closure is 1 remaining edge: the 9B non-proc shared CRT tail 0x11695ee2 -> 0x11695e3c pinned in instruction_witnesses"
-    ]
+    ],
+    "model_revision": {
+      "revision": 1,
+      "date": "2026-11-25",
+      "evidence": "same 80 Layer 79 records; no new REA operations",
+      "summary": [
+        "C17 model and tests rewritten against the retained pseudocode, assembly and string bytes: 0x112ada40 contents, 'out' thread library, lookup weak mode 'k', handler at stack index 1 in 0x112ad700, script-context offsets +4/+8/+0x14 in 0x112adf80, formatter output and pop in 0x112afa70/0x112c6d90, boolean-true counting in 0x10ca32d0, vtable-driven queue, dismissal order and doubling history vector in 0x10cb6520",
+        "0x116cfa80 relabelled luaL_openlibs (it walks the nine-entry lualibs[] table at 0x11921f10); the Layer 78 model no longer registers a string library with addresses absent from the image",
+        "findlocal model (0x10f470c0) now bounds temporaries by (ci+1)->func as the original does",
+        "0x112c6d90 stack arguments corrected to 8 bytes; 0x112ae710 recorded as receiving ECX",
+        "63 Layer 79 globals relabelled by content"
+      ]
+    }
   },
   "rea_layer80_evidence": {
     "scope": "58 Layer 80 Partition 10 FaceFX allocator, singleton, result, logging, and CRT vsprintf_s foundation routines (53 exports; 0x100de0e0..0x1168c0fc)",

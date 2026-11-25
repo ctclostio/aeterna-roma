@@ -64702,6 +64702,169 @@
       "Partition 10 (next high-degree subsystem)"
     ]
   },
+  "layer79_revision1": {
+    "status": "Layer 79 model and tests rewritten against the retained original-image evidence; verified with bounded C17 /analyze and ASan suites, original-image contract verification and clean-public regression coverage",
+    "revises": "layer79",
+    "base_commit": "a7190c1",
+    "original_image_contracts": {
+      "schema": "rome2-recovered-types-v1",
+      "verified": true,
+      "functions": 1918,
+      "globals": 1095,
+      "vtables": 85,
+      "instruction_witnesses": 1577,
+      "scope": "static original-image evidence; native behavior requires separate tests"
+    },
+    "python_focused_contract_tests": 123,
+    "native_tests": {
+      "analyze": {
+        "suites": 138,
+        "failed": 0,
+        "local_ctest_log": "out/bridge-layer79r1-20261125/wt-analyze/Testing/Temporary/LastTest.log",
+        "log_sha256": "a34a10a60a48d4511a0a6aa236f734dc47c1e7d7a03c3fc492da6e10f9ca0c1d",
+        "junit_sha256": "29e0aeda2b06509b56b1853c6cbb42f6111d23caa7e55b2a5320a1e24d30c786"
+      },
+      "asan": {
+        "suites": 138,
+        "failed": 0,
+        "local_ctest_log": "out/bridge-layer79r1-20261125/wt-asan/Testing/Temporary/LastTest.log",
+        "log_sha256": "32983e0447153e2084fec700708bec5afeac8f545c4f5c1762e22b5747c985ce",
+        "junit_sha256": "cc8af1d07e8eff8087c348cc9fd07c2506c87e2eee5ecbfa76221742c716719d"
+      },
+      "assertions_enabled": true
+    },
+    "startup_advice_script_bridge_ops_tests": {
+      "suites": 1,
+      "active_checks": 5,
+      "cases": [
+        "test_states_wrappers_and_ring",
+        "test_value_and_upvalue_formatting",
+        "test_protected_call_and_traceback",
+        "test_event_dispatch",
+        "test_advice_priority_trigger"
+      ]
+    },
+    "original_observations": [
+      "0x112ada40: lua_newstate + luaL_openlibs; lookup __mode 'k', udata_lookup __mode 'v'; defined flag table; dofile/loadfile; 0x112ae680 inserted at package.loaders[1]; string.sub/find/length; vfs.exists; decoda_name; CliExecute",
+      "0x112addc0: lazily built process state at 0x12031f0c with RequireRegister and system.ClearRequiredFiles; thread environment inheriting parent globals; lookup[thread] = wrapper; 0x14 ring node at head slot 0x119e1090; thread-local 'out' library; owner slot +0x10",
+      "0x112adf80: cached wrapper at +4, parent wrapper at +8, own-state flag byte at +0x14; NULL stored on allocation failure",
+      "0x112ad700: void; handler 0x112be4c0 at stack index 1; lua_pcall(nargs, nresults, 1) only for a function callee",
+      "0x112afa70 / 0x112c6d90: '<typename>: <value>' with numbers truncated to unsigned integers; value popped",
+      "0x112be4c0: logs owner name, script label and message, then per-frame function, local and upvalue lines; returns 0 values",
+      "0x10ca32d0: events[name] handlers called through 0x112ad700(1, 1) with a udata_lookup-boxed event pointer; counts boolean true results",
+      "0x10cb6520: vtable-driven queue; first strictly lowest detail priority (+0x4c) wins; others dismissed in order; history vector doubles",
+      "0x116cfa80: luaL_openlibs over the nine-entry lualibs[] table at 0x11921f10",
+      "0x10f470c0: temporaries bounded by (ci + 1)->func for frames below the current one"
+    ],
+    "native_adaptations": [
+      "Host hooks model owner, event, advice and manager vtable calls and the log sink; CString outputs are fixed-capacity buffers",
+      "NULL states/wrappers, non-table package/string globals, unchecked allocations and an empty advice queue return early where the original faults or reads on",
+      "f_luaopen (0x10f46950) is unrecovered; its tag-method name interning is adapted inline in the lua_newstate model"
+    ],
+    "contract_text_corrections": {
+      "functions": 15,
+      "globals": 64,
+      "instruction_witnesses": 1,
+      "abi_fields": [
+        "112c6d90 stack_argument_bytes 4 -> 8",
+        "112ae710 cdecl/none -> fastcall/ECX"
+      ],
+      "byte_hashes_changed": 0
+    },
+    "public_python_clean": {
+      "checkout": "tracked public files at the revision commit, no original image/canonical exports",
+      "runs": [
+        {
+          "tests": 986,
+          "skipped": 352,
+          "failures": 0,
+          "errors": 0,
+          "version": "3.14"
+        },
+        {
+          "tests": 986,
+          "skipped": 352,
+          "failures": 0,
+          "errors": 0,
+          "version": "3.15"
+        }
+      ],
+      "original_image_dependent_skip_reason": "Total War Rome II/empire.retail.dll, canonical exports and private reports absent"
+    },
+    "rea": {
+      "new_operation_envelopes": 0,
+      "evidence": "out/startup-layer79-20261124 (Layer 79 bundle, 80 records)"
+    },
+    "local_logs": "out/bridge-layer79r1-20261125/",
+    "source_hash_scope": "files changed by this revision, UTF-8 text with LF line endings, excluding verification.json itself",
+    "sources": [
+      {
+        "path": "docs/vfs_recovery.md",
+        "bytes": 223542,
+        "sha256": "c289c1cc04291e1d1d00f7efb7b9cec1d5913fbc0eff7712d78acecbdf88af74"
+      },
+      {
+        "path": "port/recovered_types/contracts.json",
+        "bytes": 3583653,
+        "sha256": "696dd9e23b7eb409f1f94fc276799ea9cda72a4f4a88f31fcb5804db41b2c955"
+      },
+      {
+        "path": "port/recovered_types/lua_auxlib_state_ops.c",
+        "bytes": 44808,
+        "sha256": "6bcc318074d8aaec60ae4a15a44ce74192cf022edc04f87429f7b9b0e938671f"
+      },
+      {
+        "path": "port/recovered_types/lua_auxlib_state_ops.h",
+        "bytes": 3978,
+        "sha256": "5b897142cd0c32b20b0e6969de580414a12074ea4a3f3b21dc13cd4951c2420b"
+      },
+      {
+        "path": "port/recovered_types/lua_core_leaf_ops.c",
+        "bytes": 61420,
+        "sha256": "08a912f0146cbdd6482a3a5049355e39c23119e85915e60e4cd6bb833c82d030"
+      },
+      {
+        "path": "port/recovered_types/startup_advice_script_bridge_ops.c",
+        "bytes": 31432,
+        "sha256": "1f1af917af1ee0c0724c3b95bf0a434586a17be7cc1153cfd9bed6f257648586"
+      },
+      {
+        "path": "port/recovered_types/startup_advice_script_bridge_ops.h",
+        "bytes": 5568,
+        "sha256": "f2fcb9d1601baee97232b378bf0040b0b8f0922ded6634b1558a4a0f706cdddd"
+      },
+      {
+        "path": "port/recovered_types/test_lua_auxlib_state_ops.c",
+        "bytes": 8773,
+        "sha256": "d73d6838f519c829cef43c9cae5516170ac6ce4f4028c8399c395a521648a08a"
+      },
+      {
+        "path": "port/recovered_types/test_startup_advice_script_bridge_ops.c",
+        "bytes": 31186,
+        "sha256": "23352b7955c524bf72166b1c690f52940aa2ae45eae96476071b3c8a37689e00"
+      },
+      {
+        "path": "progress.md",
+        "bytes": 200680,
+        "sha256": "823ff3fb55cf0d01b5e6dba025a8f93fdb4b4fd7b97c92f0670d9062361650b0"
+      },
+      {
+        "path": "scripts/test_type_recovery_contracts.py",
+        "bytes": 267890,
+        "sha256": "7f8d46dd832c45073e9138291d660886f2f787ea0db5355aa742891eefd5e338"
+      },
+      {
+        "path": "work/binary_contracts/global_contracts.tsv",
+        "bytes": 992039,
+        "sha256": "e21f40ec5ae09e8ce96b7570da8d5ab11e30903a8ec822846e53242cede754ca"
+      },
+      {
+        "path": "work/binary_contracts/manifest.json",
+        "bytes": 98131,
+        "sha256": "7f911b0a64e0d581555af29812c6b23d0b9b2ddf508b7275b5d5862a894772ab"
+      }
+    ]
+  },
   "layer80": {
     "status": "verified with bounded C17 /analyze and ASan suites, updated original-image contract verification, and clean-public regression coverage",
     "original_image_contracts": {

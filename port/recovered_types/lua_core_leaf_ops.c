@@ -379,7 +379,17 @@ uint32_t rome2_l75_findlocal(rome2_l75_arena *a, uint32_t l_va, uint32_t ci_va, 
             }
         }
     }
-    limit_va = (ci_va == L->ci_va) ? L->top_va : ci->top_va;
+    if (ci_va == L->ci_va) {
+        limit_va = L->top_va;
+    } else {
+        /* (ci + 1)->func, as 0x10f470c0 reads it through ci[7] */
+        const rome2_lua_callinfo_32 *next = (const rome2_lua_callinfo_32 *)rome2_l75_const_ptr(
+            a, ci_va + (uint32_t)sizeof(*ci), sizeof(*next));
+        if (next == NULL) {
+            return 0u;
+        }
+        limit_va = next->func_va;
+    }
     max_slots = (int32_t)(limit_va - ci->base_va) / (int32_t)sizeof(rome2_lua_tvalue_32);
     if (n > 0 && n <= max_slots) {
         return ROME2_LUA_VA_STR_TEMP;

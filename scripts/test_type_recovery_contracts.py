@@ -4276,6 +4276,27 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
         self.assertEqual([(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]], [("11695ee2", "11695e3c")])
 
+    def test_layer79_revision1_binary_fidelity_labels(self):
+        self.assertEqual(self.registry["rea_layer79_evidence"]["model_revision"]["revision"], 1)
+        fns = {f["address"]: f for f in self.registry["functions"]}
+        self.assertEqual(fns["116cfa80"]["ordinary_return"], "void luaL_openlibs(lua_State *L)")
+        self.assertEqual(fns["112c6d90"]["stack_argument_bytes"], 8)
+        self.assertEqual((fns["112ae710"]["calling_convention"], fns["112ae710"]["receiver_register"]), ("fastcall", "ECX"))
+        self.assertNotIn("luaopen_string", json.dumps(self.registry))
+        globs = {g["address"]: bytes.fromhex(g["initial_hex_le"]) for g in self.registry["globals"]}
+        # lualibs[] openers in image order: base, package, table, io, os, string, math, debug
+        self.assertEqual(
+            list(struct.unpack("<16I", globs["11921f10"])[1::2]),
+            [0x116D0BA0, 0x116D6AF0, 0x116D14F0, 0x116D24C0, 0x116D2E90, 0x116D3EA0, 0x116D5440, 0x116D6160],
+        )
+        # weak modes: lookup is keyed by the thread, udata_lookup holds the boxed pointers
+        self.assertEqual((globs["11757eb0"], globs["11757ea0"]), (b"k\0", b"v\0"))
+        # every "out" entry shares the 0x100dbc00 stub
+        self.assertEqual(set(struct.unpack("<16I", globs["11896760"])[1:14:2]), {0x100DBC00})
+        self.assertEqual(globs["117521e0"], b"out\0")
+        # ring tail starts at the head slot
+        self.assertEqual(struct.unpack("<I", globs["119e108c"])[0], 0x119E1090)
+
     def test_layer80_facefx_alloc_singleton_log_contracts(self):
         ev = self.registry["rea_layer80_evidence"]
         self.assertEqual(ev["snapshot_mode"], "fresh_partition10_batched")
