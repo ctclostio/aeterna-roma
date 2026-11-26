@@ -312,17 +312,18 @@ void rome2_l82_curl_ssl_kill_session(rome2_l82_curl_ctx *ctx, uint32_t session_e
     }
     rome2_l82_thunk_ssl_session_free(ctx, s->sessionid_va);
     s->sessionid_va = 0u;
-    s->idsize = 0u;
+    s->age = 0u;
+    /* the inlined Curl_free_ssl_config: +0x28, +0x24, +0x3c, +0x38, +0x34 */
     rome2_l82_curl_free(ctx, s->cafile_va);
     s->cafile_va = 0u;
     rome2_l82_curl_free(ctx, s->capath_va);
     s->capath_va = 0u;
-    rome2_l82_curl_free(ctx, s->random_file_va);
-    s->random_file_va = 0u;
-    rome2_l82_curl_free(ctx, s->egdsocket_va);
-    s->egdsocket_va = 0u;
     rome2_l82_curl_free(ctx, s->cipher_list_va);
     s->cipher_list_va = 0u;
+    rome2_l82_curl_free(ctx, s->egdsocket_va);
+    s->egdsocket_va = 0u;
+    rome2_l82_curl_free(ctx, s->random_file_va);
+    s->random_file_va = 0u;
     rome2_l82_curl_free(ctx, s->name_va);
     s->name_va = 0u;
 }

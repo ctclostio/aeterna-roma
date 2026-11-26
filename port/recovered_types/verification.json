@@ -154,8 +154,8 @@
     },
     {
       "path": "port/recovered_types/contracts.json",
-      "bytes": 4071657,
-      "sha256": "205299e071e9ee7bf83d4ac15c316bda1521f66723ba62b9e2bede2a7084e3da"
+      "bytes": 4074071,
+      "sha256": "45c58d322d564b9303155e83d27b0b1e73bfbacc7164849084af7de1eda60498"
     },
     {
       "path": "port/recovered_types/free_list_pool.c",
@@ -169,8 +169,8 @@
     },
     {
       "path": "port/recovered_types/guest32_layouts.h",
-      "bytes": 294447,
-      "sha256": "827e5a0181261c8e0d222093b996721965b9f7bdf2a2d006d2652b15b70ac55c"
+      "bytes": 295564,
+      "sha256": "c08a5636ff98e6d9c3b4d116667264445a35201cfedf802bf1ca01e3fa408a5a"
     },
     {
       "path": "port/recovered_types/image_defaults.h",
@@ -339,8 +339,8 @@
     },
     {
       "path": "progress.md",
-      "bytes": 231740,
-      "sha256": "689ca12ee9817bf62a03346ba4f2eab0b0cc29f87cd6388e99f1321b37f40567"
+      "bytes": 235055,
+      "sha256": "8d033b39f68879307d9d745ed82e4668bc71bddf2090213db690ac0e1d1bf7aa"
     },
     {
       "path": "scripts/build_recovered_types.bat",
@@ -384,8 +384,8 @@
     },
     {
       "path": "scripts/test_type_recovery_contracts.py",
-      "bytes": 359071,
-      "sha256": "b03637247ad561764c5d80b6f740a5cc1c19c14d949aafb46a4f399e3195af33"
+      "bytes": 365279,
+      "sha256": "4c93e52e2a29cef2768504d5fd65794b93c8f5ba8d3312dab918b2e28d6f187d"
     },
     {
       "path": "scripts/type_recovery_contracts.py",
@@ -403,7 +403,7 @@
       "sha256": "ecefc6a835d909f08bda5e64e8b61eda327449995cd686a41e65ad9f885950a4"
     }
   ],
-  "updated_utc": "2026-11-26T00:21:25Z",
+  "updated_utc": "2026-11-26T00:50:00Z",
   "layer2": {
     "status": "complete for admitted tag copy domain and typed helper boundary",
     "tag_allocation_failure_positions": 11,
@@ -53631,7 +53631,7 @@
       "full normalization, parser equivalence, historical CRT/locale/FP equivalence and whole-engine recovery"
     ]
   },
-  "python_focused_contract_tests": 132,
+  "python_focused_contract_tests": 133,
   "layer72": {
     "status": "all 25 Layer 72 Partition 9 preferences-writer, SEH4/PE validation & unwind, and CRT tail functions verified with bounded C17 helpers and 5 fixed-width guest32 memory views (1,588 functions total; open direct jump edges reduced from 12 to 3); Layers 73-79 remain open in Partition 9",
     "original_image_contracts": {
@@ -76034,6 +76034,170 @@
     ],
     "remaining": [
       "10 curl_* and 168 FaceFX DLL export names (163 addresses) are not yet recovered; Partition 13 is open"
+    ]
+  },
+  "layer86_revision1": {
+    "status": "Layer 86 bodies read again against the retained original-image evidence; three layout names and one function scope string corrected and one host guard stated, with no change of modelled behaviour; verified with bounded C17 /analyze and ASan suites, original-image contract verification and clean-public regression coverage",
+    "revises": "layer86",
+    "base_commit": "b30b47b",
+    "original_image_contracts": {
+      "schema": "rome2-recovered-types-v1",
+      "verified": true,
+      "functions": 2210,
+      "globals": 1250,
+      "vtables": 90,
+      "instruction_witnesses": 1747,
+      "scope": "static original-image evidence; native behavior requires separate tests"
+    },
+    "python_focused_contract_tests": 133,
+    "whole_binary_globals": 11299,
+    "native_tests": {
+      "analyze": {
+        "suites": 143,
+        "failed": 0,
+        "local_ctest_log": "out/curl-layer84-20261125/r1-analyze/Testing/Temporary/LastTest.log",
+        "log_sha256": "a540f71f4a40e79bdbddea31c5b227831cae8a7656164776c4d2da1d73de358b",
+        "junit_sha256": "1cde70166eb066e36c5e52ed4210b00804f7054c850ae1911a5e48743579a1e1"
+      },
+      "asan": {
+        "suites": 143,
+        "failed": 0,
+        "local_ctest_log": "out/curl-layer84-20261125/r1-asan/Testing/Temporary/LastTest.log",
+        "log_sha256": "fc2f8aa058b62ef974550093f220757b31ccd1cfc6d17b83cc4d8a92083c3e87",
+        "junit_sha256": "543e1a45bf775bdd1f2112ac7af5a4dce277a1eeb314bcb771c97ba3344f3a38"
+      },
+      "assertions_enabled": true
+    },
+    "curl_dup_getinfo_form_share_ops_tests": {
+      "suites": 1,
+      "active_checks": 23,
+      "cases": [
+        "test_crt_numeric",
+        "test_crt_stream",
+        "test_rand_and_strings",
+        "test_llist_hash_alloc",
+        "test_slist_duplicate_and_strippath",
+        "test_ssl_teardown",
+        "test_resolver_teardown",
+        "test_closesocket_and_connc",
+        "test_dupset",
+        "test_duphandle",
+        "test_infof",
+        "test_read_and_recv",
+        "test_multi_init",
+        "test_getinfo",
+        "test_cookie_header",
+        "test_cookie_netscape",
+        "test_cookie_replace",
+        "test_cookie_init_and_list",
+        "test_share_setopt",
+        "test_form_primitives",
+        "test_getformdata_fields",
+        "test_getformdata_files",
+        "test_formget"
+      ]
+    },
+    "curl_util_printf_slist_share_ops_tests": {
+      "suites": 1,
+      "active_checks": 3,
+      "cases": [
+        "test_l82_slist_share_escape_and_date",
+        "test_l82_mprintf_and_positional_args",
+        "test_l82_ssl_kill_session_offsets"
+      ]
+    },
+    "original_observations": [
+      "0x10f16310: MOV EAX, [ESI+4]; TEST EAX, EAX; JZ to the exit; CALL 0x10f2d4f0; MOV dword ptr [ESI+4], 0; MOV dword ptr [ESI+0xc], 0 at 0x10f16330; then +0x28, +0x24, +0x3c, +0x38 and +0x34 are each loaded, freed through [0x119750d0] when set and cleared, and last the name at +0",
+      "0x10f15a00 frees and clears +0x14, +0x10, +0x28, +0x24 and +0x20 of an ssl_config_data in that order, so the copy a session record embeds at +0x14 holds random_file at +0x34, egdsocket at +0x38 and cipher_list at +0x3c",
+      "0x10f15a80, a session-add body outside the recovered set, compares the dword at +0xc of each record to find the smallest, stores its second and third arguments at +4 and +8, the running age at +0xc and a 16-bit word of the connection at +0x10, and copies the connection's +0x1a8, +0x1a4 and +0x1a0 strings to +0x3c, +0x38 and +0x34",
+      "0x10f10380: MOV EAX, [ESI+0x57c]; TEST EAX, EAX; JZ; CMP dword ptr [EAX+0x8], 0 at 0x10f104dc; JNZ; PUSH EAX; CALL 0x10f17fd0. 0x10f17aa0 writes +0 and +4 of the calloc'd 0xc-byte cache and nothing at +8",
+      "0x10f2d2b0 loads, pushes and clears +0xc and loads and clears +8 of the 0x18-byte record and touches no other offset of it",
+      "0x10f3f340: MOV ECX, [ESP+0x27c]; MOV EAX, [ESP+0x14]; MOV [ECX], EAX; MOV EAX, [ESP+0x18]; MOV [ECX+4], EAX from 0x10f3fa99, with no test of ECX",
+      "All 51 bodies agree with the model on offsets, widths, call order and arguments, return values, conditions, loop bounds, tables, constants and strings; the 58 globals and 40 witnesses agree with the image and with their purpose text, and the README, progress and docs counts agree with the registry"
+    ],
+    "native_adaptations": [
+      "rome2_curl_ssl_sessionid_32 names idsize +8, age +0xc, remote_port +0x10, random_file +0x34 and cipher_list +0x3c; rome2_l82_curl_ssl_kill_session clears age and frees the five strings under those names, the same bytes in the same order as before",
+      "rome2_curl_conncache_32 names +8 type in place of reserved08 and rome2_curl_ssl_connect_data_32 reserves +0 in place of use",
+      "rome2_l86_curl_getformdata states that a NULL host size pointer is skipped where the original stores through it unconditionally"
+    ],
+    "contract_text_corrections": {
+      "functions": 1,
+      "globals": 0,
+      "instruction_witnesses": 0,
+      "byte_hashes_changed": 0
+    },
+    "kept_current_by": "test_layer86_revision1_session_record_and_conncache_fidelity",
+    "known_gaps": [
+      "the %p arm of the model prints \"0x0\" for a NULL pointer where the image loads \"(nil)\" (0x11840308)",
+      "the model does not implement the alternate-form (#) quoting of %s"
+    ],
+    "public_python_clean": {
+      "checkout": "tracked public files at the revision commit, no original image/canonical exports",
+      "runs": [
+        {
+          "tests": 996,
+          "skipped": 362,
+          "failures": 0,
+          "errors": 0,
+          "version": "3.14"
+        },
+        {
+          "tests": 996,
+          "skipped": 362,
+          "failures": 0,
+          "errors": 0,
+          "version": "3.15"
+        }
+      ],
+      "original_image_dependent_skip_reason": "Total War Rome II/empire.retail.dll, canonical exports and private reports absent"
+    },
+    "rea": {
+      "new_operation_envelopes": 0,
+      "evidence": "out/curl-layer84-20261125 (Partition 13 bundle, 55 records)"
+    },
+    "local_logs": "out/curl-layer84-20261125/",
+    "source_hash_scope": "files changed by this revision, UTF-8 text with LF line endings, excluding verification.json itself",
+    "sources": [
+      {
+        "path": "docs/vfs_recovery.md",
+        "bytes": 251005,
+        "sha256": "adda9f437258305481963f61050024cedbf501ee56a46f9adabdfa337ddbe07b"
+      },
+      {
+        "path": "port/recovered_types/contracts.json",
+        "bytes": 4074071,
+        "sha256": "45c58d322d564b9303155e83d27b0b1e73bfbacc7164849084af7de1eda60498"
+      },
+      {
+        "path": "port/recovered_types/curl_dup_getinfo_form_share_ops.c",
+        "bytes": 85008,
+        "sha256": "04281e1e71b75b366ac317139308f89629ec4d06a20aaf4ee01f0e58d10b8ca6"
+      },
+      {
+        "path": "port/recovered_types/curl_util_printf_slist_share_ops.c",
+        "bytes": 47194,
+        "sha256": "e389cfb97aa79291183d603f7c5451e9c5e614bfcca63b0cd5435e52c895b56d"
+      },
+      {
+        "path": "port/recovered_types/guest32_layouts.h",
+        "bytes": 295564,
+        "sha256": "c08a5636ff98e6d9c3b4d116667264445a35201cfedf802bf1ca01e3fa408a5a"
+      },
+      {
+        "path": "port/recovered_types/test_curl_util_printf_slist_share_ops.c",
+        "bytes": 10834,
+        "sha256": "c5e1eee867e44d00832d85492abca6e3a8117d0319278b4c2b93fda591ef0ac1"
+      },
+      {
+        "path": "progress.md",
+        "bytes": 235055,
+        "sha256": "8d033b39f68879307d9d745ed82e4668bc71bddf2090213db690ac0e1d1bf7aa"
+      },
+      {
+        "path": "scripts/test_type_recovery_contracts.py",
+        "bytes": 365279,
+        "sha256": "4c93e52e2a29cef2768504d5fd65794b93c8f5ba8d3312dab918b2e28d6f187d"
+      }
     ]
   }
 }

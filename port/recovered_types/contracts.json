@@ -30234,7 +30234,7 @@
       "callee_pop_bytes": 0,
       "calling_convention": "cdecl",
       "ordinary_return": "void Curl_ssl_kill_session(curl_ssl_sessionid*)",
-      "scope": "kills single SSL session slot freeing OpenSSL handle and metadata",
+      "scope": "returns unless the session handle (+4) is set; passes it to the SSL_SESSION_free thunk (0x10f2d4f0), clears it and the age (+0xc), then frees and clears CAfile (+0x28), CApath (+0x24), cipher_list (+0x3c), egdsocket (+0x38), random_file (+0x34) and the name (+0) when set",
       "abi_authority": "Root inference from REA analyze_function / read_bytes; x86 register/stack shape only, not an original source declaration or callable x64 address",
       "return_instruction_addresses": [
         "10f163c6"
@@ -81328,6 +81328,20 @@
       "The __finally entry 0x1168eed1 (MOV EBX, [EBP-0x20]) named by the scope table 0x11925508 lies between the bodies 0x1168ee1c and 0x1168eed4 and belongs to neither REA range; it is pinned by an instruction witness",
       "The NULL %s arm of the Layer 82 formatter 0x10f1ff20 is pinned here (\"(nil)\" at 0x11840300 and the witnesses 0x10f201d8 and 0x10f201f2) because Curl_infof and AddFormDataf print through it; the Layer 82 model_revision records the correction",
       "Direct CALL closure is 0 open edges and direct JMP/Jcc closure remains 1 single-tail edge: 0x11695ee2 -> 0x11695e3c"
-    ]
+    ],
+    "model_revision": {
+      "revision": 1,
+      "date": "2026-11-25",
+      "evidence": "same 55 Layer 86 records; no new REA operations",
+      "summary": [
+        "the 51 bodies were read again against their retained assembly and the image: offsets, widths, call order, arguments, return values, conditions, loop bounds, jump and index tables, constants and strings agree with the model, and the 58 globals, 40 witnesses and every Layer 86 count agree with the image and the registry; no body's modelled behaviour changes",
+        "Curl_ssl_kill_session (0x10f16310) frees +0x28, +0x24, +0x3c, +0x38 and +0x34 of a session record, the order in which Curl_free_ssl_config (0x10f15a00) frees CAfile (+0x14), CApath (+0x10), cipher_list (+0x28), egdsocket (+0x24) and random_file (+0x20) of the ssl_config_data embedded at +0x14; the Layer 82 record named +0x34 cipher_list and +0x3c random_file, the reverse of the Layer 86 ssl_config layout, and called the dword it zeroes at +0xc (MOV dword ptr [ESI+0xc], 0 at 0x10f16330) idsize. The record now names idsize +8, age +0xc, a 16-bit remote_port +0x10, random_file +0x34 and cipher_list +0x3c; the bytes the model frees and clears, and their order by offset, are unchanged",
+        "curl_easy_duphandle (0x10f10380) reads the conncache dword at +8 on its failure path (CMP dword ptr [EAX+0x8], 0 at 0x10f104dc; JNZ past the Curl_rm_connc call), so the field is named type in place of reserved08",
+        "Curl_ossl_close (0x10f2d2b0) touches only +8 and +0xc of the 0x18-byte ssl_connect_data record, so the dword at +0 is reserved in place of the unevidenced name use",
+        "Curl_getformdata (0x10f3f340) stores the 64-bit size through its last argument with no NULL test (0x10f3faa4 and 0x10f3faaa); the model's skip of a NULL host pointer is now stated beside the body",
+        "the scope text of 0x10f16310 lists the gate, the cleared fields and the free order in place of a one-line summary",
+        "a native case drives Curl_ssl_kill_session over a record filled by raw offset and checks every dword of it, and test_layer86_revision1_session_record_and_conncache_fidelity pins the instruction bytes behind each correction"
+      ]
+    }
   }
 }

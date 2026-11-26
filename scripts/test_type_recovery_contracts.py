@@ -5449,6 +5449,83 @@ class TypeContractProvenanceTests(unittest.TestCase):
                           "curl_multi_cleanup", "curl_multi_perform", "curl_multi_remove_handle", "curl_multi_socket",
                           "curl_multi_socket_action", "curl_multi_socket_all"])
 
+    def test_layer86_revision1_session_record_and_conncache_fidelity(self):
+        self.assertEqual(self.registry["rea_layer86_evidence"]["model_revision"]["revision"], 1)
+        base, sections = contracts.parse_pe32(self.image)
+        fns = {f["address"]: f for f in self.registry["functions"]}
+        read = lambda va, size: contracts.image_bytes(self.image, base, sections, va, size)[0]
+        code = lambda address: read(int(address, 16), fns[address]["bytes"])
+        loads = lambda body: [body[i + 2] for i in range(len(body) - 2) if body[i:i + 2] == b"\x8b\x46"]
+        clears = lambda body: [body[i + 2] for i in range(len(body) - 6)
+                               if body[i:i + 2] == b"\xc7\x46" and body[i + 3:i + 7] == bytes(4)]
+
+        # Curl_free_ssl_config: MOV EAX, [ESI+n] and MOV dword ptr [ESI+n], 0 for CAfile, CApath, cipher_list,
+        # egdsocket and random_file, in that order
+        config = code("10f15a00")
+        self.assertEqual((loads(config), clears(config)), ([0x14, 0x10, 0x28, 0x24, 0x20], [0x14, 0x10, 0x28, 0x24, 0x20]))
+        # Curl_ssl_kill_session: the handle gate at +4, the age at +0xc, then the same five strings 0x14 further on
+        kill = code("10f16310")
+        self.assertEqual(kill[:16].hex(), "56" "8b742408" "8b4604" "85c0" "0f84a5000000")
+        self.assertEqual(loads(kill), [0x04] + [0x14 + offset for offset in loads(config)])
+        self.assertEqual(clears(kill), [0x04, 0x0C] + [0x14 + offset for offset in loads(config)])
+        self.assertEqual(loads(kill)[1:], [0x28, 0x24, 0x3C, 0x38, 0x34])
+        self.assertEqual(read(0x10F16330, 7).hex(), "c7460c00000000")
+        self.assertEqual(kill[-24:].hex(), "8b06" "85c0" "7410" "50" "ff15d0509711" "83c404" "c70600000000" "5e" "c3")
+        called = 0x10F16321 + 5 + struct.unpack_from("<i", kill, 0x12)[0]
+        self.assertEqual((kill[0x11], called, fns["10f2d4f0"]["tail_exit"]["target"]), (0xE8, 0x10F2D4F0, "116c7f4b"))
+        self.assertIn("clears it and the age (+0xc), then frees and clears CAfile (+0x28), CApath (+0x24), "
+                      "cipher_list (+0x3c), egdsocket (+0x38), random_file (+0x34) and the name (+0)",
+                      fns["10f16310"]["scope"])
+
+        # curl_easy_duphandle failure path: MOV EAX, [ESI+0x57c]; TEST EAX, EAX; JZ; CMP dword ptr [EAX+8], 0; JNZ;
+        # PUSH EAX; CALL Curl_rm_connc
+        fail = read(0x10F104D2, 0x16)
+        self.assertEqual(fail[:17].hex(), "8b867c050000" "85c0" "7419" "83780800" "7513" "50")
+        self.assertEqual((fail[17], 0x10F104E3 + 5 + struct.unpack_from("<i", fail, 18)[0]), (0xE8, 0x10F17FD0))
+        # Curl_mk_connc writes the table at +0 and the count at +4 of its calloc'd record and nothing at +8
+        mk_connc = code("10f17aa0")
+        self.assertEqual((mk_connc[0x46:0x48].hex(), mk_connc[-8:].hex()), ("8907", "897704" "8bc7" "5f" "5e" "c3"))
+        self.assertEqual([mk_connc[i:i + 3].hex() for i in range(len(mk_connc) - 2)
+                          if mk_connc[i] in (0x89, 0xC7) and mk_connc[i + 1] in (0x47, 0x77)], ["897704"])
+
+        # Curl_ossl_close reads and clears +0xc and +8 of the 0x18-byte record and nothing else of it
+        close = code("10f2d2b0")
+        self.assertEqual((loads(close), clears(close)), ([0x0C, 0x08], [0x0C, 0x08]))
+        self.assertEqual([close[i + 2] for i in range(len(close) - 2) if close[i:i + 2] == b"\xff\x76"], [0x0C, 0x0C])
+
+        # Curl_getformdata stores the size with no test of the pointer: MOV ECX, [ESP+0x27c]; MOV EAX, [ESP+0x14];
+        # MOV [ECX], EAX; MOV EAX, [ESP+0x18]; MOV [ECX+4], EAX, straight after the JNZ of the last AddFormDataf
+        self.assertEqual(read(0x10F3FA91, 8).hex(), "85ff" "0f8588000000")
+        self.assertEqual(read(0x10F3FA99, 20).hex(), "8b8c247c020000" "8b442414" "8901" "8b442418" "894104")
+
+        root = Path(__file__).resolve().parents[1] / "port" / "recovered_types"
+        layouts = (root / "guest32_layouts.h").read_text(encoding="utf-8")
+        for text in ("ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, age, 0x0c);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, capath_va, 0x24);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, cafile_va, 0x28);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, random_file_va, 0x34);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, egdsocket_va, 0x38);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, cipher_list_va, 0x3c);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_conncache_32, type, 0x08);",
+                     "    uint32_t reserved00[2];\n    uint32_t ctx_va;\n    uint32_t handle_va;"):
+            self.assertIn(text, layouts)
+        # the session record and the ssl_config record agree on the three strings behind the two certificates
+        for name, offset in (("random_file_va", 0x20), ("egdsocket_va", 0x24), ("cipher_list_va", 0x28)):
+            self.assertIn(f"ROME2_LAYOUT_ASSERT(rome2_curl_ssl_config_prefix_32, {name}, 0x{offset:02x});", layouts)
+            self.assertIn(f"ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, {name}, 0x{offset + 0x14:02x});", layouts)
+        self.assertNotIn("uint32_t use;", layouts)
+        source = (root / "curl_dup_getinfo_form_share_ops.c").read_text(encoding="utf-8")
+        self.assertIn("offsetof(rome2_curl_conncache_32, type)) == 0u", source)
+        self.assertIn("without a NULL test (0x10f3faa4, 0x10f3faaa)", source)
+        layer82 = (root / "curl_util_printf_slist_share_ops.c").read_text(encoding="utf-8")
+        body = layer82[layer82.index("void rome2_l82_curl_ssl_kill_session("):layer82.index("/* 0x10f20ad0 */")]
+        self.assertEqual(re.findall(r"s->(\w+) = 0u;", body),
+                         ["sessionid_va", "age", "cafile_va", "capath_va", "cipher_list_va", "egdsocket_va",
+                          "random_file_va", "name_va"])
+        tests = (root / "test_curl_util_printf_slist_share_ops.c").read_text(encoding="utf-8")
+        self.assertIn("cleared[] = {0x00u, 0x04u, 0x0cu, 0x24u, 0x28u, 0x34u, 0x38u, 0x3cu};", tests)
+        self.assertIn("    test_l82_ssl_kill_session_offsets();", tests)
+
     def test_tail_exit_indirect_jmp_mutations_rejected(self):
         for mutator, pattern in (
             (lambda te: te.update({"address": "116c1f58"}), "tail_exit indirect_jmp address disagrees"),

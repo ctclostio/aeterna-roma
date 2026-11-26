@@ -851,7 +851,7 @@ uint32_t rome2_l86_curl_easy_duphandle(rome2_l86_curl_state *s, uint32_t incurl_
         return out_va;
     }
     uint32_t connc_va = l86_rd32(ctx, out_va + ROME2_CURL_EASY_STATE_CONNC_OFF);
-    if (connc_va != 0u && l86_rd32(ctx, connc_va + (uint32_t)offsetof(rome2_curl_conncache_32, reserved08)) == 0u) {
+    if (connc_va != 0u && l86_rd32(ctx, connc_va + (uint32_t)offsetof(rome2_curl_conncache_32, type)) == 0u) {
         rome2_l86_curl_rm_connc(s, connc_va);
         l86_wr32(ctx, out_va + ROME2_CURL_EASY_STATE_CONNC_OFF, 0u);
     }
@@ -2108,7 +2108,9 @@ static int32_t l86_form_add_post(
  * 0x10f3f340. An unreadable post record ends the walk through the cleanup path
  * as CURLE_BAD_FUNCTION_ARGUMENT. The contents of every file of a field are
  * selected by the field's own flags; only the name, type and headers come from
- * the `more` record.
+ * the `more` record. The original stores the 64-bit size through its last
+ * argument without a NULL test (0x10f3faa4, 0x10f3faaa); a NULL sizep is
+ * skipped here.
  */
 int32_t rome2_l86_curl_getformdata(
     rome2_l86_curl_state *s,

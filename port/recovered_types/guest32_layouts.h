@@ -4480,22 +4480,37 @@ ROME2_LAYOUT_ASSERT(rome2_curl_cookie_info_32, running, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_curl_cookie_info_32, numcookies, 0x0c);
 ROME2_LAYOUT_ASSERT(rome2_curl_cookie_info_32, newsession, 0x10);
 
+/*
+ * curl_ssl_session: Curl_ssl_kill_session (0x10f16310) zeroes the age at +0x0c
+ * and frees +0x28, +0x24, +0x3c, +0x38 and +0x34, the order in which
+ * Curl_free_ssl_config (0x10f15a00) frees CAfile, CApath, cipher_list,
+ * egdsocket and random_file of an ssl_config_data; the copy embedded here
+ * starts at +0x14. The image's session-add body at 0x10f15a80 stores its size
+ * argument at +0x08, the running age at +0x0c and a 16-bit port at +0x10.
+ */
 typedef struct rome2_curl_ssl_sessionid_32 {
     uint32_t name_va;        /* 0x00 */
     uint32_t sessionid_va;   /* 0x04 */
-    uint32_t reserved08;     /* 0x08 */
-    uint32_t idsize;         /* 0x0c */
-    uint32_t age;            /* 0x10 */
+    uint32_t idsize;         /* 0x08 */
+    uint32_t age;            /* 0x0c */
+    uint16_t remote_port;    /* 0x10 */
+    uint16_t reserved12;     /* 0x12 */
     uint32_t reserved14[4];  /* 0x14..0x20 */
     uint32_t capath_va;      /* 0x24 */
     uint32_t cafile_va;      /* 0x28 */
     uint32_t reserved2c[2];  /* 0x2c..0x30 */
-    uint32_t cipher_list_va; /* 0x34 */
+    uint32_t random_file_va; /* 0x34 */
     uint32_t egdsocket_va;   /* 0x38 */
-    uint32_t random_file_va; /* 0x3c */
+    uint32_t cipher_list_va; /* 0x3c */
     uint32_t reserved40[5];  /* 0x40..0x50 */
 } rome2_curl_ssl_sessionid_32;
 _Static_assert(sizeof(rome2_curl_ssl_sessionid_32) == 0x54, "curl ssl sessionid 32 size");
+ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, age, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, capath_va, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, cafile_va, 0x28);
+ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, random_file_va, 0x34);
+ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, egdsocket_va, 0x38);
+ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, cipher_list_va, 0x3c);
 
 typedef struct rome2_curl_share_32 {
     uint32_t specifier;
@@ -4654,14 +4669,19 @@ _Static_assert(sizeof(rome2_curl_fd_set_32) == 0x104, "curl fd_set 32 size");
  * fields the recovered bodies touch.
  */
 
-/* conncache: calloc(1, 0xc) in Curl_mk_connc (0x10f17aa0), which leaves +8 unwritten. */
+/*
+ * conncache: calloc(1, 0xc) in Curl_mk_connc (0x10f17aa0), which leaves +8
+ * unwritten. curl_easy_duphandle reads that dword at 0x10f104dc and releases
+ * the cache on its failure path only when it is zero.
+ */
 typedef struct rome2_curl_conncache_32 {
     uint32_t connects_va; /* connectdata*[num] */
     int32_t num;
-    uint32_t reserved08;
+    uint32_t type; /* 0 marks a cache owned by one easy handle */
 } rome2_curl_conncache_32;
 _Static_assert(sizeof(rome2_curl_conncache_32) == 0x0c, "curl conncache 32 size");
 ROME2_LAYOUT_ASSERT(rome2_curl_conncache_32, num, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_curl_conncache_32, type, 0x08);
 
 /* FormData node: malloc(0x10) in AddFormDataf (0x10f3f060) and Curl_getformdata (0x10f3f340). */
 typedef struct rome2_curl_formdata_32 {
@@ -4728,8 +4748,7 @@ ROME2_LAYOUT_ASSERT(rome2_curl_ssl_config_prefix_32, cipher_list_va, 0x28);
 
 /* ssl_connect_data: Curl_ossl_close (0x10f2d2b0) indexes conn + (sockindex + 0xe) * 0x18. */
 typedef struct rome2_curl_ssl_connect_data_32 {
-    uint32_t use;
-    uint32_t reserved04;
+    uint32_t reserved00[2];
     uint32_t ctx_va;
     uint32_t handle_va;
     uint32_t reserved10[2];
