@@ -41,23 +41,23 @@
 #pragma comment(lib, "shlwapi.lib")
 #pragma comment(lib, "winmm.lib")
 
-/* Guest address space: the 2 GiB user range of a 32-bit process. */
+/* Guest address space. [VM_LO, VM_HI) is the 2 GiB user range of a 32-bit process: the image, the heap, the stack
+ * and everything VirtualAlloc hands out. The runner's own objects (import slots, module handles, thread block) are
+ * above it, where such a process has nothing, so any address the original process used is free here. */
 #define VM_LO 0x00010000u
 #define VM_HI 0x7ffe0000u
-#define FS_BASE 0x7efdd000u
-#define SYSTEM_LO 0x70000000u /* import slots, module handles, TEB: never handed out */
-#define STACK_TOP 0x70000000u
-#define STACK_LIMIT 0x6fe00000u
-#define TLS_ARRAY 0x6fd00000u
-#define PEB_ADDR 0x6fc00000u
 #define HEAP_LO 0x60000000u /* process-heap blocks (HeapAlloc) */
 #define HEAP_HI 0x6f000000u
-#define IMPORT_BASE 0x70000000u
+#define STACK_SIZE 0x00100000u /* Rome2.exe's stack reserve */
+#define FAKE_EXE 0x00400000u
+#define IMPORT_BASE 0x80000000u
 #define IMPORT_STEP 16u
 #define MAX_IMPORTS 8192u
-#define RET_SENTINEL 0x7ffe0000u
-#define FAKE_EXE 0x00400000u
-#define FAKE_MODULE 0x7d000000u /* + 0x10000 per registered module name */
+#define FAKE_MODULE 0x90000000u /* + 0x10000 per registered module name */
+#define RET_SENTINEL 0xa0000000u
+#define FS_BASE 0xa1000000u
+#define PEB_ADDR 0xa1010000u
+#define TLS_ARRAY 0xa1020000u
 #define SELF_DLL "empire.retail.dll"
 #define TEB_LAST_ERROR 0x34u
 #define TLS_SLOTS 1088u
@@ -69,6 +69,12 @@ static const live_core *g_core;
 static char g_stop[512];
 static char g_game_dir[MAX_PATH] = "Total War Rome II";
 static uint64_t g_trace;
+/* --record: what scripts/lift/compare_orig.py compares with the original DLL (see orig32.c for the formats). */
+static FILE *g_rec;
+static uint32_t g_image_size;
+static char g_exe_path[MAX_PATH]; /* --mirror: the executable path the guest sees */
+static uint32_t g_stack_top = 0x70000000u, g_entry_esp; /* --mirror: the original's stack, and ESP at its DLL entry */
+static uint32_t (*g_place)[5], g_place_n, g_place_i; /* --place: the original's VirtualAlloc calls */
 
 #define GP(a) (g_mem + (uint32_t)(a))
 #define PTR(a) ((a) != 0u ? (void *)GP(a) : NULL)
@@ -119,8 +125,10 @@ static void vm_set(uint32_t lo, uint32_t hi, int state, uint32_t base) {
         VirtualFree(GP(lo), (SIZE_T)hi - lo, MEM_DECOMMIT);
     }
     for (pn = lo >> 12; pn < hi >> 12; ++pn) {
-        g_vm_reserved += (uint64_t)(state != PG_FREE) - (g_pstate[pn] != PG_FREE);
-        g_vm_committed += (uint64_t)(state == PG_COMMITTED) - (g_pstate[pn] == PG_COMMITTED);
+        if (pn < VM_HI >> 12) { /* the runner's own pages above the user range are not the guest's */
+            g_vm_reserved += (uint64_t)(state != PG_FREE) - (g_pstate[pn] != PG_FREE);
+            g_vm_committed += (uint64_t)(state == PG_COMMITTED) - (g_pstate[pn] == PG_COMMITTED);
+        }
         g_pstate[pn] = (uint8_t)state;
         g_c->pt[pn] = state == PG_COMMITTED ? GP(pn << 12) : NULL;
         if (base != KEEP_BASE) {
@@ -148,12 +156,12 @@ static uint32_t vm_alloc(uint32_t addr, uint32_t size, uint32_t type) {
         uint32_t pages = (uint32_t)(((uint64_t)size + (addr & 0xffffu) + 0xffffu) >> 16) << 4, run = 0u;
         if (addr != 0u) {
             lo = addr & ~0xffffu;
-            if (lo < VM_LO || lo >= SYSTEM_LO || (lo >> 12) + pages > SYSTEM_LO >> 12 || g_pstate[lo >> 12] != PG_FREE
-                || vm_run(lo >> 12, SYSTEM_LO >> 12) < pages) {
+            if (lo < VM_LO || lo >= VM_HI || (lo >> 12) + pages > VM_HI >> 12 || g_pstate[lo >> 12] != PG_FREE
+                || vm_run(lo >> 12, VM_HI >> 12) < pages) {
                 return 0u;
             }
         } else if ((type & MEM_TOP_DOWN) != 0u) {
-            for (pn = SYSTEM_LO >> 12; pn > VM_LO >> 12 && run < pages; pn -= 16u) {
+            for (pn = VM_HI >> 12; pn > VM_LO >> 12 && run < pages; pn -= 16u) {
                 run = g_pstate[pn - 16u] == PG_FREE && vm_run(pn - 16u, pn) == 16u ? run + 16u : 0u;
             }
             if (run < pages) {
@@ -161,7 +169,7 @@ static uint32_t vm_alloc(uint32_t addr, uint32_t size, uint32_t type) {
             }
             lo = pn << 12;
         } else {
-            for (pn = VM_LO >> 12; pn < SYSTEM_LO >> 12 && run < pages; pn += 16u) {
+            for (pn = VM_LO >> 12; pn < VM_HI >> 12 && run < pages; pn += 16u) {
                 run = g_pstate[pn] == PG_FREE && vm_run(pn, pn + 16u) == 16u ? run + 16u : 0u;
             }
             if (run < pages) {
@@ -179,7 +187,7 @@ static uint32_t vm_alloc(uint32_t addr, uint32_t size, uint32_t type) {
     /* Commit inside an existing allocation. */
     lo = addr & ~0xfffu;
     hi = (uint32_t)(((uint64_t)addr + size + 0xfffu) & ~0xfffull);
-    if ((type & MEM_COMMIT) == 0u || hi <= lo || hi > SYSTEM_LO) {
+    if ((type & MEM_COMMIT) == 0u || hi <= lo || hi > VM_HI) {
         return 0u;
     }
     for (pn = lo >> 12; pn < hi >> 12; ++pn) {
@@ -197,14 +205,14 @@ static uint32_t vm_alloc(uint32_t addr, uint32_t size, uint32_t type) {
 
 static int vm_free(uint32_t addr, uint32_t size, uint32_t type) {
     uint32_t pn = addr >> 12, n;
-    if (addr < VM_LO || addr >= SYSTEM_LO || g_pstate[pn] == PG_FREE) {
+    if (addr < VM_LO || addr >= VM_HI || g_pstate[pn] == PG_FREE) {
         return 0;
     }
     if ((type & MEM_RELEASE) != 0u) {
         if (size != 0u || g_pbase[pn] != pn) {
             return 0;
         }
-        for (n = 1u; pn + n < SYSTEM_LO >> 12 && g_pstate[pn + n] != PG_FREE && g_pbase[pn + n] == pn; ++n) {
+        for (n = 1u; pn + n < VM_HI >> 12 && g_pstate[pn + n] != PG_FREE && g_pbase[pn + n] == pn; ++n) {
         }
         vm_set(addr, addr + (n << 12), PG_FREE, 0u);
         return 1;
@@ -212,7 +220,7 @@ static int vm_free(uint32_t addr, uint32_t size, uint32_t type) {
     if ((type & MEM_DECOMMIT) != 0u) {
         uint32_t hi = size != 0u ? (uint32_t)(((uint64_t)addr + size + 0xfffu) & ~0xfffull) : 0u;
         if (size == 0u) {
-            for (n = 0u; pn + n < SYSTEM_LO >> 12 && g_pstate[pn + n] != PG_FREE && g_pbase[pn + n] == g_pbase[pn]; ++n) {
+            for (n = 0u; pn + n < VM_HI >> 12 && g_pstate[pn + n] != PG_FREE && g_pbase[pn + n] == g_pbase[pn]; ++n) {
             }
             hi = (pn + n) << 12;
         }
@@ -314,6 +322,7 @@ typedef struct import {
     char dll[64], name[96];
     const shim *sh;
     uint64_t calls;
+    uint32_t iat; /* RVA of the import-table slot; 0 for an address handed out by GetProcAddress or a COM bridge */
 } import;
 
 static import g_imp[MAX_IMPORTS];
@@ -323,10 +332,11 @@ static uint32_t g_nmod;
 static const shim *find_shim(const char *name);
 static uint32_t export_addr(const char *name);
 
-static uint32_t import_addr(const char *dll, const char *name) {
+/* Import-table slots and addresses obtained at run time are separate records, so calls through each can be told apart. */
+static uint32_t import_addr(const char *dll, const char *name, uint32_t iat) {
     uint32_t i;
     for (i = 0u; i < g_nimp; ++i) {
-        if (strcmp(g_imp[i].name, name) == 0 && _stricmp(g_imp[i].dll, dll) == 0) {
+        if ((g_imp[i].iat != 0u) == (iat != 0u) && strcmp(g_imp[i].name, name) == 0 && _stricmp(g_imp[i].dll, dll) == 0) {
             return IMPORT_BASE + i * IMPORT_STEP;
         }
     }
@@ -336,6 +346,7 @@ static uint32_t import_addr(const char *dll, const char *name) {
     snprintf(g_imp[i].dll, sizeof g_imp[i].dll, "%s", dll);
     snprintf(g_imp[i].name, sizeof g_imp[i].name, "%s", name);
     g_imp[i].sh = find_shim(name);
+    g_imp[i].iat = iat;
     ++g_nimp;
     return IMPORT_BASE + i * IMPORT_STEP;
 }
@@ -446,7 +457,28 @@ SHIM(HeapReAlloc) {
 }
 /* Virtual memory. Page protections are not enforced: a committed page is readable and writable. */
 SHIM(VirtualAlloc) {
-    uint32_t p = vm_alloc(a[0], a[1], a[2]);
+    uint32_t p;
+    if (g_place_i < g_place_n) {
+        /* --place: the original's calls in order (address, size, type, protection, result). The same request gets
+         * the same address, so both runs have one memory layout; a different request is a divergence. */
+        const uint32_t *r = g_place[g_place_i++];
+        if (r[0] != a[0] && (r[0] == 0u || a[0] == 0u || r[1] != a[1] || r[2] != a[2])) {
+            stop("VirtualAlloc call %u asks for (%08x, %x, %x); the original asked for (%08x, %x, %x)", g_place_i - 1u, a[0], a[1],
+                 a[2], r[0], r[1], r[2]);
+            return 0u;
+        }
+        if (r[1] != a[1] || r[2] != a[2]) {
+            stop("VirtualAlloc call %u asks for size %x type %x; the original asked for size %x type %x", g_place_i - 1u, a[1],
+                 a[2], r[1], r[2]);
+            return 0u;
+        }
+        p = r[4] != 0u ? vm_alloc(a[0] != 0u ? a[0] : r[4], a[1], a[2]) : 0u;
+        if (p != r[4]) {
+            stop("VirtualAlloc call %u: the original's address %08x cannot be used here (got %08x)", g_place_i - 1u, r[4], p);
+        }
+        return p;
+    }
+    p = vm_alloc(a[0], a[1], a[2]);
     if (p == 0u) {
         wr32(FS_BASE + TEB_LAST_ERROR, a[0] != 0u ? ERROR_INVALID_ADDRESS : ERROR_NOT_ENOUGH_MEMORY);
     }
@@ -485,7 +517,9 @@ SHIM(FlsSetValue) { if (a[0] >= TLS_SLOTS) { return 0u; } g_tls[a[0]] = a[1]; re
  * DebugInfo, LockCount, RecursionCount, OwningThread, LockSemaphore, SpinCount. */
 SHIM(InitializeCriticalSection) {
     memset(GP(a[0]), 0, 24u);
+    wr32(a[0], 0xffffffffu); /* no debug record, as Windows 10 and later leave it */
     wr32(a[0] + 4u, 0xffffffffu);
+    wr32(a[0] + 20u, 0x020007d0u); /* the default: 2000 spins, adjusted dynamically */
     return 1u;
 }
 SHIM(InitializeCriticalSectionAndSpinCount) {
@@ -565,14 +599,41 @@ SHIM(GetFileType) { return GetFileType(H(a[0])); }
 SHIM(SetHandleCount) { return a[0]; }
 SHIM(GetCommandLineA) { return g_cmdline_a; }
 SHIM(GetCommandLineW) { return g_cmdline_w; }
+/* The environment Windows gives a 32-bit process on a 64-bit machine: PROCESSOR_ARCHITECTURE is x86 with the
+ * machine's own in PROCESSOR_ARCHITEW6432, and the program-files variables name the 32-bit folders. */
 SHIM(GetEnvironmentStringsW) {
-    wchar_t *env = GetEnvironmentStringsW();
-    const wchar_t *p = env;
+    wchar_t *env = GetEnvironmentStringsW(), *out, *q;
+    const wchar_t *p, *files = NULL, *common = NULL;
+    size_t total = 2u;
     uint32_t g;
-    while (*p != L'\0') {
-        p += wcslen(p) + 1u;
+    for (p = env; *p != L'\0'; p += wcslen(p) + 1u) {
+        total += wcslen(p) + 1u;
+        if (_wcsnicmp(p, L"ProgramFiles(x86)=", 18u) == 0) {
+            files = p + 18;
+        } else if (_wcsnicmp(p, L"CommonProgramFiles(x86)=", 24u) == 0) {
+            common = p + 24;
+        }
     }
-    g = gdup(env, (uint32_t)((p + 1 - env) * sizeof *p));
+    out = q = malloc((total + 2u * MAX_PATH + 128u) * sizeof *out);
+    if (out == NULL) {
+        die("out of memory");
+    }
+    for (p = env; *p != L'\0'; p += wcslen(p) + 1u) {
+        if (_wcsnicmp(p, L"PROCESSOR_ARCHITECTURE=", 23u) == 0) {
+            q += swprintf(q, 64u, L"PROCESSOR_ARCHITECTURE=x86") + 1;
+            q += swprintf(q, 64u, L"PROCESSOR_ARCHITEW6432=%.32ls", p + 23) + 1;
+        } else if (files != NULL && _wcsnicmp(p, L"ProgramFiles=", 13u) == 0) {
+            q += swprintf(q, MAX_PATH + 32u, L"ProgramFiles=%.260ls", files) + 1;
+        } else if (common != NULL && _wcsnicmp(p, L"CommonProgramFiles=", 19u) == 0) {
+            q += swprintf(q, MAX_PATH + 32u, L"CommonProgramFiles=%.260ls", common) + 1;
+        } else {
+            wcscpy(q, p);
+            q += wcslen(p) + 1u;
+        }
+    }
+    *q++ = L'\0';
+    g = gdup(out, (uint32_t)((q - out) * sizeof *q));
+    free(out);
     FreeEnvironmentStringsW(env);
     return g;
 }
@@ -656,12 +717,16 @@ SHIM(GetProcAddress) {
     }
     if (a[1] < 0x10000u) {
         snprintf(ordinal, sizeof ordinal, "#%u", a[1]);
-        return import_addr(dll, ordinal);
+        return import_addr(dll, ordinal, 0u);
     }
-    return import_addr(dll, (const char *)GP(a[1]));
+    return import_addr(dll, (const char *)GP(a[1]), 0u);
 }
 static void module_path(uint32_t h, char *out, size_t cap) {
     const char *name = h == 0u || h == FAKE_EXE ? "Rome2.exe" : module_name(h);
+    if ((h == 0u || h == FAKE_EXE) && g_exe_path[0] != '\0') {
+        snprintf(out, cap, "%s", g_exe_path);
+        return;
+    }
     snprintf(out, cap, "%s\\%s", g_game_dir, name != NULL ? name : "unknown.dll");
 }
 SHIM(GetModuleFileNameA) {
@@ -916,7 +981,7 @@ static uint32_t com_wrap(IUnknown *host, const GUID *iid) {
             for (m = 0u; m < f->n_methods; ++m) {
                 char method[64];
                 snprintf(method, sizeof method, "%s#%u", f->name, m);
-                wr32(f->vtbl + 4u * m, import_addr("com", method));
+                wr32(f->vtbl + 4u * m, import_addr("com", method, 0u));
             }
         }
         g_proxy[i].guest = galloc(8u, 1);
@@ -1051,6 +1116,10 @@ SHIM(SHGetFolderPathW) {
     return (uint32_t)SHGetFolderPathW(NULL, (int)a[1], NULL, a[3], PTR(a[4]));
 }
 SHIM(SHCreateDirectoryExW) {
+    DWORD attrs = GetFileAttributesW(PTR(a[1]));
+    if (attrs != INVALID_FILE_ATTRIBUTES && (attrs & FILE_ATTRIBUTE_DIRECTORY) != 0u) {
+        return (uint32_t)ERROR_ALREADY_EXISTS; /* what the call answers for an existing directory; nothing is written */
+    }
     return write_allowed("SHCreateDirectoryExW", NULL, PTR(a[1])) ? (uint32_t)SHCreateDirectoryExW(NULL, PTR(a[1]), NULL)
                                                                    : (uint32_t)ERROR_ACCESS_DENIED;
 }
@@ -1072,6 +1141,10 @@ SHIM(SteamAPI_RegisterCallback) {
     }
     g_steam_callbacks[g_steam_ncallbacks].object = a[0];
     g_steam_callbacks[g_steam_ncallbacks++].id = a[1];
+    /* steam_api.dll marks the callback object itself: flags byte at +4 gets "registered", +8 the callback id
+     * (seen in the original process's memory by compare_orig.py). */
+    *GP(a[0] + 4u) |= 1u;
+    wr32(a[0] + 8u, a[1]);
     return 0u;
 }
 SHIM(SteamAPI_UnregisterCallback) {
@@ -1082,6 +1155,7 @@ SHIM(SteamAPI_UnregisterCallback) {
             break;
         }
     }
+    *GP(a[0] + 4u) &= (uint8_t)~1u;
     return 0u;
 }
 
@@ -1336,6 +1410,10 @@ static int run(void) {
                 continue;
             }
             ++im->calls;
+            if (g_rec != NULL && im->iat != 0u) {
+                uint32_t rec[2] = {im->iat, rd32(esp)};
+                fwrite(rec, sizeof rec, 1u, g_rec);
+            }
             c->r[LM_EAX] = im->sh->fn(c, (const uint32_t *)GP(esp + 4u));
             if (g_stop[0] != '\0') {
                 return 1;
@@ -1391,7 +1469,7 @@ static uint32_t load_image(const char *path) {
     if (f == NULL || fseek(f, 0, SEEK_END) != 0 || (size = ftell(f)) <= 0 || fseek(f, 0, SEEK_SET) != 0) {
         die("cannot read the image");
     }
-    image_size = ((uint32_t)size + LM_PAGE - 1u) & ~(LM_PAGE - 1u);
+    g_image_size = image_size = ((uint32_t)size + LM_PAGE - 1u) & ~(LM_PAGE - 1u);
     lift_set_image(g_c, GP(LM_IMAGE_BASE), image_size);
     lift_set_env(g_c, FS_BASE, NULL, NULL, 0u);
     g_pstate = calloc(1u << 20, sizeof *g_pstate);
@@ -1403,9 +1481,8 @@ static uint32_t load_image(const char *path) {
     vm_set(FAKE_EXE, FAKE_EXE + 0x100000u, PG_RESERVED, FAKE_EXE >> 12);
     vm_set(LM_IMAGE_BASE, LM_IMAGE_BASE + image_size, PG_COMMITTED, LM_IMAGE_BASE >> 12);
     vm_set(HEAP_LO, HEAP_HI, PG_COMMITTED, HEAP_LO >> 12);
-    vm_set(PEB_ADDR, STACK_TOP, PG_COMMITTED, PEB_ADDR >> 12); /* PEB, TLS array, stack */
-    vm_set(SYSTEM_LO, 0x80000000u, PG_RESERVED, SYSTEM_LO >> 12);
-    vm_set(FS_BASE, FS_BASE + LM_PAGE, PG_COMMITTED, KEEP_BASE);
+    vm_set(g_stack_top - STACK_SIZE, g_stack_top, PG_COMMITTED, (g_stack_top - STACK_SIZE) >> 12);
+    vm_set(FS_BASE, TLS_ARRAY + 0x10000u, PG_COMMITTED, FS_BASE >> 12); /* thread block, PEB, TLS array */
     if (fread(GP(LM_IMAGE_BASE), 1u, (size_t)size, f) != (size_t)size) {
         die("short read of the image");
     }
@@ -1485,17 +1562,23 @@ static void bind_imports(void) {
         for (; (v = rd32(names)) != 0u; names += 4u, iat += 4u) {
             char ordinal[16];
             snprintf(ordinal, sizeof ordinal, "#%u", v & 0xffffu);
-            wr32(iat, import_addr(dll, (v & 0x80000000u) != 0u ? ordinal : (const char *)GP(LM_IMAGE_BASE + v + 2u)));
+            wr32(iat, import_addr(dll, (v & 0x80000000u) != 0u ? ordinal : (const char *)GP(LM_IMAGE_BASE + v + 2u),
+                                  iat - LM_IMAGE_BASE));
         }
     }
     g_static_imports = g_nimp;
 }
 
 static void init_thread(void) {
-    uint32_t tls = data_dir(9u);
+    uint32_t tls = data_dir(9u), cfg = data_dir(10u), cookie = cfg != 0u && rd32(cfg) >= 64u ? rd32(cfg + 60u) : 0u;
+    /* The Windows loader replaces the image's default stack cookie before the entry runs (load configuration). */
+    if (cookie != 0u && rd32(cookie) == 0xbb40e64eu) {
+        uint32_t v = (uint32_t)__rdtsc() ^ GetCurrentProcessId() ^ GetTickCount();
+        wr32(cookie, v == 0xbb40e64eu || v == 0u ? 0xbb40e64fu : v);
+    }
     wr32(FS_BASE + 0x00u, 0xffffffffu); /* empty exception handler chain */
-    wr32(FS_BASE + 0x04u, STACK_TOP);
-    wr32(FS_BASE + 0x08u, STACK_LIMIT);
+    wr32(FS_BASE + 0x04u, g_stack_top);
+    wr32(FS_BASE + 0x08u, g_stack_top - STACK_SIZE);
     wr32(FS_BASE + 0x18u, FS_BASE);
     wr32(FS_BASE + 0x20u, GetCurrentProcessId());
     wr32(FS_BASE + 0x24u, GetCurrentThreadId());
@@ -1511,10 +1594,76 @@ static void init_thread(void) {
             fprintf(stderr, "live: TLS callbacks present and not run\n");
         }
     }
-    g_c->r[LM_ESP] = STACK_TOP - 0x1000u;
+    /* The DLL entry gets three arguments and a return address pushed below this. */
+    g_c->r[LM_ESP] = g_entry_esp != 0u ? g_entry_esp + 16u : g_stack_top - 0x1000u;
     g_c->mode = 0u;
     g_c->status = LM_S_OK;
     live_fp_enter(g_c);
+}
+
+/* 0 not an address, 1 this image, 2 other committed memory (heap, stack, thread block), 3 another module. */
+static uint8_t addr_class(uint32_t v) {
+    if (v < 0x10000u) {
+        return 0u;
+    }
+    if (v - LM_IMAGE_BASE < g_image_size) {
+        return 1u;
+    }
+    if (v - IMPORT_BASE < g_nimp * IMPORT_STEP || v - FAKE_MODULE < g_nmod << 16 || v - FAKE_EXE < 0x100000u) {
+        return 3u;
+    }
+    return g_pstate[v >> 12] == PG_COMMITTED ? 2u : 0u;
+}
+
+/* A memory record as orig32.c writes it: n (key, size) pairs, then each region's bytes and one class per dword. */
+static void write_regions(const char *path, uint32_t result, uint32_t n, const uint32_t (*region)[3]) {
+    uint32_t i, a, head[6];
+    FILE *f = fopen(path, "wb");
+    if (f == NULL) {
+        die("cannot write a memory record");
+    }
+    memcpy(head, "LMEM", 4u);
+    head[1] = LM_IMAGE_BASE;
+    head[2] = result;
+    head[3] = GetCurrentProcessId();
+    head[4] = GetCurrentThreadId();
+    head[5] = n;
+    fwrite(head, sizeof head, 1u, f);
+    for (i = 0u; i < n; ++i) {
+        fwrite(region[i], 4u, 2u, f); /* key, size */
+    }
+    for (i = 0u; i < n; ++i) {
+        fwrite(GP(region[i][2]), 1u, region[i][1], f);
+        for (a = 0u; a < region[i][1]; a += 4u) {
+            fputc(addr_class(rd32(region[i][2] + a)), f);
+        }
+    }
+    fclose(f);
+}
+
+/* <prefix>.mem: the writable sections, keyed by RVA. <prefix>.heap: the --place allocations, keyed by address. */
+static void write_mem(const char *prefix, uint32_t result) {
+    static uint32_t region[8192][3]; /* key, size, guest address */
+    uint32_t nt = LM_IMAGE_BASE + rd32(LM_IMAGE_BASE + 0x3cu), sec = nt + 24u + (rd32(nt + 20u) & 0xffffu), i, n = 0u;
+    char path[MAX_PATH + 8];
+    for (i = 0u; i < (rd32(nt + 6u) & 0xffffu); ++i) {
+        if ((rd32(sec + 40u * i + 36u) & IMAGE_SCN_MEM_WRITE) != 0u) {
+            region[n][0] = rd32(sec + 40u * i + 12u);
+            region[n][1] = rd32(sec + 40u * i + 8u) & ~3u;
+            region[n++][2] = LM_IMAGE_BASE + rd32(sec + 40u * i + 12u);
+        }
+    }
+    snprintf(path, sizeof path, "%s.mem", prefix);
+    write_regions(path, result, n, region);
+    for (i = n = 0u; i < g_place_i; ++i) {
+        /* Only what this run allocated too: a page the lifted code never got is not readable here. */
+        if (g_place[i][0] == 0u && g_place[i][4] != 0u && (g_place[i][2] & MEM_COMMIT) != 0u) {
+            region[n][0] = region[n][2] = g_place[i][4];
+            region[n++][1] = (g_place[i][1] + 0xfffu) & ~0xfffu;
+        }
+    }
+    snprintf(path, sizeof path, "%s.heap", prefix);
+    write_regions(path, result, n, region);
 }
 
 static void report(int stopped) {
@@ -1569,8 +1718,8 @@ int main(int argc, char **argv) {
     const char *image = NULL;
     uint64_t max_insns = 20000000000ull;
     uint32_t i, off = 0u, entry, args[3] = {LM_IMAGE_BASE, DLL_PROCESS_ATTACH, 0u};
-    wchar_t wide[MAX_PATH + 16];
-    char cmd[MAX_PATH + 16];
+    wchar_t wide[2048];
+    char cmd[2048] = "", record[MAX_PATH] = "", path[MAX_PATH + 8];
     int stopped;
 
     for (i = 1; i + 1u < (uint32_t)argc; i += 2u) {
@@ -1589,13 +1738,33 @@ int main(int argc, char **argv) {
         } else if (strcmp(argv[i], "--profile") == 0) {
             CreateDirectoryA(argv[i + 1], NULL);
             GetFullPathNameA(argv[i + 1], sizeof g_profile, g_profile, NULL);
+        } else if (strcmp(argv[i], "--place") == 0) {
+            FILE *f = fopen(argv[i + 1], "rb");
+            g_place = malloc(8192u * sizeof *g_place);
+            if (f == NULL || g_place == NULL) {
+                die("cannot read the --place file");
+            }
+            g_place_n = (uint32_t)fread(g_place, sizeof *g_place, 8192u, f);
+            fclose(f);
+        } else if (strcmp(argv[i], "--record") == 0) {
+            GetFullPathNameA(argv[i + 1], sizeof record, record, NULL);
+        } else if (strcmp(argv[i], "--mirror") == 0) {
+            /* orig32's .env file: executable path; command line; stack base and ESP at the DLL entry (hex). */
+            FILE *f = fopen(argv[i + 1], "rb");
+            if (f == NULL || fgets(g_exe_path, sizeof g_exe_path, f) == NULL || fgets(cmd, sizeof cmd, f) == NULL
+                || fscanf(f, "%x %x", &g_stack_top, &g_entry_esp) != 2) {
+                die("cannot read the --mirror file");
+            }
+            fclose(f);
+            g_exe_path[strcspn(g_exe_path, "\r\n")] = '\0';
+            cmd[strcspn(cmd, "\r\n")] = '\0';
         }
     }
     if (image == NULL) {
         die("usage: live --image <image.bin> [--game-dir <dir>] [--max-insns <n>] [--trace <n>]");
     }
-    if (GetFullPathNameA(g_game_dir, sizeof cmd, cmd, NULL) != 0u) {
-        strcpy(g_game_dir, cmd);
+    if (GetFullPathNameA(g_game_dir, sizeof path, path, NULL) != 0u) {
+        strcpy(g_game_dir, path);
     }
 
     g_core = live_core_get();
@@ -1619,9 +1788,11 @@ int main(int argc, char **argv) {
     }
     g_c->limit = g_c->budget = max_insns;
 
-    snprintf(cmd, sizeof cmd, "\"%s\\Rome2.exe\"", g_game_dir);
+    if (cmd[0] == '\0') {
+        snprintf(cmd, sizeof cmd, "\"%s\\Rome2.exe\"", g_game_dir);
+    }
     g_cmdline_a = gdup(cmd, (uint32_t)strlen(cmd) + 1u);
-    i = (uint32_t)MultiByteToWideChar(CP_ACP, 0, cmd, -1, wide, MAX_PATH + 16);
+    i = (uint32_t)MultiByteToWideChar(CP_ACP, 0, cmd, -1, wide, (int)(sizeof wide / sizeof wide[0]));
     g_cmdline_w = gdup(wide, i * (uint32_t)sizeof wide[0]);
     bind_imports();
     init_thread();
@@ -1632,7 +1803,20 @@ int main(int argc, char **argv) {
 
     entry = LM_IMAGE_BASE + rd32(LM_IMAGE_BASE + rd32(LM_IMAGE_BASE + 0x3cu) + 24u + 16u);
     printf("image %s, %u lifted functions, DLL entry %08x\n", image, g_core->n_fns, entry);
+    if (record[0] != '\0') {
+        snprintf(path, sizeof path, "%s.trace", record);
+        if ((g_rec = fopen(path, "wb")) == NULL) {
+            die("cannot write the call record");
+        }
+    }
     stopped = guest_call(entry, 3u, args);
+    if (g_rec != NULL) {
+        /* A recording covers the DLL entry only, which is what orig32 observes. */
+        fclose(g_rec);
+        write_mem(record, stopped ? 0xffffffffu : g_c->r[LM_EAX]);
+        report(stopped);
+        return stopped;
+    }
     if (!stopped) {
         printf("REACHED: DLL entry returned %u for DLL_PROCESS_ATTACH (CRT start-up and static initializers ran)\n",
                g_c->r[LM_EAX]);
