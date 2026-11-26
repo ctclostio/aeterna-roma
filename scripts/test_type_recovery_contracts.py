@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import json
+import re
 import struct
 import unittest
 from pathlib import Path
@@ -75,10 +76,10 @@ class TypeContractProvenanceTests(unittest.TestCase):
     def test_original_functions_globals_and_vtables(self):
         result = contracts.validate_contracts(self.image, self.registry)
         self.assertTrue(result["verified"])
-        self.assertEqual(result["functions"], 2159)
-        self.assertEqual(result["globals"], 1192)
+        self.assertEqual(result["functions"], 2210)
+        self.assertEqual(result["globals"], 1250)
         self.assertEqual(result["vtables"], 90)
-        self.assertEqual(result["instruction_witnesses"], 1707)
+        self.assertEqual(result["instruction_witnesses"], 1747)
         # the ledger header names the latest layer in the registry and carries the same counts
         ledger = json.loads((Path(__file__).resolve().parents[1] / "port" / "recovered_types"
                              / "verification.json").read_text(encoding="utf-8"))
@@ -5168,6 +5169,362 @@ class TypeContractProvenanceTests(unittest.TestCase):
         self.assertEqual(contracts.image_bytes(self.image, base, sections, 0x10F09320, 5)[0].hex(), "f30f104924")
         self.assertNotIn("L85_OFFSET(rome2_fx_event_prefix_32, scale_24)", source)
         self.assertIn("put_f32(L85_LINKED_VA + 0x24u, 0.25f);", tests)
+
+    def test_layer86_curl_dup_getinfo_form_share_opens_p13_contracts(self):
+        ev = self.registry["rea_layer86_evidence"]
+        layer85 = self.registry["rea_layer85_evidence"]
+        self.assertEqual(ev["snapshot_mode"], "fresh_partition13_batched")
+        self.assertNotIn("partition13_sealed", ev)
+        self.assertEqual((ev["closed_evidence_records"], ev["new_evidence_records"], ev["retained_operation_envelopes"],
+                          ev["extra_evidence_views_count"]), (55, 55, 55, 0))
+        operations = [r["operation"] for r in ev["new_records"]]
+        self.assertEqual((operations.count("analyze_function"), operations.count("read_bytes")), (51, 4))
+        new_ids = {r["evidence_id"] for r in ev["new_records"]}
+        self.assertEqual(len(new_ids), 55)
+        self.assertTrue(all(r["retained_local_path"].startswith("out/curl-layer84-20261125/") for r in ev["new_records"]))
+        # a closed session of its own: no record belongs to an earlier layer, so Partition 12 ends at Layer 85
+        for key, block in self.registry.items():
+            if key.startswith("rea_layer") and key.endswith("_evidence") and key != "rea_layer86_evidence":
+                earlier = block.get("new_records", block.get("records", []))
+                self.assertFalse(new_ids & {r["evidence_id"] for r in earlier}, key)
+        self.assertEqual(ev["closed_snapshot_local_path"], "out/curl-layer84-20261125/session.rea.json")
+        self.assertNotEqual(ev["closed_snapshot_sha256"], layer85["closed_snapshot_sha256"])
+        self.assertEqual(ev["validated_bundle_sha256"], "63ad1032cc86fc7a1c6c80b97d79257d070d403be3469c0f4f28de8186bb481f")
+        self.assertEqual((ev["cumulative_validated_bundle_sha256"], ev["cumulative_validated_bundle_records"]),
+                         (ev["validated_bundle_sha256"], 55))
+        for suffix in ("local_path", "sha256", "records"):
+            for n in range(1, 12):
+                key = f"partition{n}_validated_bundle_{suffix}"
+                self.assertEqual(ev[key], layer85[key], key)
+            self.assertEqual(ev[f"partition12_validated_bundle_{suffix}"], layer85[f"cumulative_validated_bundle_{suffix}"])
+        partition_records = [ev[f"partition{n}_validated_bundle_records"] for n in range(1, 13)]
+        self.assertEqual((partition_records[-1], sum(partition_records)), (130, 3164))
+        self.assertEqual((ev["prior_partitions_validated_records"], ev["cumulative_all_partitions_records"]), (3164, 3219))
+        self.assertEqual((ev["non_proc_slots"], ev["resource_constrained_slots"]), ([], []))
+        self.assertEqual(ev["closure_audit"]["recovered_functions"], 2210)
+        self.assertEqual(ev["closure_audit"]["open_direct_call_edges"], 0)
+        self.assertEqual([(e["source"], e["target"]) for e in ev["closure_audit"]["direct_jump_edges_leaving_recovered_bodies"]], [("11695ee2", "11695e3c")])
+
+        base, sections = contracts.parse_pe32(self.image)
+        fns = {f["address"]: f for f in self.registry["functions"]}
+        globs = {g["address"]: g for g in self.registry["globals"]}
+        value = lambda address: bytes.fromhex(globs[address]["initial_hex_le"])
+        read = lambda va, size: contracts.image_bytes(self.image, base, sections, va, size)[0]
+        code = lambda address: read(int(address, 16), fns[address]["bytes"])
+        u32 = lambda va: struct.unpack("<I", read(va, 4))[0]
+        le32 = lambda number: struct.pack("<I", number)
+        layer = self.registry["functions"][2159:2210]
+        addresses = [f["address"] for f in layer]
+        self.assertEqual((addresses[0], addresses[-1], addresses), ("10f10380", "116c7fcf", sorted(addresses)))
+        self.assertEqual(sum(f["bytes"] for f in layer), 11605)
+
+        # ABI: every body is cdecl without a receiver; the variadic ones list their fixed arguments only
+        self.assertEqual({(f["calling_convention"], f["receiver_register"], f["callee_pop_bytes"]) for f in layer},
+                         {("cdecl", "none", 0)})
+        stack = {"10f10380": 4, "10f10580": 8, "10f107c0": 16, "10f10b90": 4, "10f10cd0": 24, "10f11a80": 16,
+                 "10f11be0": 4, "10f120c0": 4, "10f122e0": 16, "10f127d0": 4, "10f12bf0": 4, "10f131e0": 0,
+                 "10f15a00": 4, "10f15cd0": 8, "10f16080": 4, "10f176a0": 8, "10f17aa0": 8, "10f17fd0": 4,
+                 "10f1cad0": 8, "10f1d330": 8, "10f1d3f0": 20, "10f1d9a0": 8, "10f1ed80": 0, "10f20900": 12,
+                 "10f20af0": 8, "10f20dd0": 12, "10f21130": 12, "10f21150": 4, "10f214e0": 4, "10f223b0": 4,
+                 "10f22aa0": 0, "10f249a0": 4, "10f2d2b0": 8, "10f3f060": 12, "10f3f140": 0, "10f3f2d0": 4,
+                 "10f3f340": 20, "10f404a0": 12, "10f40780": 4, "11683da0": 0, "1168ebe6": 16, "1168ee1c": 12,
+                 "1168eed4": 0, "1168eede": 12, "1169de5f": 12, "1169ece3": 4, "1169ed1f": 4, "116c7f0f": 4,
+                 "116c7f81": 4, "116c7fc9": 4, "116c7fcf": 4}
+        self.assertEqual({f["address"]: f["stack_argument_bytes"] for f in layer}, stack)
+        for address in ("10f10580", "10f1cad0", "10f1d330", "10f20af0", "10f3f060"):
+            self.assertIn(", ...)", fns[address]["ordinary_return"], address)
+        # curl_easy_getinfo forwards its three stack dwords: PUSH [ESP+0xc] three times, CALL Curl_getinfo
+        forward = code("10f10580")
+        self.assertEqual((forward[:13].hex(), forward[17:].hex()), ("ff74240c" * 3 + "e8", "83c40c" "c3"))
+        self.assertEqual(0x10F10580 + 17 + struct.unpack_from("<i", forward, 13)[0], 0x10F1CAD0)
+
+        # exits: four direct tail jumps, four IAT thunks and two bodies that end in a backward JMP
+        self.assertEqual(fns["10f15cd0"]["tail_exit"], {"kind": "direct_jmp", "address": "10f15cd0", "target": "10f2d2b0"})
+        self.assertEqual(fns["10f16080"]["tail_exit"], {"kind": "direct_jmp", "address": "10f16080", "target": "100dbc00"})
+        self.assertEqual((code("100dbc00"), code("100d6560")), (b"\x33\xc0\xc3", b"\xc3"))
+        self.assertEqual(fns["1168eede"]["tail_exit"], {"kind": "direct_jmp", "address": "1168eee4", "target": "1168ee1c"})
+        self.assertEqual(fns["1169ed1f"]["tail_exit"], {"kind": "direct_jmp", "address": "1169ed25", "target": "1169ece3"})
+        for stub in ("1168eede", "1169ed1f"):
+            self.assertEqual(code(stub)[:6].hex(), "8bff558bec5d", stub)
+        self.assertEqual(len([f for f in layer if "tail_exit" in f]), 8)
+        self.assertEqual((code("1168ee1c")[-2:].hex(), fns["1168ee1c"]["return_instruction_addresses"]), ("ebad", ["1168eec0"]))
+        self.assertEqual((code("10f3f340")[-2:].hex(), len(fns["10f3f340"]["return_instruction_addresses"])), ("ebc6", 5))
+        self.assertEqual([len(fns[a]["return_instruction_addresses"]) for a in ("10f10cd0", "10f1cad0", "10f20af0")], [6, 44, 11])
+
+        root = Path(__file__).resolve().parents[1] / "port" / "recovered_types"
+        source = (root / "curl_dup_getinfo_form_share_ops.c").read_text(encoding="utf-8")
+        header = (root / "curl_dup_getinfo_form_share_ops.h").read_text(encoding="utf-8")
+        for address in addresses:
+            self.assertIn(f"0x{address}", source, address)
+
+        # the model's thunk table restates the pinned thunk, slot and ordinal
+        thunks = [("116c7f0f", "1172f604", 8), ("116c7f81", "1172f57c", 48), ("116c7fc9", "1172f5ac", 96),
+                  ("116c7fcf", "1172f5b0", 86)]
+        for thunk, slot, ordinal in thunks:
+            self.assertIn(f"{{0x{thunk}u, 0x{slot}u, {ordinal}u, 1u}}", source)
+            self.assertEqual(fns[thunk]["tail_exit"], {"kind": "iat_jmp", "address": thunk, "iat_slot": slot})
+            self.assertIn(f"SSLEAY32.dll!#{ordinal} ", fns[thunk]["ordinary_return"])
+            self.assertEqual(struct.unpack("<I", value(slot))[0], 0x80000000 | ordinal)
+            self.assertEqual(code(thunk), b"\xff\x25" + le32(int(slot, 16)))
+        # Curl_ossl_close passes the handle to #96, #86 and #48 and then the context to #8
+        close = code("10f2d2b0")
+        called = [f"{0x10F2D2B0 + i + 5 + struct.unpack_from('<i', close, i + 1)[0]:08x}" for i in range(len(close) - 4)
+                  if close[i] == 0xE8]
+        self.assertEqual([target for target in called if target in fns], ["116c7fc9", "116c7fcf", "116c7f81", "116c7f0f"])
+        self.assertEqual(close[:18].hex(), "8b442408" "83c00e" "56" "8d0c40" "8b442408" "8d34c8")  # conn + (index + 0xe) * 0x18
+
+        # Curl_getinfo: each arm the model tabulates loads the same SessionHandle offset in the image
+        def model(name, width):
+            rows = re.search(rf"l86_getinfo_{name}\[\]\[{width}\] = \{{(.*?)\}};", source, re.S).group(1)
+            return [(int(info, 16), int(offset, 16)) for info, offset in re.findall(r"\{(0x[0-9a-f]+)u, (0x[0-9a-f]+)u", rows)]
+
+        def arms(index_va, table_va, first, width, default):
+            index = read(index_va, width)
+            self.assertEqual(sorted(set(index)), list(range(default + 1)))
+            self.assertEqual(u32(table_va + default * 4), 0x10F1CCB5)
+            return {first + i: u32(table_va + arm * 4) for i, arm in enumerate(index) if arm != default}
+
+        longs, strings, doubles, wide = model("long", 2), model("string", 2), model("double", 2), model("off_t", 3)
+        self.assertEqual((len(longs), len(strings), len(doubles), len(wide)), (17, 5, 7, 6))
+        long_arms = arms(0x10F1CEA4, 0x10F1CE58, 0x200002, 41, 18)
+        string_arms = arms(0x10F1CEF4, 0x10F1CED0, 0x100001, 41, 8)
+        double_arms = arms(0x10F1CF58, 0x10F1CF20, 0x300003, 31, 13)
+        self.assertEqual(sorted(long_arms), sorted([info for info, _ in longs] + [0x20001D]))
+        self.assertEqual(sorted(string_arms), sorted([info for info, _ in strings] + [0x100001, 0x100020, 0x100029]))
+        self.assertEqual(sorted(double_arms), sorted(info for info, _ in doubles + wide))
+        for info, offset in longs:  # MOV EAX, [ECX+offset]; MOV [ESI], EAX
+            self.assertEqual(read(long_arms[info], 8), b"\x8b\x81" + le32(offset) + b"\x89\x06", hex(info))
+        for info, offset in strings:  # MOV ECX, [ECX+offset]
+            self.assertEqual(read(string_arms[info], 6), b"\x8b\x89" + le32(offset), hex(info))
+        for info, offset in doubles:  # MOVSD XMM0, [ECX+offset]
+            self.assertEqual(read(double_arms[info], 8), b"\xf2\x0f\x10\x81" + le32(offset), hex(info))
+        for info, offset in wide[:4]:  # MOV EDX, [ECX+offset+4]; MOV ECX, [ECX+offset]; CALL _ltod3
+            arm = double_arms[info]
+            self.assertEqual(read(arm, 13), b"\x8b\x91" + le32(offset + 4) + b"\x8b\x89" + le32(offset) + b"\xe8", hex(info))
+            self.assertEqual(arm + 17 + struct.unpack("<i", read(arm + 13, 4))[0], 0x11683DA0)
+        for (info, offset), flag in zip(wide[4:], (0x40, 0x20)):  # TEST BYTE [ECX+0x4a8], flag; JZ to the -1.0 load
+            arm = double_arms[info]
+            self.assertEqual(read(arm, 8), b"\xf6\x81\xa8\x04\x00\x00" + bytes([flag]) + b"\x74", hex(info))
+            self.assertEqual(arm + 9 + struct.unpack("<b", read(arm + 8, 1))[0], 0x10F1CDC7)
+            self.assertEqual(read(arm + 9, 6), b"\x8b\x91" + le32(offset + 4))
+        self.assertIn("{0x30000fu, 0x0478u, ROME2_L86_PGRS_DL_SIZE_KNOWN}", source)
+        self.assertIn("{0x300010u, 0x0480u, ROME2_L86_PGRS_UL_SIZE_KNOWN}", source)
+        self.assertIn("ROME2_L86_PGRS_UL_SIZE_KNOWN = 0x20,", header)
+        self.assertIn("ROME2_L86_PGRS_DL_SIZE_KNOWN = 0x40", header)
+        # the two IP ids return the address of a buffer inside the handle: ADD ECX, offset
+        self.assertEqual((read(string_arms[0x100020], 6), read(string_arms[0x100029], 6)),
+                         (b"\x81\xc1" + le32(0x8714), b"\x81\xc1" + le32(0x8748)))
+        self.assertIn("ROME2_L86_EASY_INFO_PRIMARY_IP_OFF = 0x8714,", header)
+        self.assertIn("ROME2_L86_EASY_INFO_LOCAL_IP_OFF = 0x8748,", header)
+        self.assertEqual(struct.unpack("<d", value("1183fa08"))[0], -1.0)
+        self.assertEqual(struct.unpack("<2d", value("1190bb38")), (0.0, 4294967296.0))
+
+        # share option tables: lock type 5 (CONNECT) returns CURLSHE_OK with nothing to create or release
+        self.assertEqual(struct.unpack("<5I", value("10f20c50")), (0x10F20B18, 0x10F20BBC, 0x10F20C1F, 0x10F20C2B, 0x10F20C37))
+        share, unshare = struct.unpack("<4I", value("10f20c64")), struct.unpack("<4I", value("10f20c74"))
+        self.assertEqual((share, unshare), ((0x10F20B59, 0x10F20B36, 0x10F20B87, 0x10F20C48),
+                                            (0x10F20BEE, 0x10F20BD6, 0x10F20C06, 0x10F20C48)))
+        self.assertEqual(read(0x10F20C43, 10).hex(), "bf01000000" "8bc7" "5f" "5e" "c3")  # EDI = 1 falls into the shared return
+        # cookie Netscape fields 0..6, and the 26 MOV BL, 'A' + n arms of Curl_raw_nequal
+        self.assertEqual(struct.unpack("<7I", value("10f1164c")), (0x10F112CE, 0x10F112F1, 0x10F1130D, 0x10F113A1,
+                                                                 0x10F113BA, 0x10F113CF, 0x10F113E5))
+        upper = struct.unpack("<26I", value("10f20ecc"))
+        self.assertEqual([read(target, 2) for target in upper], [bytes([0xB3, 0x41 + n]) for n in range(26)])
+        # common_fgets scope table: one record whose handler is the __finally entry between the two bodies
+        self.assertEqual(struct.unpack("<7i", value("11925508")), (-2, 0, -56, 0, -2, 0, 0x1168EED1))
+        self.assertEqual(int("1168ee1c", 16) + fns["1168ee1c"]["bytes"], 0x1168EED1)
+        self.assertEqual(0x1168EED1 + 3, int("1168eed4", 16))
+
+        # strings the bodies format with
+        self.assertEqual(value("1183eaa8"), b"%1023[^;\r\n =]=%4999[^;\r\n]\0")
+        self.assertEqual(value("1183ebbc"), b"%s%s%s\t%s\t%s\t%s\t%lld\t%s\t%s\0")
+        self.assertEqual(value("1183eb74"), b"%s cookie %s=\"%s\" for domain %s, path %s, expire %lld\n\0")
+        self.assertEqual((value("1183eb54"), value("1183ebb0"), value("1183ebac")), (b"#HttpOnly_\0", b"Set-Cookie:\0", b"-\0"))
+        self.assertEqual((value("1183eb60"), value("1183eb6c")), (b"Replaced\0", b"Added\0"))
+        self.assertEqual(value("11846700"), b"\r\n--%s\r\nContent-Disposition: attachment; filename=\"%s\"\0")
+        self.assertEqual((value("11846788"), value("11846794")), (b"\r\n--%s--\0", b"\r\n--%s--\r\n\0"))
+        self.assertEqual((value("118467a0"), value("118465f8")), (b"-" * 28 + b"\0", b"0123456789abcdef\0"))
+        self.assertIn('ROME2_L86_FORM_BOUNDARY_DASHES "' + "-" * 28 + '"', header)
+        self.assertIn('ROME2_L86_FORM_BOUNDARY_DIGITS "0123456789abcdef"', header)
+        new_globals = self.registry["globals"][1192:1250]
+        kinds = [g["kind"] for g in new_globals]
+        self.assertEqual((sum("IAT slot" in kind for kind in kinds), sum(" in .text " in kind for kind in kinds),
+                          sum(".rdata string" in kind or "format \"" in kind for kind in kinds)), (4, 11, 41))
+        self.assertEqual({g["storage"] for g in new_globals}, {"file"})
+
+        witnesses = {w["address"]: w["hex"] for w in self.registry["instruction_witnesses"]}
+        self.assertEqual(len(self.registry["instruction_witnesses"][1707:]), 40)
+        self.assertEqual((witnesses["10f10382"], witnesses["10f104c3"]), ("6888870000", "c78684870000addbdec0"))
+        self.assertEqual((witnesses["10f10ce7"], witnesses["10f10d20"], witnesses["10f11a97"]), ("6a40", "6888130000", "6a14"))
+        self.assertEqual((witnesses["10f12313"], witnesses["10f12360"], witnesses["10f131ef"]), ("6a18", "688027f110", "6a07"))
+        self.assertEqual((witnesses["10f112c7"], witnesses["10f1cb3a"], witnesses["10f1cc44"], witnesses["10f1ccda"]),
+                         ("ff249d4c16f110", "ff248558cef110", "ff2485d0cef110", "ff248520cff110"))
+        self.assertEqual((witnesses["10f20b11"], witnesses["10f20b2f"], witnesses["10f20bcf"], witnesses["10f20e0e"]),
+                         ("ff2485500cf210", "ff248d640cf210", "ff248d740cf210", "ff2485cc0ef210"))
+        self.assertEqual((witnesses["10f20b1e"], witnesses["10f20b90"]), ("0fabc8", "6a54"))
+        self.assertEqual((witnesses["10f22aa1"], witnesses["10f22abb"], witnesses["10f22adc"], witnesses["10f22b03"]),
+                         ("6880000000", "c7061eab0b00", "688f030000", "6860650d10"))
+        self.assertEqual((witnesses["10f1d367"], witnesses["10f1d488"], witnesses["10f17abf"]), ("6801080000", "b900400000", "b8ffffff1f"))
+        self.assertEqual((witnesses["10f3f141"], witnesses["10f3f8fa"], witnesses["10f3fa58"], witnesses["10f4055d"]),
+                         ("6a29", "6800020000", "bf1a000000", "6800200000"))
+        self.assertEqual((witnesses["11683db9"], witnesses["1168ebf4"], witnesses["1168eed1"]), ("f20f5804cd38bb9011", "6aff", "8b5de0"))
+        # Curl_rand: seed * 1103515245 + 12345, rotated by 16 bits
+        self.assertEqual((witnesses["10f1ed80"], witnesses["10f1ed8a"], witnesses["10f1ed94"]),
+                         ("6905" + le32(0x11FB5970).hex() + le32(1103515245).hex(), "05" + le32(12345).hex(), "c1c010"))
+        self.assertIn("ROME2_L86_RAND_MUL 0x41c64e6du", header)
+        self.assertIn("ROME2_L86_RAND_ADD 0x00003039u", header)
+        # Curl_dupset: 0xca dwords copied, 0x98 string-table bytes cleared, 38 strings duplicated
+        dupset = code("10f176a0")
+        self.assertEqual((dupset[5:10].hex(), dupset[31:36].hex(), dupset[0x71:0x74].hex()), ("b9ca000000", "6898000000", "83ff26"))
+        self.assertIn("ROME2_L86_EASY_SET_DWORDS = 0xca,", header)
+        self.assertIn("ROME2_L86_EASY_SET_STR_BYTES = 0x98,", header)
+        self.assertEqual(0x98, 0x26 * 4)
+        # conn_free inlined in Curl_rm_connc clears the model's 18 slots in order, then the pipes and localdev
+        rm_connc, cleared, at = code("10f17fd0"), [], 0
+        while at < len(rm_connc) - 10:
+            if rm_connc[at:at + 2] == b"\xc7\x86" and rm_connc[at + 6:at + 10] == bytes(4):
+                cleared.append(struct.unpack_from("<I", rm_connc, at + 2)[0]); at += 10
+            elif rm_connc[at:at + 2] == b"\xc7\x46" and rm_connc[at + 3:at + 7] == bytes(4):
+                cleared.append(rm_connc[at + 2]); at += 7
+            else:
+                at += 1
+        rows = re.search(r"l86_conn_free_offsets\[\] = \{(.*?)\};", source, re.S).group(1)
+        offsets = [int(text, 16) for text in re.findall(r"0x[0-9a-f]+", rows)]
+        self.assertEqual((len(offsets), cleared), (18, offsets + [0x280, 0x284, 0x288, 0x28C, 0x498]))
+
+        layouts = (root / "guest32_layouts.h").read_text(encoding="utf-8")
+        for text in ('_Static_assert(sizeof(rome2_curl_cookie_32) == 0x40, "curl cookie 32 size");',
+                     '_Static_assert(sizeof(rome2_curl_cookie_info_32) == 0x14, "curl cookie info 32 size");',
+                     '_Static_assert(sizeof(rome2_curl_multi_prefix_32) == 0x80, "curl multi prefix 32 size");',
+                     '_Static_assert(sizeof(rome2_curl_conncache_32) == 0x0c, "curl conncache 32 size");',
+                     '_Static_assert(sizeof(rome2_curl_formdata_32) == 0x10, "curl formdata 32 size");',
+                     '_Static_assert(sizeof(rome2_curl_thread_sync_data_32) == 0x38, "curl thread sync data 32 size");',
+                     '_Static_assert(sizeof(rome2_curl_ssl_connect_data_32) == 0x18, "curl ssl connect data 32 size");',
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_cookie_32, expires_lo, 0x18);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_cookie_32, expirestr_va, 0x20);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_cookie_32, httponly, 0x38);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_cookie_info_32, newsession, 0x10);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_multi_prefix_32, hostcache_va, 0x54);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_multi_prefix_32, connc_va, 0x64);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_thread_data_prefix_32, tsd, 0x0c);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_ssl_connect_data_32, handle_va, 0x0c);",
+                     "ROME2_LAYOUT_ASSERT(rome2_crt_stream_prefix_32, cnt, 0x08);"):
+            self.assertIn(text, layouts)
+        self.assertEqual((read(0x10F17ABA, 2).hex(), read(0x10F12C2E, 2).hex()), ("6a0c", "6a38"))
+        for stale in ("spath_va", "access_flag"):
+            self.assertNotIn(stale, layouts)
+
+        # Layer 82 revision 1: the formatter prints a NULL %s argument as "(nil)", or nothing under a precision below 5
+        self.assertEqual(self.registry["rea_layer82_evidence"]["model_revision"]["revision"], 1)
+        self.assertEqual(read(0x10F201D3, 5).hex(), "83faff" "7416")
+        self.assertEqual((witnesses["10f201d8"], witnesses["10f201f2"]), ("83fa05", "b9" + le32(0x11840300).hex()))
+        self.assertEqual(value("11840300"), b"(nil)\0")
+        formatter = (root / "curl_util_printf_slist_share_ops.c").read_text(encoding="utf-8")
+        self.assertIn('prec >= 5) ? "(nil)" : "";', formatter)
+        self.assertNotIn('"(null)"', formatter)
+        # curl_cookie_cleanup (0x10f11670) frees +0x20, +0x10, +0xc, +4, +8, +0x2c and +0x28 of each cookie
+        cleanup = code("10f11670")
+        loads = [cleanup[i + 2] for i in range(0x30, len(cleanup) - 3) if cleanup[i:i + 2] == b"\x8b\x46"]
+        self.assertEqual(loads, [0x20, 0x10, 0x0C, 0x04, 0x08, 0x2C, 0x28])
+
+        # DLL exports: six of the bodies carry one curl_ name each; ten curl_ names remain
+        through_layer86 = {f["address"] for f in self.registry["functions"][:2210]}
+        rva_offset = lambda rva: next(raw + rva - start for start, _, raw, size in sections if start <= rva < start + size)
+        pe = struct.unpack_from("<I", self.image, 0x3C)[0]
+        directory = rva_offset(struct.unpack_from("<I", self.image, pe + 24 + 96)[0])
+        name_count, functions_rva, names_rva, ordinals_rva = struct.unpack_from("<4I", self.image, directory + 0x18)
+        exports = {}
+        for index in range(name_count):
+            name_at = rva_offset(struct.unpack_from("<I", self.image, rva_offset(names_rva) + index * 4)[0])
+            ordinal = struct.unpack_from("<H", self.image, rva_offset(ordinals_rva) + index * 2)[0]
+            target = base + struct.unpack_from("<I", self.image, rva_offset(functions_rva) + ordinal * 4)[0]
+            name = self.image[name_at:self.image.index(b"\0", name_at)].decode()
+            exports.setdefault(f"{target:08x}", []).append(name)
+        self.assertEqual({address: exports[address] for address in addresses if address in exports},
+                         {"10f10380": ["curl_easy_duphandle"], "10f10580": ["curl_easy_getinfo"],
+                          "10f107c0": ["curl_easy_recv"], "10f20af0": ["curl_share_setopt"],
+                          "10f22aa0": ["curl_multi_init"], "10f404a0": ["curl_formget"]})
+        self.assertEqual(sorted(n for a, names in exports.items() if a not in through_layer86 for n in names if n.startswith("curl_")),
+                         ["curl_easy_cleanup", "curl_easy_perform", "curl_easy_setopt", "curl_multi_add_handle",
+                          "curl_multi_cleanup", "curl_multi_perform", "curl_multi_remove_handle", "curl_multi_socket",
+                          "curl_multi_socket_action", "curl_multi_socket_all"])
+
+    def test_layer86_revision1_session_record_and_conncache_fidelity(self):
+        self.assertEqual(self.registry["rea_layer86_evidence"]["model_revision"]["revision"], 1)
+        base, sections = contracts.parse_pe32(self.image)
+        fns = {f["address"]: f for f in self.registry["functions"]}
+        read = lambda va, size: contracts.image_bytes(self.image, base, sections, va, size)[0]
+        code = lambda address: read(int(address, 16), fns[address]["bytes"])
+        loads = lambda body: [body[i + 2] for i in range(len(body) - 2) if body[i:i + 2] == b"\x8b\x46"]
+        clears = lambda body: [body[i + 2] for i in range(len(body) - 6)
+                               if body[i:i + 2] == b"\xc7\x46" and body[i + 3:i + 7] == bytes(4)]
+
+        # Curl_free_ssl_config: MOV EAX, [ESI+n] and MOV dword ptr [ESI+n], 0 for CAfile, CApath, cipher_list,
+        # egdsocket and random_file, in that order
+        config = code("10f15a00")
+        self.assertEqual((loads(config), clears(config)), ([0x14, 0x10, 0x28, 0x24, 0x20], [0x14, 0x10, 0x28, 0x24, 0x20]))
+        # Curl_ssl_kill_session: the handle gate at +4, the age at +0xc, then the same five strings 0x14 further on
+        kill = code("10f16310")
+        self.assertEqual(kill[:16].hex(), "56" "8b742408" "8b4604" "85c0" "0f84a5000000")
+        self.assertEqual(loads(kill), [0x04] + [0x14 + offset for offset in loads(config)])
+        self.assertEqual(clears(kill), [0x04, 0x0C] + [0x14 + offset for offset in loads(config)])
+        self.assertEqual(loads(kill)[1:], [0x28, 0x24, 0x3C, 0x38, 0x34])
+        self.assertEqual(read(0x10F16330, 7).hex(), "c7460c00000000")
+        self.assertEqual(kill[-24:].hex(), "8b06" "85c0" "7410" "50" "ff15d0509711" "83c404" "c70600000000" "5e" "c3")
+        called = 0x10F16321 + 5 + struct.unpack_from("<i", kill, 0x12)[0]
+        self.assertEqual((kill[0x11], called, fns["10f2d4f0"]["tail_exit"]["target"]), (0xE8, 0x10F2D4F0, "116c7f4b"))
+        self.assertIn("clears it and the age (+0xc), then frees and clears CAfile (+0x28), CApath (+0x24), "
+                      "cipher_list (+0x3c), egdsocket (+0x38), random_file (+0x34) and the name (+0)",
+                      fns["10f16310"]["scope"])
+
+        # curl_easy_duphandle failure path: MOV EAX, [ESI+0x57c]; TEST EAX, EAX; JZ; CMP dword ptr [EAX+8], 0; JNZ;
+        # PUSH EAX; CALL Curl_rm_connc
+        fail = read(0x10F104D2, 0x16)
+        self.assertEqual(fail[:17].hex(), "8b867c050000" "85c0" "7419" "83780800" "7513" "50")
+        self.assertEqual((fail[17], 0x10F104E3 + 5 + struct.unpack_from("<i", fail, 18)[0]), (0xE8, 0x10F17FD0))
+        # Curl_mk_connc writes the table at +0 and the count at +4 of its calloc'd record and nothing at +8
+        mk_connc = code("10f17aa0")
+        self.assertEqual((mk_connc[0x46:0x48].hex(), mk_connc[-8:].hex()), ("8907", "897704" "8bc7" "5f" "5e" "c3"))
+        self.assertEqual([mk_connc[i:i + 3].hex() for i in range(len(mk_connc) - 2)
+                          if mk_connc[i] in (0x89, 0xC7) and mk_connc[i + 1] in (0x47, 0x77)], ["897704"])
+
+        # Curl_ossl_close reads and clears +0xc and +8 of the 0x18-byte record and nothing else of it
+        close = code("10f2d2b0")
+        self.assertEqual((loads(close), clears(close)), ([0x0C, 0x08], [0x0C, 0x08]))
+        self.assertEqual([close[i + 2] for i in range(len(close) - 2) if close[i:i + 2] == b"\xff\x76"], [0x0C, 0x0C])
+
+        # Curl_getformdata stores the size with no test of the pointer: MOV ECX, [ESP+0x27c]; MOV EAX, [ESP+0x14];
+        # MOV [ECX], EAX; MOV EAX, [ESP+0x18]; MOV [ECX+4], EAX, straight after the JNZ of the last AddFormDataf
+        self.assertEqual(read(0x10F3FA91, 8).hex(), "85ff" "0f8588000000")
+        self.assertEqual(read(0x10F3FA99, 20).hex(), "8b8c247c020000" "8b442414" "8901" "8b442418" "894104")
+
+        root = Path(__file__).resolve().parents[1] / "port" / "recovered_types"
+        layouts = (root / "guest32_layouts.h").read_text(encoding="utf-8")
+        for text in ("ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, age, 0x0c);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, capath_va, 0x24);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, cafile_va, 0x28);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, random_file_va, 0x34);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, egdsocket_va, 0x38);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, cipher_list_va, 0x3c);",
+                     "ROME2_LAYOUT_ASSERT(rome2_curl_conncache_32, type, 0x08);",
+                     "    uint32_t reserved00[2];\n    uint32_t ctx_va;\n    uint32_t handle_va;"):
+            self.assertIn(text, layouts)
+        # the session record and the ssl_config record agree on the three strings behind the two certificates
+        for name, offset in (("random_file_va", 0x20), ("egdsocket_va", 0x24), ("cipher_list_va", 0x28)):
+            self.assertIn(f"ROME2_LAYOUT_ASSERT(rome2_curl_ssl_config_prefix_32, {name}, 0x{offset:02x});", layouts)
+            self.assertIn(f"ROME2_LAYOUT_ASSERT(rome2_curl_ssl_sessionid_32, {name}, 0x{offset + 0x14:02x});", layouts)
+        self.assertNotIn("uint32_t use;", layouts)
+        source = (root / "curl_dup_getinfo_form_share_ops.c").read_text(encoding="utf-8")
+        self.assertIn("offsetof(rome2_curl_conncache_32, type)) == 0u", source)
+        self.assertIn("without a NULL test (0x10f3faa4, 0x10f3faaa)", source)
+        layer82 = (root / "curl_util_printf_slist_share_ops.c").read_text(encoding="utf-8")
+        body = layer82[layer82.index("void rome2_l82_curl_ssl_kill_session("):layer82.index("/* 0x10f20ad0 */")]
+        self.assertEqual(re.findall(r"s->(\w+) = 0u;", body),
+                         ["sessionid_va", "age", "cafile_va", "capath_va", "cipher_list_va", "egdsocket_va",
+                          "random_file_va", "name_va"])
+        tests = (root / "test_curl_util_printf_slist_share_ops.c").read_text(encoding="utf-8")
+        self.assertIn("cleared[] = {0x00u, 0x04u, 0x0cu, 0x24u, 0x28u, 0x34u, 0x38u, 0x3cu};", tests)
+        self.assertIn("    test_l82_ssl_kill_session_offsets();", tests)
 
     def test_tail_exit_indirect_jmp_mutations_rejected(self):
         for mutator, pattern in (

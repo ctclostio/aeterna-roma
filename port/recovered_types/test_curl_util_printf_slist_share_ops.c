@@ -9,6 +9,7 @@ static int s_l82_lock_calls = 0;
 static int s_l82_unlock_calls = 0;
 static int s_l82_llist_dtor_calls = 0;
 static int s_l82_ssl_free_calls = 0;
+static uint32_t s_l82_ssl_free_arg = 0u;
 
 static void test_on_lock(
     rome2_l82_curl_ctx *ctx,
@@ -49,7 +50,7 @@ static void test_on_llist_dtor(
 
 static void test_on_ssl_free(rome2_l82_curl_ctx *ctx, uint32_t ssl_session_va) {
     (void)ctx;
-    (void)ssl_session_va;
+    s_l82_ssl_free_arg = ssl_session_va;
     s_l82_ssl_free_calls++;
 }
 
@@ -67,6 +68,7 @@ static void setup_ctx(rome2_l82_curl_ctx *ctx) {
     s_l82_unlock_calls = 0;
     s_l82_llist_dtor_calls = 0;
     s_l82_ssl_free_calls = 0;
+    s_l82_ssl_free_arg = 0u;
 
     rome2_l82_ctx_init(ctx, s_l82_arena, 0x40000000u, (uint32_t)sizeof(s_l82_arena), 0x40001000u);
     ctx->on_share_lock = test_on_lock;
@@ -194,9 +196,74 @@ static void test_l82_mprintf_and_positional_args(void) {
     assert(n == 8 && strcmp(buf, "[   Cen]") == 0);
 }
 
+static uint32_t session_dword(rome2_l82_curl_ctx *ctx, uint32_t record_va, uint32_t offset) {
+    uint32_t value = 0u;
+    const void *p = rome2_l82_const_ptr(ctx, record_va + offset, 4u);
+    assert(p != NULL);
+    memcpy(&value, p, sizeof(value));
+    return value;
+}
+
+static void set_session_dword(rome2_l82_curl_ctx *ctx, uint32_t record_va, uint32_t offset, uint32_t value) {
+    void *p = rome2_l82_mut_ptr(ctx, record_va + offset, 4u);
+    assert(p != NULL);
+    memcpy(p, &value, sizeof(value));
+}
+
+/*
+ * 0x10f16310 by raw offset: the handle at +4 gates the body; it, the age at
+ * +0xc, the five ssl_config strings at +0x28, +0x24, +0x3c, +0x38 and +0x34
+ * and the name at +0 are released and cleared, and nothing else is written.
+ */
+static void test_l82_ssl_kill_session_offsets(void) {
+    static const uint32_t cleared[] = {0x00u, 0x04u, 0x0cu, 0x24u, 0x28u, 0x34u, 0x38u, 0x3cu};
+    rome2_l82_curl_ctx ctx;
+    setup_ctx(&ctx);
+    assert(sizeof(rome2_curl_ssl_sessionid_32) == 0x54u);
+    uint32_t record_va = rome2_l82_calloc(&ctx, 1u, 0x54u);
+    assert(record_va != 0u);
+    for (uint32_t offset = 0u; offset < 0x54u; offset += 4u) {
+        set_session_dword(&ctx, record_va, offset, 0x40000800u + offset);
+    }
+
+    /* no handle: nothing is released or cleared */
+    set_session_dword(&ctx, record_va, 0x04u, 0u);
+    uint32_t frees = ctx.free_count;
+    rome2_l82_curl_ssl_kill_session(&ctx, record_va);
+    assert(ctx.free_count == frees && s_l82_ssl_free_calls == 0);
+    for (uint32_t offset = 0u; offset < 0x54u; offset += 4u) {
+        assert(session_dword(&ctx, record_va, offset) == (offset == 0x04u ? 0u : 0x40000800u + offset));
+    }
+
+    set_session_dword(&ctx, record_va, 0x04u, 0x40000123u);
+    rome2_l82_curl_ssl_kill_session(&ctx, record_va);
+    assert(s_l82_ssl_free_calls == 1 && s_l82_ssl_free_arg == 0x40000123u);
+    assert(ctx.free_count == frees + 6u); /* five strings and the name; the handle goes to SSL_SESSION_free */
+    for (uint32_t offset = 0u; offset < 0x54u; offset += 4u) {
+        uint32_t expected = 0x40000800u + offset;
+        for (uint32_t i = 0u; i < sizeof(cleared) / sizeof(cleared[0]); ++i) {
+            if (cleared[i] == offset) {
+                expected = 0u;
+            }
+        }
+        assert(session_dword(&ctx, record_va, offset) == expected);
+    }
+
+    /* a record with only a handle releases nothing through the allocator */
+    set_session_dword(&ctx, record_va, 0x04u, 0x40000124u);
+    set_session_dword(&ctx, record_va, 0x0cu, 9u);
+    frees = ctx.free_count;
+    rome2_l82_curl_ssl_kill_session(&ctx, record_va);
+    assert(ctx.free_count == frees && s_l82_ssl_free_calls == 2 && s_l82_ssl_free_arg == 0x40000124u);
+    assert(session_dword(&ctx, record_va, 0x04u) == 0u && session_dword(&ctx, record_va, 0x0cu) == 0u);
+    rome2_l82_curl_ssl_kill_session(&ctx, 0u);
+    assert(s_l82_ssl_free_calls == 2);
+}
+
 int main(void) {
     test_l82_slist_share_escape_and_date();
     test_l82_mprintf_and_positional_args();
+    test_l82_ssl_kill_session_offsets();
     printf("curl_util_printf_slist_share_ops tests passed\n");
     return 0;
 }

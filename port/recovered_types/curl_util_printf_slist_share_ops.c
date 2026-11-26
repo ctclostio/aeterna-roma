@@ -180,7 +180,7 @@ void rome2_l82_curl_cookie_cleanup(rome2_l82_curl_ctx *ctx, uint32_t c_va) {
             break;
         }
         uint32_t next_va = co->next_va;
-        rome2_l82_curl_free(ctx, co->spath_va);
+        rome2_l82_curl_free(ctx, co->expirestr_va);
         rome2_l82_curl_free(ctx, co->domain_va);
         rome2_l82_curl_free(ctx, co->path_va);
         rome2_l82_curl_free(ctx, co->name_va);
@@ -312,17 +312,18 @@ void rome2_l82_curl_ssl_kill_session(rome2_l82_curl_ctx *ctx, uint32_t session_e
     }
     rome2_l82_thunk_ssl_session_free(ctx, s->sessionid_va);
     s->sessionid_va = 0u;
-    s->idsize = 0u;
+    s->age = 0u;
+    /* the inlined Curl_free_ssl_config: +0x28, +0x24, +0x3c, +0x38, +0x34 */
     rome2_l82_curl_free(ctx, s->cafile_va);
     s->cafile_va = 0u;
     rome2_l82_curl_free(ctx, s->capath_va);
     s->capath_va = 0u;
-    rome2_l82_curl_free(ctx, s->random_file_va);
-    s->random_file_va = 0u;
-    rome2_l82_curl_free(ctx, s->egdsocket_va);
-    s->egdsocket_va = 0u;
     rome2_l82_curl_free(ctx, s->cipher_list_va);
     s->cipher_list_va = 0u;
+    rome2_l82_curl_free(ctx, s->egdsocket_va);
+    s->egdsocket_va = 0u;
+    rome2_l82_curl_free(ctx, s->random_file_va);
+    s->random_file_va = 0u;
     rome2_l82_curl_free(ctx, s->name_va);
     s->name_va = 0u;
 }
@@ -1242,7 +1243,10 @@ int32_t rome2_l82_dprintf_formatf(void *user, rome2_l82_emit_fn stream, const ch
         char numbuf[128];
         if (sp.conv == 's') {
             const char *s = (const char *)arg_vals[sp.num].ptr;
-            if (!s) s = "(null)";
+            if (!s) {
+                /* 0x10f201d3: "(nil)" (0x11840300), or nothing when a precision below 5 leaves no room for it */
+                s = (!sp.has_prec || prec == -1 || prec >= 5) ? "(nil)" : "";
+            }
             size_t len = strlen(s);
             if (sp.has_prec && prec >= 0 && (size_t)prec < len) {
                 len = (size_t)prec;

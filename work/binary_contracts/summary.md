@@ -1,17 +1,17 @@
 # Whole-binary static ABI & type-layout contracts - empire.retail.dll
 
-Complete PE-verified static contract pinning across all **81,280 / 81,280 (100.0%)** canonical functions, all **9,639 / 9,639 (100.0%)** inventoried vtables, all **181** MSVC RTTI `TypeDescriptor`s (**15** `.rdata` `CompleteObjectLocator`s), static member/constructor class field layouts (**95,747** entries across **6,281** vtables), and **11,245** PE-verified static global records (`port/recovered_types/contracts.json` curated C17 Layer 85 kept independent and untouched).
+Complete PE-verified static contract pinning across all **81,280 / 81,280 (100.0%)** canonical functions, all **9,639 / 9,639 (100.0%)** inventoried vtables, all **181** MSVC RTTI `TypeDescriptor`s (**15** `.rdata` `CompleteObjectLocator`s), static member/constructor class field layouts (**95,747** entries across **6,281** vtables), and **11,299** PE-verified static global records (`port/recovered_types/contracts.json` curated C17 Layer 86 kept independent and untouched).
 
 ## 1. Contract coverage
 
 | contract artifact | entries | file size | verification scope |
 |---|---:|---:|---|
 | `function_contracts_part1.tsv` + `part2.tsv` | 81,280 | 18.00 MB | PE `body_ranges` SHA-256, Capstone exit opcode, CC/stack purge, export & vtable flags |
-| `non_proc_curated_slots.tsv` | 31 | 4.5 KB | Curated Layer 1-85 vtable-slot entries absent from canonical function index |
+| `non_proc_curated_slots.tsv` | 31 | 4.5 KB | Curated Layer 1-86 vtable-slot entries absent from canonical function index |
 | `vtable_class_contracts.tsv` | 9,639 | 2.68 MB | PE `.rdata` slot-table SHA-256, hierarchy, RTTI link, observed field extent & alloc hints |
 | `class_field_layouts.tsv` | 95,747 | 6.44 MB | `+0x0` vptr (`9,639`), MI subobjects, member/ctor `this+off` widths & read/write access |
 | `rtti_contracts.tsv` | 181 (15 COLs) | 34.1 KB | PE `.data` `TypeDescriptor` SHA-256 + `.rdata` `CompleteObjectLocator` / `CHD` / bases |
-| `global_contracts.tsv` | 11,245 | 0.97 MB | Curated globals (`1,192`), IAT (`615`), data exports (`29`), RTTI, `.data` reloc ptrs |
+| `global_contracts.tsv` | 11,299 | 0.98 MB | Curated globals (`1,250`), IAT (`615`), data exports (`29`), RTTI, `.data` reloc ptrs |
 
 ## 2. Function exit & calling-convention breakdown (`81,280` functions)
 
@@ -36,11 +36,11 @@ Complete PE-verified static contract pinning across all **81,280 / 81,280 (100.0
 | `cdecl` | 592 | 0.73% |
 | `stdcall` | 47 | 0.06% |
 
-## 3. Class field layouts, RTTI & curated Layer 85 reconciliation
+## 3. Class field layouts, RTTI & curated Layer 86 reconciliation
 
 * Vtables with member/ctor fields recovered beyond `+0x0` vptr: **6,281 / 9,639** (65.16%), totaling **95,747** `(vtable, offset)` entries.
 * Vtables with direct constructor `alloc(size)` hint (`decomp_fn_100d12b0`): **278**.
-* Curated Layer 85 reconciliation (`port/recovered_types/contracts.json`): **2,159 / 2,159** functions (`2,110` exact SHA match, `18` merged tail-jump expanded in Layer 47-56 vs canonical boundaries, `31` non-proc slots), **1192 / 1192** globals, and **90 / 90** vtables matched.
+* Curated Layer 86 reconciliation (`port/recovered_types/contracts.json`): **2,210 / 2,210** functions (`2,161` exact SHA match, `18` merged tail-jump expanded in Layer 47-56 vs canonical boundaries, `31` non-proc slots), **1250 / 1250** globals, and **90 / 90** vtables matched.
 
 ## 4. Boundary & honesty note
 
