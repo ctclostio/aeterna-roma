@@ -4439,27 +4439,46 @@ typedef struct rome2_curl_hash_32 {
 } rome2_curl_hash_32;
 _Static_assert(sizeof(rome2_curl_hash_32) == 0x18, "curl hash 32 size");
 
+/* struct Cookie: calloc(1, 0x40) in Curl_cookie_add (0x10f10cd0). */
 typedef struct rome2_curl_cookie_32 {
-    uint32_t next_va;
-    uint32_t name_va;
-    uint32_t value_va;
-    uint32_t path_va;
-    uint32_t domain_va;
-    uint32_t expires;
-    uint32_t expirestr_va;
-    uint32_t tailmatch;
-    uint32_t spath_va;
-    uint32_t secure;
-    uint32_t version_va;
-    uint32_t maxage_va;
+    uint32_t next_va;      /* 0x00 */
+    uint32_t name_va;      /* 0x04 */
+    uint32_t value_va;     /* 0x08 */
+    uint32_t path_va;      /* 0x0c */
+    uint32_t domain_va;    /* 0x10 */
+    uint32_t reserved14;   /* 0x14: alignment ahead of the 64-bit expiry */
+    uint32_t expires_lo;   /* 0x18 */
+    int32_t expires_hi;    /* 0x1c */
+    uint32_t expirestr_va; /* 0x20 */
+    uint32_t tailmatch;    /* 0x24 */
+    uint32_t version_va;   /* 0x28 */
+    uint32_t maxage_va;    /* 0x2c */
+    uint32_t secure;       /* 0x30 */
+    uint32_t livecookie;   /* 0x34 */
+    uint32_t httponly;     /* 0x38 */
+    uint32_t reserved3c;   /* 0x3c */
 } rome2_curl_cookie_32;
-_Static_assert(sizeof(rome2_curl_cookie_32) == 0x30, "curl cookie 32 size");
+_Static_assert(sizeof(rome2_curl_cookie_32) == 0x40, "curl cookie 32 size");
+ROME2_LAYOUT_ASSERT(rome2_curl_cookie_32, expires_lo, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_curl_cookie_32, expirestr_va, 0x20);
+ROME2_LAYOUT_ASSERT(rome2_curl_cookie_32, tailmatch, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_curl_cookie_32, maxage_va, 0x2c);
+ROME2_LAYOUT_ASSERT(rome2_curl_cookie_32, secure, 0x30);
+ROME2_LAYOUT_ASSERT(rome2_curl_cookie_32, livecookie, 0x34);
+ROME2_LAYOUT_ASSERT(rome2_curl_cookie_32, httponly, 0x38);
 
+/* struct CookieInfo: calloc(1, 0x14) in Curl_cookie_init (0x10f11a80). */
 typedef struct rome2_curl_cookie_info_32 {
     uint32_t cookies_va;
     uint32_t filename_va;
+    uint32_t running;
+    int32_t numcookies;
+    uint32_t newsession;
 } rome2_curl_cookie_info_32;
-_Static_assert(sizeof(rome2_curl_cookie_info_32) == 0x08, "curl cookie info 32 size");
+_Static_assert(sizeof(rome2_curl_cookie_info_32) == 0x14, "curl cookie info 32 size");
+ROME2_LAYOUT_ASSERT(rome2_curl_cookie_info_32, running, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_curl_cookie_info_32, numcookies, 0x0c);
+ROME2_LAYOUT_ASSERT(rome2_curl_cookie_info_32, newsession, 0x10);
 
 typedef struct rome2_curl_ssl_sessionid_32 {
     uint32_t name_va;        /* 0x00 */
@@ -4488,7 +4507,7 @@ typedef struct rome2_curl_share_32 {
     uint32_t cookies_va;
     uint32_t sslsession_va;
     uint32_t max_ssl_sessions;
-    int32_t access_flag;
+    int32_t sessionage;
 } rome2_curl_share_32;
 _Static_assert(sizeof(rome2_curl_share_32) == 0x28, "curl share 32 size");
 
@@ -4577,7 +4596,7 @@ ROME2_LAYOUT_ASSERT(rome2_curl_sh_entry_prefix_32, socketp_va, 0x18);
 /* multi_getsock (0x10f232c0) reads the easy handle, connection and state. */
 typedef struct rome2_curl_one_easy_prefix_32 {
     uint32_t next_va;
-    uint32_t reserved04;
+    uint32_t prev_va;
     uint32_t easy_handle_va;
     uint32_t easy_conn_va;
     int32_t state;
@@ -4586,7 +4605,10 @@ _Static_assert(sizeof(rome2_curl_one_easy_prefix_32) == 0x14, "curl one easy pre
 ROME2_LAYOUT_ASSERT(rome2_curl_one_easy_prefix_32, easy_handle_va, 0x08);
 ROME2_LAYOUT_ASSERT(rome2_curl_one_easy_prefix_32, state, 0x10);
 
-/* Curl_multi fields reached by setopt, assign, fdset, info_read and timeout. */
+/*
+ * Curl_multi (calloc(1, 0x80) in curl_multi_init 0x10f22aa0): the fields
+ * reached by init, setopt, assign, fdset, info_read and timeout.
+ */
 typedef struct rome2_curl_multi_prefix_32 {
     uint32_t magic; /* 0x000bab1e */
     rome2_curl_one_easy_prefix_32 easy; /* list sentinel: easy.next_va == &easy when empty */
@@ -4594,24 +4616,27 @@ typedef struct rome2_curl_multi_prefix_32 {
     uint32_t msglist_va;
     uint32_t socket_cb_va;
     uint32_t socket_userp_va;
-    uint32_t reserved54;
+    uint32_t hostcache_va;
     uint32_t timetree_va;
     uint32_t sockhash_va;
     uint32_t pipelining;
-    uint32_t reserved64;
+    uint32_t connc_va;
     uint32_t maxconnects;
     uint32_t reserved6c;
     uint32_t timer_cb_va;
     uint32_t timer_userp_va;
+    uint32_t reserved78[2];
 } rome2_curl_multi_prefix_32;
-_Static_assert(sizeof(rome2_curl_multi_prefix_32) == 0x78, "curl multi prefix 32 size");
+_Static_assert(sizeof(rome2_curl_multi_prefix_32) == 0x80, "curl multi prefix 32 size");
 ROME2_LAYOUT_ASSERT(rome2_curl_multi_prefix_32, easy, 0x04);
 ROME2_LAYOUT_ASSERT(rome2_curl_multi_prefix_32, msglist_va, 0x48);
 ROME2_LAYOUT_ASSERT(rome2_curl_multi_prefix_32, socket_cb_va, 0x4c);
 ROME2_LAYOUT_ASSERT(rome2_curl_multi_prefix_32, socket_userp_va, 0x50);
+ROME2_LAYOUT_ASSERT(rome2_curl_multi_prefix_32, hostcache_va, 0x54);
 ROME2_LAYOUT_ASSERT(rome2_curl_multi_prefix_32, timetree_va, 0x58);
 ROME2_LAYOUT_ASSERT(rome2_curl_multi_prefix_32, sockhash_va, 0x5c);
 ROME2_LAYOUT_ASSERT(rome2_curl_multi_prefix_32, pipelining, 0x60);
+ROME2_LAYOUT_ASSERT(rome2_curl_multi_prefix_32, connc_va, 0x64);
 ROME2_LAYOUT_ASSERT(rome2_curl_multi_prefix_32, maxconnects, 0x68);
 ROME2_LAYOUT_ASSERT(rome2_curl_multi_prefix_32, timer_cb_va, 0x70);
 ROME2_LAYOUT_ASSERT(rome2_curl_multi_prefix_32, timer_userp_va, 0x74);
@@ -4622,6 +4647,105 @@ typedef struct rome2_curl_fd_set_32 {
     uint32_t fd_array[64];
 } rome2_curl_fd_set_32;
 _Static_assert(sizeof(rome2_curl_fd_set_32) == 0x104, "curl fd_set 32 size");
+
+/*
+ * Layer 86: libcurl connection cache, formpost chain, resolver thread, SSL
+ * and CRT stream records (Partition 13). The *_prefix_32 records hold only the
+ * fields the recovered bodies touch.
+ */
+
+/* conncache: calloc(1, 0xc) in Curl_mk_connc (0x10f17aa0), which leaves +8 unwritten. */
+typedef struct rome2_curl_conncache_32 {
+    uint32_t connects_va; /* connectdata*[num] */
+    int32_t num;
+    uint32_t reserved08;
+} rome2_curl_conncache_32;
+_Static_assert(sizeof(rome2_curl_conncache_32) == 0x0c, "curl conncache 32 size");
+ROME2_LAYOUT_ASSERT(rome2_curl_conncache_32, num, 0x04);
+
+/* FormData node: malloc(0x10) in AddFormDataf (0x10f3f060) and Curl_getformdata (0x10f3f340). */
+typedef struct rome2_curl_formdata_32 {
+    uint32_t next_va;
+    int32_t type; /* 0 data, 1 content, 2 callback, 3 file */
+    uint32_t line_va;
+    uint32_t length;
+} rome2_curl_formdata_32;
+_Static_assert(sizeof(rome2_curl_formdata_32) == 0x10, "curl formdata 32 size");
+ROME2_LAYOUT_ASSERT(rome2_curl_formdata_32, type, 0x04);
+ROME2_LAYOUT_ASSERT(rome2_curl_formdata_32, line_va, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_curl_formdata_32, length, 0x0c);
+
+/* Curl_addrinfo links released by Curl_freeaddrinfo (0x10f214e0). */
+typedef struct rome2_curl_addrinfo_32 {
+    uint32_t reserved00[5];
+    uint32_t canonname_va;
+    uint32_t addr_va;
+    uint32_t next_va;
+} rome2_curl_addrinfo_32;
+_Static_assert(sizeof(rome2_curl_addrinfo_32) == 0x20, "curl addrinfo 32 size");
+ROME2_LAYOUT_ASSERT(rome2_curl_addrinfo_32, canonname_va, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_curl_addrinfo_32, addr_va, 0x18);
+ROME2_LAYOUT_ASSERT(rome2_curl_addrinfo_32, next_va, 0x1c);
+
+/* thread_sync_data: memset(tsd, 0, 0x38) in destroy_thread_sync_data (0x10f12bf0). */
+typedef struct rome2_curl_thread_sync_data_32 {
+    uint32_t mtx_va; /* CRITICAL_SECTION* */
+    uint32_t reserved04;
+    uint32_t hostname_va;
+    uint32_t reserved0c[2];
+    uint32_t res_va; /* Curl_addrinfo* */
+    uint32_t reserved18[8];
+} rome2_curl_thread_sync_data_32;
+_Static_assert(sizeof(rome2_curl_thread_sync_data_32) == 0x38, "curl thread sync data 32 size");
+ROME2_LAYOUT_ASSERT(rome2_curl_thread_sync_data_32, hostname_va, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_curl_thread_sync_data_32, res_va, 0x14);
+
+/* thread_data as Curl_resolver_cancel (0x10f127d0) reaches it through conn+0x3e0. */
+typedef struct rome2_curl_thread_data_prefix_32 {
+    uint32_t thread_hnd;
+    uint32_t reserved04[2];
+    rome2_curl_thread_sync_data_32 tsd;
+} rome2_curl_thread_data_prefix_32;
+_Static_assert(sizeof(rome2_curl_thread_data_prefix_32) == 0x44, "curl thread data prefix 32 size");
+ROME2_LAYOUT_ASSERT(rome2_curl_thread_data_prefix_32, tsd, 0x0c);
+
+/* ssl_config_data strings released by Curl_free_ssl_config (0x10f15a00). */
+typedef struct rome2_curl_ssl_config_prefix_32 {
+    uint32_t reserved00[4];
+    uint32_t capath_va;
+    uint32_t cafile_va;
+    uint32_t reserved18[2];
+    uint32_t random_file_va;
+    uint32_t egdsocket_va;
+    uint32_t cipher_list_va;
+} rome2_curl_ssl_config_prefix_32;
+_Static_assert(sizeof(rome2_curl_ssl_config_prefix_32) == 0x2c, "curl ssl config prefix 32 size");
+ROME2_LAYOUT_ASSERT(rome2_curl_ssl_config_prefix_32, capath_va, 0x10);
+ROME2_LAYOUT_ASSERT(rome2_curl_ssl_config_prefix_32, cafile_va, 0x14);
+ROME2_LAYOUT_ASSERT(rome2_curl_ssl_config_prefix_32, random_file_va, 0x20);
+ROME2_LAYOUT_ASSERT(rome2_curl_ssl_config_prefix_32, egdsocket_va, 0x24);
+ROME2_LAYOUT_ASSERT(rome2_curl_ssl_config_prefix_32, cipher_list_va, 0x28);
+
+/* ssl_connect_data: Curl_ossl_close (0x10f2d2b0) indexes conn + (sockindex + 0xe) * 0x18. */
+typedef struct rome2_curl_ssl_connect_data_32 {
+    uint32_t use;
+    uint32_t reserved04;
+    uint32_t ctx_va;
+    uint32_t handle_va;
+    uint32_t reserved10[2];
+} rome2_curl_ssl_connect_data_32;
+_Static_assert(sizeof(rome2_curl_ssl_connect_data_32) == 0x18, "curl ssl connect data 32 size");
+ROME2_LAYOUT_ASSERT(rome2_curl_ssl_connect_data_32, ctx_va, 0x08);
+ROME2_LAYOUT_ASSERT(rome2_curl_ssl_connect_data_32, handle_va, 0x0c);
+
+/* CRT FILE fields _fgetc_nolock (0x1169ece3) reads and advances. */
+typedef struct rome2_crt_stream_prefix_32 {
+    uint32_t ptr_va;
+    uint32_t reserved04;
+    int32_t cnt;
+} rome2_crt_stream_prefix_32;
+_Static_assert(sizeof(rome2_crt_stream_prefix_32) == 0x0c, "crt stream prefix 32 size");
+ROME2_LAYOUT_ASSERT(rome2_crt_stream_prefix_32, cnt, 0x08);
 
 /*
  * Layer 84: FaceFX SDK accessors and leaf routines (Partition 12).

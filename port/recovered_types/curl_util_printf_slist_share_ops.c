@@ -180,7 +180,7 @@ void rome2_l82_curl_cookie_cleanup(rome2_l82_curl_ctx *ctx, uint32_t c_va) {
             break;
         }
         uint32_t next_va = co->next_va;
-        rome2_l82_curl_free(ctx, co->spath_va);
+        rome2_l82_curl_free(ctx, co->expirestr_va);
         rome2_l82_curl_free(ctx, co->domain_va);
         rome2_l82_curl_free(ctx, co->path_va);
         rome2_l82_curl_free(ctx, co->name_va);
@@ -1242,7 +1242,10 @@ int32_t rome2_l82_dprintf_formatf(void *user, rome2_l82_emit_fn stream, const ch
         char numbuf[128];
         if (sp.conv == 's') {
             const char *s = (const char *)arg_vals[sp.num].ptr;
-            if (!s) s = "(null)";
+            if (!s) {
+                /* 0x10f201d3: "(nil)" (0x11840300), or nothing when a precision below 5 leaves no room for it */
+                s = (!sp.has_prec || prec == -1 || prec >= 5) ? "(nil)" : "";
+            }
             size_t len = strlen(s);
             if (sp.has_prec && prec >= 0 && (size_t)prec < len) {
                 len = (size_t)prec;
