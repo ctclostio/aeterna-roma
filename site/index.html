@@ -67,8 +67,6 @@ header { display: grid; gap: 10px; }
 .bar i { position: absolute; inset: 0 auto 0 0; background: var(--accent); min-width: 3px; border-radius: 2px; }
 .bar.mid i { background: var(--amber); }
 .bar.low i { background: var(--crit); }
-.bar.split i { background: var(--mid); }
-.bar.split i.in { background: var(--accent); }
 
 .grid { display: grid; grid-template-columns: repeat(auto-fill, 9px); gap: 2px; }
 .grid span { width: 9px; height: 9px; border-radius: 1px; background: var(--open); }
@@ -183,37 +181,38 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
     // Completion axes: tracker rows plus two derived from contracts.json
     var axes = t.map(function (r) { return { label: r.axis, val: r.state, pct: r.pct, below: r.below, sub: r.meaning_html }; });
     var at = ident ? t.indexOf(ident) + 1 : axes.length;
-    // One bar, two tiers: the lifted tier in the light tone, the share typed by hand solid over it.
-    if (total) axes.splice(at, 0, { label: 'Functions pinned with tests', val: fmt(L.pinned) + ' / ' + fmt(L.functions) + ' (' + round(pct(L.pinned, L.functions)) + '%)',
-      pct: pct(L.pinned, L.functions), inner: pct(L.typed, L.functions),
-      sub: 'Solid: ' + fmt(L.typed) + ' typed by hand with named layouts (<code>contracts.json</code> pins ' + fmt(c.functions) + ' functions, ' + fmt(c.globals) + ' globals and ' + fmt(c.instruction_witnesses) + ' instruction witnesses). ' +
-        'Light: ' + fmt(L.lifted_only) + ' more lifted to C by machine and matching the original code on every comparable trial, at raw offsets with no named types (<code>port/lifted</code>). ' +
-        fmt(L.fully_covered) + ' lifted functions are reached in full by their trials; the rest are pinned on the paths the trials take.' });
+    if (total) axes.splice(at, 0, { label: 'Types pinned with tests', val: fmt(c.functions) + ' / ' + fmt(total) + ' (' + round(pct(c.functions, total)) + '%)', pct: pct(c.functions, total),
+      sub: 'Functions typed by hand with named layouts. Plus ' + fmt(c.globals) + ' globals and ' + fmt(c.instruction_witnesses) + ' instruction witnesses in <code>contracts.json</code>.' });
     if (s.vtables_inventoried) axes.splice(at + 1, 0, { label: 'Vtables pinned', val: fmt(c.vtables) + ' / ' + fmt(s.vtables_inventoried) + ' (' + round(pct(c.vtables, s.vtables_inventoried)) + '%)',
       pct: pct(c.vtables, s.vtables_inventoried), sub: 'Pinned in <code>contracts.json</code> against the vtable inventory.' });
+    // The lifted tier is its own axis, next to its README row; it is never added to the typed count.
+    var lr = -1;
+    axes.forEach(function (a, i) { if (lr < 0 && /^Lifted C/.test(a.label)) lr = i; });
+    axes.splice(lr < 0 ? axes.length : lr, 0, { label: 'Lifted C matching the original', val: fmt(L.verified) + ' / ' + fmt(L.functions) + ' (' + round(pct(L.verified, L.functions)) + '%)', pct: pct(L.verified, L.functions),
+      sub: 'Functions translated to C by machine and equal to the original code on every comparable trial. Raw offsets, no named types: this does not count toward the typed axis. ' +
+        fmt(L.fully_covered) + ' are exercised in full; the rest only on the paths the trials take.' });
     $('axes').innerHTML = axes.map(function (a) {
       var w = a.pct == null ? null : a.below ? a.pct / 2 : Math.min(a.pct, 100);
       return '<div class="axis"><span class="label">' + esc(a.label) + '</span><span class="val">' + esc(a.val) + '</span>' +
-        (w == null ? '' : '<div class="bar ' + (a.inner == null ? tone(a.pct) : 'split') + '"><i style="width:' + w + '%"></i>' +
-          (a.inner == null ? '' : '<i class="in" style="width:' + a.inner + '%"></i>') + '</div>') +
+        (w == null ? '' : '<div class="bar ' + tone(a.pct) + '"><i style="width:' + w + '%"></i></div>') +
         '<span class="sub">' + a.sub + '</span></div>';
     }).join('');
 
     // Scale grid: one square per 100 functions
     if (total) {
-      var cells = Math.round(total / 100), typed = Math.max(1, Math.round(L.typed / 100)), pinned = Math.floor(L.pinned / 100);
+      var cells = Math.round(total / 100), typed = Math.max(1, Math.round(c.functions / 100)), lifted = Math.floor(L.verified / 100);
       var g = $('grid'), frag = document.createDocumentFragment();
       for (var i = 0; i < cells; i++) {
         var sq = document.createElement('span');
-        if (i < typed) sq.className = 'p'; else if (i < pinned) sq.className = 'n';
+        if (i < typed) sq.className = 'p'; else if (i < lifted) sq.className = 'n';
         frag.appendChild(sq);
       }
       g.appendChild(frag);
-      g.setAttribute('aria-label', cells + ' squares of about 100 functions each: ' + typed + ' typed by hand, ' + Math.max(0, pinned - typed) + ' more lifted by machine and tested');
-      $('grid-note').textContent = 'Each square is about 100 of the ' + fmt(total) + ' functions. The two tiers are tracked separately and drawn side by side only to show their size.';
-      $('legend').innerHTML = '<span><b style="background:var(--accent)"></b>Typed by hand, pinned with tests · ' + fmt(L.typed) + '</span>' +
-        '<span><b style="background:var(--mid)"></b>Lifted by machine, differential-tested · ' + fmt(L.lifted_only) + '</span>' +
-        '<span><b style="background:var(--open)"></b>Neither · ' + fmt(L.functions - L.pinned) + '</span>';
+      g.setAttribute('aria-label', cells + ' squares of about 100 functions each: ' + typed + ' typed by hand and pinned with tests, ' + lifted + ' lifted by machine and matching the original');
+      $('grid-note').textContent = 'Each square is about 100 of the ' + fmt(total) + ' functions. The two coloured sets are tracked separately and drawn nested only to show their size.';
+      $('legend').innerHTML = '<span><b style="background:var(--accent)"></b>Typed by hand, pinned with tests · ' + fmt(c.functions) + '</span>' +
+        '<span><b style="background:var(--mid)"></b>Lifted by machine, matching the original · ' + fmt(L.verified) + '</span>' +
+        '<span><b style="background:var(--open)"></b>Decompiled and named only</span>';
     }
 
     if (hist.length > 1) drawChart(hist);

@@ -81,17 +81,15 @@ class RepositoryTests(unittest.TestCase):
         layers = [row["layer"] for row in self.status["history"]]
         self.assertEqual(layers, sorted(set(layers)))
 
-    def test_lifted_counts_match_ledger(self) -> None:
+    def test_tiers_are_separate_bars(self) -> None:
         manifest = json.loads((g.ROOT / g.LIFTED / "manifest.json").read_text(encoding="ascii"))
         lifted = self.status["lifted"]
         self.assertEqual(lifted["functions"], manifest["functions"])
         self.assertEqual(lifted["verified"], manifest["status_counts"]["verified"])
-        self.assertEqual(lifted["pinned"], lifted["typed"] + lifted["lifted_only"])
-        self.assertLessEqual(lifted["typed"], self.status["contracts"]["functions"])
-        self.assertLessEqual(lifted["pinned"], lifted["functions"])
-        row = next(r for r in g.card_rows(self.status) if r[3] is not None)
-        self.assertEqual(row[0], "Functions pinned with tests")
-        self.assertLess(row[3], row[2])
+        rows = {label: value for label, value, _ in g.card_rows(self.status)}
+        total = manifest["functions"]
+        self.assertEqual(rows["Types pinned with tests"], f"{self.status['contracts']['functions']:,} / {total:,}")
+        self.assertEqual(rows["Lifted C matching the original"], f"{lifted['verified']:,} / {total:,}")
 
     def test_cards_are_well_formed_svg(self) -> None:
         for theme in g.THEMES:
