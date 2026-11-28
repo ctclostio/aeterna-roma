@@ -1,0 +1,98 @@
+{
+  "run": {
+    "instructions_executed": 312483591325,
+    "stopped_at": "instruction budget reached at 11670293"
+  },
+  "rungs": [
+    {
+      "id": "dll_init",
+      "title": "DLL init",
+      "means": "the lifted DLL entry returns 1 for DLL_PROCESS_ATTACH: CRT start-up and the static initializers ran",
+      "rule": "see scripts/lift/milestones.py",
+      "reached": true,
+      "evidence": "REACHED: DLL entry returned 1 for DLL_PROCESS_ATTACH (CRT start-up and static initializers ran)",
+      "compared": true,
+      "comparison": "compare_orig.py: 10,921 import calls against the original's 10,921, identical; DLL entry result 1 against 1; 19 of 2,098,567 dwords of the writable sections differ unexplained"
+    },
+    {
+      "id": "entry_point",
+      "title": "entry_point",
+      "means": "the runner, standing in for Rome2.exe, calls the DLL's entry_point export (0x100edd70)",
+      "rule": "see scripts/lift/milestones.py",
+      "reached": true,
+      "evidence": "launcher: blocks 12240000 (0x14a00000 bytes), 26c40000 (0x392c0000 bytes)",
+      "compared": false,
+      "comparison": "none yet"
+    },
+    {
+      "id": "vfs",
+      "title": "VFS",
+      "means": "the game logs \"Finished VFS load_release\" (its own wording)",
+      "rule": "see scripts/lift/milestones.py",
+      "reached": true,
+      "evidence": "guest: PRE_DB_APP_INIT: Done Finished VFS load_release (123546ms delta, 123588ms total, 0MB allocated total, 0 bytes delta allocated, total UniStrings:0)",
+      "compared": false,
+      "comparison": "none yet"
+    },
+    {
+      "id": "adapters",
+      "title": "adapter enumeration",
+      "means": "the game enumerates display adapters through DXGI",
+      "rule": "see scripts/lift/milestones.py",
+      "reached": true,
+      "evidence": "IDXGIFactory1#12 called 16 times",
+      "compared": false,
+      "comparison": "the bridge's call record (ROME2_D3D11_TRACE) against the same record of the original game's calls; the original has not been recorded yet"
+    },
+    {
+      "id": "device",
+      "title": "device",
+      "means": "the game calls methods of a Direct3D 11 device",
+      "rule": "see scripts/lift/milestones.py",
+      "reached": true,
+      "evidence": "ID3D11Device#10 called 16 times, ID3D11Device#11 called 328 times, ID3D11Device#12 called 328 times, ID3D11Device#13 called 3 times",
+      "compared": false,
+      "comparison": "the bridge's call record (ROME2_D3D11_TRACE) against the same record of the original game's calls; the original has not been recorded yet"
+    },
+    {
+      "id": "window",
+      "title": "window",
+      "means": "the game creates its window",
+      "rule": "see scripts/lift/milestones.py",
+      "reached": true,
+      "evidence": "CreateWindowExW called 1 times",
+      "compared": false,
+      "comparison": "none yet"
+    },
+    {
+      "id": "present",
+      "title": "first Present",
+      "means": "the game presents a frame (IDXGISwapChain::Present, slot 8)",
+      "rule": "see scripts/lift/milestones.py",
+      "reached": true,
+      "evidence": "IDXGISwapChain#8 called 23,934 times",
+      "compared": false,
+      "comparison": "the bridge's call record (ROME2_D3D11_TRACE) against the same record of the original game's calls; the original has not been recorded yet"
+    },
+    {
+      "id": "menu",
+      "title": "menu",
+      "means": "the front end is up",
+      "rule": "none yet: what in a run shows this is not identified",
+      "reached": false,
+      "evidence": null,
+      "compared": false,
+      "comparison": "none yet"
+    },
+    {
+      "id": "battle",
+      "title": "battle",
+      "means": "a battle runs",
+      "rule": "none yet: what in a run shows this is not identified",
+      "reached": false,
+      "evidence": null,
+      "compared": false,
+      "comparison": "none yet"
+    }
+  ]
+}

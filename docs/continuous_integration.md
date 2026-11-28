@@ -18,6 +18,12 @@ It uses GitHub-hosted Windows Server 2025 / Visual Studio 2026 runners.
   retail assets. Both optimized profiles use `/W4 /WX`; assertions remain enabled.
   The `analyze` profile also runs the recovered-types `/analyze` checks.
   The second profile instruments the native code with AddressSanitizer.
+- The live-tier job runs `python scripts/lift/gate.py --quick`: the lifted-tier
+  ledger and milestone-ladder checks, and the Direct3D 11 bridge test
+  (`scripts/lift/gen_d3d11_bridge.py --test`), which proves the bridge's 32-bit
+  layouts against the runner's Windows SDK and drives it end to end on WARP.
+  It needs no game files. The gate's other two steps (start-up comparison with
+  the original DLL, the live run) need the game and run locally only.
 - Native test results and failure logs are retained for 14 days. Game files,
   executables, canonical exports, and build-wrapper environment dumps are
   never uploaded by these workflows.
