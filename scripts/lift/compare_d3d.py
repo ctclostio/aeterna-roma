@@ -31,22 +31,34 @@ from pathlib import Path
 CONTEXT = 3
 
 
-def read(path: Path) -> dict[str, list[str]]:
+def by_thread(lines) -> dict[str, list[str]]:
+    """Each thread's calls in their order, from the lines of a record or of a part of one."""
     threads: dict[str, list[str]] = collections.defaultdict(list)
-    for text in path.read_text(encoding="utf-8", errors="replace").splitlines():
+    for text in lines:
         thread, _, call = text.partition(" ")
         threads[thread].append(call)
     return threads
 
 
-def compare(a: dict[str, list[str]], b: dict[str, list[str]], names=("first", "second")) -> list[str]:
-    """One paragraph per thread whose calls differ."""
+def read(path: Path) -> dict[str, list[str]]:
+    return by_thread(path.read_text(encoding="utf-8", errors="replace").splitlines())
+
+
+def differences(a: dict[str, list[str]], b: dict[str, list[str]]) -> list[tuple[str, int, list[str], list[str]]]:
+    """For each thread whose calls differ: the thread, how many calls are the same before the first that is not, and
+    its calls in both."""
     out = []
     for thread in sorted(set(a) | set(b), key=lambda t: (len(t), t)):
         x, y = a.get(thread, []), b.get(thread, [])
-        if x == y:
-            continue
-        at = next((i for i, (p, q) in enumerate(zip(x, y)) if p != q), min(len(x), len(y)))
+        if x != y:
+            out.append((thread, next((i for i, (p, q) in enumerate(zip(x, y)) if p != q), min(len(x), len(y))), x, y))
+    return out
+
+
+def compare(a: dict[str, list[str]], b: dict[str, list[str]], names=("first", "second")) -> list[str]:
+    """One paragraph per thread whose calls differ."""
+    out = []
+    for thread, at, x, y in differences(a, b):
         lines = [f"thread {thread}: the same for {at:,} calls, then ({len(x):,} calls in the {names[0]}, {len(y):,} in the {names[1]}):"]
         lines += [f"      {call}" for call in x[max(0, at - CONTEXT):at]]
         lines += [f"  {names[0]:>6}: {x[at] if at < len(x) else '(no more calls)'}", f"  {names[1]:>6}: {y[at] if at < len(y) else '(no more calls)'}"]
