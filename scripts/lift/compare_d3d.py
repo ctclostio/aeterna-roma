@@ -2,21 +2,25 @@
 
     python scripts/lift/compare_d3d.py <record> <record>
 
-A record is what the Direct3D bridge writes when ROME2_D3D11_TRACE names a file (port/lifted_live/d3d11_bridge.c,
-section 6): one line per call the 32-bit program makes,
+A record has one line per call a program makes,
 
     <thread> <Interface>::<Method>(<arguments>) = <result>
 
 with everything that differs from run to run for no reason of the program's left out (addresses are `*`, handles
 `h`), and threads numbered in the order of their first call. Two runs that make the same calls give the same
-lines, so the first line that differs is where the runs part.
+lines, so the first line that differs is where the runs part. Two things write such records, and a comparison
+is between two of the same kind:
+
+  - the Direct3D bridge, when ROME2_D3D11_TRACE names a file (port/lifted_live/d3d11_bridge.c, section 6):
+    every call the lifted game makes;
+  - scripts/lift/watch_d3d.py, from Windows' event tracing: the DXGI calls and Direct3D 11 resources of any
+    program, the original game included, watched from outside.
 
 Threads run side by side, so the lines of different threads interleave differently in every run: each thread's
 lines are compared as a sequence of their own. Exit code 1 when a thread's sequences differ.
 
-Today both records come from the lifted game (two runs, or before and after a change). A record of the
-original 32-bit game's calls in the same form is what would make this the check that start-up has in
-compare_orig.py; nothing writes one yet.
+A watched record of the original 32-bit game against a watched record of the lifted run is what makes this the
+check that start-up has in compare_orig.py. The original has not been watched yet.
 """
 from __future__ import annotations
 

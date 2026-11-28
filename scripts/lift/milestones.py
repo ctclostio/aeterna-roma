@@ -30,8 +30,8 @@ ROW = re.compile(r"(?m)^\| Live x64 run milestones \|.*$")
 AFTER = re.compile(r"(?m)^\| Lifted C differential tests \|.*$")  # the row goes under the lifted tier's own
 
 # What the Direct3D rungs are to be compared by, and why they are not yet.
-D3D_CHECK = ("the bridge's call record (ROME2_D3D11_TRACE) against the same record of the original game's calls; "
-             "the original has not been recorded yet")
+D3D_CHECK = ("the run's DXGI calls and Direct3D 11 resources as Windows' event tracing reports them "
+             "(scripts/lift/watch_d3d.py) against the same record of the original game; the original has not been recorded yet")
 
 
 def line(pattern: str):
