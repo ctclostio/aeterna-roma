@@ -32,8 +32,8 @@ WHAT STAYS ON THE MACHINE, and how to see and remove it.
     until `collect`, `disarm` or a restart of the machine. See it with `status` or `logman query -ets`; remove it
     with `disarm` or `logman stop aeterna_watch_<name> -ets`.
   - Files in generated/lifted/d3d_watch/ (git-ignored): the traces <role>_<date>_<time>.etl, kept (compressed; a new
-    name at every arming, because Windows replaces an existing trace file without a word; one that recorded nothing
-    stays too, 262,144 bytes); the records below; and monitor.log. <role> is "original" for Rome2.exe, "lifted" for
+    name at every arming, because Windows replaces an existing trace file without a word; one that recorded nothing,
+    262,144 bytes, stays until the next `collect` or monitor deletes it); the records below; and monitor.log. <role> is "original" for Rome2.exe, "lifted" for
     live.exe, else the name without .exe in lower case.
   - Only after `install`: the scheduled task aeterna_game_watch, which runs `wait` under pythonw at every logon of
     the user who installed it, with the highest run level. See it with `Get-ScheduledTask aeterna_game_watch`
@@ -50,12 +50,16 @@ session has stopped). Otherwise it stops the session, arms again with a new file
 after this one is recorded too), decodes the trace with tracerpt, lists the processes in it (process id, bitness,
 events, first and last event), and writes the record of the one with the most events, or of --pid, to <role>.txt and
 to <role>_<date>_<time>.txt beside its trace, which no later run overwrites. The record of another process of a kept
-trace: `python scripts/lift/watch_d3d.py write <record> --etl <trace> --pid <pid>`. That is also the way to the
-record of a trace whose decoding failed or was cut short (the monitor ended while it decoded, say): the trace stays,
-nothing collects it later, and the command names the trace's processes when the pid is not one of them. What a
-record holds and does not hold is in scripts/lift/watch_d3d.py: the DXGI calls and the Direct3D 11 devices,
-contexts, buffers and textures created, not draws, state, shaders or views; a 32-bit and a 64-bit program making the
-same calls give the same record.
+trace: `python scripts/lift/watch_d3d.py write <record> --etl <trace> --pid <pid>` (it names the trace's processes
+when the pid is not one of them). What a record holds and does not hold is in scripts/lift/watch_d3d.py: the DXGI
+calls and the Direct3D 11 devices, contexts, buffers and textures created, not draws, state, shaders or views; a
+32-bit and a 64-bit program making the same calls give the same record.
+A trace that was left without a record (the monitor was ended while it decoded, the machine was restarted with the
+session open, `disarm`) is not lost: `collect`, and the monitor when it starts, first go through the traces in the
+folder that no session writes and that have no record, oldest first. Each that holds a run gets its dated record,
+and <role>.txt too unless the folder has the dated record of a later trace; each that holds nothing of the program
+is deleted (every arming that no run followed leaves one); one that tracerpt cannot read stays, with <trace>.err
+beside it saying why, and is not tried again. `status` lists them.
 A process the monitor did not see alive has its bitness read from its events; when they do not tell it (listed as
 ??-bit: no first DXGI call in the trace, say) the record is read as a 64-bit program's and `collect` says so.
 When original.txt and lifted.txt both exist, `collect` runs scripts/lift/compare_d3d.py on them and prints the
@@ -109,8 +113,8 @@ debug privilege on, as it was in the shell these tests ran in, the monitor opene
 `install` was run once, under the selftest's task name: the task was registered as it prints, started with
 Start-ScheduledTask, its monitor collected a run of the probe, and `uninstall` removed it. Not run: `install` under
 its real task name and a logon that starts the task; a restart, sleep or logoff with the session open, and whether the
-trace file of a session that a restart ended can be decoded (by the code, a run whose session a restart ended before
-it was collected has no record until someone writes it from that trace by hand); a prompt of a user without
+trace file of a session that a restart ended can be decoded (by the code, the next `collect` or monitor tries it and
+leaves <trace>.err when it cannot); a prompt of a user without
 administrator rights (run instead: a process whose token has the Administrators group for denying only, in which
 every verb that needs a session ends with Windows' error 5 and "this needs an elevated prompt"); the file-open session
 reaching 256 MB (with the limit at 1 MB it closed itself, and the monitor wrote its list all the same); a file-open
@@ -230,6 +234,10 @@ def status(w: Watch) -> int:
     say(f"{w.exe}: " + ("running, pid " + ", ".join(map(str, running)) if running else "not running"))
     monitored = etw.claimed(w.monitor)
     say(f"monitor (`wait`): {'running' if monitored else 'not running'}")
+    left = uncollected(w)
+    if left:
+        say("traces without a record: " + ", ".join(f"{etl.name} ({etl.stat().st_size:,} bytes)" for etl in left)
+            + f"; `{w.command('collect')}` or the next monitor writes the record of each that holds a run")
     files, raw = etw.query_session(w.files_session), raw_files(w)
     if files or raw:
         say(f"file opens of every program: session {w.files_session} {'open and recording' if files else 'not open'}; on disk: "
@@ -256,8 +264,10 @@ def compare(folder: Path) -> int:
 
 
 def collect(w: Watch, pid: int | None = None, rearm: bool = True, known: dict[int, int] | None = None) -> int:
-    """Stops the session and writes the record of one process from its trace. `known`: the bitness of the processes
-    a monitor saw alive (IsWow64Process2), which goes before what their events say."""
+    """Stops the session and writes the record of one process from its trace, after the records of traces that were
+    left without one. `known`: the bitness of the processes a monitor saw alive (IsWow64Process2), which goes before
+    what their events say."""
+    recovered = recover(w)
     running = etw.find_processes(w.exe)
     if running:
         say(f"{w.exe} is still running (pid {', '.join(map(str, running))}): a trace cannot be decoded before its session has stopped, and "
@@ -265,12 +275,50 @@ def collect(w: Watch, pid: int | None = None, rearm: bool = True, known: dict[in
         return 1
     final = etw.stop_session(w.session)
     if final is None:
-        say(f"{w.session} is not open: there is nothing to collect")
-        return 1
+        say(f"{w.session} is not open: there is nothing {'more ' if recovered else ''}to collect")
+        return 0 if recovered else 1
     etl = Path(final.LogFileName)
     say(f"stopped {w.session}; its trace is {etl} ({etl.stat().st_size:,} bytes)")
     if rearm:
         arm(w)  # before the decoding, which takes its time: the launch after this one is recorded too
+    return 0 if write_record(w, etl, pid, known, final.p.EventsLost) else 1
+
+
+def uncollected(w: Watch) -> list[Path]:
+    """The traces in the folder that no session writes and that have no record, oldest first: the tool was ended, or
+    the machine restarted, after a session stopped and before its record was written; `disarm` leaves one; and so
+    does every arming that no run followed."""
+    props = etw.query_session(w.session)
+    current = Path(props.LogFileName) if props else None
+    return sorted(etl for etl in w.out.glob(f"{w.role}_*.etl")
+                  if not etl.stem.endswith("_files") and etl != current
+                  and not etl.with_suffix(".txt").exists() and not etl.with_suffix(".err").exists())
+
+
+def recover(w: Watch) -> int:
+    """Writes the records of the uncollected traces and returns how many it wrote. <role>.txt is written from one only
+    when the folder has no dated record of a later trace. A trace that holds nothing of the program is deleted. One
+    that cannot be decoded stays, with a file <trace>.err beside it that says why, and is not tried again."""
+    written = 0
+    for etl in uncollected(w):
+        later = any(path.stem > etl.stem for path in w.out.glob(f"{w.role}_*.txt") if not path.stem.endswith("_files"))
+        say(f"a trace without a record: {etl} ({etl.stat().st_size:,} bytes)")
+        try:
+            if write_record(w, etl, None, None, 0, latest=not later):
+                written += 1
+            else:
+                etl.unlink()
+                say(f"deleted {etl.name}: it holds nothing of {w.exe}")
+        except (Exception, SystemExit) as error:  # SystemExit: tracerpt failed, or the trace is not a whole one
+            etl.with_suffix(".xml").unlink(missing_ok=True)
+            etl.with_suffix(".err").write_text(f"{error}\n", encoding="utf-8", newline="\n")
+            say(f"{etl.name} could not be decoded and stays as it is; {etl.with_suffix('.err').name} says why: {error}")
+    return written
+
+
+def write_record(w: Watch, etl: Path, pid: int | None, known: dict[int, int] | None, lost_by_session: int, latest: bool = True) -> bool:
+    """Decodes a trace whose session has stopped and writes the record of one process: the dated copy beside the trace
+    and, when `latest`, <role>.txt. False, and nothing written, when the trace holds no event of such a process."""
     types = watch_d3d.schema()
     seen, _, lost = watch_d3d.processes(etl, types)
     bits = {p: (known or {}).get(int(p)) or mine["bits"] for p, mine in seen.items()}
@@ -282,22 +330,23 @@ def collect(w: Watch, pid: int | None = None, rearm: bool = True, known: dict[in
         etl.with_suffix(".xml").unlink()
         say((f"pid {pid} is not among them" if pid else f"the trace holds no DXGI or Direct3D 11 event of a program named {w.exe}")
             + ": no record written")
-        return 1
+        return False
     if not bits[chosen]:
         say(f"the events of pid {chosen} do not tell whether it is a 32-bit or a 64-bit program (scripts/lift/watch_d3d.py, Bitness): "
             "its record is read as a 64-bit program's")
     lines, unknown = watch_d3d.record(etl, chosen, types, bits[chosen])
     etl.with_suffix(".xml").unlink()
     record, dated = w.out / f"{w.role}.txt", etl.with_suffix(".txt")
-    for path in (record, dated):
+    for path in (record, dated) if latest else (dated,):
         path.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
-    say(f"{record}: {len(lines):,} lines from the {seen[chosen]['events']:,} events of pid {chosen}; the copy that stays: {dated.name}")
-    say(f"events lost: {max(lost, final.p.EventsLost)}; events the manifests do not describe: {unknown}")
+    say(f"{record if latest else dated}: {len(lines):,} lines from the {seen[chosen]['events']:,} events of pid {chosen}"
+        + (f"; the copy that stays: {dated.name}" if latest else f"; {record.name} is of a later run and is left as it is"))
+    say(f"events lost: {max(lost, lost_by_session)}; events the manifests do not describe: {unknown}")
     if len(seen) > 1:
         say(f"another process's record: python scripts/lift/watch_d3d.py write <record> --etl {etl} --pid <pid>")
-    if w.role in ROLES.values() and (w.out / "original.txt").exists() and (w.out / "lifted.txt").exists():
+    if latest and w.role in ROLES.values() and (w.out / "original.txt").exists() and (w.out / "lifted.txt").exists():
         compare(w.out)
-    return 0
+    return True
 
 
 def raw_files(w: Watch) -> list[Path]:
@@ -455,6 +504,10 @@ def monitor(w: Watch, files_seconds: int) -> int:
     say(f"monitor for {w.exe} started, pid {os.getpid()}")
     try:
         arm(w)  # a failure here ends the monitor: without the session it has nothing to wait for
+        try:
+            recover(w)  # what a monitor that was ended while it decoded, or a restart of the machine, left without a record
+        except (Exception, SystemExit):
+            say("the traces without a record were not all collected; carrying on:\n" + traceback.format_exc())
         while True:
             try:
                 # What a monitor that was ended, or the run before this one when it failed, has left of every program's file opens.
@@ -689,6 +742,25 @@ def selftest() -> int:
         last = trace()
         code, said = verb("disarm")
         check("disarm stops the session and leaves its trace file", code == 0 and last and not trace() and Path(last).exists() and last in said)
+
+        code, said = verb("arm")
+        cut = trace()
+        check("the 64-bit probe ran, and its session is stopped with no record written, as a monitor ended while decoding leaves it",
+              ran(probe("x64")) and etw.stop_session(w.session) is not None and not trace())
+        broken = w.out / f"{w.role}_19990101_000000.etl"  # the first trace cut to 60% of its length: tracerpt finds no event in such a file
+        whole = Path(first).read_bytes()
+        broken.write_bytes(whole[:len(whole) * 6 // 10])
+        record.unlink(missing_ok=True)
+        code, said = verb("status")
+        check("status lists the traces without a record", all(Path(name).name in said for name in (cut, last, broken)), said)
+        code, said = verb("collect")
+        check("collect writes the record of the trace that was left without one, with no session open",
+              code == 0 and text(record) == record64 and text(Path(cut).with_suffix(".txt")) == record64 and not trace(), said)
+        check("it deletes the trace that holds nothing of the program", not Path(last).exists())
+        check("it leaves the trace that cannot be decoded, with a file beside it that says why",
+              broken.exists() and text(broken.with_suffix(".err")).strip() and not broken.with_suffix(".xml").exists(), text(broken.with_suffix(".err")))
+        code, said = verb("collect")
+        check("a second collect has nothing to collect and does not try that trace again", code == 1 and broken.name not in said, said)
     finally:
         if child and child.poll() is None:
             child.kill()

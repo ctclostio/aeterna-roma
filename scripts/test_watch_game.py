@@ -911,5 +911,87 @@ class FileLineTests(unittest.TestCase):
                          "a device whose name merely begins the same is not the drive's")
 
 
+class LeftoverTests(unittest.TestCase):
+    """Traces left without a record. The session and the decoding are stood in for: the names and what is done with a
+    trace are what is tested, and `watch_game.py selftest` runs the same on real traces."""
+
+    def setUp(self) -> None:
+        folder = tempfile.TemporaryDirectory()
+        self.addCleanup(folder.cleanup)
+        self.w = watch_game.Watch("Rome2.exe")
+        self.w.out = Path(folder.name)
+        self.calls: list[tuple[str, bool]] = []
+
+    def make(self, *names: str) -> None:
+        for name in names:
+            (self.w.out / name).write_bytes(b"x")
+
+    def session(self, trace: str | None):
+        props = mock.Mock(LogFileName=str(self.w.out / trace)) if trace else None
+        return mock.patch.object(watch_game.etw, "query_session", return_value=props)
+
+    def decoding(self, result):
+        """In the place of write_record: notes the call, then writes the dated record, returns False or raises."""
+        def write_record(w, etl, pid, known, lost, latest=True):
+            self.calls.append((etl.name, latest))
+            if isinstance(result, BaseException):
+                raise result
+            if result:
+                etl.with_suffix(".txt").write_text("record\n")
+            return result
+        return mock.patch.object(watch_game, "write_record", write_record)
+
+    def recover(self) -> tuple[int, str]:
+        said = io.StringIO()
+        with contextlib.redirect_stdout(said):
+            return watch_game.recover(self.w), said.getvalue()
+
+    def test_which_traces_are_left_without_a_record(self) -> None:
+        self.make("original_20261128_000952.etl", "original_20261128_000952.txt",           # collected
+                  "original_20261128_101500.etl",                                           # left
+                  "original_20261128_090000.etl",                                           # left, earlier
+                  "original_20261128_111500.etl",                                           # the open session's
+                  "original_20261128_101500_files.etl",                                     # every program's file opens: never a Direct3D trace
+                  "original_20261127_080000.etl", "original_20261127_080000.err",           # could not be decoded before
+                  "lifted_20261128_101500.etl", "watch.etl")                                # another program's, and watch_d3d.py's own
+        with self.session("original_20261128_111500.etl"):
+            self.assertEqual([etl.name for etl in watch_game.uncollected(self.w)], ["original_20261128_090000.etl", "original_20261128_101500.etl"])
+        with self.session(None):
+            self.assertEqual([etl.name for etl in watch_game.uncollected(self.w)],
+                             ["original_20261128_090000.etl", "original_20261128_101500.etl", "original_20261128_111500.etl"])
+
+    def test_the_latest_record_is_not_replaced_by_an_earlier_run_s(self) -> None:
+        self.make("original_20261128_090000.etl", "original_20261128_101500.etl", "original_20261128_100000.etl", "original_20261128_100000.txt")
+        with self.session(None), self.decoding(True):
+            written, _ = self.recover()
+        self.assertEqual(written, 2)
+        self.assertEqual(self.calls, [("original_20261128_090000.etl", False), ("original_20261128_101500.etl", True)],
+                         "oldest first; only the trace later than every dated record gives original.txt")
+
+    def test_a_trace_that_holds_nothing_of_the_program_is_deleted(self) -> None:
+        self.make("original_20261128_090000.etl")
+        with self.session(None), self.decoding(False):
+            written, said = self.recover()
+        self.assertEqual((written, list(self.w.out.iterdir())), (0, []))
+        self.assertIn("deleted original_20261128_090000.etl", said)
+
+    def test_a_trace_that_cannot_be_decoded_stays_and_is_not_tried_again(self) -> None:
+        self.make("original_20261128_090000.etl", "original_20261128_090000.xml")
+        with self.session(None), self.decoding(SystemExit("tracerpt found no event in it")):
+            written, said = self.recover()
+            again, _ = self.recover()
+        self.assertEqual((written, again, self.calls), (0, 0, [("original_20261128_090000.etl", True)]), "tried once")
+        self.assertEqual(sorted(path.name for path in self.w.out.iterdir()), ["original_20261128_090000.err", "original_20261128_090000.etl"],
+                         "the trace stays, the reason is beside it, the decoded form that was begun is gone")
+        self.assertEqual((self.w.out / "original_20261128_090000.err").read_text(), "tracerpt found no event in it\n")
+        self.assertIn("could not be decoded", said)
+
+    def test_collect_without_a_session_succeeds_when_it_recovered_a_record(self) -> None:
+        for recovered, code in ((1, 0), (0, 1)):
+            with mock.patch.object(watch_game, "recover", return_value=recovered), mock.patch.object(watch_game.etw, "find_processes", return_value=[]), \
+                    mock.patch.object(watch_game.etw, "stop_session", return_value=None), contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(watch_game.collect(self.w), code)
+
+
 if __name__ == "__main__":
     unittest.main()
