@@ -111,12 +111,22 @@ def shown(task: str, name: str, kind: str, value: str) -> str:
     return "h"  # HexInt32, HexInt64, UInt64: handles, driver versions, times
 
 
-def read_trace(etl: Path) -> str:
+def events(etl: Path):
+    """The trace's events as tracerpt decodes them, one XML element at a time (a long trace is gigabytes of XML)."""
     xml = etl.with_suffix(".xml")
     if not xml.exists() or xml.stat().st_mtime < etl.stat().st_mtime:
         tool("tracerpt", str(etl), "-o", str(xml), "-of", "XML", "-lr", "-y")
-    data = xml.read_bytes()
-    return data.decode("utf-16" if data[:2] in (b"\xff\xfe", b"\xfe\xff") else "utf-8", errors="replace")
+    with open(xml, "rb") as raw:
+        encoding = "utf-16" if raw.read(2) in (b"\xff\xfe", b"\xfe\xff") else "utf-8"
+    with open(xml, encoding=encoding, errors="replace") as text:
+        rest = ""
+        while chunk := text.read(1 << 24):
+            rest += chunk
+            end = 0
+            for found in EVENT.finditer(rest):
+                yield found.group(0)
+                end = found.end()
+            rest = rest[end:]
 
 
 def field(event: str, tag: str) -> str:
@@ -124,12 +134,15 @@ def field(event: str, tag: str) -> str:
     return found.group(1) if found else ""
 
 
-def processes(text: str) -> tuple[collections.Counter, dict[str, str]]:
-    """Events of the two providers by process id, and the image names of the processes started during the trace."""
+def processes(etl: Path) -> tuple[collections.Counter, dict[str, str], int]:
+    """Events of the two providers by process id, the image names of the processes started during the trace,
+    and how many events the session lost."""
     counts: collections.Counter = collections.Counter()
     names: dict[str, str] = {}
-    for found in EVENT.finditer(text):
-        event = found.group(0)
+    lost = 0
+    for event in events(etl):
+        if not lost and "EventsLost" in event:
+            lost = int(re.search(r'<Data Name="EventsLost">\s*(\d+)', event).group(1))
         provider = re.search(r'<Provider Name="([^"]+)"', event)
         if provider and provider.group(1) == PROCESSES and field(event, "EventID") == "1":
             data = dict(re.findall(r'<Data Name="([^"]+)">([^<]*)</Data>', event))
@@ -137,16 +150,18 @@ def processes(text: str) -> tuple[collections.Counter, dict[str, str]]:
                 names[data["ProcessID"].strip()] = data["ImageName"].replace("\\", "/").rsplit("/", 1)[-1]
         elif provider and provider.group(1) in PROVIDERS:
             counts[re.search(r'<Execution ProcessID="(\d+)"', event).group(1)] += 1
-    return counts, names
+    return counts, names, lost
 
 
-def record(text: str, pid: str, types: dict) -> tuple[list[str], int]:
+def record(etl: Path, pid: str, types: dict) -> tuple[list[str], int]:
     """The record lines of one process, and how many of its events have no description in the manifests."""
     threads: dict[str, int] = {}
     open_calls: dict[str, list[tuple[str, str] | None]] = collections.defaultdict(list)  # thread -> calls begun
     lines, unknown = [], 0
-    for found in EVENT.finditer(text):
-        event = found.group(0)
+    mine = f'ProcessID="{pid}"'
+    for event in events(etl):
+        if mine not in event:
+            continue
         provider = re.search(r'<Provider Name="([^"]+)"', event)
         where = re.search(r'<Execution ProcessID="(\d+)" ThreadID="(\d+)"', event)
         if not provider or provider.group(1) not in PROVIDERS or not where or where.group(1) != pid:
@@ -196,11 +211,9 @@ def main(argv=None) -> int:
         tool("logman", "stop", SESSION, "-ets")
     if not args.etl.exists():
         raise SystemExit(f"{args.etl}: no trace; run start first")
-    text = read_trace(args.etl)
-    counts, names = processes(text)
-    lost = re.search(r'<Data Name="EventsLost">\s*(\d+)', text)
-    if lost and int(lost.group(1)):
-        print(f"WARNING: the trace lost {lost.group(1)} events; the record has gaps")
+    counts, names, lost = processes(args.etl)
+    if lost:
+        print(f"WARNING: the trace lost {lost} events; the record has gaps")
     if args.verb == "stop":
         for pid, n in counts.most_common():
             print(f"{n:9,} events  pid {pid:>6}  {names.get(pid, '(running before the trace began)')}")
@@ -212,7 +225,7 @@ def main(argv=None) -> int:
     if len(wanted) != 1:
         raise SystemExit(f"{len(wanted)} processes named {args.process} used Direct3D during the trace; name one with --pid: "
                          + ", ".join(f"{pid} ({counts[pid]:,} events)" for pid in wanted))
-    lines, unknown = record(text, wanted[0], schema())
+    lines, unknown = record(args.etl, wanted[0], schema())
     args.record.parent.mkdir(parents=True, exist_ok=True)
     args.record.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
     print(f"{args.record}: {len(lines):,} lines from {counts[wanted[0]]:,} events of pid {wanted[0]}"
