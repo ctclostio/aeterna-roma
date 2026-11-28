@@ -24,8 +24,8 @@ with static assertions.
     python scripts/lift/gen_d3d11_bridge.py --check  fail if the block is out of date
     python scripts/lift/gen_d3d11_bridge.py --test   --check, then:
         the 32-bit structure layouts, proved by an x86 compile;
-        test_d3d11_bridge.c built and run twice (x64): linked with the bridge, and including it the
-        way live_main.c does;
+        test_d3d11_bridge.c built twice (x64): linked with the bridge, and including it the way
+        live_main.c does; each is run as it is and with --debug-layer;
         this checkout's live_main.c compiled with the two lines that include the bridge, and linked
         when generated/lifted/live/lifted.lib is there.
     python scripts/lift/gen_d3d11_bridge.py --test --runner <checkout>   the last step on another checkout
@@ -34,6 +34,7 @@ from __future__ import annotations
 
 import ast
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -76,6 +77,7 @@ HEADERS = ("unknwnbase.h", "dxgiformat.h", "dxgicommon.h", "dxgitype.h", "dxgi.h
 
 SCALAR4 = frozenset({"UINT", "INT", "BOOL", "FLOAT", "UINT8", "SIZE_T", "ULONG", "DWORD", "LONG", "HRESULT"})
 POINTER4 = frozenset({"REFIID", "REFGUID", "LPCSTR", "LPSTR", "LPCWSTR", "LPWSTR", "LPVOID", "LPCVOID", "HWND", "HMODULE", "HANDLE"})
+HANDLES = frozenset({"HWND", "HMODULE", "HANDLE"})
 # One SAL / MIDL annotation, with an optional argument list nested at most two deep.
 ANNOTATION = re.compile(r"\b_{1,2}[A-Za-z]\w*\s*(\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))?")
 
@@ -130,6 +132,7 @@ class Types:
         everything = "\n".join(headers.values())
         self.enums = set(re.findall(r"\benum\s+(\w+)", everything))
         self.alias = dict((new, old) for old, new in re.findall(r"\btypedef\s+(\w+)\s+(\w+)\s*;", everything))
+        self.interfaces = set(re.findall(r"\btypedef\s+interface\s+(\w+)\s+\1\s*;", everything))
 
     def resolve(self, name: str) -> str:
         seen = set()
@@ -147,6 +150,24 @@ class Types:
             return False
         base = self.resolve(words[0])
         return base in SCALAR4 or base in POINTER4 or base in self.enums
+
+    def arg_class(self, decl: str) -> str:
+        """How a record of the call shows this argument: v a value, h a handle (its value belongs to one run), g a
+        pointer to a GUID, s a string, i an interface pointer, o a pointer to pointers, p any other pointer."""
+        decl = ANNOTATION.sub(" ", decl)
+        words = [w for w in re.sub(r"[*\[\]]", " ", decl).split() if w not in ("const", "CONST", "struct")]
+        base = self.resolve(words[0])
+        if decl.count("*") >= 2:
+            return "o"
+        if "*" in decl or "[" in decl:
+            return "i" if words[0] in self.interfaces else "p"
+        if base in ("REFIID", "REFGUID"):
+            return "g"
+        if base in HANDLES:
+            return "h"
+        if base == "LPCSTR":  # LPSTR is a buffer the call fills
+            return "s"
+        return "p" if base in POINTER4 else "v"
 
     def ret_class(self, ret: str) -> str:
         ret = " ".join(ANNOTATION.sub(" ", ret).split())
@@ -187,7 +208,8 @@ def parse_interfaces(headers: dict[str, str], types: Types) -> dict[str, dict]:
                 bad = [p for p in plist if not types.is_dword(p)]
                 if bad:
                     raise GenError(f"{name}::{method}: parameter is not one dword on x86: {bad}")
-                methods.append({"decl": decl, "name": method, "slot": slot, "nargs": len(plist), "ret": types.ret_class(ret)})
+                methods.append({"decl": decl, "name": method, "slot": slot, "nargs": len(plist), "ret": types.ret_class(ret),
+                                "sig": "t" + "".join(types.arg_class(p) for p in plist[1:])})
             out[name] = {"parent": parents.get(name, name), "methods": methods}
     missing = [n for n in BRIDGED if n not in out]
     if missing:
@@ -209,7 +231,7 @@ def parse_interfaces(headers: dict[str, str], types: Types) -> dict[str, dict]:
     return out
 
 
-def parse_exports(headers: dict[str, str], types: Types) -> list[tuple[str, str, int]]:
+def parse_exports(headers: dict[str, str], types: Types) -> list[tuple[str, str, int, str]]:
     out = []
     for dll, name, header in EXPORTS:
         m = re.search(r"\bHRESULT\s+WINAPI\s+" + name + r"\s*\((.*?)\)\s*;", headers[header], re.S)
@@ -219,20 +241,22 @@ def parse_exports(headers: dict[str, str], types: Types) -> list[tuple[str, str,
         bad = [p for p in plist if not types.is_dword(p)]
         if bad:
             raise GenError(f"{name}: parameter is not one dword on x86: {bad}")
-        out.append((dll, name, len(plist)))
+        out.append((dll, name, len(plist), "".join(types.arg_class(p) for p in plist)))
     return out
 
 
-def render(interfaces: dict[str, dict], exports: list[tuple[str, str, int]], version: str) -> str:
+def render(interfaces: dict[str, dict], exports: list[tuple[str, str, int, str]], version: str) -> str:
     lines = [
         BEGIN,
         f"/* From the Windows SDK {version} headers. Do not edit: rerun the script.",
         " * I(interface, parent); the root is its own parent.",
         " * M(interface, declaring interface, method, vtable slot, x86 stack dwords including This, return class):",
         " *   V void, D dword, Z SIZE_T, P host pointer, F float in x87 st(0).",
-        " * D(interface, method, vtable slot, x86 stack dwords): the methods an interface declares itself, which",
-        " *   is the name a method is registered under.",
-        " * E(import DLL, export, x86 stack dwords). */",
+        " * D(interface, method, vtable slot, x86 stack dwords, return class, arguments): the methods an interface",
+        " *   declares itself, which is the name a method is registered under. One letter for each argument dword:",
+        " *   t This, v value, h handle, g pointer to a GUID, s string, i interface pointer, o pointer to pointers,",
+        " *   p other pointer.",
+        " * E(import DLL, export, x86 stack dwords, arguments). */",
         "#define B11_IFACES(I) \\",
     ]
     lines += [f"    I({name}, {interfaces[name]['parent']}) \\" for name in BRIDGED]
@@ -245,14 +269,14 @@ def render(interfaces: dict[str, dict], exports: list[tuple[str, str, int]], ver
         lines[-1] = lines[-1][:-2]
     lines.append("#define B11_DECLARED(D) \\")
     lines += [
-        f"    D({name}, {m['name']}, {m['slot']}, {m['nargs']}) \\"
+        f"    D({name}, {m['name']}, {m['slot']}, {m['nargs']}, '{m['ret']}', \"{m['sig']}\") \\"
         for name in BRIDGED
         for m in interfaces[name]["methods"]
         if m["decl"] == name
     ]
     lines[-1] = lines[-1][:-2]
     lines.append("#define B11_EXPORTS(E) \\")
-    lines += [f'    E("{dll}", {name}, {nargs}) \\' for dll, name, nargs in exports]
+    lines += [f'    E("{dll}", {name}, {nargs}, "{sig}") \\' for dll, name, nargs, sig in exports]
     lines[-1] = lines[-1][:-2]
     lines.append(END)
     return "\n".join(lines)
@@ -274,6 +298,9 @@ def check_runner(root: Path, out: Path) -> None:
     work.mkdir(parents=True, exist_ok=True)
     copy = work / "live_main_with_bridge.c"
     copy.write_text(text, encoding="utf-8", newline="\n")
+    # This checkout's bridge, next to the copy: an include by name finds it there before the runner's own.
+    for part in (TARGET, TARGET.with_suffix(".h")):
+        shutil.copyfile(part, work / part.name)
     # The flags that checkout builds live.exe with.
     flags = re.search(r"^EXE_CFLAGS = (\[.*\])$", (root / "scripts" / "lift" / "build_live.py").read_text(encoding="utf-8"), re.M)
     cflags = ast.literal_eval(flags.group(1)) if flags else [f for f in RUNTIME_CFLAGS if f not in ("/W4", "/WX")] + ["/W3"]
@@ -308,10 +335,11 @@ def run_test(runner: Path) -> int:
         objs = out / exe.stem  # the two builds compile the same test source: keep their objects apart
         objs.mkdir(exist_ok=True)
         run_tool(["cl", *RUNTIME_CFLAGS, f"/Fo{objs}\\", f"/Fe{exe}", *sources, "/link", "/INCREMENTAL:NO"], cwd=out)
-        code = subprocess.run([str(exe)], cwd=out).returncode
-        if code != 0:
-            print(f"{name} failed: exit code {code & 0xffffffff:#x}", file=sys.stderr)
-            return 1
+        for args in ([], ["--debug-layer"]):
+            code = subprocess.run([str(exe), *args], cwd=out).returncode
+            if code != 0:
+                print(f"{' '.join([name, *args])} failed: exit code {code & 0xffffffff:#x}", file=sys.stderr)
+                return 1
     check_runner(runner, out)
     return 0
 

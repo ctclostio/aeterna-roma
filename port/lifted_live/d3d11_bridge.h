@@ -1,6 +1,6 @@
 /*
- * d3d11_bridge.h - Direct3D 11, DXGI and D3DCompiler for a 32-bit guest on a
- * 64-bit host.
+ * d3d11_bridge.h - Direct3D 11, DXGI, D3DCompiler and the game's four D3DX11
+ * imports for a 32-bit guest on a 64-bit host.
  *
  * The guest is 32-bit code whose memory is identity-mapped in the low 4 GiB
  * of the host process: guest address A is host pointer (void *)(uintptr_t)A.
@@ -14,7 +14,7 @@
  *
  * In live_main.c. live.exe is built from that one source, so the bridge is
  * included into it; d3d11_bridge.c then supplies the callbacks itself, from
- * the runner's galloc, gfree, stop, import_addr and guest_call:
+ * the runner's galloc, gfree, stop, import_addr, guest_call and write_allowed:
  *
  *     #define D3D11_BRIDGE_LIVE
  *     #include "d3d11_bridge.c"         above g_shims
@@ -56,9 +56,18 @@
  * description), answered by d3dcompiler_47; d3d11_bridge.c lists the call
  * sites they are taken from.
  *
+ * D3DX11. The game imports four functions of d3dx11_42.dll. They are done by
+ * the host's 64-bit d3dx11_42.dll (DirectX End-User Runtime, June 2010) on
+ * the host objects behind the guest's; without that DLL they stop the run.
+ *
  * Not bridged, and stopping the run when reached: the other slots of that
  * reflection interface, IDXGISurface, storing a guest IUnknown as private
- * data, software adapters, and ID3D11DeviceContext::GetResourceMinLOD.
+ * data, software adapters, and a D3DX11 thread pump.
+ *
+ * Development aids, chosen by the environment (d3d11_bridge.c, section 6):
+ * ROME2_D3D11_TRACE=<file> records every call the guest makes in a form two
+ * runs can be compared by; ROME2_D3D11_DEBUG=1 (or =stop) creates devices
+ * with Direct3D's debug layer and reports what it says about each call.
  */
 #ifndef ROME2_D3D11_BRIDGE_H
 #define ROME2_D3D11_BRIDGE_H
@@ -84,6 +93,12 @@ typedef struct d3d11_bridge_host {
     /* Optional: calls the guest stdcall function at entry and returns its EAX. Only D3DCompile with an
      * ID3DInclude the guest implements needs it; without it that call stops the run. */
     uint32_t (*call_guest)(struct lift_ctx *c, uint32_t entry, uint32_t nargs, const uint32_t *args);
+    /* Optional: makes v the calling guest thread's x87 st(0), where a 32-bit caller takes a FLOAT result from.
+     * Only ID3D11DeviceContext::GetResourceMinLOD needs it; without it that call stops the run. */
+    void (*return_float)(struct lift_ctx *c, float v);
+    /* Optional: may the guest write this file of the host's? Nonzero allows it. Only
+     * D3DX11SaveTextureToFileA asks; without it that call stops the run. */
+    int (*may_write)(const char *path);
 } d3d11_bridge_host_t;
 
 /* Call once, before any other function. The struct is copied. Included into live_main.c the bridge calls
@@ -107,6 +122,11 @@ uint32_t d3d11_bridge_D3D11CreateDeviceAndSwapChain(struct lift_ctx *c, const ui
 uint32_t d3d11_bridge_D3DCompile(struct lift_ctx *c, const uint32_t *a);
 uint32_t d3d11_bridge_D3DReflect(struct lift_ctx *c, const uint32_t *a);
 uint32_t d3d11_bridge_D3DDisassemble(struct lift_ctx *c, const uint32_t *a);
+/* d3dx11_42.dll, done by the host's 64-bit d3dx11_42.dll. */
+uint32_t d3d11_bridge_D3DX11FilterTexture(struct lift_ctx *c, const uint32_t *a);
+uint32_t d3d11_bridge_D3DX11LoadTextureFromTexture(struct lift_ctx *c, const uint32_t *a);
+uint32_t d3d11_bridge_D3DX11SaveTextureToFileA(struct lift_ctx *c, const uint32_t *a);
+uint32_t d3d11_bridge_D3DX11CompileFromFileW(struct lift_ctx *c, const uint32_t *a);
 
 /* For other shims that take or return Direct3D objects (D3DX11, for one).
  * host_object: the host interface pointer behind a guest object, NULL when guest is not one.

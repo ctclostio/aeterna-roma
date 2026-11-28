@@ -7,14 +7,18 @@
  *   3. guest objects: the table pairing a guest object with a host interface pointer
  *   4. argument conversion
  *   5. one function per vtable slot, grouped by interface
- *   6. exported entry points
+ *   6. development aids (a record of the calls, Direct3D's debug layer) and the exported entry points
  *   7. the glue for live_main.c (only with D3D11_BRIDGE_LIVE)
  *
  * Every slot of every bridged interface has a function. The ones that cannot
  * be done faithfully stop the run and name themselves (search for B11_UNSUP
  * and for b11_host.stop): storing a guest IUnknown on a host object,
- * IDXGISurface, software adapters, a FLOAT return value, and the methods of
- * D3DCompiler_42's shader reflection interface that the game does not call.
+ * IDXGISurface, software adapters, and the methods of D3DCompiler_42's shader
+ * reflection interface that the game does not call.
+ *
+ * The guest never reaches an m_ function directly: the vtables hold the b11_w_
+ * wrappers, and the exported entry points are wrappers too. That is where the
+ * development aids of section 6 see every call.
  *
  * Locks. b11_lock guards the object table and nothing else is done under it:
  * no host COM call (the host calls back into b11_note_Release from inside its
@@ -24,6 +28,9 @@
  * source live.exe is built from. Every name at file scope therefore starts with
  * b11_, B11_, m_<interface>_, K_<interface>, g32_ or d3d11_bridge_.
  */
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS /* getenv, fopen */
+#endif
 #ifndef COBJMACROS
 #define COBJMACROS
 #endif
@@ -42,6 +49,7 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <dxgi.h>
+#include <dxgidebug.h>
 #pragma warning(pop)
 
 #undef INITGUID
@@ -67,9 +75,11 @@
  * I(interface, parent); the root is its own parent.
  * M(interface, declaring interface, method, vtable slot, x86 stack dwords including This, return class):
  *   V void, D dword, Z SIZE_T, P host pointer, F float in x87 st(0).
- * D(interface, method, vtable slot, x86 stack dwords): the methods an interface declares itself, which
- *   is the name a method is registered under.
- * E(import DLL, export, x86 stack dwords). */
+ * D(interface, method, vtable slot, x86 stack dwords, return class, arguments): the methods an interface
+ *   declares itself, which is the name a method is registered under. One letter for each argument dword:
+ *   t This, v value, h handle, g pointer to a GUID, s string, i interface pointer, o pointer to pointers,
+ *   p other pointer.
+ * E(import DLL, export, x86 stack dwords, arguments). */
 #define B11_IFACES(I) \
     I(IUnknown, IUnknown) \
     I(IDXGIObject, IUnknown) \
@@ -698,242 +708,242 @@
     M(ID3D11Device, ID3D11Device, SetExceptionMode, 41, 2, 'D') \
     M(ID3D11Device, ID3D11Device, GetExceptionMode, 42, 1, 'D')
 #define B11_DECLARED(D) \
-    D(IUnknown, QueryInterface, 0, 3) \
-    D(IUnknown, AddRef, 1, 1) \
-    D(IUnknown, Release, 2, 1) \
-    D(IDXGIObject, SetPrivateData, 3, 4) \
-    D(IDXGIObject, SetPrivateDataInterface, 4, 3) \
-    D(IDXGIObject, GetPrivateData, 5, 4) \
-    D(IDXGIObject, GetParent, 6, 3) \
-    D(IDXGIDeviceSubObject, GetDevice, 7, 3) \
-    D(IDXGIFactory, EnumAdapters, 7, 3) \
-    D(IDXGIFactory, MakeWindowAssociation, 8, 3) \
-    D(IDXGIFactory, GetWindowAssociation, 9, 2) \
-    D(IDXGIFactory, CreateSwapChain, 10, 4) \
-    D(IDXGIFactory, CreateSoftwareAdapter, 11, 3) \
-    D(IDXGIFactory1, EnumAdapters1, 12, 3) \
-    D(IDXGIFactory1, IsCurrent, 13, 1) \
-    D(IDXGIAdapter, EnumOutputs, 7, 3) \
-    D(IDXGIAdapter, GetDesc, 8, 2) \
-    D(IDXGIAdapter, CheckInterfaceSupport, 9, 3) \
-    D(IDXGIAdapter1, GetDesc1, 10, 2) \
-    D(IDXGIOutput, GetDesc, 7, 2) \
-    D(IDXGIOutput, GetDisplayModeList, 8, 5) \
-    D(IDXGIOutput, FindClosestMatchingMode, 9, 4) \
-    D(IDXGIOutput, WaitForVBlank, 10, 1) \
-    D(IDXGIOutput, TakeOwnership, 11, 3) \
-    D(IDXGIOutput, ReleaseOwnership, 12, 1) \
-    D(IDXGIOutput, GetGammaControlCapabilities, 13, 2) \
-    D(IDXGIOutput, SetGammaControl, 14, 2) \
-    D(IDXGIOutput, GetGammaControl, 15, 2) \
-    D(IDXGIOutput, SetDisplaySurface, 16, 2) \
-    D(IDXGIOutput, GetDisplaySurfaceData, 17, 2) \
-    D(IDXGIOutput, GetFrameStatistics, 18, 2) \
-    D(IDXGISwapChain, Present, 8, 3) \
-    D(IDXGISwapChain, GetBuffer, 9, 4) \
-    D(IDXGISwapChain, SetFullscreenState, 10, 3) \
-    D(IDXGISwapChain, GetFullscreenState, 11, 3) \
-    D(IDXGISwapChain, GetDesc, 12, 2) \
-    D(IDXGISwapChain, ResizeBuffers, 13, 6) \
-    D(IDXGISwapChain, ResizeTarget, 14, 2) \
-    D(IDXGISwapChain, GetContainingOutput, 15, 2) \
-    D(IDXGISwapChain, GetFrameStatistics, 16, 2) \
-    D(IDXGISwapChain, GetLastPresentCount, 17, 2) \
-    D(IDXGIDevice, GetAdapter, 7, 2) \
-    D(IDXGIDevice, CreateSurface, 8, 6) \
-    D(IDXGIDevice, QueryResourceResidency, 9, 4) \
-    D(IDXGIDevice, SetGPUThreadPriority, 10, 2) \
-    D(IDXGIDevice, GetGPUThreadPriority, 11, 2) \
-    D(IDXGIDevice1, SetMaximumFrameLatency, 12, 2) \
-    D(IDXGIDevice1, GetMaximumFrameLatency, 13, 2) \
-    D(ID3D10Blob, GetBufferPointer, 3, 1) \
-    D(ID3D10Blob, GetBufferSize, 4, 1) \
-    D(ID3D11DeviceChild, GetDevice, 3, 2) \
-    D(ID3D11DeviceChild, GetPrivateData, 4, 4) \
-    D(ID3D11DeviceChild, SetPrivateData, 5, 4) \
-    D(ID3D11DeviceChild, SetPrivateDataInterface, 6, 3) \
-    D(ID3D11Resource, GetType, 7, 2) \
-    D(ID3D11Resource, SetEvictionPriority, 8, 2) \
-    D(ID3D11Resource, GetEvictionPriority, 9, 1) \
-    D(ID3D11Buffer, GetDesc, 10, 2) \
-    D(ID3D11Texture1D, GetDesc, 10, 2) \
-    D(ID3D11Texture2D, GetDesc, 10, 2) \
-    D(ID3D11Texture3D, GetDesc, 10, 2) \
-    D(ID3D11View, GetResource, 7, 2) \
-    D(ID3D11RenderTargetView, GetDesc, 8, 2) \
-    D(ID3D11DepthStencilView, GetDesc, 8, 2) \
-    D(ID3D11ShaderResourceView, GetDesc, 8, 2) \
-    D(ID3D11UnorderedAccessView, GetDesc, 8, 2) \
-    D(ID3D11SamplerState, GetDesc, 7, 2) \
-    D(ID3D11RasterizerState, GetDesc, 7, 2) \
-    D(ID3D11BlendState, GetDesc, 7, 2) \
-    D(ID3D11DepthStencilState, GetDesc, 7, 2) \
-    D(ID3D11Asynchronous, GetDataSize, 7, 1) \
-    D(ID3D11Query, GetDesc, 8, 2) \
-    D(ID3D11Counter, GetDesc, 8, 2) \
-    D(ID3D11ClassInstance, GetClassLinkage, 7, 2) \
-    D(ID3D11ClassInstance, GetDesc, 8, 2) \
-    D(ID3D11ClassInstance, GetInstanceName, 9, 3) \
-    D(ID3D11ClassInstance, GetTypeName, 10, 3) \
-    D(ID3D11ClassLinkage, GetClassInstance, 7, 4) \
-    D(ID3D11ClassLinkage, CreateClassInstance, 8, 7) \
-    D(ID3D11CommandList, GetContextFlags, 7, 1) \
-    D(ID3D11DeviceContext, VSSetConstantBuffers, 7, 4) \
-    D(ID3D11DeviceContext, PSSetShaderResources, 8, 4) \
-    D(ID3D11DeviceContext, PSSetShader, 9, 4) \
-    D(ID3D11DeviceContext, PSSetSamplers, 10, 4) \
-    D(ID3D11DeviceContext, VSSetShader, 11, 4) \
-    D(ID3D11DeviceContext, DrawIndexed, 12, 4) \
-    D(ID3D11DeviceContext, Draw, 13, 3) \
-    D(ID3D11DeviceContext, Map, 14, 6) \
-    D(ID3D11DeviceContext, Unmap, 15, 3) \
-    D(ID3D11DeviceContext, PSSetConstantBuffers, 16, 4) \
-    D(ID3D11DeviceContext, IASetInputLayout, 17, 2) \
-    D(ID3D11DeviceContext, IASetVertexBuffers, 18, 6) \
-    D(ID3D11DeviceContext, IASetIndexBuffer, 19, 4) \
-    D(ID3D11DeviceContext, DrawIndexedInstanced, 20, 6) \
-    D(ID3D11DeviceContext, DrawInstanced, 21, 5) \
-    D(ID3D11DeviceContext, GSSetConstantBuffers, 22, 4) \
-    D(ID3D11DeviceContext, GSSetShader, 23, 4) \
-    D(ID3D11DeviceContext, IASetPrimitiveTopology, 24, 2) \
-    D(ID3D11DeviceContext, VSSetShaderResources, 25, 4) \
-    D(ID3D11DeviceContext, VSSetSamplers, 26, 4) \
-    D(ID3D11DeviceContext, Begin, 27, 2) \
-    D(ID3D11DeviceContext, End, 28, 2) \
-    D(ID3D11DeviceContext, GetData, 29, 5) \
-    D(ID3D11DeviceContext, SetPredication, 30, 3) \
-    D(ID3D11DeviceContext, GSSetShaderResources, 31, 4) \
-    D(ID3D11DeviceContext, GSSetSamplers, 32, 4) \
-    D(ID3D11DeviceContext, OMSetRenderTargets, 33, 4) \
-    D(ID3D11DeviceContext, OMSetRenderTargetsAndUnorderedAccessViews, 34, 8) \
-    D(ID3D11DeviceContext, OMSetBlendState, 35, 4) \
-    D(ID3D11DeviceContext, OMSetDepthStencilState, 36, 3) \
-    D(ID3D11DeviceContext, SOSetTargets, 37, 4) \
-    D(ID3D11DeviceContext, DrawAuto, 38, 1) \
-    D(ID3D11DeviceContext, DrawIndexedInstancedIndirect, 39, 3) \
-    D(ID3D11DeviceContext, DrawInstancedIndirect, 40, 3) \
-    D(ID3D11DeviceContext, Dispatch, 41, 4) \
-    D(ID3D11DeviceContext, DispatchIndirect, 42, 3) \
-    D(ID3D11DeviceContext, RSSetState, 43, 2) \
-    D(ID3D11DeviceContext, RSSetViewports, 44, 3) \
-    D(ID3D11DeviceContext, RSSetScissorRects, 45, 3) \
-    D(ID3D11DeviceContext, CopySubresourceRegion, 46, 9) \
-    D(ID3D11DeviceContext, CopyResource, 47, 3) \
-    D(ID3D11DeviceContext, UpdateSubresource, 48, 7) \
-    D(ID3D11DeviceContext, CopyStructureCount, 49, 4) \
-    D(ID3D11DeviceContext, ClearRenderTargetView, 50, 3) \
-    D(ID3D11DeviceContext, ClearUnorderedAccessViewUint, 51, 3) \
-    D(ID3D11DeviceContext, ClearUnorderedAccessViewFloat, 52, 3) \
-    D(ID3D11DeviceContext, ClearDepthStencilView, 53, 5) \
-    D(ID3D11DeviceContext, GenerateMips, 54, 2) \
-    D(ID3D11DeviceContext, SetResourceMinLOD, 55, 3) \
-    D(ID3D11DeviceContext, GetResourceMinLOD, 56, 2) \
-    D(ID3D11DeviceContext, ResolveSubresource, 57, 6) \
-    D(ID3D11DeviceContext, ExecuteCommandList, 58, 3) \
-    D(ID3D11DeviceContext, HSSetShaderResources, 59, 4) \
-    D(ID3D11DeviceContext, HSSetShader, 60, 4) \
-    D(ID3D11DeviceContext, HSSetSamplers, 61, 4) \
-    D(ID3D11DeviceContext, HSSetConstantBuffers, 62, 4) \
-    D(ID3D11DeviceContext, DSSetShaderResources, 63, 4) \
-    D(ID3D11DeviceContext, DSSetShader, 64, 4) \
-    D(ID3D11DeviceContext, DSSetSamplers, 65, 4) \
-    D(ID3D11DeviceContext, DSSetConstantBuffers, 66, 4) \
-    D(ID3D11DeviceContext, CSSetShaderResources, 67, 4) \
-    D(ID3D11DeviceContext, CSSetUnorderedAccessViews, 68, 5) \
-    D(ID3D11DeviceContext, CSSetShader, 69, 4) \
-    D(ID3D11DeviceContext, CSSetSamplers, 70, 4) \
-    D(ID3D11DeviceContext, CSSetConstantBuffers, 71, 4) \
-    D(ID3D11DeviceContext, VSGetConstantBuffers, 72, 4) \
-    D(ID3D11DeviceContext, PSGetShaderResources, 73, 4) \
-    D(ID3D11DeviceContext, PSGetShader, 74, 4) \
-    D(ID3D11DeviceContext, PSGetSamplers, 75, 4) \
-    D(ID3D11DeviceContext, VSGetShader, 76, 4) \
-    D(ID3D11DeviceContext, PSGetConstantBuffers, 77, 4) \
-    D(ID3D11DeviceContext, IAGetInputLayout, 78, 2) \
-    D(ID3D11DeviceContext, IAGetVertexBuffers, 79, 6) \
-    D(ID3D11DeviceContext, IAGetIndexBuffer, 80, 4) \
-    D(ID3D11DeviceContext, GSGetConstantBuffers, 81, 4) \
-    D(ID3D11DeviceContext, GSGetShader, 82, 4) \
-    D(ID3D11DeviceContext, IAGetPrimitiveTopology, 83, 2) \
-    D(ID3D11DeviceContext, VSGetShaderResources, 84, 4) \
-    D(ID3D11DeviceContext, VSGetSamplers, 85, 4) \
-    D(ID3D11DeviceContext, GetPredication, 86, 3) \
-    D(ID3D11DeviceContext, GSGetShaderResources, 87, 4) \
-    D(ID3D11DeviceContext, GSGetSamplers, 88, 4) \
-    D(ID3D11DeviceContext, OMGetRenderTargets, 89, 4) \
-    D(ID3D11DeviceContext, OMGetRenderTargetsAndUnorderedAccessViews, 90, 7) \
-    D(ID3D11DeviceContext, OMGetBlendState, 91, 4) \
-    D(ID3D11DeviceContext, OMGetDepthStencilState, 92, 3) \
-    D(ID3D11DeviceContext, SOGetTargets, 93, 3) \
-    D(ID3D11DeviceContext, RSGetState, 94, 2) \
-    D(ID3D11DeviceContext, RSGetViewports, 95, 3) \
-    D(ID3D11DeviceContext, RSGetScissorRects, 96, 3) \
-    D(ID3D11DeviceContext, HSGetShaderResources, 97, 4) \
-    D(ID3D11DeviceContext, HSGetShader, 98, 4) \
-    D(ID3D11DeviceContext, HSGetSamplers, 99, 4) \
-    D(ID3D11DeviceContext, HSGetConstantBuffers, 100, 4) \
-    D(ID3D11DeviceContext, DSGetShaderResources, 101, 4) \
-    D(ID3D11DeviceContext, DSGetShader, 102, 4) \
-    D(ID3D11DeviceContext, DSGetSamplers, 103, 4) \
-    D(ID3D11DeviceContext, DSGetConstantBuffers, 104, 4) \
-    D(ID3D11DeviceContext, CSGetShaderResources, 105, 4) \
-    D(ID3D11DeviceContext, CSGetUnorderedAccessViews, 106, 4) \
-    D(ID3D11DeviceContext, CSGetShader, 107, 4) \
-    D(ID3D11DeviceContext, CSGetSamplers, 108, 4) \
-    D(ID3D11DeviceContext, CSGetConstantBuffers, 109, 4) \
-    D(ID3D11DeviceContext, ClearState, 110, 1) \
-    D(ID3D11DeviceContext, Flush, 111, 1) \
-    D(ID3D11DeviceContext, GetType, 112, 1) \
-    D(ID3D11DeviceContext, GetContextFlags, 113, 1) \
-    D(ID3D11DeviceContext, FinishCommandList, 114, 3) \
-    D(ID3D11Device, CreateBuffer, 3, 4) \
-    D(ID3D11Device, CreateTexture1D, 4, 4) \
-    D(ID3D11Device, CreateTexture2D, 5, 4) \
-    D(ID3D11Device, CreateTexture3D, 6, 4) \
-    D(ID3D11Device, CreateShaderResourceView, 7, 4) \
-    D(ID3D11Device, CreateUnorderedAccessView, 8, 4) \
-    D(ID3D11Device, CreateRenderTargetView, 9, 4) \
-    D(ID3D11Device, CreateDepthStencilView, 10, 4) \
-    D(ID3D11Device, CreateInputLayout, 11, 6) \
-    D(ID3D11Device, CreateVertexShader, 12, 5) \
-    D(ID3D11Device, CreateGeometryShader, 13, 5) \
-    D(ID3D11Device, CreateGeometryShaderWithStreamOutput, 14, 10) \
-    D(ID3D11Device, CreatePixelShader, 15, 5) \
-    D(ID3D11Device, CreateHullShader, 16, 5) \
-    D(ID3D11Device, CreateDomainShader, 17, 5) \
-    D(ID3D11Device, CreateComputeShader, 18, 5) \
-    D(ID3D11Device, CreateClassLinkage, 19, 2) \
-    D(ID3D11Device, CreateBlendState, 20, 3) \
-    D(ID3D11Device, CreateDepthStencilState, 21, 3) \
-    D(ID3D11Device, CreateRasterizerState, 22, 3) \
-    D(ID3D11Device, CreateSamplerState, 23, 3) \
-    D(ID3D11Device, CreateQuery, 24, 3) \
-    D(ID3D11Device, CreatePredicate, 25, 3) \
-    D(ID3D11Device, CreateCounter, 26, 3) \
-    D(ID3D11Device, CreateDeferredContext, 27, 3) \
-    D(ID3D11Device, OpenSharedResource, 28, 4) \
-    D(ID3D11Device, CheckFormatSupport, 29, 3) \
-    D(ID3D11Device, CheckMultisampleQualityLevels, 30, 4) \
-    D(ID3D11Device, CheckCounterInfo, 31, 2) \
-    D(ID3D11Device, CheckCounter, 32, 10) \
-    D(ID3D11Device, CheckFeatureSupport, 33, 4) \
-    D(ID3D11Device, GetPrivateData, 34, 4) \
-    D(ID3D11Device, SetPrivateData, 35, 4) \
-    D(ID3D11Device, SetPrivateDataInterface, 36, 3) \
-    D(ID3D11Device, GetFeatureLevel, 37, 1) \
-    D(ID3D11Device, GetCreationFlags, 38, 1) \
-    D(ID3D11Device, GetDeviceRemovedReason, 39, 1) \
-    D(ID3D11Device, GetImmediateContext, 40, 2) \
-    D(ID3D11Device, SetExceptionMode, 41, 2) \
-    D(ID3D11Device, GetExceptionMode, 42, 1)
+    D(IUnknown, QueryInterface, 0, 3, 'D', "tgo") \
+    D(IUnknown, AddRef, 1, 1, 'D', "t") \
+    D(IUnknown, Release, 2, 1, 'D', "t") \
+    D(IDXGIObject, SetPrivateData, 3, 4, 'D', "tgvp") \
+    D(IDXGIObject, SetPrivateDataInterface, 4, 3, 'D', "tgi") \
+    D(IDXGIObject, GetPrivateData, 5, 4, 'D', "tgpp") \
+    D(IDXGIObject, GetParent, 6, 3, 'D', "tgo") \
+    D(IDXGIDeviceSubObject, GetDevice, 7, 3, 'D', "tgo") \
+    D(IDXGIFactory, EnumAdapters, 7, 3, 'D', "tvo") \
+    D(IDXGIFactory, MakeWindowAssociation, 8, 3, 'D', "thv") \
+    D(IDXGIFactory, GetWindowAssociation, 9, 2, 'D', "tp") \
+    D(IDXGIFactory, CreateSwapChain, 10, 4, 'D', "tipo") \
+    D(IDXGIFactory, CreateSoftwareAdapter, 11, 3, 'D', "tho") \
+    D(IDXGIFactory1, EnumAdapters1, 12, 3, 'D', "tvo") \
+    D(IDXGIFactory1, IsCurrent, 13, 1, 'D', "t") \
+    D(IDXGIAdapter, EnumOutputs, 7, 3, 'D', "tvo") \
+    D(IDXGIAdapter, GetDesc, 8, 2, 'D', "tp") \
+    D(IDXGIAdapter, CheckInterfaceSupport, 9, 3, 'D', "tgp") \
+    D(IDXGIAdapter1, GetDesc1, 10, 2, 'D', "tp") \
+    D(IDXGIOutput, GetDesc, 7, 2, 'D', "tp") \
+    D(IDXGIOutput, GetDisplayModeList, 8, 5, 'D', "tvvpp") \
+    D(IDXGIOutput, FindClosestMatchingMode, 9, 4, 'D', "tppi") \
+    D(IDXGIOutput, WaitForVBlank, 10, 1, 'D', "t") \
+    D(IDXGIOutput, TakeOwnership, 11, 3, 'D', "tiv") \
+    D(IDXGIOutput, ReleaseOwnership, 12, 1, 'V', "t") \
+    D(IDXGIOutput, GetGammaControlCapabilities, 13, 2, 'D', "tp") \
+    D(IDXGIOutput, SetGammaControl, 14, 2, 'D', "tp") \
+    D(IDXGIOutput, GetGammaControl, 15, 2, 'D', "tp") \
+    D(IDXGIOutput, SetDisplaySurface, 16, 2, 'D', "ti") \
+    D(IDXGIOutput, GetDisplaySurfaceData, 17, 2, 'D', "ti") \
+    D(IDXGIOutput, GetFrameStatistics, 18, 2, 'D', "tp") \
+    D(IDXGISwapChain, Present, 8, 3, 'D', "tvv") \
+    D(IDXGISwapChain, GetBuffer, 9, 4, 'D', "tvgo") \
+    D(IDXGISwapChain, SetFullscreenState, 10, 3, 'D', "tvi") \
+    D(IDXGISwapChain, GetFullscreenState, 11, 3, 'D', "tpo") \
+    D(IDXGISwapChain, GetDesc, 12, 2, 'D', "tp") \
+    D(IDXGISwapChain, ResizeBuffers, 13, 6, 'D', "tvvvvv") \
+    D(IDXGISwapChain, ResizeTarget, 14, 2, 'D', "tp") \
+    D(IDXGISwapChain, GetContainingOutput, 15, 2, 'D', "to") \
+    D(IDXGISwapChain, GetFrameStatistics, 16, 2, 'D', "tp") \
+    D(IDXGISwapChain, GetLastPresentCount, 17, 2, 'D', "tp") \
+    D(IDXGIDevice, GetAdapter, 7, 2, 'D', "to") \
+    D(IDXGIDevice, CreateSurface, 8, 6, 'D', "tpvvpo") \
+    D(IDXGIDevice, QueryResourceResidency, 9, 4, 'D', "topv") \
+    D(IDXGIDevice, SetGPUThreadPriority, 10, 2, 'D', "tv") \
+    D(IDXGIDevice, GetGPUThreadPriority, 11, 2, 'D', "tp") \
+    D(IDXGIDevice1, SetMaximumFrameLatency, 12, 2, 'D', "tv") \
+    D(IDXGIDevice1, GetMaximumFrameLatency, 13, 2, 'D', "tp") \
+    D(ID3D10Blob, GetBufferPointer, 3, 1, 'P', "t") \
+    D(ID3D10Blob, GetBufferSize, 4, 1, 'Z', "t") \
+    D(ID3D11DeviceChild, GetDevice, 3, 2, 'V', "to") \
+    D(ID3D11DeviceChild, GetPrivateData, 4, 4, 'D', "tgpp") \
+    D(ID3D11DeviceChild, SetPrivateData, 5, 4, 'D', "tgvp") \
+    D(ID3D11DeviceChild, SetPrivateDataInterface, 6, 3, 'D', "tgi") \
+    D(ID3D11Resource, GetType, 7, 2, 'V', "tp") \
+    D(ID3D11Resource, SetEvictionPriority, 8, 2, 'V', "tv") \
+    D(ID3D11Resource, GetEvictionPriority, 9, 1, 'D', "t") \
+    D(ID3D11Buffer, GetDesc, 10, 2, 'V', "tp") \
+    D(ID3D11Texture1D, GetDesc, 10, 2, 'V', "tp") \
+    D(ID3D11Texture2D, GetDesc, 10, 2, 'V', "tp") \
+    D(ID3D11Texture3D, GetDesc, 10, 2, 'V', "tp") \
+    D(ID3D11View, GetResource, 7, 2, 'V', "to") \
+    D(ID3D11RenderTargetView, GetDesc, 8, 2, 'V', "tp") \
+    D(ID3D11DepthStencilView, GetDesc, 8, 2, 'V', "tp") \
+    D(ID3D11ShaderResourceView, GetDesc, 8, 2, 'V', "tp") \
+    D(ID3D11UnorderedAccessView, GetDesc, 8, 2, 'V', "tp") \
+    D(ID3D11SamplerState, GetDesc, 7, 2, 'V', "tp") \
+    D(ID3D11RasterizerState, GetDesc, 7, 2, 'V', "tp") \
+    D(ID3D11BlendState, GetDesc, 7, 2, 'V', "tp") \
+    D(ID3D11DepthStencilState, GetDesc, 7, 2, 'V', "tp") \
+    D(ID3D11Asynchronous, GetDataSize, 7, 1, 'D', "t") \
+    D(ID3D11Query, GetDesc, 8, 2, 'V', "tp") \
+    D(ID3D11Counter, GetDesc, 8, 2, 'V', "tp") \
+    D(ID3D11ClassInstance, GetClassLinkage, 7, 2, 'V', "to") \
+    D(ID3D11ClassInstance, GetDesc, 8, 2, 'V', "tp") \
+    D(ID3D11ClassInstance, GetInstanceName, 9, 3, 'V', "tpp") \
+    D(ID3D11ClassInstance, GetTypeName, 10, 3, 'V', "tpp") \
+    D(ID3D11ClassLinkage, GetClassInstance, 7, 4, 'D', "tsvo") \
+    D(ID3D11ClassLinkage, CreateClassInstance, 8, 7, 'D', "tsvvvvo") \
+    D(ID3D11CommandList, GetContextFlags, 7, 1, 'D', "t") \
+    D(ID3D11DeviceContext, VSSetConstantBuffers, 7, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, PSSetShaderResources, 8, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, PSSetShader, 9, 4, 'V', "tiov") \
+    D(ID3D11DeviceContext, PSSetSamplers, 10, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, VSSetShader, 11, 4, 'V', "tiov") \
+    D(ID3D11DeviceContext, DrawIndexed, 12, 4, 'V', "tvvv") \
+    D(ID3D11DeviceContext, Draw, 13, 3, 'V', "tvv") \
+    D(ID3D11DeviceContext, Map, 14, 6, 'D', "tivvvp") \
+    D(ID3D11DeviceContext, Unmap, 15, 3, 'V', "tiv") \
+    D(ID3D11DeviceContext, PSSetConstantBuffers, 16, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, IASetInputLayout, 17, 2, 'V', "ti") \
+    D(ID3D11DeviceContext, IASetVertexBuffers, 18, 6, 'V', "tvvopp") \
+    D(ID3D11DeviceContext, IASetIndexBuffer, 19, 4, 'V', "tivv") \
+    D(ID3D11DeviceContext, DrawIndexedInstanced, 20, 6, 'V', "tvvvvv") \
+    D(ID3D11DeviceContext, DrawInstanced, 21, 5, 'V', "tvvvv") \
+    D(ID3D11DeviceContext, GSSetConstantBuffers, 22, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, GSSetShader, 23, 4, 'V', "tiov") \
+    D(ID3D11DeviceContext, IASetPrimitiveTopology, 24, 2, 'V', "tv") \
+    D(ID3D11DeviceContext, VSSetShaderResources, 25, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, VSSetSamplers, 26, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, Begin, 27, 2, 'V', "ti") \
+    D(ID3D11DeviceContext, End, 28, 2, 'V', "ti") \
+    D(ID3D11DeviceContext, GetData, 29, 5, 'D', "tipvv") \
+    D(ID3D11DeviceContext, SetPredication, 30, 3, 'V', "tiv") \
+    D(ID3D11DeviceContext, GSSetShaderResources, 31, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, GSSetSamplers, 32, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, OMSetRenderTargets, 33, 4, 'V', "tvoi") \
+    D(ID3D11DeviceContext, OMSetRenderTargetsAndUnorderedAccessViews, 34, 8, 'V', "tvoivvop") \
+    D(ID3D11DeviceContext, OMSetBlendState, 35, 4, 'V', "tipv") \
+    D(ID3D11DeviceContext, OMSetDepthStencilState, 36, 3, 'V', "tiv") \
+    D(ID3D11DeviceContext, SOSetTargets, 37, 4, 'V', "tvop") \
+    D(ID3D11DeviceContext, DrawAuto, 38, 1, 'V', "t") \
+    D(ID3D11DeviceContext, DrawIndexedInstancedIndirect, 39, 3, 'V', "tiv") \
+    D(ID3D11DeviceContext, DrawInstancedIndirect, 40, 3, 'V', "tiv") \
+    D(ID3D11DeviceContext, Dispatch, 41, 4, 'V', "tvvv") \
+    D(ID3D11DeviceContext, DispatchIndirect, 42, 3, 'V', "tiv") \
+    D(ID3D11DeviceContext, RSSetState, 43, 2, 'V', "ti") \
+    D(ID3D11DeviceContext, RSSetViewports, 44, 3, 'V', "tvp") \
+    D(ID3D11DeviceContext, RSSetScissorRects, 45, 3, 'V', "tvp") \
+    D(ID3D11DeviceContext, CopySubresourceRegion, 46, 9, 'V', "tivvvvivp") \
+    D(ID3D11DeviceContext, CopyResource, 47, 3, 'V', "tii") \
+    D(ID3D11DeviceContext, UpdateSubresource, 48, 7, 'V', "tivppvv") \
+    D(ID3D11DeviceContext, CopyStructureCount, 49, 4, 'V', "tivi") \
+    D(ID3D11DeviceContext, ClearRenderTargetView, 50, 3, 'V', "tip") \
+    D(ID3D11DeviceContext, ClearUnorderedAccessViewUint, 51, 3, 'V', "tip") \
+    D(ID3D11DeviceContext, ClearUnorderedAccessViewFloat, 52, 3, 'V', "tip") \
+    D(ID3D11DeviceContext, ClearDepthStencilView, 53, 5, 'V', "tivvv") \
+    D(ID3D11DeviceContext, GenerateMips, 54, 2, 'V', "ti") \
+    D(ID3D11DeviceContext, SetResourceMinLOD, 55, 3, 'V', "tiv") \
+    D(ID3D11DeviceContext, GetResourceMinLOD, 56, 2, 'F', "ti") \
+    D(ID3D11DeviceContext, ResolveSubresource, 57, 6, 'V', "tivivv") \
+    D(ID3D11DeviceContext, ExecuteCommandList, 58, 3, 'V', "tiv") \
+    D(ID3D11DeviceContext, HSSetShaderResources, 59, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, HSSetShader, 60, 4, 'V', "tiov") \
+    D(ID3D11DeviceContext, HSSetSamplers, 61, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, HSSetConstantBuffers, 62, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, DSSetShaderResources, 63, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, DSSetShader, 64, 4, 'V', "tiov") \
+    D(ID3D11DeviceContext, DSSetSamplers, 65, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, DSSetConstantBuffers, 66, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, CSSetShaderResources, 67, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, CSSetUnorderedAccessViews, 68, 5, 'V', "tvvop") \
+    D(ID3D11DeviceContext, CSSetShader, 69, 4, 'V', "tiov") \
+    D(ID3D11DeviceContext, CSSetSamplers, 70, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, CSSetConstantBuffers, 71, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, VSGetConstantBuffers, 72, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, PSGetShaderResources, 73, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, PSGetShader, 74, 4, 'V', "toop") \
+    D(ID3D11DeviceContext, PSGetSamplers, 75, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, VSGetShader, 76, 4, 'V', "toop") \
+    D(ID3D11DeviceContext, PSGetConstantBuffers, 77, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, IAGetInputLayout, 78, 2, 'V', "to") \
+    D(ID3D11DeviceContext, IAGetVertexBuffers, 79, 6, 'V', "tvvopp") \
+    D(ID3D11DeviceContext, IAGetIndexBuffer, 80, 4, 'V', "topp") \
+    D(ID3D11DeviceContext, GSGetConstantBuffers, 81, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, GSGetShader, 82, 4, 'V', "toop") \
+    D(ID3D11DeviceContext, IAGetPrimitiveTopology, 83, 2, 'V', "tp") \
+    D(ID3D11DeviceContext, VSGetShaderResources, 84, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, VSGetSamplers, 85, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, GetPredication, 86, 3, 'V', "top") \
+    D(ID3D11DeviceContext, GSGetShaderResources, 87, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, GSGetSamplers, 88, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, OMGetRenderTargets, 89, 4, 'V', "tvoo") \
+    D(ID3D11DeviceContext, OMGetRenderTargetsAndUnorderedAccessViews, 90, 7, 'V', "tvoovvo") \
+    D(ID3D11DeviceContext, OMGetBlendState, 91, 4, 'V', "topp") \
+    D(ID3D11DeviceContext, OMGetDepthStencilState, 92, 3, 'V', "top") \
+    D(ID3D11DeviceContext, SOGetTargets, 93, 3, 'V', "tvo") \
+    D(ID3D11DeviceContext, RSGetState, 94, 2, 'V', "to") \
+    D(ID3D11DeviceContext, RSGetViewports, 95, 3, 'V', "tpp") \
+    D(ID3D11DeviceContext, RSGetScissorRects, 96, 3, 'V', "tpp") \
+    D(ID3D11DeviceContext, HSGetShaderResources, 97, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, HSGetShader, 98, 4, 'V', "toop") \
+    D(ID3D11DeviceContext, HSGetSamplers, 99, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, HSGetConstantBuffers, 100, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, DSGetShaderResources, 101, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, DSGetShader, 102, 4, 'V', "toop") \
+    D(ID3D11DeviceContext, DSGetSamplers, 103, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, DSGetConstantBuffers, 104, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, CSGetShaderResources, 105, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, CSGetUnorderedAccessViews, 106, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, CSGetShader, 107, 4, 'V', "toop") \
+    D(ID3D11DeviceContext, CSGetSamplers, 108, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, CSGetConstantBuffers, 109, 4, 'V', "tvvo") \
+    D(ID3D11DeviceContext, ClearState, 110, 1, 'V', "t") \
+    D(ID3D11DeviceContext, Flush, 111, 1, 'V', "t") \
+    D(ID3D11DeviceContext, GetType, 112, 1, 'D', "t") \
+    D(ID3D11DeviceContext, GetContextFlags, 113, 1, 'D', "t") \
+    D(ID3D11DeviceContext, FinishCommandList, 114, 3, 'D', "tvo") \
+    D(ID3D11Device, CreateBuffer, 3, 4, 'D', "tppo") \
+    D(ID3D11Device, CreateTexture1D, 4, 4, 'D', "tppo") \
+    D(ID3D11Device, CreateTexture2D, 5, 4, 'D', "tppo") \
+    D(ID3D11Device, CreateTexture3D, 6, 4, 'D', "tppo") \
+    D(ID3D11Device, CreateShaderResourceView, 7, 4, 'D', "tipo") \
+    D(ID3D11Device, CreateUnorderedAccessView, 8, 4, 'D', "tipo") \
+    D(ID3D11Device, CreateRenderTargetView, 9, 4, 'D', "tipo") \
+    D(ID3D11Device, CreateDepthStencilView, 10, 4, 'D', "tipo") \
+    D(ID3D11Device, CreateInputLayout, 11, 6, 'D', "tpvpvo") \
+    D(ID3D11Device, CreateVertexShader, 12, 5, 'D', "tpvio") \
+    D(ID3D11Device, CreateGeometryShader, 13, 5, 'D', "tpvio") \
+    D(ID3D11Device, CreateGeometryShaderWithStreamOutput, 14, 10, 'D', "tpvpvpvvio") \
+    D(ID3D11Device, CreatePixelShader, 15, 5, 'D', "tpvio") \
+    D(ID3D11Device, CreateHullShader, 16, 5, 'D', "tpvio") \
+    D(ID3D11Device, CreateDomainShader, 17, 5, 'D', "tpvio") \
+    D(ID3D11Device, CreateComputeShader, 18, 5, 'D', "tpvio") \
+    D(ID3D11Device, CreateClassLinkage, 19, 2, 'D', "to") \
+    D(ID3D11Device, CreateBlendState, 20, 3, 'D', "tpo") \
+    D(ID3D11Device, CreateDepthStencilState, 21, 3, 'D', "tpo") \
+    D(ID3D11Device, CreateRasterizerState, 22, 3, 'D', "tpo") \
+    D(ID3D11Device, CreateSamplerState, 23, 3, 'D', "tpo") \
+    D(ID3D11Device, CreateQuery, 24, 3, 'D', "tpo") \
+    D(ID3D11Device, CreatePredicate, 25, 3, 'D', "tpo") \
+    D(ID3D11Device, CreateCounter, 26, 3, 'D', "tpo") \
+    D(ID3D11Device, CreateDeferredContext, 27, 3, 'D', "tvo") \
+    D(ID3D11Device, OpenSharedResource, 28, 4, 'D', "thgo") \
+    D(ID3D11Device, CheckFormatSupport, 29, 3, 'D', "tvp") \
+    D(ID3D11Device, CheckMultisampleQualityLevels, 30, 4, 'D', "tvvp") \
+    D(ID3D11Device, CheckCounterInfo, 31, 2, 'V', "tp") \
+    D(ID3D11Device, CheckCounter, 32, 10, 'D', "tppppppppp") \
+    D(ID3D11Device, CheckFeatureSupport, 33, 4, 'D', "tvpv") \
+    D(ID3D11Device, GetPrivateData, 34, 4, 'D', "tgpp") \
+    D(ID3D11Device, SetPrivateData, 35, 4, 'D', "tgvp") \
+    D(ID3D11Device, SetPrivateDataInterface, 36, 3, 'D', "tgi") \
+    D(ID3D11Device, GetFeatureLevel, 37, 1, 'D', "t") \
+    D(ID3D11Device, GetCreationFlags, 38, 1, 'D', "t") \
+    D(ID3D11Device, GetDeviceRemovedReason, 39, 1, 'D', "t") \
+    D(ID3D11Device, GetImmediateContext, 40, 2, 'V', "to") \
+    D(ID3D11Device, SetExceptionMode, 41, 2, 'D', "tv") \
+    D(ID3D11Device, GetExceptionMode, 42, 1, 'D', "t")
 #define B11_EXPORTS(E) \
-    E("dxgi.dll", CreateDXGIFactory, 2) \
-    E("dxgi.dll", CreateDXGIFactory1, 2) \
-    E("d3d11.dll", D3D11CreateDevice, 10) \
-    E("d3d11.dll", D3D11CreateDeviceAndSwapChain, 12) \
-    E("D3DCompiler_42.dll", D3DCompile, 11) \
-    E("D3DCompiler_42.dll", D3DReflect, 4) \
-    E("D3DCompiler_42.dll", D3DDisassemble, 5)
+    E("dxgi.dll", CreateDXGIFactory, 2, "go") \
+    E("dxgi.dll", CreateDXGIFactory1, 2, "go") \
+    E("d3d11.dll", D3D11CreateDevice, 10, "ivhvpvvopo") \
+    E("d3d11.dll", D3D11CreateDeviceAndSwapChain, 12, "ivhvpvvpoopo") \
+    E("D3DCompiler_42.dll", D3DCompile, 11, "pvspissvvoo") \
+    E("D3DCompiler_42.dll", D3DReflect, 4, "pvgo") \
+    E("D3DCompiler_42.dll", D3DDisassemble, 5, "pvvso")
 /* ---- END GENERATED ---- */
 
 /* The interface the game asks D3DReflect for: these 16 bytes are at image address 0x1190ba0c, the IID
@@ -960,11 +970,13 @@ typedef struct b11_method {
     char ret;
 } b11_method;
 
-#define B11_AS_PROTO(I, D, N, slot, nargs, ret) static uint32_t m_##D##_##N(struct lift_ctx *c, const uint32_t *a);
+#define B11_AS_PROTO(I, D, N, slot, nargs, ret) \
+    static uint32_t m_##D##_##N(struct lift_ctx *c, const uint32_t *a); \
+    static uint32_t b11_w_##D##_##N(struct lift_ctx *c, const uint32_t *a);
 #define B11_AS_PROTOS(name, parent) B11_METHODS_##name(B11_AS_PROTO)
 B11_IFACES(B11_AS_PROTOS)
 
-#define B11_AS_METHOD(I, D, N, slot, nargs, ret) {m_##D##_##N, #N, K_##D, slot, nargs, ret},
+#define B11_AS_METHOD(I, D, N, slot, nargs, ret) {b11_w_##D##_##N, #N, K_##D, slot, nargs, ret},
 #define B11_AS_TABLE(name, parent) static const b11_method b11_methods_##name[] = {B11_METHODS_##name(B11_AS_METHOD)};
 B11_IFACES(B11_AS_TABLE)
 
@@ -996,23 +1008,28 @@ B11_IFACES(B11_AS_SLOTS)
  * shows what the other slots are in D3DCompiler_42: they stop the run, registered with 0 arguments. No
  * version of the interface has more slots than the current one. */
 #define B11_REFLECTION_SLOTS(S) \
-    S(3, 0) S(4, 2) S(5, 0) S(6, 3) S(7, 0) S(8, 0) S(9, 0) S(10, 0) S(11, 0) S(12, 0) S(13, 0) S(14, 0) S(15, 0) S(16, 0) S(17, 0) \
-    S(18, 0) S(19, 0) S(20, 0) S(21, 0)
-#define B11_REFLECTION_CB_SLOTS(S) S(0, 2) S(1, 0) S(2, 0)
+    S(3, 0, 'D', "") S(4, 2, 'P', "tv") S(5, 0, 'D', "") S(6, 3, 'D', "tvp") S(7, 0, 'D', "") S(8, 0, 'D', "") S(9, 0, 'D', "") \
+    S(10, 0, 'D', "") S(11, 0, 'D', "") S(12, 0, 'D', "") S(13, 0, 'D', "") S(14, 0, 'D', "") S(15, 0, 'D', "") S(16, 0, 'D', "") \
+    S(17, 0, 'D', "") S(18, 0, 'D', "") S(19, 0, 'D', "") S(20, 0, 'D', "") S(21, 0, 'D', "")
+#define B11_REFLECTION_CB_SLOTS(S) S(0, 2, 'D', "tp") S(1, 0, 'D', "") S(2, 0, 'D', "")
 #define B11_REFLECTION_UNKNOWN(S) \
     S(Reflection, 3) S(Reflection, 5) S(Reflection, 7) S(Reflection, 8) S(Reflection, 9) S(Reflection, 10) S(Reflection, 11) \
     S(Reflection, 12) S(Reflection, 13) S(Reflection, 14) S(Reflection, 15) S(Reflection, 16) S(Reflection, 17) \
     S(Reflection, 18) S(Reflection, 19) S(Reflection, 20) S(Reflection, 21) S(ReflectionCB, 1) S(ReflectionCB, 2)
-#define B11_AS_REFLECTION_PROTO(n, nargs) static uint32_t m_Reflection_slot##n(struct lift_ctx *c, const uint32_t *a);
-#define B11_AS_REFLECTION_CB_PROTO(n, nargs) static uint32_t m_ReflectionCB_slot##n(struct lift_ctx *c, const uint32_t *a);
+#define B11_AS_REFLECTION_PROTO(n, nargs, ret, sig) \
+    static uint32_t m_Reflection_slot##n(struct lift_ctx *c, const uint32_t *a); \
+    static uint32_t b11_w_Reflection_slot##n(struct lift_ctx *c, const uint32_t *a);
+#define B11_AS_REFLECTION_CB_PROTO(n, nargs, ret, sig) \
+    static uint32_t m_ReflectionCB_slot##n(struct lift_ctx *c, const uint32_t *a); \
+    static uint32_t b11_w_ReflectionCB_slot##n(struct lift_ctx *c, const uint32_t *a);
 B11_REFLECTION_SLOTS(B11_AS_REFLECTION_PROTO)
 B11_REFLECTION_CB_SLOTS(B11_AS_REFLECTION_CB_PROTO)
-#define B11_AS_REFLECTION_METHOD(n, nargs) {m_Reflection_slot##n, "slot " #n, K_Reflection, n, nargs, 'D'},
-#define B11_AS_REFLECTION_CB_METHOD(n, nargs) {m_ReflectionCB_slot##n, "slot " #n, K_ReflectionCB, n, nargs, 'D'},
+#define B11_AS_REFLECTION_METHOD(n, nargs, ret, sig) {b11_w_Reflection_slot##n, "slot " #n, K_Reflection, n, nargs, ret},
+#define B11_AS_REFLECTION_CB_METHOD(n, nargs, ret, sig) {b11_w_ReflectionCB_slot##n, "slot " #n, K_ReflectionCB, n, nargs, ret},
 static const b11_method b11_methods_Reflection[] = {
-    {m_IUnknown_QueryInterface, "QueryInterface", K_IUnknown, 0, 3, 'D'},
-    {m_IUnknown_AddRef, "AddRef", K_IUnknown, 1, 1, 'D'},
-    {m_IUnknown_Release, "Release", K_IUnknown, 2, 1, 'D'},
+    {b11_w_IUnknown_QueryInterface, "QueryInterface", K_IUnknown, 0, 3, 'D'},
+    {b11_w_IUnknown_AddRef, "AddRef", K_IUnknown, 1, 1, 'D'},
+    {b11_w_IUnknown_Release, "Release", K_IUnknown, 2, 1, 'D'},
     B11_REFLECTION_SLOTS(B11_AS_REFLECTION_METHOD)
 };
 static const b11_method b11_methods_ReflectionCB[] = {B11_REFLECTION_CB_SLOTS(B11_AS_REFLECTION_CB_METHOD)};
@@ -2893,7 +2910,20 @@ B11_CTX_OBJ0(End, ID3D11Asynchronous)
 B11_CTX_OBJ0(RSSetState, ID3D11RasterizerState)
 B11_CTX_OBJ0(GenerateMips, ID3D11ShaderResourceView)
 
-B11_UNSUP(ID3D11DeviceContext, GetResourceMinLOD, "it returns a FLOAT, which a 32-bit caller expects in x87 st(0)")
+/* FLOAT GetResourceMinLOD(ID3D11Resource *pResource). A 32-bit caller takes the result from x87 st(0) and
+ * pops it; EAX means nothing. Only the host can put a value there. */
+B11_FN(ID3D11DeviceContext, GetResourceMinLOD) {
+    ID3D11Resource *res;
+    int bad = 0;
+    B11_SELF(ID3D11DeviceContext)
+    res = b11_arg(a[1], K_ID3D11Resource, &bad);
+    if (b11_host.return_float == NULL) {
+        b11_host.stop("ID3D11DeviceContext::GetResourceMinLOD returns a FLOAT: it needs d3d11_bridge_host_t.return_float");
+        return 0u;
+    }
+    b11_host.return_float(c, bad ? 0.0f : ID3D11DeviceContext_GetResourceMinLOD(self, res));
+    return 0u;
+}
 
 B11_FN(ID3D11DeviceContext, GetData) {
     ID3D11Asynchronous *async;
@@ -3360,7 +3390,150 @@ static uint32_t m_ReflectionCB_slot0(struct lift_ctx *c, const uint32_t *a) {
     }
 B11_REFLECTION_UNKNOWN(B11_AS_REFLECTION_STUB)
 
-/* ---- 6. entry points --------------------------------------------------------------------------- */
+/* ---- 6. development aids and entry points ---------------------------------------------------------
+ * Two aids, both off unless the environment asks; d3d11_bridge_init reads it once.
+ *
+ *   ROME2_D3D11_TRACE=<file>  One line for every call the guest makes into the bridge, written when the call
+ *                             returns: thread (numbered by first call), name, arguments, result. Values that
+ *                             belong to one run are left out: an address is * (0 when null), a handle h, This
+ *                             is not shown. What stays (values, GUIDs, strings, results) is the same in any
+ *                             run that makes the same calls, so two records can be compared line by line.
+ *   ROME2_D3D11_DEBUG=1       Devices are created with D3D11_CREATE_DEVICE_DEBUG, and what Direct3D's debug
+ *                             layer says about a call (corruption, errors, warnings) is printed on stderr
+ *                             when the call returns: the host checks every converted argument.
+ *   ROME2_D3D11_DEBUG=stop    The same, and the first error or corruption message stops the run.
+ *
+ * The debug layer is the Windows optional feature "Graphics Tools". Without it no debug device can be
+ * created, and the run stops there saying so. A message is attributed to the call that was returning when
+ * it was read; with several threads inside Direct3D that can be a neighbour's. */
+
+#define B11_DEV_TRACE 1u
+#define B11_DEV_DEBUG 2u
+#define B11_DEV_STOP 4u
+static uint32_t b11_dev; /* nonzero: every call ends in b11_after */
+static FILE *b11_trace;
+static IDXGIInfoQueue *b11_info;
+static CRITICAL_SECTION b11_dev_lock; /* one line, or one reading of the message queue, at a time */
+static volatile LONG b11_threads;
+static __declspec(thread) uint32_t b11_thread_no;
+
+static void b11_dev_init(void) {
+    typedef HRESULT(WINAPI * get_interface)(REFIID, void **);
+    const char *path = getenv("ROME2_D3D11_TRACE"), *debug = getenv("ROME2_D3D11_DEBUG");
+    InitializeCriticalSection(&b11_dev_lock);
+    if (path != NULL && path[0] != '\0') {
+        b11_trace = fopen(path, "wb"); /* the same bytes on any host */
+        if (b11_trace == NULL) {
+            b11_host.stop("ROME2_D3D11_TRACE: cannot write %s", path);
+        } else {
+            b11_dev |= B11_DEV_TRACE;
+        }
+    }
+    if (debug != NULL && debug[0] != '\0' && strcmp(debug, "0") != 0) {
+        const HMODULE lib = LoadLibraryExW(L"dxgidebug.dll", NULL, LOAD_LIBRARY_SEARCH_SYSTEM32);
+        const get_interface get = lib != NULL ? (get_interface)(uintptr_t)GetProcAddress(lib, "DXGIGetDebugInterface") : NULL;
+        b11_dev |= B11_DEV_DEBUG | (strcmp(debug, "stop") == 0 ? B11_DEV_STOP : 0u);
+        if (get == NULL || FAILED(get(&IID_IDXGIInfoQueue, (void **)&b11_info))) {
+            b11_info = NULL; /* no debug layer: creating the device will say so */
+        }
+    }
+}
+
+/* The creation flags of a device, and the one failure ROME2_D3D11_DEBUG can cause. */
+#define B11_DEVICE_FLAGS(flags) ((flags) | ((b11_dev & B11_DEV_DEBUG) != 0u ? (UINT)D3D11_CREATE_DEVICE_DEBUG : 0u))
+static void b11_debug_created(HRESULT hr, const char *what) {
+    if (hr == DXGI_ERROR_SDK_COMPONENT_MISSING && (b11_dev & B11_DEV_DEBUG) != 0u) {
+        b11_host.stop("%s: ROME2_D3D11_DEBUG is set and Direct3D's debug layer is not installed (the Windows optional feature "
+                      "\"Graphics Tools\")", what);
+    }
+}
+
+static void b11_trace_call(const char *name, const char *sig, char ret, const uint32_t *a, uint32_t r) {
+    char line[768];
+    size_t n, i, k;
+    if (b11_thread_no == 0u) {
+        b11_thread_no = (uint32_t)InterlockedIncrement(&b11_threads);
+    }
+    n = (size_t)snprintf(line, sizeof line, "%u %s(", b11_thread_no, name);
+    for (i = 0u; sig[i] != '\0' && n < sizeof line - 96u; ++i) {
+        const uint32_t v = a[i];
+        if (sig[i] == 't') {
+            continue;
+        }
+        if (line[n - 1u] != '(') {
+            line[n++] = ' ';
+        }
+        if (sig[i] == 'v') {
+            n += (size_t)snprintf(line + n, sizeof line - n, "%x", v);
+        } else if (sig[i] == 'g' && v != 0u) {
+            const GUID *g = B11_GP(v);
+            n += (size_t)snprintf(line + n, sizeof line - n, "{%08lx-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x}", (unsigned long)g->Data1,
+                                  g->Data2, g->Data3, g->Data4[0], g->Data4[1], g->Data4[2], g->Data4[3], g->Data4[4], g->Data4[5],
+                                  g->Data4[6], g->Data4[7]);
+        } else if (sig[i] == 's' && v != 0u) {
+            const char *s = B11_GP(v);
+            line[n++] = '"';
+            for (k = 0u; k < 64u && s[k] != '\0'; ++k) {
+                line[n++] = s[k] >= ' ' && s[k] <= '~' && s[k] != '"' ? s[k] : '?';
+            }
+            line[n++] = '"';
+        } else {
+            line[n++] = v == 0u ? '0' : sig[i] == 'h' ? 'h' : '*';
+        }
+    }
+    if (ret == 'D' || ret == 'Z') {
+        n += (size_t)snprintf(line + n, sizeof line - n, ") = %x\n", r);
+    } else {
+        n += (size_t)snprintf(line + n, sizeof line - n, ret == 'P' ? r != 0u ? ") = *\n" : ") = 0\n" : ")\n");
+    }
+    EnterCriticalSection(&b11_dev_lock);
+    fwrite(line, 1u, n, b11_trace);
+    fflush(b11_trace); /* the run may end without the C runtime's leave */
+    LeaveCriticalSection(&b11_dev_lock);
+}
+
+static void b11_debug_read(const char *name) {
+    static const char *const severity[] = {"corruption", "error", "warning"};
+    char first[512];
+    int fatal = 0;
+    UINT64 i, n;
+    EnterCriticalSection(&b11_dev_lock);
+    n = IDXGIInfoQueue_GetNumStoredMessages(b11_info, DXGI_DEBUG_ALL);
+    for (i = 0u; i < n; ++i) {
+        SIZE_T size = 0u;
+        DXGI_INFO_QUEUE_MESSAGE *m;
+        if (FAILED(IDXGIInfoQueue_GetMessage(b11_info, DXGI_DEBUG_ALL, i, NULL, &size)) || (m = malloc(size)) == NULL) {
+            continue;
+        }
+        if (SUCCEEDED(IDXGIInfoQueue_GetMessage(b11_info, DXGI_DEBUG_ALL, i, m, &size))
+            && m->Severity <= DXGI_INFO_QUEUE_MESSAGE_SEVERITY_WARNING) {
+            fprintf(stderr, "d3d11 debug layer, %s: %s: %s\n", name, severity[m->Severity], m->pDescription);
+            if (m->Severity <= DXGI_INFO_QUEUE_MESSAGE_SEVERITY_ERROR && !fatal) {
+                fatal = 1;
+                snprintf(first, sizeof first, "%s", m->pDescription);
+            }
+        }
+        free(m);
+    }
+    if (n != 0u) {
+        IDXGIInfoQueue_ClearStoredMessages(b11_info, DXGI_DEBUG_ALL);
+    }
+    LeaveCriticalSection(&b11_dev_lock);
+    if (fatal && (b11_dev & B11_DEV_STOP) != 0u) {
+        b11_host.stop("Direct3D's debug layer, at %s: %s", name, first);
+    }
+}
+
+/* The end of every call from the guest while an aid is on. a still holds the arguments: no bridge function
+ * writes to them. */
+static void b11_after(const char *name, const char *sig, char ret, const uint32_t *a, uint32_t r) {
+    if (b11_trace != NULL) {
+        b11_trace_call(name, sig, ret, a, r);
+    }
+    if (b11_info != NULL) {
+        b11_debug_read(name);
+    }
+}
 
 /* Inside live_main.c nobody calls d3d11_bridge_init: the first entry does. */
 #ifdef D3D11_BRIDGE_LIVE
@@ -3372,11 +3545,12 @@ static void b11_live_init(void);
 
 void d3d11_bridge_init(const d3d11_bridge_host_t *host) {
     static int ready;
+    b11_host = *host;
     if (!ready) {
         InitializeCriticalSection(&b11_lock);
+        b11_dev_init();
         ready = 1;
     }
-    b11_host = *host;
 }
 
 void *d3d11_bridge_host_object(uint32_t guest) {
@@ -3399,21 +3573,17 @@ uint32_t d3d11_bridge_wrap(void *host_iface, const void *iid) {
 uint32_t d3d11_bridge_live_objects(void) { return b11_obj_live; }
 uint32_t d3d11_bridge_live_maps(void) { return b11_map_n; }
 
-#define B11_AS_EXPORT(dll, name, nargs) {dll, #name, nargs, d3d11_bridge_##name},
-const d3d11_bridge_export_t d3d11_bridge_exports[] = {B11_EXPORTS(B11_AS_EXPORT)};
-const uint32_t d3d11_bridge_export_count = sizeof d3d11_bridge_exports / sizeof d3d11_bridge_exports[0];
+#define B11_AS_EXPORT(dll, name, nargs, sig) {dll, #name, nargs, d3d11_bridge_##name},
 
 /* HRESULT CreateDXGIFactory(REFIID riid, void **ppFactory) */
-uint32_t d3d11_bridge_CreateDXGIFactory(struct lift_ctx *c, const uint32_t *a) {
-    B11_ENSURE();
+static uint32_t b11_x_CreateDXGIFactory(struct lift_ctx *c, const uint32_t *a) {
     (void)c;
     void *out = NULL;
     const HRESULT hr = CreateDXGIFactory(B11_P(0), a[1] != 0u ? &out : NULL);
     return b11_out_iid(hr, out, a[0], a[1], "CreateDXGIFactory");
 }
 
-uint32_t d3d11_bridge_CreateDXGIFactory1(struct lift_ctx *c, const uint32_t *a) {
-    B11_ENSURE();
+static uint32_t b11_x_CreateDXGIFactory1(struct lift_ctx *c, const uint32_t *a) {
     (void)c;
     void *out = NULL;
     const HRESULT hr = CreateDXGIFactory1(B11_P(0), a[1] != 0u ? &out : NULL);
@@ -3423,8 +3593,7 @@ uint32_t d3d11_bridge_CreateDXGIFactory1(struct lift_ctx *c, const uint32_t *a) 
 /* HRESULT D3D11CreateDevice(IDXGIAdapter *pAdapter, D3D_DRIVER_TYPE DriverType, HMODULE Software, UINT Flags,
  *     const D3D_FEATURE_LEVEL *pFeatureLevels, UINT FeatureLevels, UINT SDKVersion, ID3D11Device **ppDevice,
  *     D3D_FEATURE_LEVEL *pFeatureLevel, ID3D11DeviceContext **ppImmediateContext) */
-uint32_t d3d11_bridge_D3D11CreateDevice(struct lift_ctx *c, const uint32_t *a) {
-    B11_ENSURE();
+static uint32_t b11_x_D3D11CreateDevice(struct lift_ctx *c, const uint32_t *a) {
     (void)c;
     ID3D11Device *device = NULL;
     ID3D11DeviceContext *context = NULL;
@@ -3439,15 +3608,15 @@ uint32_t d3d11_bridge_D3D11CreateDevice(struct lift_ctx *c, const uint32_t *a) {
         b11_host.stop("D3D11CreateDevice: the software rasterizer module %08x is a guest DLL", a[2]);
         return (uint32_t)E_INVALIDARG;
     }
-    hr = D3D11CreateDevice(adapter, (D3D_DRIVER_TYPE)a[1], NULL, a[3], B11_P(4), a[5], a[6], a[7] != 0u ? &device : NULL, B11_P(8),
-                           a[9] != 0u ? &context : NULL);
+    hr = D3D11CreateDevice(adapter, (D3D_DRIVER_TYPE)a[1], NULL, B11_DEVICE_FLAGS(a[3]), B11_P(4), a[5], a[6],
+                           a[7] != 0u ? &device : NULL, B11_P(8), a[9] != 0u ? &context : NULL);
+    b11_debug_created(hr, "D3D11CreateDevice");
     b11_out_obj(hr, device, K_ID3D11Device, a[7]);
     return b11_out_obj(hr, context, K_ID3D11DeviceContext, a[9]);
 }
 
 /* The same with (const DXGI_SWAP_CHAIN_DESC *pSwapChainDesc, IDXGISwapChain **ppSwapChain) before ppDevice. */
-uint32_t d3d11_bridge_D3D11CreateDeviceAndSwapChain(struct lift_ctx *c, const uint32_t *a) {
-    B11_ENSURE();
+static uint32_t b11_x_D3D11CreateDeviceAndSwapChain(struct lift_ctx *c, const uint32_t *a) {
     (void)c;
     DXGI_SWAP_CHAIN_DESC desc;
     IDXGISwapChain *swap = NULL;
@@ -3464,8 +3633,10 @@ uint32_t d3d11_bridge_D3D11CreateDeviceAndSwapChain(struct lift_ctx *c, const ui
         b11_host.stop("D3D11CreateDeviceAndSwapChain: the software rasterizer module %08x is a guest DLL", a[2]);
         return (uint32_t)E_INVALIDARG;
     }
-    hr = D3D11CreateDeviceAndSwapChain(adapter, (D3D_DRIVER_TYPE)a[1], NULL, a[3], B11_P(4), a[5], a[6], b11_swap_desc_in(a[7], &desc),
-                                       a[8] != 0u ? &swap : NULL, a[9] != 0u ? &device : NULL, B11_P(10), a[11] != 0u ? &context : NULL);
+    hr = D3D11CreateDeviceAndSwapChain(adapter, (D3D_DRIVER_TYPE)a[1], NULL, B11_DEVICE_FLAGS(a[3]), B11_P(4), a[5], a[6],
+                                       b11_swap_desc_in(a[7], &desc), a[8] != 0u ? &swap : NULL, a[9] != 0u ? &device : NULL, B11_P(10),
+                                       a[11] != 0u ? &context : NULL);
+    b11_debug_created(hr, "D3D11CreateDeviceAndSwapChain");
     b11_out_obj(hr, swap, K_IDXGISwapChain, a[8]);
     b11_out_obj(hr, device, K_ID3D11Device, a[9]);
     return b11_out_obj(hr, context, K_ID3D11DeviceContext, a[11]);
@@ -3475,8 +3646,10 @@ uint32_t d3d11_bridge_D3D11CreateDeviceAndSwapChain(struct lift_ctx *c, const ui
  * address of a vtable of two stdcall functions that take the object as their first stack argument. */
 typedef struct b11_include_adapter {
     ID3DInclude base;
-    struct lift_ctx *c; /* of the D3DCompile call: the compiler calls back on that thread, inside it */
+    struct lift_ctx *c; /* of the compile call: the compiler calls back on that thread, inside it */
     uint32_t guest;
+    const void *host_parent; /* the one including file that is not in guest memory, and what the guest is */
+    uint32_t parent_token;   /* given for it */
 } b11_include_adapter;
 
 #define B11_GUEST_SLOT(vtbl_type, member) ((uint32_t)(offsetof(vtbl_type, member) / sizeof(void *) * 4u))
@@ -3487,8 +3660,20 @@ static HRESULT STDMETHODCALLTYPE b11_include_Open(ID3DInclude *This, D3D_INCLUDE
     uint32_t guest = self->guest, args[6], scratch;
     size_t len = strlen(name) + 1u;
     HRESULT hr;
-    /* The parent is a buffer an earlier Open returned, or the guest's source: guest memory either way. */
-    if ((uintptr_t)parent > 0xffffffffu || len > 0x10000u || (scratch = b11_host.galloc(8u + (uint32_t)len, 1)) == 0u) {
+    /* The parent is a buffer an earlier Open returned or the guest's source, guest memory either way; or it is
+     * the file D3DX read for D3DX11CompileFromFileW, a buffer of the host's. The 32-bit program gets D3DX's
+     * buffer too, an address it has never seen: here it gets one of its own that stands for it. */
+    if ((uintptr_t)parent > 0xffffffffu) {
+        if (self->host_parent == NULL && (self->parent_token = b11_host.galloc(1u, 1)) != 0u) {
+            self->host_parent = parent;
+        }
+        if (self->host_parent != parent) {
+            b11_host.stop("ID3DInclude::Open(\"%s\"): a second including file outside guest memory, or no guest memory", name);
+            return E_FAIL;
+        }
+        parent = B11_GP(self->parent_token);
+    }
+    if (len > 0x10000u || (scratch = b11_host.galloc(8u + (uint32_t)len, 1)) == 0u) {
         b11_host.stop("ID3DInclude::Open(\"%s\"): the arguments cannot be passed to the guest", name);
         return E_FAIL;
     }
@@ -3516,66 +3701,84 @@ static HRESULT STDMETHODCALLTYPE b11_include_Close(ID3DInclude *This, LPCVOID da
 
 static struct ID3DIncludeVtbl b11_include_vtbl = {b11_include_Open, b11_include_Close};
 
-/* HRESULT D3DCompile(LPCVOID pSrcData, SIZE_T SrcDataSize, LPCSTR pSourceName, const D3D_SHADER_MACRO *pDefines,
- *     ID3DInclude *pInclude, LPCSTR pEntrypoint, LPCSTR pTarget, UINT Flags1, UINT Flags2, ID3DBlob **ppCode,
- *     ID3DBlob **ppErrorMsgs)
- * The game calls it once, at 0x11462110, with an include handler of its own. */
-uint32_t d3d11_bridge_D3DCompile(struct lift_ctx *c, const uint32_t *a) {
-    B11_ENSURE();
-    (void)c;
-    const g32_D3D_SHADER_MACRO *g = B11_P(3);
-    D3D_SHADER_MACRO *defines = NULL;
+/* The macro definitions and the include handler of a compile call, as the host compiler takes them. */
+typedef struct b11_compile_in {
+    D3D_SHADER_MACRO *defines;
+    ID3DInclude *include;
     b11_include_adapter adapter;
-    ID3DInclude *include = NULL;
-    ID3DBlob *code = NULL, *errors = NULL;
+} b11_compile_in;
+
+static HRESULT b11_compile_begin(b11_compile_in *in, struct lift_ctx *c, uint32_t defines, uint32_t include, const char *what) {
+    const g32_D3D_SHADER_MACRO *g = B11_GP(defines);
     uint32_t i, n = 0u;
-    HRESULT hr;
-    if (a[4] == (uint32_t)(uintptr_t)D3D_COMPILE_STANDARD_FILE_INCLUDE) {
-        include = D3D_COMPILE_STANDARD_FILE_INCLUDE;
-    } else if (a[4] != 0u) {
+    memset(in, 0, sizeof *in);
+    if (include == (uint32_t)(uintptr_t)D3D_COMPILE_STANDARD_FILE_INCLUDE) {
+        in->include = D3D_COMPILE_STANDARD_FILE_INCLUDE;
+    } else if (include != 0u) {
         if (b11_host.call_guest == NULL) {
-            b11_host.stop("D3DCompile: the guest's ID3DInclude at %08x needs d3d11_bridge_host_t.call_guest", a[4]);
-            return (uint32_t)E_NOTIMPL;
+            b11_host.stop("%s: the guest's ID3DInclude at %08x needs d3d11_bridge_host_t.call_guest", what, include);
+            return E_NOTIMPL;
         }
-        adapter.base.lpVtbl = &b11_include_vtbl;
-        adapter.c = c;
-        adapter.guest = a[4];
-        include = &adapter.base;
+        in->adapter.base.lpVtbl = &b11_include_vtbl;
+        in->adapter.c = c;
+        in->adapter.guest = include;
+        in->include = &in->adapter.base;
     }
     if (g != NULL) { /* the array ends at a null name */
         while (g[n].Name != 0u) {
             ++n;
         }
-        defines = malloc(((size_t)n + 1u) * sizeof *defines);
-        if (defines == NULL) {
-            b11_host.stop("D3DCompile: no host memory for %u macro definitions", n);
-            return (uint32_t)E_OUTOFMEMORY;
+        in->defines = malloc(((size_t)n + 1u) * sizeof *in->defines);
+        if (in->defines == NULL) {
+            b11_host.stop("%s: no host memory for %u macro definitions", what, n);
+            return E_OUTOFMEMORY;
         }
         for (i = 0u; i < n; ++i) {
-            defines[i].Name = B11_GP(g[i].Name);
-            defines[i].Definition = B11_GP(g[i].Definition);
+            in->defines[i].Name = B11_GP(g[i].Name);
+            in->defines[i].Definition = B11_GP(g[i].Definition);
         }
-        defines[n].Name = NULL;
-        defines[n].Definition = NULL;
+        in->defines[n].Name = NULL;
+        in->defines[n].Definition = NULL;
     }
-    hr = D3DCompile(B11_P(0), a[1], B11_P(2), defines, include, B11_P(5), B11_P(6), a[7], a[8], a[9] != 0u ? &code : NULL, a[10] != 0u ? &errors : NULL);
-    free(defines);
-    /* Either blob can come back whatever the result: warnings on success, no code on failure. */
-    if (a[9] != 0u) {
-        b11_wr32(a[9], b11_wrap_out(code, K_ID3D10Blob));
+    return S_OK;
+}
+
+/* Either blob can come back whatever the result: warnings on success, no code on failure. */
+static uint32_t b11_compile_end(b11_compile_in *in, HRESULT hr, ID3DBlob *code, uint32_t code_out, ID3DBlob *errors, uint32_t errors_out) {
+    free(in->defines);
+    if (in->adapter.parent_token != 0u) {
+        b11_host.gfree(in->adapter.parent_token);
     }
-    if (a[10] != 0u) {
-        b11_wr32(a[10], b11_wrap_out(errors, K_ID3D10Blob));
+    if (code_out != 0u) {
+        b11_wr32(code_out, b11_wrap_out(code, K_ID3D10Blob));
+    }
+    if (errors_out != 0u) {
+        b11_wr32(errors_out, b11_wrap_out(errors, K_ID3D10Blob));
     }
     return (uint32_t)hr;
+}
+
+/* HRESULT D3DCompile(LPCVOID pSrcData, SIZE_T SrcDataSize, LPCSTR pSourceName, const D3D_SHADER_MACRO *pDefines,
+ *     ID3DInclude *pInclude, LPCSTR pEntrypoint, LPCSTR pTarget, UINT Flags1, UINT Flags2, ID3DBlob **ppCode,
+ *     ID3DBlob **ppErrorMsgs)
+ * The game calls it once, at 0x11462110, with an include handler of its own. */
+static uint32_t b11_x_D3DCompile(struct lift_ctx *c, const uint32_t *a) {
+    b11_compile_in in;
+    ID3DBlob *code = NULL, *errors = NULL;
+    HRESULT hr = b11_compile_begin(&in, c, a[3], a[4], "D3DCompile");
+    if (FAILED(hr)) {
+        return (uint32_t)hr;
+    }
+    hr = D3DCompile(B11_P(0), a[1], B11_P(2), in.defines, in.include, B11_P(5), B11_P(6), a[7], a[8], a[9] != 0u ? &code : NULL,
+                    a[10] != 0u ? &errors : NULL);
+    return b11_compile_end(&in, hr, code, a[9], errors, a[10]);
 }
 
 /* HRESULT D3DReflect(LPCVOID pSrcData, SIZE_T SrcDataSize, REFIID pInterface, void **ppReflector)
  * d3dcompiler_47 knows only its own reflection IID (it answers E_INVALIDARG to D3DCompiler_42's), so the
  * game's request is made with that one. The guest gets D3DCompiler_42's interface as far as the game uses
  * it; see B11_REFLECTION_SLOTS. */
-uint32_t d3d11_bridge_D3DReflect(struct lift_ctx *c, const uint32_t *a) {
-    B11_ENSURE();
+static uint32_t b11_x_D3DReflect(struct lift_ctx *c, const uint32_t *a) {
     (void)c;
     const GUID *iid = B11_P(2);
     void *out = NULL;
@@ -3600,27 +3803,188 @@ uint32_t d3d11_bridge_D3DReflect(struct lift_ctx *c, const uint32_t *a) {
 }
 
 /* HRESULT D3DDisassemble(LPCVOID pSrcData, SIZE_T SrcDataSize, UINT Flags, LPCSTR szComments, ID3DBlob **ppDisassembly) */
-uint32_t d3d11_bridge_D3DDisassemble(struct lift_ctx *c, const uint32_t *a) {
-    B11_ENSURE();
+static uint32_t b11_x_D3DDisassemble(struct lift_ctx *c, const uint32_t *a) {
     (void)c;
     ID3DBlob *out = NULL;
     const HRESULT hr = D3DDisassemble(B11_P(0), a[1], a[2], B11_P(3), a[4] != 0u ? &out : NULL);
     return b11_out_obj(hr, out, K_ID3D10Blob, a[4]);
 }
 
+/* ---- D3DX11: the four functions the game imports from d3dx11_42.dll, done by the host's 64-bit d3dx11_42.dll ----
+ * The Windows SDK has no header for D3DX, so the argument lists are the game's own, at its four call sites
+ * (image addresses; every call leaves its arguments to the callee):
+ *
+ *   0x11470c31  D3DX11FilterTexture(context, texture, 0, 3)
+ *   0x1146338f, 0x11470cee
+ *               D3DX11LoadTextureFromTexture(context, source, &info, destination). At 0x11470cee info is 40
+ *               bytes of stack: two null pointers, then the dwords i - 1, i, 1, 0, 0, 0xffffffff, 5, 5, in a
+ *               loop over i with source and destination the same texture: each mip level from the one above.
+ *   0x11463ff8  D3DX11SaveTextureToFileA(context, texture, format, file name)
+ *   0x11462000  D3DX11CompileFromFileW(file name, defines, an include handler of the game's (vtable 0x118c113c),
+ *               entry point, profile, flags, 0, 0, &code, &errors, 0)
+ *
+ * They agree with the documented D3DX11 prototypes, whose names the structure below uses:
+ * D3DX11_TEXTURE_LOAD_INFO is {D3D11_BOX *pSrcBox, *pDstBox; UINT SrcFirstMip, DstFirstMip, NumMips,
+ * SrcFirstElement, DstFirstElement, NumElements, Filter, MipFilter}. The 64-bit DLL takes the same, with
+ * 8-byte pointers. It is part of the DirectX End-User Runtime (June 2010); without it these calls stop the run. */
+#define B11_D3DX_EXPORTS(E) \
+    E("d3dx11_42.dll", D3DX11FilterTexture, 4, "iivv") \
+    E("d3dx11_42.dll", D3DX11LoadTextureFromTexture, 4, "iipi") \
+    E("d3dx11_42.dll", D3DX11SaveTextureToFileA, 4, "iivs") \
+    E("d3dx11_42.dll", D3DX11CompileFromFileW, 11, "ppissvvpoop")
+
+typedef struct g32_D3DX11_TEXTURE_LOAD_INFO {
+    uint32_t pSrcBox, pDstBox;
+    UINT SrcFirstMip, DstFirstMip, NumMips, SrcFirstElement, DstFirstElement, NumElements, Filter, MipFilter;
+} g32_D3DX11_TEXTURE_LOAD_INFO;
+_Static_assert(sizeof(g32_D3DX11_TEXTURE_LOAD_INFO) == 40, "the 40 bytes the game fills at 0x11470c88..0x11470ce4");
+typedef struct b11_D3DX11_TEXTURE_LOAD_INFO {
+    D3D11_BOX *pSrcBox, *pDstBox;
+    UINT SrcFirstMip, DstFirstMip, NumMips, SrcFirstElement, DstFirstElement, NumElements, Filter, MipFilter;
+} b11_D3DX11_TEXTURE_LOAD_INFO;
+
+typedef HRESULT(WINAPI *b11_d3dx_filter)(ID3D11DeviceContext *, ID3D11Resource *, UINT, UINT);
+typedef HRESULT(WINAPI *b11_d3dx_load)(ID3D11DeviceContext *, ID3D11Resource *, b11_D3DX11_TEXTURE_LOAD_INFO *, ID3D11Resource *);
+typedef HRESULT(WINAPI *b11_d3dx_save)(ID3D11DeviceContext *, ID3D11Resource *, UINT, LPCSTR);
+typedef HRESULT(WINAPI *b11_d3dx_compile)(LPCWSTR, const D3D_SHADER_MACRO *, ID3DInclude *, LPCSTR, LPCSTR, UINT, UINT, void *, ID3DBlob **,
+                                           ID3DBlob **, HRESULT *);
+
+/* A function of the host's d3dx11_42.dll, 0 (and the run stopped) when the DLL is not installed. */
+static uintptr_t b11_d3dx(const char *name) {
+    static volatile HMODULE lib;
+    HMODULE dll = lib;
+    FARPROC fn;
+    if (dll == NULL) {
+        lib = dll = LoadLibraryExW(L"d3dx11_42.dll", NULL, LOAD_LIBRARY_SEARCH_SYSTEM32); /* twice at worst: one module */
+    }
+    fn = dll != NULL ? GetProcAddress(dll, name) : NULL;
+    if (fn == NULL) {
+        b11_host.stop("%s: the host has no 64-bit d3dx11_42.dll (DirectX End-User Runtime, June 2010)", name);
+    }
+    return (uintptr_t)fn;
+}
+
+/* The device context and the one or two textures every one of them starts with. */
+static int b11_d3dx_objects(const uint32_t *a, ID3D11DeviceContext **context, ID3D11Resource **first, uint32_t second_arg,
+                            ID3D11Resource **second) {
+    int bad = 0;
+    *context = b11_arg(a[0], K_ID3D11DeviceContext, &bad);
+    *first = b11_arg(a[1], K_ID3D11Resource, &bad);
+    if (second != NULL) {
+        *second = b11_arg(second_arg, K_ID3D11Resource, &bad);
+    }
+    return !bad;
+}
+
+static uint32_t b11_x_D3DX11FilterTexture(struct lift_ctx *c, const uint32_t *a) {
+    const b11_d3dx_filter fn = (b11_d3dx_filter)b11_d3dx("D3DX11FilterTexture");
+    ID3D11DeviceContext *context;
+    ID3D11Resource *texture;
+    (void)c;
+    if (fn == NULL || !b11_d3dx_objects(a, &context, &texture, 0u, NULL)) {
+        return (uint32_t)E_FAIL;
+    }
+    return (uint32_t)fn(context, texture, a[2], a[3]);
+}
+
+static uint32_t b11_x_D3DX11LoadTextureFromTexture(struct lift_ctx *c, const uint32_t *a) {
+    const b11_d3dx_load fn = (b11_d3dx_load)b11_d3dx("D3DX11LoadTextureFromTexture");
+    const g32_D3DX11_TEXTURE_LOAD_INFO *g = B11_P(2);
+    b11_D3DX11_TEXTURE_LOAD_INFO info;
+    ID3D11DeviceContext *context;
+    ID3D11Resource *source, *destination;
+    (void)c;
+    if (fn == NULL || !b11_d3dx_objects(a, &context, &source, a[3], &destination)) {
+        return (uint32_t)E_FAIL;
+    }
+    if (g != NULL) {
+        info.pSrcBox = B11_GP(g->pSrcBox); /* D3D11_BOX is six dwords in both worlds */
+        info.pDstBox = B11_GP(g->pDstBox);
+        memcpy(&info.SrcFirstMip, &g->SrcFirstMip, 8u * sizeof(UINT));
+    }
+    return (uint32_t)fn(context, source, g != NULL ? &info : NULL, destination);
+}
+
+/* The one function here that writes a file of the host's: the runner decides whether it may. */
+static uint32_t b11_x_D3DX11SaveTextureToFileA(struct lift_ctx *c, const uint32_t *a) {
+    const b11_d3dx_save fn = (b11_d3dx_save)b11_d3dx("D3DX11SaveTextureToFileA");
+    ID3D11DeviceContext *context;
+    ID3D11Resource *texture;
+    (void)c;
+    if (fn == NULL || a[3] == 0u || !b11_d3dx_objects(a, &context, &texture, 0u, NULL)) {
+        return (uint32_t)E_FAIL;
+    }
+    if (b11_host.may_write == NULL) {
+        b11_host.stop("D3DX11SaveTextureToFileA(\"%s\") writes a file: it needs d3d11_bridge_host_t.may_write", (const char *)B11_P(3));
+        return (uint32_t)E_NOTIMPL;
+    }
+    if (!b11_host.may_write(B11_P(3))) {
+        return (uint32_t)E_ACCESSDENIED;
+    }
+    return (uint32_t)fn(context, texture, a[2], B11_P(3));
+}
+
+static uint32_t b11_x_D3DX11CompileFromFileW(struct lift_ctx *c, const uint32_t *a) {
+    const b11_d3dx_compile fn = (b11_d3dx_compile)b11_d3dx("D3DX11CompileFromFileW");
+    b11_compile_in in;
+    ID3DBlob *code = NULL, *errors = NULL;
+    HRESULT hr;
+    if (fn == NULL) {
+        return (uint32_t)E_FAIL;
+    }
+    if (a[7] != 0u) {
+        b11_host.stop("D3DX11CompileFromFileW: a thread pump (%08x) is not bridged", a[7]);
+        return (uint32_t)E_NOTIMPL;
+    }
+    hr = b11_compile_begin(&in, c, a[1], a[2], "D3DX11CompileFromFileW");
+    if (FAILED(hr)) {
+        return (uint32_t)hr;
+    }
+    hr = fn(B11_P(0), in.defines, in.include, B11_P(3), B11_P(4), a[5], a[6], NULL, a[8] != 0u ? &code : NULL, a[9] != 0u ? &errors : NULL,
+            B11_P(10));
+    return b11_compile_end(&in, hr, code, a[8], errors, a[9]);
+}
+
+#define B11_ALL_EXPORTS(E) B11_EXPORTS(E) B11_D3DX_EXPORTS(E)
+
+/* What the guest calls: a bridge function, then the development aids when one is on. */
+#define B11_WRAPPER(linkage, wrapper, ensure, inner, label, sig, ret) \
+    linkage uint32_t wrapper(struct lift_ctx *c, const uint32_t *a) { \
+        uint32_t r; \
+        ensure; \
+        r = inner(c, a); \
+        if (b11_dev != 0u) { \
+            b11_after(label, sig, ret, a, r); \
+        } \
+        return r; \
+    }
+#define B11_AS_WRAPPER(I, N, slot, nargs, ret, sig) B11_WRAPPER(static, b11_w_##I##_##N, (void)0, m_##I##_##N, #I "::" #N, sig, ret)
+#define B11_AS_REFLECTION_WRAPPER(n, nargs, ret, sig) \
+    B11_WRAPPER(static, b11_w_Reflection_slot##n, (void)0, m_Reflection_slot##n, "ID3D11ShaderReflection_42::slot" #n, sig, ret)
+#define B11_AS_REFLECTION_CB_WRAPPER(n, nargs, ret, sig) \
+    B11_WRAPPER(static, b11_w_ReflectionCB_slot##n, (void)0, m_ReflectionCB_slot##n, "ID3D11ShaderReflectionConstantBuffer_42::slot" #n, sig, ret)
+#define B11_AS_ENTRY(dll, name, nargs, sig) B11_WRAPPER(, d3d11_bridge_##name, B11_ENSURE(), b11_x_##name, #name, sig, 'D')
+B11_DECLARED(B11_AS_WRAPPER)
+B11_REFLECTION_SLOTS(B11_AS_REFLECTION_WRAPPER)
+B11_REFLECTION_CB_SLOTS(B11_AS_REFLECTION_CB_WRAPPER)
+B11_ALL_EXPORTS(B11_AS_ENTRY)
+const d3d11_bridge_export_t d3d11_bridge_exports[] = {B11_ALL_EXPORTS(B11_AS_EXPORT)};
+const uint32_t d3d11_bridge_export_count = sizeof d3d11_bridge_exports / sizeof d3d11_bridge_exports[0];
+
 /* ---- 7. inside live_main.c ---------------------------------------------------------------------
  * live.exe is built from live_main.c alone, so the bridge joins it as an included file. Two additions
  * to live_main.c, and none to the build:
  *
  *     #define D3D11_BRIDGE_LIVE
- *     #include "d3d11_bridge.c"         above g_shims; uses stop, galloc, gfree, import_addr, guest_call
+ *     #include "d3d11_bridge.c"         above g_shims; uses stop, galloc, gfree, import_addr, guest_call,
+ *                                       write_allowed
  *
  *     static const shim g_shims[] = {
  *         ...
  *         D3D11_BRIDGE_SHIMS            no comma after it
  *     };
  *
- * The rows give the seven entry points and every vtable slot a shim of the runner's own type, found by
+ * The rows give the eleven entry points and every vtable slot a shim of the runner's own type, found by
  * the names the runner already uses: GetProcAddress and the import table by export name, a vtable slot as
  * "<interface>#<slot>" of the pseudo-DLL "com". The first call into the bridge initialises it. */
 #ifdef D3D11_BRIDGE_LIVE
@@ -3650,8 +4014,21 @@ static uint32_t b11_live_call_guest(struct lift_ctx *c, uint32_t entry, uint32_t
     return guest_call(entry, nargs, args) ? (uint32_t)E_FAIL : c->r[LM_EAX];
 }
 
+/* fld dword ptr [rcx]; ret. While a shim runs the thread's x87 registers are the guest's (live_fp_enter makes
+ * them so, and compiled x64 code does not use them): what is pushed here is the guest's st(0). */
+#pragma section(".b11x", read, execute)
+static __declspec(allocate(".b11x")) const unsigned char b11_live_fld[] = {0xd9, 0x01, 0xc3};
+static void b11_live_return_float(struct lift_ctx *c, float v) {
+    (void)c;
+    ((void (*)(const float *))(uintptr_t)b11_live_fld)(&v);
+}
+
+/* The runner's rule for files the guest writes; it stops the run itself when the answer is no. */
+static int b11_live_may_write(const char *path) { return write_allowed("D3DX11SaveTextureToFileA", path, NULL); }
+
 static BOOL CALLBACK b11_live_once(PINIT_ONCE once, PVOID param, PVOID *context) {
-    static const d3d11_bridge_host_t host = {galloc, gfree, b11_live_register, stop, b11_live_call_guest};
+    static const d3d11_bridge_host_t host = {galloc, gfree,           b11_live_register,     stop,
+                                             b11_live_call_guest,     b11_live_return_float, b11_live_may_write};
     (void)once;
     (void)param;
     (void)context;
@@ -3672,12 +4049,13 @@ static void b11_live_init(void) {
 #else
 #define B11_ROW(dll, name, nargs, fn) {name, nargs, fn},
 #endif
-#define B11_ROW_METHOD(I, N, slot, nargs) B11_ROW("com", #I "#" #slot, nargs, m_##I##_##N)
-#define B11_ROW_REFLECTION(n, nargs) B11_ROW("com", "ID3D11ShaderReflection_42#" #n, nargs, m_Reflection_slot##n)
-#define B11_ROW_REFLECTION_CB(n, nargs) B11_ROW("com", "ID3D11ShaderReflectionConstantBuffer_42#" #n, nargs, m_ReflectionCB_slot##n)
-#define B11_ROW_EXPORT(dll, name, nargs) B11_ROW(dll, #name, nargs, d3d11_bridge_##name)
+#define B11_ROW_METHOD(I, N, slot, nargs, ret, sig) B11_ROW("com", #I "#" #slot, nargs, b11_w_##I##_##N)
+#define B11_ROW_REFLECTION(n, nargs, ret, sig) B11_ROW("com", "ID3D11ShaderReflection_42#" #n, nargs, b11_w_Reflection_slot##n)
+#define B11_ROW_REFLECTION_CB(n, nargs, ret, sig) \
+    B11_ROW("com", "ID3D11ShaderReflectionConstantBuffer_42#" #n, nargs, b11_w_ReflectionCB_slot##n)
+#define B11_ROW_EXPORT(dll, name, nargs, sig) B11_ROW(dll, #name, nargs, d3d11_bridge_##name)
 #define D3D11_BRIDGE_SHIMS \
     B11_DECLARED(B11_ROW_METHOD) B11_REFLECTION_SLOTS(B11_ROW_REFLECTION) B11_REFLECTION_CB_SLOTS(B11_ROW_REFLECTION_CB) \
-    B11_EXPORTS(B11_ROW_EXPORT)
+    B11_ALL_EXPORTS(B11_ROW_EXPORT)
 
 #endif /* D3D11_BRIDGE_LIVE */

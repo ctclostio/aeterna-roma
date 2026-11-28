@@ -10,6 +10,9 @@
  *
  * It renders a triangle and reads exact pixel values back, then checks object identity and lifetime,
  * the swap chain, the compiler entry points, several guest threads and the cases that must stop the run.
+ * The bridge records its calls throughout (ROME2_D3D11_TRACE), and the record is checked at the end.
+ * Run with --debug-layer, the test checks ROME2_D3D11_DEBUG instead: against Direct3D's debug layer when
+ * it is installed, and the refusal to create a device when it is not.
  *
  * The test is built twice. On its own it links d3d11_bridge.c as a second source and is the bridge's host
  * through d3d11_bridge_host_t. With TEST_LIVE it stands in for live_main.c: it defines the runner's shim
@@ -32,6 +35,7 @@
 #include <dxgi.h>
 #pragma warning(pop)
 
+#include <immintrin.h>
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -224,13 +228,16 @@ static void no_stop(void) {
 #define FN_INCLUDE_OPEN 0xe0000010u
 #define FN_INCLUDE_CLOSE 0xe0000020u
 static uint32_t g_include_obj, g_include_text, g_opens, g_closes, g_src;
+static int g_from_file;      /* the compiler was given a file of the host's, not the guest's source */
+static char g_tmp[MAX_PATH]; /* the one folder the guest may write files in, as the runner's --profile */
 static uint32_t guest_code(uint32_t entry, uint32_t nargs, const uint32_t *args) {
     static const char text[] = "static const float4 bias = float4(0, 0, BLUE, 0);\n";
     MUST(g_in_bridge);
     if (entry == FN_INCLUDE_OPEN) {
         CHECK(nargs == 6u && args[0] == g_include_obj && args[1] == (uint32_t)D3D_INCLUDE_LOCAL);
         CHECK(in_guest(args[2]) && strcmp(GP(args[2]), "bias.hlsl") == 0);
-        CHECK(args[3] == 0u || args[3] == g_src); /* the including file: the source the guest passed */
+        /* The including file: the source the guest passed, or guest memory standing for the host's file. */
+        CHECK(args[3] == 0u || (g_from_file ? in_guest(args[3]) : args[3] == g_src));
         CHECK(in_guest(args[4]) && in_guest(args[5]));
         g_include_text = gstr(text);
         *(uint32_t *)GP(args[4]) = g_include_text;
@@ -277,6 +284,16 @@ static int guest_call(uint32_t entry, uint32_t nargs, const uint32_t *args) {
     return 0;
 }
 
+/* The runner's rule for files the guest writes: it stops the run at one it does not allow. */
+static int write_allowed(const char *what, const char *path_a, const wchar_t *path_w) {
+    (void)path_w;
+    if (_strnicmp(path_a, g_tmp, strlen(g_tmp)) == 0) {
+        return 1;
+    }
+    stop("%s wants to write %s", what, path_a);
+    return 0;
+}
+
 #define D3D11_BRIDGE_LIVE
 #include "d3d11_bridge.c"
 
@@ -306,12 +323,52 @@ static uint32_t call_guest(struct lift_ctx *c, uint32_t entry, uint32_t nargs, c
     MUST(c == &g_cpu); /* the state the D3DCompile call was entered with */
     return guest_code(entry, nargs, args);
 }
+static int may_write(const char *path) {
+    MUST(g_in_bridge);
+    return _strnicmp(path, g_tmp, strlen(g_tmp)) == 0;
+}
 
+#endif
+
+/* ---- a FLOAT result ------------------------------------------------------------------------------- */
+
+#ifdef TEST_LIVE
+/* In live_main.c the bridge leaves it in x87 st(0), and the 32-bit caller pops it from there:
+ * fstp dword ptr [rcx]; ret. */
+#pragma section(".tstx", read, execute)
+static __declspec(allocate(".tstx")) const unsigned char g_fstp[] = {0xd9, 0x19, 0xc3};
+/* One bit for each x87 register that holds a value (the abridged tag word of FXSAVE). */
+static unsigned x87_in_use(void) {
+    __declspec(align(16)) uint8_t fx[512];
+    _fxsave64(fx);
+    return fx[4];
+}
+static float float_result(void) {
+    float v = -1.0f;
+    CHECK(x87_in_use() == 0x80u); /* one value pushed on an empty stack: the top is register 7 */
+    ((void (*)(float *))(uintptr_t)g_fstp)(&v);
+    CHECK(x87_in_use() == 0u);
+    return v;
+}
+#else
+/* As a host of its own the test is handed the value. */
+static float g_float;
+static int g_floats;
+static void return_float(struct lift_ctx *c, float v) {
+    MUST(g_in_bridge && c == &g_cpu);
+    g_float = v;
+    ++g_floats;
+}
+static float float_result(void) {
+    CHECK(g_floats == 1);
+    g_floats = 0;
+    return g_float;
+}
 #endif
 
 /* ---- calling the bridge the way the guest does -------------------------------------------------- */
 
-static uint32_t g_seen_vtbl[64], g_nseen, g_calls;
+static uint32_t g_seen_vtbl[64], g_nseen, g_calls, g_ecalls;
 
 static uint32_t gcall(const char *what, uint32_t obj, uint32_t slot, const uint32_t *args, size_t nargs) {
     uint32_t vtbl = rd32(obj), va = rd32(vtbl + 4u * slot), i = (va - THUNK_BASE) / 16u, r;
@@ -359,6 +416,7 @@ static uint32_t ecall_n(const char *name, const uint32_t *args, size_t nargs) {
                 fn = sh->fn;
             }
 #endif
+            ++g_ecalls;
             g_in_bridge = 1;
             r = fn(&g_cpu, args);
             g_in_bridge = 0;
@@ -1362,6 +1420,133 @@ static void test_reflection(void) {
     no_stop();
 }
 
+/* ---- d3dx11_42.dll, called as the game calls it --------------------------------------------------- */
+
+static int g_d3dx; /* the host has the 64-bit DLL */
+
+/* The first pixel of one mip level of an 8x8 RGBA8 texture of 4 levels, read through a staging copy. */
+static uint32_t mip_pixel(uint32_t tex, uint32_t mip) {
+    D3D11_TEXTURE2D_DESC *sd = gmem(sizeof *sd);
+    uint32_t staging, *m = gmem(12u), pixel;
+    *sd = (D3D11_TEXTURE2D_DESC){8u, 8u, 4u, 1u, DXGI_FORMAT_R8G8B8A8_UNORM, {1u, 0u}, D3D11_USAGE_STAGING, 0u, D3D11_CPU_ACCESS_READ, 0u};
+    CHECK_HR(CALL(g_dev, ID3D11Device, CreateTexture2D, G(sd), 0u, G(g_out)));
+    staging = *g_out;
+    CALL(g_ctx, ID3D11DeviceContext, CopyResource, staging, tex);
+    CHECK_HR(CALL(g_ctx, ID3D11DeviceContext, Map, staging, mip, D3D11_MAP_READ, 0u, G(m)));
+    pixel = *(uint32_t *)GP(m[0]);
+    CALL(g_ctx, ID3D11DeviceContext, Unmap, staging, mip);
+    CHECK(RELEASE(staging) == 0u);
+    return pixel;
+}
+
+static void test_d3dx(void) {
+    const uint32_t magenta = RGBA(255, 0, 255, 255);
+    D3D11_TEXTURE2D_DESC *td = gmem(sizeof *td);
+    uint32_t tex, mip, i, *info = gmem(40u), *pixels = gmem(4u * 64u), *junk = gmem(16u), objects, blocks;
+    HMODULE dll = LoadLibraryExA("d3dx11_42.dll", NULL, LOAD_LIBRARY_SEARCH_SYSTEM32);
+    *td = (D3D11_TEXTURE2D_DESC){8u, 8u, 4u, 1u, DXGI_FORMAT_R8G8B8A8_UNORM, {1u, 0u}, D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0u, 0u};
+    CHECK_HR(CALL(g_dev, ID3D11Device, CreateTexture2D, G(td), 0u, G(g_out)));
+    tex = *g_out;
+    if (dll == NULL) {
+        CHECK(ECALL(D3DX11FilterTexture, g_ctx, tex, 0u, 3u) == (uint32_t)E_FAIL);
+        expect_stop("no 64-bit d3dx11_42.dll");
+        CHECK(RELEASE(tex) == 0u);
+        printf("d3dx11_42.dll is not installed: the bridge stops the run at a D3DX11 call. NOT CHECKED: the four D3DX11 functions\n");
+        return;
+    }
+    g_d3dx = 1;
+    objects = live_objects();
+    blocks = bridge_blocks();
+
+    /* Level 0 magenta, the levels below it black. */
+    for (mip = 0u; mip < 4u; ++mip) {
+        for (i = 0u; i < 64u; ++i) {
+            pixels[i] = mip == 0u ? magenta : 0u;
+        }
+        CALL(g_ctx, ID3D11DeviceContext, UpdateSubresource, tex, mip, 0u, G(pixels), 4u * (8u >> mip), 0u);
+    }
+    CHECK(mip_pixel(tex, 0u) == magenta && mip_pixel(tex, 1u) == 0u);
+
+    /* D3DX11LoadTextureFromTexture with the 40 bytes the game fills at 0x11470c88 for its first round: level 1
+     * from level 0 of the same texture. */
+    info[0] = info[1] = 0u;
+    info[2] = 0u;
+    info[3] = 1u;
+    info[4] = 1u;
+    info[5] = info[6] = 0u;
+    info[7] = 0xffffffffu;
+    info[8] = info[9] = 5u;
+    CHECK_HR(ECALL(D3DX11LoadTextureFromTexture, g_ctx, tex, G(info), tex));
+    CHECK(mip_pixel(tex, 1u) == magenta && mip_pixel(tex, 2u) == 0u);
+
+    /* D3DX11FilterTexture with the game's arguments at 0x11470c31: every level from level 0. */
+    CHECK_HR(ECALL(D3DX11FilterTexture, g_ctx, tex, 0u, 3u));
+    CHECK(mip_pixel(tex, 2u) == magenta && mip_pixel(tex, 3u) == magenta);
+
+    /* Something that is not a bridged object stops the run before D3DX sees it. */
+    CHECK(ECALL(D3DX11FilterTexture, G(junk), tex, 0u, 3u) == (uint32_t)E_FAIL);
+    expect_stop("not a bridged Direct3D object");
+
+    /* D3DX11SaveTextureToFileA: the host decides which of its files the guest may write. Format 4 is DDS. */
+    {
+        char path[MAX_PATH], outside[MAX_PATH], magic[4] = "";
+        FILE *f;
+        snprintf(path, sizeof path, "%s\\saved.dds", g_tmp);
+        DeleteFileA(path);
+        CHECK_HR(ECALL(D3DX11SaveTextureToFileA, g_ctx, tex, 4u, gstr(path)));
+        f = fopen(path, "rb");
+        CHECK(f != NULL && fread(magic, 1u, 4u, f) == 4u && memcmp(magic, "DDS ", 4u) == 0);
+        if (f != NULL) {
+            fclose(f);
+        }
+        MUST(GetFullPathNameA("not_allowed.dds", sizeof outside, outside, NULL) != 0u);
+        CHECK(ECALL(D3DX11SaveTextureToFileA, g_ctx, tex, 4u, gstr(outside)) == (uint32_t)E_ACCESSDENIED);
+#ifdef TEST_LIVE
+        expect_stop("wants to write"); /* the runner's own refusal */
+#endif
+        CHECK(GetFileAttributesA(outside) == INVALID_FILE_ATTRIBUTES);
+    }
+
+    /* D3DX11CompileFromFileW with the game's argument list at 0x11462000: D3DX reads the file, the guest's
+     * handler the file it includes. */
+    {
+        wchar_t wide[MAX_PATH];
+        char path[MAX_PATH];
+        uint32_t *code = gmem(4u), *errors = gmem(4u), *defines = gmem(16u), hr, opens = g_opens, closes = g_closes;
+        FILE *f;
+        snprintf(path, sizeof path, "%s\\pixel.hlsl", g_tmp);
+        f = fopen(path, "wb");
+        MUST(f != NULL && fwrite(PS_SRC, 1u, sizeof PS_SRC - 1u, f) == sizeof PS_SRC - 1u && fclose(f) == 0);
+        MUST(MultiByteToWideChar(CP_ACP, 0, path, -1, wide, MAX_PATH - 8) != 0);
+        defines[0] = gstr("BLUE");
+        defines[1] = gstr("0.2");
+        g_from_file = 1;
+        hr = ECALL(D3DX11CompileFromFileW, gput(wide, (uint32_t)((wcslen(wide) + 1u) * sizeof wide[0])), G(defines), g_include_obj, gstr("main"),
+                   gstr("ps_4_0"), 0u, 0u, 0u, G(code), G(errors), 0u);
+        g_from_file = 0;
+        if (hr != 0u) {
+            printf("FAIL: D3DX11CompileFromFileW %08x: %s\n", hr, *errors != 0u ? (char *)GP(blob_ptr(*errors)) : "");
+            exit(1);
+        }
+        CHECK(g_opens == opens + 1u && g_closes == closes + 1u);
+        CHECK(in_guest(*code) && memcmp(GP(blob_ptr(*code)), "DXBC", 4u) == 0);
+        CHECK(RELEASE(*code) == 0u);
+        if (*errors != 0u) {
+            RELEASE(*errors);
+        }
+        /* A file that is not there is the host's failure, and no code comes back. */
+        *code = SENTINEL;
+        wcscat(wide, L".none");
+        CHECK(ECALL(D3DX11CompileFromFileW, gput(wide, (uint32_t)((wcslen(wide) + 1u) * sizeof wide[0])), 0u, 0u, gstr("main"), gstr("ps_4_0"), 0u,
+                    0u, 0u, G(code), 0u, 0u) != 0u);
+        CHECK(*code == 0u);
+    }
+    CHECK(bridge_blocks() == blocks && live_objects() == objects);
+    CHECK(RELEASE(tex) == 0u);
+    no_stop();
+    printf("d3dx11_42.dll: the game's four D3DX11 calls are done by the host's 64-bit DLL\n");
+}
+
 /* ---- swap chain --------------------------------------------------------------------------------- */
 
 static void test_swapchain(void) {
@@ -1581,17 +1766,37 @@ static void test_stops(void) {
         CHECK_HR(CALL(tex, ID3D11DeviceChild, GetPrivateData, GI(IID_IDXGISurface), G(size), G(data)));
         CHECK(*size == 5u && strcmp((char *)data, "name") == 0);
     }
-    /* A FLOAT return value. */
-    CALL(g_ctx, ID3D11DeviceContext, GetResourceMinLOD, tex);
-    expect_stop("GetResourceMinLOD");
-#ifndef TEST_LIVE
-    /* An ID3DInclude without call_guest is refused before the compiler runs. */
+    /* A FLOAT result is not in EAX: the clamp set on a texture that takes one, and 0 for one that does not. */
     {
-        d3d11_bridge_host_t host = {galloc, gfree, register_method, stop, NULL};
+        uint32_t clamped;
+        *td = (D3D11_TEXTURE2D_DESC){4u, 4u, 3u, 1u, DXGI_FORMAT_R8G8B8A8_UNORM, {1u, 0u}, D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE,
+                                     0u, D3D11_RESOURCE_MISC_RESOURCE_CLAMP};
+        CHECK_HR(CALL(g_dev, ID3D11Device, CreateTexture2D, G(td), 0u, G(g_out)));
+        clamped = *g_out;
+        CALL(g_ctx, ID3D11DeviceContext, SetResourceMinLOD, clamped, fbits(1.5f));
+        CALL(g_ctx, ID3D11DeviceContext, GetResourceMinLOD, clamped);
+        CHECK(float_result() == 1.5f);
+        CALL(g_ctx, ID3D11DeviceContext, GetResourceMinLOD, tex);
+        CHECK(float_result() == 0.0f);
+        CHECK(RELEASE(clamped) == 0u);
+    }
+#ifndef TEST_LIVE
+    /* Without the optional callbacks: an ID3DInclude is refused before the compiler runs, a FLOAT result
+     * stops the run. */
+    {
+        d3d11_bridge_host_t host = {galloc, gfree, register_method, stop, NULL, NULL, NULL};
         bridge_init(&host);
         CHECK(ECALL(D3DCompile, gstr("x"), 1u, 0u, 0u, g_include_obj, gstr("main"), gstr("ps_4_0"), 0u, 0u, G(g_out), 0u) == (uint32_t)E_NOTIMPL);
         expect_stop("call_guest");
+        CALL(g_ctx, ID3D11DeviceContext, GetResourceMinLOD, tex);
+        expect_stop("return_float");
+        if (g_d3dx) { /* a file is not written on the bridge's own authority */
+            CHECK(ECALL(D3DX11SaveTextureToFileA, g_ctx, tex, 4u, gstr("d3dx_test\\unasked.dds")) == (uint32_t)E_NOTIMPL);
+            expect_stop("may_write");
+        }
         host.call_guest = call_guest;
+        host.return_float = return_float;
+        host.may_write = may_write;
         bridge_init(&host);
     }
 #endif
@@ -1627,11 +1832,102 @@ static void test_teardown(void) {
     no_stop();
 }
 
-int main(void) {
+/* ---- the record of calls ---------------------------------------------------------------------------- */
+
+#ifdef TEST_LIVE
+#define TRACE_FILE "test_d3d11_bridge_live.trace"
+#else
+#define TRACE_FILE "test_d3d11_bridge.trace"
+#endif
+
+/* One line for each call the test made, and the lines of calls whose arguments are known here. */
+static void test_trace(void) {
+    static const char *const expected[] = {
+        "1 CreateDXGIFactory1({770aae78-f26f-4dba-a829-253c83d1b387} *) = 0\n",
+        "1 D3D11CreateDevice(0 5 0 0 * 1 7 * * *) = 0\n",
+        "1 ID3D11Device::GetFeatureLevel() = b000\n",
+        "1 IUnknown::QueryInterface({cafcb56c-6ac3-4889-bf47-9e23bbd260ec} *) = 80004002\n",
+        "1 D3DCompile(* 2d \"bad.hlsl\" 0 0 \"main\" \"ps_4_0\" 0 0 * *) = 80004005\n",
+        "1 ID3D11DeviceContext::SetResourceMinLOD(* 3fc00000)\n",
+        "1 ID3D11DeviceContext::GetResourceMinLOD(*)\n",
+        "1 ID3D11ShaderReflection_42::slot4(1) = *\n",
+        "1 ID3D11ShaderReflectionConstantBuffer_42::slot0(*) = 0\n",
+        "2 ID3D11Device::CreateClassLinkage(*) = 0\n",
+    };
+    FILE *f = fopen(TRACE_FILE, "rb");
+    char *text;
+    long size;
+    uint32_t lines = 0u;
+    size_t i;
+    MUST(f != NULL && fseek(f, 0, SEEK_END) == 0 && (size = ftell(f)) > 0 && fseek(f, 0, SEEK_SET) == 0);
+    text = malloc((size_t)size + 1u);
+    MUST(text != NULL && fread(text, 1u, (size_t)size, f) == (size_t)size);
+    fclose(f);
+    text[size] = '\0';
+    for (i = 0u; i < (size_t)size; ++i) {
+        lines += text[i] == '\n';
+    }
+    if (lines != g_calls + g_ecalls) {
+        printf("FAIL: %s has %u lines for %u calls\n", TRACE_FILE, lines, g_calls + g_ecalls);
+        exit(1);
+    }
+    ++g_checks;
+    for (i = 0u; i < sizeof expected / sizeof expected[0]; ++i) {
+        const char *at = strstr(text, expected[i]);
+        if (at == NULL || (at != text && at[-1] != '\n')) {
+            printf("FAIL: %s has no line %s", TRACE_FILE, expected[i]);
+            exit(1);
+        }
+        ++g_checks;
+    }
+    free(text);
+    printf("%s: %u calls recorded\n", TRACE_FILE, lines);
+}
+
+/* ---- --debug-layer: ROME2_D3D11_DEBUG=stop ---------------------------------------------------------- */
+
+static int test_debug_layer(void) {
+    uint32_t *level = gmem(4u), *ctx = gmem(4u), dev, hr;
+    D3D11_BUFFER_DESC *bd = gmem(sizeof *bd);
+    const HRESULT native = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_NULL, NULL, D3D11_CREATE_DEVICE_DEBUG, NULL, 0u, D3D11_SDK_VERSION, NULL,
+                                             NULL, NULL);
+    *level = D3D_FEATURE_LEVEL_11_0;
+    hr = ECALL(D3D11CreateDevice, 0u, D3D_DRIVER_TYPE_WARP, 0u, 0u, G(level), 1u, D3D11_SDK_VERSION, G(g_out), 0u, G(ctx));
+    if (native == DXGI_ERROR_SDK_COMPONENT_MISSING) {
+        /* No debug layer on this machine: the bridge must say so, not run without the checks it was asked for. */
+        CHECK(hr == (uint32_t)DXGI_ERROR_SDK_COMPONENT_MISSING && *g_out == 0u);
+        expect_stop("Graphics Tools");
+        printf("d3d11 bridge, ROME2_D3D11_DEBUG: Direct3D's debug layer is not installed (Windows optional feature \"Graphics "
+               "Tools\"); the bridge refuses the device and says so. NOT CHECKED: reporting of the layer's messages\n");
+        return 0;
+    }
+    CHECK(SUCCEEDED(native) && hr == 0u);
+    dev = *g_out;
+    /* A call the layer has nothing to say about, then one it rejects: reported at that call, with its name. */
+    *bd = (D3D11_BUFFER_DESC){64u, D3D11_USAGE_DEFAULT, D3D11_BIND_VERTEX_BUFFER, 0u, 0u, 0u};
+    CHECK_HR(CALL(dev, ID3D11Device, CreateBuffer, G(bd), 0u, G(g_out)));
+    no_stop();
+    RELEASE(*g_out);
+    no_stop();
+    bd->ByteWidth = 0u;
+    CHECK(CALL(dev, ID3D11Device, CreateBuffer, G(bd), 0u, G(g_out)) == (uint32_t)E_INVALIDARG);
+    expect_stop("ID3D11Device::CreateBuffer");
+    RELEASE(*ctx);
+    RELEASE(dev);
+    no_stop();
+    printf("d3d11 bridge, ROME2_D3D11_DEBUG: Direct3D's debug layer accepts a valid CreateBuffer and stops the run at an invalid "
+           "one (%u checks)\n", g_checks);
+    return 0;
+}
+
+int main(int argc, char **argv) {
     static const uintptr_t bases[] = {0x20000000u, 0x30000000u, 0x40000000u, 0x50000000u, 0x60000000u};
+    const int debug_layer = argc > 1 && strcmp(argv[1], "--debug-layer") == 0;
     void *mem = NULL;
     size_t i;
     setvbuf(stdout, NULL, _IONBF, 0);
+    /* The bridge reads these when it is initialised. */
+    MUST(_putenv_s(debug_layer ? "ROME2_D3D11_DEBUG" : "ROME2_D3D11_TRACE", debug_layer ? "stop" : TRACE_FILE) == 0);
     for (i = 0u; mem == NULL && i < sizeof bases / sizeof bases[0]; ++i) {
         mem = VirtualAlloc((void *)bases[i], GUEST_SIZE, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
     }
@@ -1641,21 +1937,27 @@ int main(void) {
     InitializeCriticalSection(&g_lock);
 #ifndef TEST_LIVE /* inside live_main.c the first call into the bridge initialises it */
     {
-        d3d11_bridge_host_t host = {galloc, gfree, register_method, stop, call_guest};
+        d3d11_bridge_host_t host = {galloc, gfree, register_method, stop, call_guest, return_float, may_write};
         bridge_init(&host);
     }
 #endif
+    MUST(GetFullPathNameA("d3dx_test", sizeof g_tmp, g_tmp, NULL) != 0u && (CreateDirectoryA(g_tmp, NULL) || GetLastError() == ERROR_ALREADY_EXISTS));
     g_out = gmem(4u);
+    if (debug_layer) {
+        return test_debug_layer();
+    }
     test_dxgi();
     test_device();
     test_render();
     test_maps();
     test_compiler();
     test_reflection();
+    test_d3dx();
     test_swapchain();
     test_threads();
     test_stops();
     test_teardown();
+    test_trace();
 #ifdef TEST_LIVE
     printf("d3d11 bridge, included as in live_main.c (%u shim rows): ", (unsigned)(sizeof g_shims / sizeof g_shims[0]));
 #else
