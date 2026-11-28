@@ -11,6 +11,8 @@ function. These rows are not part of the inventory and are never counted in it.
     python scripts/lift/live_extra.py initterm             seed from the static-initializer tables
     python scripts/lift/live_extra.py relocs               seed from the image's relocations (see reloc_targets)
     python scripts/lift/live_extra.py relocs --list        print what `relocs` would seed, and change nothing
+    python scripts/lift/live_extra.py tables               print the rows that are a table, not code (see table_rows)
+    python scripts/lift/live_extra.py tables --drop        and take them out of the table
 
 A run that reaches code nothing lifts stops there, the address is added and the run is repeated: one address for each
 run. `relocs` finds, without a run, the addresses of that kind that the image itself names.
@@ -233,6 +235,17 @@ def reloc_targets(rows) -> dict[int, str]:
     return found
 
 
+def table_rows(rows) -> list[int]:
+    """Rows that are not code: the entry's first byte is one of the 4 that a relocation marks as an address.
+
+    No instruction begins there. Such a row is a jump table kept in the code section, taken for a function because
+    lifted code names its address (as the displacement of jmp [reg*4 + table]) and lifted as whatever its bytes
+    decode to.
+    """
+    marked = relocations()
+    return sorted(entry for entry in rows if any(entry - back in marked for back in range(4)))
+
+
 def first_instructions(addr: int, count: int = 3) -> str:
     image = load_image()
     return "; ".join(f"{ins.mnemonic} {ins.op_str}".strip() for ins in _decoder().disasm(image[addr - IMAGE_BASE:addr - IMAGE_BASE + 48], addr, count))
@@ -255,6 +268,15 @@ def main(argv=None) -> int:
         for entry, kind in sorted(found.items()):
             print(f"{entry:08x}\t{kind}\t{first_instructions(entry)}")
         print(f"{len(found)} addresses: " + ", ".join(f"{sum(k == kind for k in found.values())} {kind}" for kind in RELOC_KINDS))
+        return 0
+    elif argv in (["tables"], ["tables", "--drop"]):
+        rows = load_rows()
+        found = table_rows(rows)
+        for entry in found:
+            print(f"{entry:08x}\t{rows[entry][1]}\t{first_instructions(entry)}")
+        if found and argv[1:]:
+            save_rows({entry: row for entry, row in rows.items() if entry not in found})
+        print(f"{len(found)} of {len(rows)} rows are tables{', dropped' if found and argv[1:] else ''}")
         return 0
     elif argv == ["relocs"]:
         added = []
